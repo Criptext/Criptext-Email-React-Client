@@ -59,6 +59,10 @@ ipc.answerRenderer('client-get-data-ready', recipientId =>
   clientManager.getDataReady(recipientId)
 );
 
+ipc.answerRenderer('client-get-domain-mx', domain =>
+  clientManager.getDomainMX(domain)
+);
+
 ipc.answerRenderer('client-get-key-bundle', params =>
   clientManager.getKeyBundle(params)
 );
@@ -69,6 +73,10 @@ ipc.answerRenderer('client-get-user-settings', () =>
 
 ipc.answerRenderer('client-insert-prekeys', params =>
   clientManager.insertPreKeys(params)
+);
+
+ipc.answerRenderer('client-domain-available', domain =>
+  clientManager.isDomainAvailable(domain)
 );
 
 ipc.answerRenderer('client-is-criptext-domain', domains => {
@@ -133,6 +141,10 @@ ipc.answerRenderer('client-post-peer-event', params => {
   };
   return clientManager.postPeerEvent(data);
 });
+
+ipc.answerRenderer('client-register-domain', domain =>
+  clientManager.registerDomain(domain)
+);
 
 ipc.answerRenderer('client-post-user', params =>
   clientManager.postUser(params)
@@ -234,6 +246,10 @@ ipc.answerRenderer('client-upload-avatar', params => {
   const data = { ...params, recipientId: myAccount.recipientId };
   return clientManager.uploadAvatar(data);
 });
+
+ipc.answerRenderer('client-validate-mx-records', domain =>
+  clientManager.validateDomainMX(domain)
+);
 
 ipc.answerRenderer('client-validate-recovery-code', params =>
   clientManager.validateRecoveryCode(params)

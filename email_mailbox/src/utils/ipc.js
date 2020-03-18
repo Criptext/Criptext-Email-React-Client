@@ -188,6 +188,10 @@ export const deleteMyAccount = async params => {
   return await ipc.callMain('client-delete-my-account', params);
 };
 
+export const getDomainMX = async domain => {
+  return await ipc.callMain('client-get-domain-mx', domain);
+};
+
 export const getUserSettings = async recipientId => {
   return await ipc.callMain('client-get-user-settings', recipientId);
 };
@@ -196,12 +200,20 @@ export const insertPreKeys = async params => {
   return await ipc.callMain('client-insert-prekeys', params);
 };
 
+export const isDomainAvailable = async domain => {
+  return await ipc.callMain('client-domain-available', domain);
+};
+
 export const logout = async () => {
   return await ipc.callMain('client-logout');
 };
 
 export const postPeerEvent = async params => {
   return await ipc.callMain('client-post-peer-event', params);
+};
+
+export const registerDomain = async domain => {
+  return await ipc.callMain('client-register-domain', domain);
 };
 
 export const removeAvatar = async params => {
@@ -274,6 +286,10 @@ export const updatePushToken = async pushToken => {
 
 export const uploadAvatar = async params => {
   return await ipc.callMain('client-upload-avatar', params);
+};
+
+export const validateDomainMX = async domain => {
+  return await ipc.callMain('client-validate-mx-records', domain);
 };
 
 /*  DataBase

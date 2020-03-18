@@ -19,7 +19,8 @@
         "title": "Let's set up your domain",
         "text": "Enter the custom domain you wish to add.",
         "errors": {
-          "usedDomain": "This domain is already in use"
+          "usedDomain": "This domain is already in use",
+          "unknownError": "Unkwnown error"
         }
       },
       "step2": {
@@ -37,12 +38,19 @@
           "name": "Name/Host/Alias",
           "value": "Value/Destination",
           "copy": "Copy"
+        },
+        "errors": {
+          "notMXRecords": "Ups, can't retrieve MX records"
         }
       },
       "step3": {
         "running": {
           "title": "Verifying Domain Ownership",
-          "timer": "About 5 minutes left"
+          "timer": {
+            "first": "About",
+            "second": "minute",
+            "third": "left"
+          } 
         },
         "error1": {
           "title": "MX records don’t match",
@@ -51,8 +59,8 @@
         }, 
         "error2": {
           "title": "DNS records for this domain were not found",
-          "text-1": "liknaru.com is listed as your domain, make sure this is right; otherwise correct the domain on your Company Profile. Need help?",
-          "text-2": "Also check that the DNS records on your domain are not empty; otherwise go back and add them from the previous steps."
+          "text_1": " is listed as your domain, make sure this is right; otherwise correct the domain on your Company Profile. Need help?",
+          "text_2": "Also check that the DNS records on your domain are not empty; otherwise go back and add them from the previous steps."
         },
         "error3": {
           "title": "Something Went Wrong",

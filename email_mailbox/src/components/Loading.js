@@ -10,6 +10,11 @@ const statusType = {
   COMPLETE: 'complete-animation'
 };
 
+const errorType = {
+  MX_NOT_MATCH: 1,
+  OTHER: 2
+};
+
 const Loading = props => (
   <div id={'loading-container'} className="dialog-container">
     <div className="dialog-content">
@@ -22,12 +27,8 @@ const Loading = props => (
           />
         </div>
         <div className="dialog-text">{dialogText(props)}</div>
+        <br />
         <div className="dialog-button">{dialogButton(props)}</div>
-        {/*         <div className="percent">
-          <div className="content">
-            <span className="number">{props.percent}%</span>
-          </div>
-        </div> */}
       </div>
     </div>
   </div>
@@ -35,62 +36,65 @@ const Loading = props => (
 
 const dialogTitle = props => {
   if (props.animationClass === statusType.RUNNING) {
-    return <p> Verifying Domain Ownership</p>;
+    return <p> {string.address.add.step3.running.title}</p>;
   } else if (
     props.animationClass === statusType.STOP &&
-    props.errorType === 1
+    props.errorType === errorType.MX_NOT_MATCH
   ) {
-    return <p> MX records don’t match </p>;
+    return <p> {string.address.add.step3.error1.title} </p>;
   } else if (
     props.animationClass === statusType.STOP &&
-    props.errorType === 2
+    props.errorType === errorType.OTHER
   ) {
-    return <p> DNS records for this domain were not found </p>;
-  } else if (
-    props.animationClass === statusType.STOP &&
-    props.errorType === 3
-  ) {
-    return <p> Something Went Wrong </p>;
+    return <p> {string.address.add.step3.error3.title} </p>;
   } else if (props.animationClass === statusType.COMPLETE) {
-    return <p> Your Domain Was Verified Succesfully </p>;
+    return <p> {string.address.add.step3.complete.title}</p>;
   }
 };
 
 const dialogText = props => {
   if (props.animationClass === statusType.RUNNING) {
-    return <p className="dialog-gray"> About 10 minutes left</p>;
-  } else if (
-    props.animationClass === statusType.STOP &&
-    props.errorType === 1
-  ) {
+    const theExtraS = props.minutes <= 1 ? '' : 's';
     return (
-      <p>
+      <p className="dialog-gray">
         {' '}
-        Go back and verify that you've added the right information into your{' '}
-        <b>DNS records</b>.{' '}
+        {string.address.add.step3.running.timer.first} {props.minutes}{' '}
+        {string.address.add.step3.running.timer.second}
+        {theExtraS} {string.address.add.step3.running.timer.third}
       </p>
     );
   } else if (
     props.animationClass === statusType.STOP &&
-    props.errorType === 2
+    props.errorType === errorType.MX_NOT_MATCH
   ) {
     return (
       <p>
-        {' '}
-        liknaru.com is listed as your domain, make sure this is right; otherwise
-        correct the domain on your Company Profile. Need help? <br />
+        {props.domain} {string.address.add.step3.error2.text_1}{' '}
+        <a href="criptext.com" target="_blank">
+          {string.address.add.need_help}
+        </a>
         <br />
-        Also check that the DNS records on your domain are not empty; otherwise
-        go back and add them from the previous steps.{' '}
+        <br />
+        {string.address.add.step3.error2.text_2}
       </p>
     );
   } else if (
     props.animationClass === statusType.STOP &&
-    props.errorType === 3
+    props.errorType === errorType.OTHER
   ) {
-    return <p> Try again in a couple of minutes. Need help? </p>;
+    return (
+      <p>
+        {' '}
+        {string.address.add.step3.error3.text}{' '}
+        <a href="criptext.com" target="_blank">
+          {string.address.add.need_help}
+        </a>{' '}
+      </p>
+    );
   } else if (props.animationClass === statusType.COMPLETE) {
-    return <p className="dialog-gray"> Done! </p>;
+    return (
+      <p className="dialog-gray"> {string.address.add.step3.complete.text} </p>
+    );
   }
 };
 
@@ -101,16 +105,14 @@ const dialogButton = props => {
         {renderLoading()}
       </button>
     );
-  } else {
+  } else if (props.animationClass === statusType.STOP) {
     return (
-      <button
-        className="loading-button"
-        onClick={() => props.onClickMinusStep()}
-      >
-        Back
+      <button className="loading-button" onClick={() => props.decreaseStep()}>
+        {string.address.add.backButtonLabel}
       </button>
     );
   }
+  return '';
 };
 
 const renderLoading = () => (
@@ -124,7 +126,13 @@ const renderLoading = () => (
 
 Loading.propTypes = {
   animationClass: PropTypes.string,
-  percent: PropTypes.number
+  domain: PropTypes.string,
+  percent: PropTypes.number,
+  failed: PropTypes.bool,
+  errorType: PropTypes.number,
+  minutes: PropTypes.number,
+  restart: PropTypes.func,
+  decreaseStep: PropTypes.func
 };
 
 export default Loading;

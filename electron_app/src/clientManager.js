@@ -279,6 +279,20 @@ const getDataReady = async recipientId => {
     : await checkExpiredSession(res, getDataReady, recipientId);
 };
 
+const getDomainMX = async domain => {
+  const res = await client.getDomainMX(domain);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, getDomainMX, domain);
+};
+
+const getEmailBody = async bodyKey => {
+  const res = await client.getEmailBody(bodyKey);
+  return res.status === 200
+    ? { status: res.status, body: res.body }
+    : checkExpiredSession(res, getEmailBody, bodyKey);
+};
+
 const getKeyBundle = async params => {
   const { deviceId, recipientId } = params;
   const client = await createClient({ recipientId });
@@ -296,6 +310,10 @@ const getUserSettings = async recipientId => {
     : await checkExpiredSession(res, getUserSettings, recipientId);
 };
 
+const isDomainAvailable = async domain => {
+  const request = { domain: { name: domain } };
+  return await client.isDomainAvailable(request);
+};
 const parseUserSettings = settings => {
   const { devices, general, addresses } = settings;
   const {
@@ -476,6 +494,13 @@ const postUser = async params => {
   const { recipientId } = params;
   const client = await createClient({ recipientId, optionalToken: '@' });
   return await client.postUser(params);
+};
+
+const registerDomain = async domain => {
+  const res = await client.registerDomain(domain);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, registerDomain, domain);
 };
 
 const removeAvatar = async recipientId => {
@@ -681,6 +706,13 @@ const unsendEmail = async params => {
     : await checkExpiredSession(res, unsendEmail, params);
 };
 
+const validateDomainMX = async domain => {
+  const res = await client.validateDomainMX(domain);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, validateDomainMX, domain);
+};
+
 const validateRecoveryCode = async ({ newDeviceData, jwt }) => {
   const recipientId = getRecipientId(newDeviceData);
   const client = await createClient({ recipientId, optionalToken: jwt });
@@ -703,10 +735,13 @@ module.exports = {
   findKeyBundles,
   generateEvent,
   getDataReady,
+  getDomainMX,
+  getEmailBody,
   getKeyBundle,
   getUserSettings,
   insertPreKeys,
   isCriptextDomain,
+  isDomainAvailable,
   linkAccept,
   linkAuth,
   linkBegin,
@@ -722,6 +757,7 @@ module.exports = {
   postPeerEvent,
   pushPeerEvents,
   postUser,
+  registerDomain,
   removeAvatar,
   removeDevice,
   reportPhishing,
@@ -743,5 +779,6 @@ module.exports = {
   updatePushToken,
   uploadAvatar,
   unsendEmail,
+  validateDomainMX,
   validateRecoveryCode
 };

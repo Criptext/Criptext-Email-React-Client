@@ -90,10 +90,10 @@
             animation: fadeDown 1s linear;
           }
   
-          @keyframes fadeDown {
+/*           @keyframes fadeDown {
             0% { width: 100%; }
             100% { width: 0%; }
-          }
+          } */
         }
   
         .percent {
@@ -141,6 +141,7 @@
       .loading-button {
         min-width: 60px;
         border-radius: 12px;
+        min-height: 24px;
         background-color: #008efa;
         font-size: 12px;
         font-weight: bold;
