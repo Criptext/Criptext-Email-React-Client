@@ -14,7 +14,7 @@ const errorType = {
   OTHER: 2
 };
 
-const delay = 180;
+const delay = 1800;
 const delayError = 25;
 const delaySuccess = 35;
 
@@ -103,7 +103,7 @@ class MxLoadingWrapper extends Component {
   increasePercentSuccesfull = () => {
     const percent = this.state.percent + 1;
     this.setState({ percent });
-    if (percent === 100) {
+    if (percent >= 100) {
       clearTimeout(this.tm);
       setTimeout(
         () => this.props.onClickChangeStep(this.props.currentStep + 1),

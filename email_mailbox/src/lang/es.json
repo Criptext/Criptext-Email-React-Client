@@ -10,7 +10,87 @@
     "opened": "ha abierto",
     "someone": "Alguien"
   },
-  
+  "address": {
+    "add": {
+      "nextButtonLabel": "Siguiente",
+      "backButtonLabel": "Atrás",
+      "need_help": "¿Necesitas ayuda?",
+      "title" : {
+        "first": "Paso ",
+        "second": " de 3"
+      },
+      "step1": {
+        "title": "Configuremos tu dominio",
+        "text": "Ingresa el dominio personal que quisieras agregar.",
+        "errors": {
+          "usedDomain": "Este dominio ya está en uso",
+          "unknownError": "Error de servidor. Prueba despúes."
+        }
+      },
+      "step2": {
+        "title": "Visita tu Administrador de DNS",
+        "text1": {
+          "first": "Ve a ",
+          "go_daddy": "Go Daddy ",
+          "second": "o quien sea tu proveedor de dominios y accede al ",
+          "blackened": "Administrador de DNS ",
+          "third": "donde puedas agregar MX Records y Text records."
+        },
+        "text2": "Elimina los existentes MX records antes de proceder."
+      },
+      "step2_2": {
+        "title": "Agrega Records para Criptext",
+        "text": "Agrega los siguientes records en tu Administrador de DNS. Esto validará que el dominio te pertenece y configurará ajustes de correo Criptext.",
+        "note": {
+          "text": " Si ves el campo TTL ingresa 3600 segundos (1 hora). Tu proveedor puede que no incluya el campo \"Nombre\", \"Host\" o \"Alias\".",
+          "blackened": "Nota: "
+        },
+        "table": {
+          "type": "Tipo",
+          "priority": "Prioridad",
+          "name": "Nombre/Host/Alias",
+          "value": "Valor/Destino",
+          "copy": "Copiar"
+        },
+        "errors": {
+          "notMXRecords": "Ups, no pudimos retribuir los MX records"
+        }
+      },
+      "step3": {
+        "running": {
+          "title": "Validando Dominio",
+          "timer": {
+            "first": "Cerca de ",
+            "second": "minuto",
+            "third": "restante"
+          } 
+        },
+        "error1": {
+          "title": "Los MX Records no coinciden",
+          "text": "Regresa y verifica que hayas agregado la información correcta en tus DNS ",
+          "DNSRecords": "DNS records."
+        }, 
+        "error2": {
+          "title": "No se encontraron DNS Records de este dominio",
+          "text_1": " esta ingresado como tu dominio. Verifica que esto este correcto.",
+          "text_2": "También verifica que los DNS Records de tu dominio no estén vacíos."
+        },
+        "error3": {
+          "title": "Algo falló",
+          "text": "Intenta de nuevo en unos minutos."
+        },
+        "complete": {
+          "title": "Tu dominio fue validado exitosamente",
+          "text": "¡Hecho!"
+        }
+      },
+      "step4": {
+        "title": "Configuración de Dominio Completada",
+        "text": "Ya hora puedes crear Alias con ",
+        "mxButton": "Crear Alias"
+      }
+    }
+  },
   "alias": {
     "add": {
       "title": "Nuevo Alias",

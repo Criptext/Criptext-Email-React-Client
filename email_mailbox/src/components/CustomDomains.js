@@ -10,7 +10,9 @@ const CustomDomains = props => {
       <div className="settings-content-scroll cptx-scrollbar">
         <div className="custom-domains-steps-container">
           <div className="custom-domains-steps">
-            Step {stepNumber(props)} of 3
+            {string.address.add.title.first}
+            {stepNumber(props)}
+            {string.address.add.title.second}
           </div>
         </div>
         <div className="custom-domains-main-container">
@@ -29,119 +31,160 @@ const stepNumber = props => {
 
 const stepsRenderer = props => {
   const actualStep = props.currentStep;
+  switch (actualStep) {
+    case 0:
+      return <Step1 {...props} />;
+    case 1:
+      return <Step2 {...props} />;
+    case 2:
+      return <Step2Two {...props} />;
+    case 3:
+      return <Step3 {...props} />;
+    case 4:
+      return <Step4 {...props} />;
+    default:
+      return '';
+  }
+};
+
+const Step1 = props => {
+  return (
+    <div className="custom-domains-steps-first">
+      <div className="custom-domains-steps-title">
+        {string.address.add.step1.title}
+      </div>
+      <div className="custom-domains-steps-text custom-domains-steps-first-text">
+        {string.address.add.step1.text}
+      </div>
+      <div className="custom-domains-steps-first-input">
+        <input
+          type="text"
+          onChange={e => props.onChangeInputDomain(e)}
+          className={props.existError ? 'input-error' : ''}
+        />
+        {inputError(props)}
+      </div>
+
+      <div className="custom-domains-steps-button-container">
+        {renderIsDomainButton(props)}
+      </div>
+    </div>
+  );
+};
+
+const Step2 = props => {
+  const actualStep = props.currentStep;
+  const newStep = actualStep + 1;
+  return (
+    <div className="custom-domains-steps-second">
+      <div className="custom-domains-steps-title">
+        {string.address.add.step2.title}{' '}
+      </div>
+      <div className="custom-domains-steps-text custom-domains-steps-second-text">
+        <b>1. </b>
+        {string.address.add.step2.text1.first}
+        <a href="godaddy.com" target="_blank">
+          {string.address.add.step2.text1.go_daddy}
+        </a>
+        {string.address.add.step2.text1.second}
+        <b>{string.address.add.step2.text1.blackened}</b>
+        {string.address.add.step2.text1.third}
+        <br />
+        <br />
+        <b>2. </b> {string.address.add.step2.text2}
+      </div>
+
+      <div className="custom-domains-steps-button-container">
+        <button
+          className="custom-domains-steps-button"
+          onClick={() => props.onClickChangeStep(newStep)}
+        >
+          {string.address.add.nextButtonLabel}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Step2Two = props => {
+  const actualStep = props.currentStep;
   const newStep = actualStep + 1;
   const backStep = actualStep - 1;
-  if (actualStep === 0) {
-    return (
-      <div className="custom-domains-steps-first">
-        <div className="custom-domains-steps-title">
-          {string.address.add.step1.title}
-        </div>
-        <div className="custom-domains-steps-text custom-domains-steps-first-text">
-          {string.address.add.step1.text}
-        </div>
-        <div className="custom-domains-steps-first-input">
-          <input
-            type="text"
-            onChange={e => props.onChangeInputDomain(e)}
-            className={props.existError ? 'input-error' : ''}
-          />
-          {inputError(props)}
-        </div>
-
-        <div className="custom-domains-steps-button-container">
-          {renderIsDomainButton(props)}
-        </div>
+  return (
+    <div className="custom-domains-steps-second-2">
+      <div className="custom-domains-steps-title">
+        {string.address.add.step2_2.title}
       </div>
-    );
-  } else if (actualStep === 1) {
-    return (
-      <div className="custom-domains-steps-second">
-        <div className="custom-domains-steps-title">
-          {string.address.add.step2.title}{' '}
-        </div>
-        <div className="custom-domains-steps-text custom-domains-steps-second-text">
-          <b>1. </b> {string.address.add.step2.text1}
-          <br />
-          <br />
-          <b>2. </b> {string.address.add.step2.text2}
-        </div>
-
-        <div className="custom-domains-steps-button-container">
-          <button
-            className="custom-domains-steps-button"
-            onClick={() => props.onClickChangeStep(newStep)}
-          >
-            {string.address.add.nextButtonLabel}
-          </button>
-        </div>
+      <div className="custom-domains-steps-text custom-domains-steps-second-text">
+        {string.address.add.step2_2.text}{' '}
+        <a href="criptext.com" target="_blank">
+          {' '}
+          {string.address.add.need_help}
+        </a>
       </div>
-    );
-  } else if (actualStep === 2) {
-    return (
-      <div className="custom-domains-steps-second-2">
-        <div className="custom-domains-steps-title">
-          {string.address.add.step2_2.title}
-        </div>
-        <div className="custom-domains-steps-text custom-domains-steps-second-text">
-          {string.address.add.step2_2.text}{' '}
-          <a href="#"> {string.address.add.need_help}</a>
-        </div>
 
-        <div className="custom-domains-steps-table-second-2">
-          {mxTable(props)}
-        </div>
+      <div className="custom-domains-steps-table-second-2">
+        {mxTable(props)}
+      </div>
+      <br />
+      <br />
+      <div className="custom-domains-steps-second-note">
+        <b>{string.address.add.step2_2.note.blackened}</b>{' '}
+        {string.address.add.step2_2.note.text}
         <br />
         <br />
-        <div className="custom-domains-steps-second-note">
-          {string.address.add.step2_2.note}
-          <br />
-          <br />
-        </div>
-        <div className="custom-domains-steps-button-container">
-          <button
-            className="custom-domains-steps-button-back"
-            onClick={() => props.onClickChangeStep(backStep)}
-          >
-            {string.address.add.backButtonLabel}
-          </button>
-          <button
-            className="custom-domains-steps-button"
-            onClick={() => props.onClickChangeStep(newStep)}
-          >
-            {string.address.add.nextButtonLabel}
-          </button>
-        </div>
       </div>
-    );
-  } else if (actualStep === 3) {
-    return (
-      <div className="custom-domains-steps-third">
-        <MxLoadingWrapper
-          domain={props.domain}
-          currentStep={props.currentStep}
-          onClickChangeStep={props.onClickChangeStep}
-        />
+      <div className="custom-domains-steps-button-container">
+        <button
+          className="custom-domains-steps-button-back"
+          onClick={() => props.onClickChangeStep(backStep)}
+        >
+          {string.address.add.backButtonLabel}
+        </button>
+        <button
+          className="custom-domains-steps-button"
+          onClick={() => props.onClickChangeStep(newStep)}
+        >
+          {string.address.add.nextButtonLabel}
+        </button>
       </div>
-    );
-  } else if (actualStep === 4) {
-    return (
-      <div className="custom-domains-steps-fourth">
-        <div className="custom-domains-steps-title">Domain Setup Complete!</div>
-        <div className="custom-domains-steps-text">
-          You can now add an alias with @liknaru.com
-        </div>
-        <div className="custom-domains-steps-button-container">
-          <button
-            className="custom-domains-steps-button"
-            onClick={() => props.onClickChangeStep(newStep)}
-          >
-            Create Alias
-          </button>
-        </div>
+    </div>
+  );
+};
+
+const Step3 = props => {
+  return (
+    <div className="custom-domains-steps-third">
+      <MxLoadingWrapper
+        domain={props.domain}
+        currentStep={props.currentStep}
+        onClickChangeStep={props.onClickChangeStep}
+      />
+    </div>
+  );
+};
+
+const Step4 = props => {
+  const actualStep = props.currentStep;
+  const newStep = actualStep + 1;
+  return (
+    <div className="custom-domains-steps-fourth">
+      <div className="custom-domains-steps-title">
+        {string.address.add.step4.title}
       </div>
-    );
-  }
+      <div className="custom-domains-steps-text">
+        {string.address.add.step4.text} {props.domain}
+      </div>
+      <div className="custom-domains-steps-button-container">
+        <button
+          className="custom-domains-steps-button"
+          onClick={() => props.onClickChangeStep(newStep)}
+        >
+          {string.address.add.step4.mxButton}
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const renderIsDomainButton = props => {
@@ -171,28 +214,29 @@ const mxTable = props => {
   if (!props.mxTable) {
     return (
       <div>
-        <p>Not Mx Records</p>
+        <p>{string.address.add.step2_2.errors.notMXRecords}</p>
       </div>
     );
   }
   const mxTable = props.mxTable;
-  const tableContent = mxTable.map(record => {
+  const tableContent = mxTable.map((record, index) => {
     const { host, pointsTo, priority, type } = record;
     return (
-      <tr>
+      <tr key={index}>
         <td>{type}</td>
         <td>{priority}</td>
         <td>{host}</td>
         <td>{cutString(pointsTo, 15)}</td>
         <td>
           <a
-            href="#"
+            href="criptext.com"
+            target="_blank"
             className="custom-domain-steps-second-table-copy"
             onClick={() => {
               navigator.clipboard.writeText(pointsTo);
             }}
           >
-            Copy
+            {string.address.add.step2_2.table.copy}
           </a>
         </td>
       </tr>
@@ -202,10 +246,10 @@ const mxTable = props => {
     <table>
       <thead>
         <tr>
-          <th>Type</th>
-          <th>Priority</th>
-          <th>Name/Host/Alias</th>
-          <th>Value/Destination</th>
+          <th>{string.address.add.step2_2.table.type}</th>
+          <th>{string.address.add.step2_2.table.priority}</th>
+          <th>{string.address.add.step2_2.table.name}</th>
+          <th>{string.address.add.step2_2.table.value}</th>
           <th />
         </tr>
       </thead>
@@ -234,6 +278,42 @@ CustomDomains.propTypes = {
   onClickChangeStep: PropTypes.func,
   onChangeInputDomain: PropTypes.func,
   onClickIsDomainAvailable: PropTypes.func
+};
+
+Step1.propTypes = {
+  onChangeInputDomain: PropTypes.func,
+  existError: PropTypes.bool
+};
+
+Step2.propTypes = {
+  currentStep: PropTypes.number,
+  onClickChangeStep: PropTypes.func
+};
+
+Step2Two.propTypes = {
+  currentStep: PropTypes.number,
+  onClickChangeStep: PropTypes.func
+};
+
+Step3.propTypes = {
+  domain: PropTypes.string,
+  currentStep: PropTypes.number,
+  onClickChangeStep: PropTypes.func
+};
+
+Step4.propTypes = {
+  domain: PropTypes.string,
+  currentStep: PropTypes.number,
+  onClickChangeStep: PropTypes.func
+};
+
+renderIsDomainButton.propTypes = {
+  isLoadingDomain: PropTypes.bool,
+  onClickIsDomainAvailable: PropTypes.func
+};
+
+mxTable.propTypes = {
+  mxTable: PropTypes.array
 };
 
 export default CustomDomains;

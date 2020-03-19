@@ -7,9 +7,14 @@ const errors = {
   NOT_DOMAIN_AVAILABLE: string.address.add.step1.errors.usedDomain,
   UNKNOWN_DOMAIN_AVAILABLE: string.address.add.step1.errors.unknownError,
   FAILED_MX_RECORDS: string.address.add.step2_2.errors.notMXRecords,
-  FAILED_REGISTER_DOMAIN: 'domain cant be registered',
-  REGISTER_DOMAIN: 'Server error. Try again later ',
-  CUSTOM_DOMAIN: 'Custom domain limit '
+  UNKNOWN_ERROR: string.address.add.step1.errors.unknownError
+};
+
+const response_status = {
+  DOMAIN_AVAILABLE_SUCCESSFULL: 200,
+  DOMAIN_AVAILABLE_UNSUCCESSFULL: 400,
+  GET_MX_RECORDS_SUCCESSFULL: 200,
+  GET_MX_RECORDS_UNSUCCESSFULLL: 400
 };
 
 class CustomDomainsWrapper extends Component {
@@ -70,7 +75,8 @@ class CustomDomainsWrapper extends Component {
     }
 
     switch (response.status) {
-      case 200:
+      // eslint-disable-next-line no-case-declarations
+      case response_status.DOMAIN_AVAILABLE_SUCCESSFULL:
         const registerDomain = await this.handleRegisterDomain(domain);
         if (registerDomain) {
           const newStep = this.state.currentStep + 1;
@@ -84,12 +90,12 @@ class CustomDomainsWrapper extends Component {
           this.setState({
             loadingDomain: false,
             existError: true,
-            errorMessage: errors.FAILED_REGISTER_DOMAIN
+            errorMessage: errors.UNKNOWN_ERROR
           });
         }
 
         break;
-      case 400:
+      case response_status.DOMAIN_AVAILABLE_UNSUCCESSFULL:
         this.setState({
           loadingDomain: false,
           existError: true,
@@ -121,13 +127,14 @@ class CustomDomainsWrapper extends Component {
     }
 
     switch (response.status) {
-      case 200:
+      // eslint-disable-next-line no-case-declarations
+      case response_status.GET_MX_RECORDS_SUCCESSFULL:
         const mxRecords = response.body.mx;
         this.setState({
           mxTable: mxRecords
         });
         break;
-      case 400:
+      case response_status.GET_MX_RECORDS_UNSUCCESSFULLL:
         this.setState({
           existError: true,
           errorMessage: errors.FAILED_MX_RECORDS

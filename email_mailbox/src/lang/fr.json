@@ -10,6 +10,87 @@
     "opened": "ouvert(s)",
     "someone": "Quelqu'un"
   },
+  "address": {
+    "add": {
+      "nextButtonLabel": "Next",
+      "backButtonLabel": "Back",
+      "need_help": "Need help?",
+      "title" : {
+        "first": "Step ",
+        "second": " of 3"
+      },
+      "step1": {
+        "title": "Let's set up your domain",
+        "text": "Enter the custom domain you wish to add.",
+        "errors": {
+          "usedDomain": "This domain is already in use",
+          "unknownError": "Server error. Try again later."
+        }
+      },
+      "step2": {
+        "title": "Visit your DNS Manager",
+        "text1": {
+          "first": "Go to ",
+          "go_daddy": "Go Daddy ",
+          "second": "or whomever your domain provider is and access the ",
+          "blackened": "DNS Manager ",
+          "third": "where you can add MX and Text records."
+        },
+        "text2": "Delete any existing MX records before proceeding."
+      },
+      "step2_2": {
+        "title": "Add Records for Criptext",
+        "text": "Add the following records in your DNS Manager. This will verify your domain ownership and configure Criptext email settings.",
+        "note": {
+          "text": "If you see the field TTL (time to live), enter 3600 seconds (1hour). Your host may not include a field called “Name”, “Host”, or “Alias”.",
+          "blackened": "Note: "
+        },
+        "table": {
+          "type": "Type",
+          "priority": "Priority",
+          "name": "Name/Host/Alias",
+          "value": "Value/Destination",
+          "copy": "Copy"
+        },
+        "errors": {
+          "notMXRecords": "Ups, can't retrieve MX records"
+        }
+      },
+      "step3": {
+        "running": {
+          "title": "Verifying Domain Ownership",
+          "timer": {
+            "first": "About",
+            "second": "minute",
+            "third": "left"
+          } 
+        },
+        "error1": {
+          "title": "MX records don’t match",
+          "text": "Go back and verify that you've added the right information into your",
+          "DNSRecords": "DNS records."
+        }, 
+        "error2": {
+          "title": "DNS records for this domain were not found",
+          "text_1": " is listed as your domain, make sure this is right; otherwise correct the domain on your Company Profile. Need help?",
+          "text_2": "Also check that the DNS records on your domain are not empty; otherwise go back and add them from the previous steps."
+        },
+        "error3": {
+          "title": "Something Went Wrong",
+          "text": "Try again in a couple of minutes."
+        },
+        "complete": {
+          "title": "Your Domain Was Verified Succesfully",
+          "text": "Done!"
+        }
+      },
+      "step4": {
+        "title": "Domain Setup Complete 🥳",
+        "text": "You can now add an alias with ",
+        "mxButton": "Create Alias"
+      }
+    }
+  },
   "alias": {
     "add": {
       "title": "New Alias",
