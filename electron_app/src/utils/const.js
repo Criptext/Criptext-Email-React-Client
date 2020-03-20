@@ -15,6 +15,7 @@ const FILE_SERVER_APP_ID = 'qynhtyzjrshazxqarkpy';
 const FILE_SERVER_KEY = 'lofjksedbxuucdjjpnby';
 const PROD_APP_DOMAIN = 'criptext.com';
 const NEWS_SERVER_URL = 'https://news.criptext.com';
+const DEFAULT_PIN = 'aaaa';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 if (isDevelopment) {
@@ -43,5 +44,6 @@ module.exports = {
   NUCLEUS_ID: isDevelopment
     ? process.env.DEV_NUCLEUS_ID
     : process.env.PROD_NUCLEUS_ID || nucleusId,
-  INSTALLER_TYPE: criptextInstallerType
+  INSTALLER_TYPE: criptextInstallerType,
+  DEFAULT_PIN
 };

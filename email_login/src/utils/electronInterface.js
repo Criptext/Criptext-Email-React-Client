@@ -63,3 +63,5 @@ export const confirmWaitingApprovalLogin = callback => {
     callback(response);
   });
 };
+
+export const { DEFAULT_PIN } = remote.require('./src/utils/const');

@@ -25,11 +25,7 @@ const checkDatabaseStep = async dbManager => {
   }
   if (existsDatabaseEncrypted) {
     if (existsDatabaseNormal) {
-      const myEDBPath = getFilenamePath(
-        process.env.NODE_ENV,
-        'CriptextEncrypt.db'
-      );
-      await deleteFile(myEDBPath);
+      await deleteEncryptedDatabase();
       return 2;
     }
     return 4;
@@ -56,6 +52,11 @@ const encryptDataBase = async () => {
 const deleteNotEncryptDatabase = async () => {
   const myOldDBPath = getFilenamePath(process.env.NODE_ENV, 'Criptext.db');
   await deleteFile(myOldDBPath);
+};
+
+const deleteEncryptedDatabase = async () => {
+  const myEDBPath = getFilenamePath(process.env.NODE_ENV, 'CriptextEncrypt.db');
+  await deleteFile(myEDBPath);
 };
 
 const deleteFile = async filepath => {
@@ -89,6 +90,7 @@ const getFilenamePath = (node_env, filename) => {
 module.exports = {
   checkDatabaseStep,
   deleteNotEncryptDatabase,
+  deleteEncryptedDatabase,
   encryptDataBase,
   existsDatabase
 };

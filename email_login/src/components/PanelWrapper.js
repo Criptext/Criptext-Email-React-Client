@@ -16,7 +16,8 @@ import {
   deleteTemporalAccount,
   hasPin,
   socketClient,
-  confirmWaitingApprovalLogin
+  confirmWaitingApprovalLogin,
+  DEFAULT_PIN
 } from './../utils/electronInterface';
 import {
   canLogin,
@@ -908,7 +909,7 @@ class PanelWrapper extends Component {
           const hasPIN = hasPin();
           if (!hasPIN)
             await sendPin({
-              pin: '1234',
+              pin: DEFAULT_PIN,
               shouldSave: false,
               shouldExport: false,
               shouldOnlySetPIN: true
@@ -993,7 +994,7 @@ class PanelWrapper extends Component {
       const hasPIN = hasPin();
       if (!hasPIN)
         await sendPin({
-          pin: '1234',
+          pin: DEFAULT_PIN,
           shouldSave: false,
           shouldExport: false,
           shouldOnlySetPIN: true

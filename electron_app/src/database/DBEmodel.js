@@ -9,6 +9,7 @@ const umzug = require('umzug');
 const Model = Sequelize.Model;
 const Op = Sequelize.Op;
 const { parseDate, formatDate } = require('./../utils/TimeUtils');
+const { DEFAULT_PIN } = require('./../utils/const');
 
 let sequelize;
 
@@ -544,6 +545,9 @@ const initDatabaseEncrypted = async (
 };
 
 const resetKeyDatabase = async key => {
+  if (!sequelize) {
+    await setConfiguration(DEFAULT_PIN);
+  }
   return await sequelize.query(`PRAGMA rekey = "${key}";`);
 };
 
@@ -556,8 +560,7 @@ const rawCheckPin = async pin => {
   });
 
   const result = await mySequelize.query(`SELECT * from ${Table.ACCOUNT}`);
-
-  return !!result;
+  return result[0];
 };
 
 module.exports = {
