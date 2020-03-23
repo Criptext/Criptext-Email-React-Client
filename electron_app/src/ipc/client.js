@@ -38,6 +38,10 @@ ipc.answerRenderer('client-delete-address', addressId =>
   clientManager.deleteAddress(addressId)
 );
 
+ipc.answerRenderer('client-delete-domain', domain =>
+  clientManager.deleteDomain(domain)
+);
+
 ipc.answerRenderer('client-delete-device-token', params =>
   clientManager.deleteDeviceToken(params)
 );

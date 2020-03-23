@@ -184,6 +184,10 @@ export const deleteAddress = async addressId => {
   return await ipc.callMain('client-delete-address', addressId);
 };
 
+export const deleteDomain = async domain => {
+  return await ipc.callMain('client-delete-domain', domain);
+};
+
 export const deleteMyAccount = async params => {
   return await ipc.callMain('client-delete-my-account', params);
 };
@@ -318,6 +322,10 @@ export const getCustomDomainByParams = async params => {
   return await ipc.callMain('db-get-custom-domains-by-params', params);
 };
 
+export const getCustomDomain = async params => {
+  return await ipc.callMain('db-get-custom-domains-by-params', params);
+};
+
 export const createEmail = async params => {
   return await ipc.callMain('db-create-email', params);
 };
@@ -360,6 +368,10 @@ export const deleteAliases = async params => {
 
 export const deleteCustomDomainByName = async params => {
   return await ipc.callMain('db-delete-custom-domains-by-name', params);
+};
+
+export const deleteCustomDomain = async domain => {
+  return await ipc.callMain('db-delete-custom-domains', { domain });
 };
 
 export const deleteEmailLabel = async params => {

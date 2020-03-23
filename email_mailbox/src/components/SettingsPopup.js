@@ -6,6 +6,7 @@ import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import ChangeSecurityPinPopup from './ChangeSecurityPinPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
 import DeleteAliasPopup from './DeleteAliasPopup';
+import DeleteCustomDomainPopup from './DeleteCustomDomainPopup';
 import ExportBackupPopupWrapper from './ExportBackupPopupWrapper';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
@@ -20,6 +21,7 @@ const Changesecuritypinpopup = PopupHOC(ChangeSecurityPinPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 const Deletealiaspopup = PopupHOC(DeleteAliasPopup);
+const Deletecustomdomainpopup = PopupHOC(DeleteCustomDomainPopup);
 const Exportbackuppopup = PopupHOC(ExportBackupPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
 const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
@@ -33,6 +35,7 @@ const SettingsPopup = props => {
     CHANGE_SECURITY_PIN,
     DELETE_ACCOUNT,
     DELETE_ALIAS,
+    DELETE_CUSTOM_DOMAIN,
     EXPORT_BACKUP,
     MANUAL_SYNC,
     MANUAL_SYNC_DEVICE_AUTHENTICATION,
@@ -133,6 +136,18 @@ const SettingsPopup = props => {
         />
       );
     }
+    case DELETE_CUSTOM_DOMAIN: {
+      return (
+        <Deletecustomdomainpopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          onConfirmDeleteCustomDomain={props.onConfirmDeleteCustomDomain}
+          {...props.deleteCustomDomainsParams}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+        />
+      );
+    }
     case EXPORT_BACKUP: {
       return (
         <Exportbackuppopup
@@ -217,6 +232,7 @@ SettingsPopup.propTypes = {
   changePasswordPopupParams: PropTypes.object,
   changeRecoveryEmailPopupParams: PropTypes.object,
   deleteAliasParams: PropTypes.object,
+  deleteCustomDomainsParams: PropTypes.object,
   isHidden: PropTypes.bool,
   type: PropTypes.string,
   onChangeInputValueChangePassword: PropTypes.func,
@@ -230,6 +246,7 @@ SettingsPopup.propTypes = {
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
   onConfirmDeleteAlias: PropTypes.func,
+  onConfirmDeleteCustomDomain: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
   onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,

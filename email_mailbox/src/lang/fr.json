@@ -17,7 +17,7 @@
       "need_help": "Need help?",
       "title" : {
         "first": "Step ",
-        "second": " of 3"
+        "second": " of 4"
       },
       "step1": {
         "title": "Let's set up your domain",
@@ -264,6 +264,14 @@
       },
       "error": {
         "description": "Une erreur est survenue pendant le téléchargement. Le fichier n'a pas été enregistré"
+      }
+    },
+    "custom_domain_deleted": {
+      "success": {
+        "description": "Domain deleted successfully"
+      },
+      "error": {
+        "description": "Failed to delete domain"
       }
     },
     "save_draft": {
@@ -718,7 +726,8 @@
     "custom_domains": {
       "title": "Custom Domains",
       "description": "Send emails from a personal domain that you own.",
-      "add": "Add Domain"
+      "add": "Add Domain",
+      "remove": "Remove domain"
     },
     "mailbox_backup": {
       "auto": {

@@ -50,12 +50,11 @@ class MxLoadingWrapper extends Component {
     );
   }
 
-  increasePercent = () => {
+  increasePercent = async () => {
     const percent = this.state.percent + 1;
     if (percent === 1 || percent === 33 || percent === 66 || percent === 99) {
       const domain = this.props.domain;
-      const response =
-        percent === 33 ? { status: 200 } : validateDomainMX(domain);
+      const response = await validateDomainMX(domain);
       const newMinutes = this.state.minutes - 1;
 
       this.setState({
@@ -67,6 +66,7 @@ class MxLoadingWrapper extends Component {
           animationClass: statusType.COMPLETE
         });
         clearTimeout(this.tm);
+        this.props.saveDomain();
         this.tm = setTimeout(this.increasePercentSuccesfull, delaySuccess);
       } else if (percent === 99) {
         const errorState =
@@ -132,7 +132,8 @@ class MxLoadingWrapper extends Component {
 MxLoadingWrapper.propTypes = {
   domain: PropTypes.string,
   currentStep: PropTypes.number,
-  onClickChangeStep: PropTypes.func
+  onClickChangeStep: PropTypes.func,
+  saveDomain: PropTypes.func
 };
 
 export default MxLoadingWrapper;

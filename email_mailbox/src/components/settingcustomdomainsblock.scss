@@ -1,0 +1,32 @@
+
+.criptext-cdomain-item-wrapper {
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  padding-top: 10px;
+
+  .criptext-cdomain-item-name {
+    font-size: 12px;
+    color: black;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    padding-bottom: 5px;
+  
+  }
+  .criptext-cdomain-item-delete {
+    font-size: 12px;
+    text-align: right;
+    margin-left: auto;
+    
+
+    .button-b {
+      color: #d14444 !important;
+      padding-right: 0;
+    }
+    
+
+  }
+
+}
+

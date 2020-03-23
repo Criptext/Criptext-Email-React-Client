@@ -66,6 +66,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.alias_status.success.deactivated
     },
+    customDomainDeleted: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.custom_domain_deleted.success.description
+    },
     downloadFile: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.download_file.success.description

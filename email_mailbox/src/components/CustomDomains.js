@@ -24,8 +24,7 @@ const CustomDomains = props => {
 };
 
 const stepNumber = props => {
-  if (props.currentStep === 2 || props.currentStep === 3) return 2;
-  else if (props.currentStep > 3) return props.currentStep - 1;
+  if (props.currentStep < 2) return props.currentStep + 1;
   return props.currentStep;
 };
 
@@ -159,14 +158,13 @@ const Step3 = props => {
         domain={props.domain}
         currentStep={props.currentStep}
         onClickChangeStep={props.onClickChangeStep}
+        saveDomain={props.saveDomain}
       />
     </div>
   );
 };
 
 const Step4 = props => {
-  const actualStep = props.currentStep;
-  const newStep = actualStep + 1;
   return (
     <div className="custom-domains-steps-fourth">
       <div className="custom-domains-steps-title">
@@ -178,7 +176,7 @@ const Step4 = props => {
       <div className="custom-domains-steps-button-container">
         <button
           className="custom-domains-steps-button"
-          onClick={() => props.onClickChangeStep(newStep)}
+          onClick={() => props.onClickHandleDone()}
         >
           {string.address.add.step4.mxButton}
         </button>
@@ -277,7 +275,8 @@ CustomDomains.propTypes = {
   errorMessage: PropTypes.string,
   onClickChangeStep: PropTypes.func,
   onChangeInputDomain: PropTypes.func,
-  onClickIsDomainAvailable: PropTypes.func
+  onClickIsDomainAvailable: PropTypes.func,
+  saveDomain: PropTypes.func
 };
 
 Step1.propTypes = {
@@ -298,13 +297,14 @@ Step2Two.propTypes = {
 Step3.propTypes = {
   domain: PropTypes.string,
   currentStep: PropTypes.number,
-  onClickChangeStep: PropTypes.func
+  onClickChangeStep: PropTypes.func,
+  saveDomain: PropTypes.func
 };
 
 Step4.propTypes = {
   domain: PropTypes.string,
   currentStep: PropTypes.number,
-  onClickChangeStep: PropTypes.func
+  onClickHandleDone: PropTypes.func
 };
 
 renderIsDomainButton.propTypes = {

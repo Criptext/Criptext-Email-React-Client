@@ -11,6 +11,7 @@ import SettingBlockProfile from '../containers/SettingBlockProfile';
 import SettingsAccountBackupWrapper from './SettingsAccountBackupWrapper';
 import SettingsAccountRestoreBackupc from './SettingsAccountRestoreBackup';
 import AliasesBlock from './SettingAliasBlock';
+import CustomDomainsBlock from './SettingCustomDomainsBlock';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import './settingaccount.scss';
@@ -85,34 +86,15 @@ const SettingAccount = props => (
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
       onConfirmSetReplyTo={props.onConfirmSetReplyTo}
       onConfirmDeleteAlias={props.onConfirmDeleteAlias}
+      onConfirmDeleteCustomDomain={props.onConfirmDeleteCustomDomain}
       onShowSettingsPopup={props.onShowSettingsPopup}
       deleteAliasParams={props.deleteAliasParams}
+      deleteCustomDomainsParams={props.deleteCustomDomainsParams}
       setReplyToPopupParams={props.setReplyToPopupParams}
       onSetExportBackupPassword={props.onSetExportBackupPassword}
       onSelectBackupFolder={props.onSelectBackupFolder}
       type={props.settingsPopupType}
     />
-  </div>
-);
-
-const CustomDomainsBlock = props => (
-  <div id="settings-account-domains" className="cptx-section-item">
-    <span className="cptx-section-item-title">
-      {string.settings.custom_domains.title}
-    </span>
-    <span className="cptx-section-item-description">
-      {string.settings.custom_domains.description}
-    </span>
-    <div className="cptx-section-item-control">
-      <button
-        className="button-b"
-        onClick={() => {
-          props.onChangePanel('custom-domains');
-        }}
-      >
-        <span>{string.settings.custom_domains.add}</span>
-      </button>
-    </div>
   </div>
 );
 
@@ -404,6 +386,7 @@ SettingAccount.propTypes = {
   changePasswordPopupParams: PropTypes.object,
   changeRecoveryEmailPopupParams: PropTypes.object,
   deleteAliasParams: PropTypes.object,
+  deleteCustomDomainsParams: PropTypes.object,
   devicesQuantity: PropTypes.number,
   isEnterprise: PropTypes.bool,
   isHiddenSettingsPopup: PropTypes.bool,
@@ -418,6 +401,7 @@ SettingAccount.propTypes = {
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
   onConfirmDeleteAlias: PropTypes.func,
+  onConfirmDeleteCustomDomain: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
   onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,

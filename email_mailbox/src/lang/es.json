@@ -17,7 +17,7 @@
       "need_help": "¿Necesitas ayuda?",
       "title" : {
         "first": "Paso ",
-        "second": " de 3"
+        "second": " de 4"
       },
       "step1": {
         "title": "Configuremos tu dominio",
@@ -266,6 +266,14 @@
       },
       "error": {
         "description": "Un error ha ocurrido durante la descarga. El archivo no fue guardado"
+      }
+    },
+    "custom_domain_deleted": {
+      "success": {
+        "description": "Dominio borrado exitosamente"
+      },
+      "error": {
+        "description": "No se pudo borrar el dominio"
       }
     },
     "save_draft": {
@@ -774,7 +782,8 @@
     "custom_domains": {
       "title": "Dominio Personal",
       "description": "Envía correos desde un dominio personal que posees.",
-      "add": "Agregar Dominio"
+      "add": "Agregar Dominio",
+      "remove": "Eliminar Dominio"
     },
     "mailbox_backup": {
       "auto": {

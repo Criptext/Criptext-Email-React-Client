@@ -7,9 +7,15 @@ import SettingsHOC from './SettingsHOC';
 import { myAccount } from '../utils/electronInterface';
 import {
   sendRemoveDeviceErrorMessage,
-  sendAliasSuccessStatusMessage
+  sendAliasSuccessStatusMessage,
+  sendCustomDomainDeletedMessage
 } from '../utils/electronEventInterface';
-import { getAlias, updateAlias, activateAddress } from '../utils/ipc';
+import {
+  getAlias,
+  updateAlias,
+  activateAddress,
+  getCustomDomain
+} from '../utils/ipc';
 import { appDomain } from '../utils/const';
 import string from './../lang';
 
@@ -31,6 +37,7 @@ class SettingsContainer extends Component {
     this.state = {
       panel: PANEL.SETTINGS,
       devices: [],
+      domains: [],
       aliasesByDomain: {},
       recoveryEmail: myAccount.recoveryEmail,
       recoveryEmailConfirmed: !!myAccount.recoveryEmailConfirmed,
@@ -52,6 +59,8 @@ class SettingsContainer extends Component {
               settings.addresses,
               settings.custom_domains.title
             ]}
+            onAddDomain={this.handleAddDomain}
+            onChangePanel={this.handleChangePanel}
           />
         );
       case PANEL.ALIAS:
@@ -74,6 +83,7 @@ class SettingsContainer extends Component {
             titlePath={[myAccount.email]}
             devices={this.state.devices}
             aliasesByDomain={this.state.aliasesByDomain}
+            domains={this.state.domains}
             isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
             onChangeAliasStatus={this.handleChangeAliasStatus}
             onChangePanel={this.handleChangePanel}
@@ -83,6 +93,7 @@ class SettingsContainer extends Component {
             onClosePopup={this.handleClosePopup}
             onConfirmLogout={this.handleConfirmLogout}
             onRemoveAlias={this.handleRemoveAlias}
+            onRemoveCustomDomain={this.handleRemoveCustomDomain}
             onRemoveDevice={this.handleRemoveDevice}
             recoveryEmail={this.state.recoveryEmail}
             recoveryEmailConfirmed={this.state.recoveryEmailConfirmed}
@@ -126,6 +137,8 @@ class SettingsContainer extends Component {
       },
       {}
     );
+    const customDomains = await getCustomDomain({});
+    const domains = customDomains.map(domain => domain.dataValues.name);
 
     this.setState({
       aliasesByDomain,
@@ -134,9 +147,18 @@ class SettingsContainer extends Component {
       recoveryEmailConfirmed,
       twoFactorAuth,
       readReceiptsEnabled,
-      replyToEmail
+      replyToEmail,
+      domains
     });
   }
+
+  handleAddDomain = domain => {
+    const domainArray = this.state.domains;
+    domainArray.push(domain);
+    this.setState({
+      domains: domainArray
+    });
+  };
 
   handleAddAlias = alias => {
     const aliasDomain = alias.domain || appDomain;
@@ -159,6 +181,14 @@ class SettingsContainer extends Component {
     this.setState({
       aliasesByDomain
     });
+  };
+
+  handleRemoveCustomDomain = domain => {
+    const newDomains = this.state.domains.filter(e => e !== domain);
+    this.setState({
+      domains: newDomains
+    });
+    sendCustomDomainDeletedMessage();
   };
 
   handleChangeAliasStatus = (rowId, domain, active) => {

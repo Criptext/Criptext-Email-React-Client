@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import CustomDomains from './CustomDomains';
 import string from './../lang';
-import { isDomainAvailable, getDomainMX, registerDomain } from '../utils/ipc';
+import PropTypes from 'prop-types';
+import {
+  isDomainAvailable,
+  getDomainMX,
+  registerDomain,
+  createCustomDomain
+} from '../utils/ipc';
 
 const errors = {
   NOT_DOMAIN_AVAILABLE: string.address.add.step1.errors.usedDomain,
@@ -42,6 +48,8 @@ class CustomDomainsWrapper extends Component {
         onClickChangeStep={this.handleOnClickChangeStep}
         onChangeInputDomain={this.handleInputDomain}
         onClickIsDomainAvailable={this.handleDomainExistRequirement}
+        saveDomain={this.handleSaveDomain}
+        onClickHandleDone={this.handleDone}
       />
     );
   }
@@ -50,6 +58,10 @@ class CustomDomainsWrapper extends Component {
     this.setState({
       domain: ev.target.value
     });
+  };
+
+  handleDone = () => {
+    this.props.onChangePanel('settings');
   };
 
   handleOnClickChangeStep = newStep => {
@@ -147,6 +159,23 @@ class CustomDomainsWrapper extends Component {
         });
     }
   };
+
+  handleSaveDomain = async () => {
+    const domain = this.state.domain;
+    const params = {
+      name: domain,
+      validated: true
+    };
+
+    await createCustomDomain(params);
+
+    this.props.onAddDomain(domain);
+  };
 }
+
+CustomDomainsWrapper.propTypes = {
+  onAddDomain: PropTypes.func,
+  onChangePanel: PropTypes.func
+};
 
 export default CustomDomainsWrapper;
