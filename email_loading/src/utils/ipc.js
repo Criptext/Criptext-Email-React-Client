@@ -40,16 +40,16 @@ export const restartAlice = async () => {
 
 /* Criptext Client
 ----------------------------- */
-export const acknowledgeEvents = async eventIds => {
-  return await ipc.callMain('client-acknowledge-events', eventIds);
+export const acknowledgeEvents = async params => {
+  return await ipc.callMain('client-acknowledge-events', params);
 };
 
-export const getDataReady = async () => {
-  return await ipc.callMain('client-get-data-ready');
+export const getDataReady = async recipientId => {
+  return await ipc.callMain('client-get-data-ready', recipientId);
 };
 
-export const getKeyBundle = async deviceId => {
-  return await ipc.callMain('client-get-key-bundle', deviceId);
+export const getKeyBundle = async params => {
+  return await ipc.callMain('client-get-key-bundle', params);
 };
 
 export const linkAccept = async randomId => {

@@ -9,7 +9,8 @@ ipcRenderer.on('socket-message', (ev, message) => {
   const eventType = message.cmd;
   switch (eventType) {
     case SocketCommand.DATA_UPLOADED: {
-      return handleDataUploadedEvent(message.params, message.rowid);
+      const { rowid, params, recipientId } = message;
+      return handleDataUploadedEvent(params, rowid, recipientId);
     }
     default:
       return;
@@ -18,9 +19,10 @@ ipcRenderer.on('socket-message', (ev, message) => {
 
 const handleDataUploadedEvent = async (
   { authorizerId, dataAddress, key },
-  rowid
+  rowid,
+  recipientId
 ) => {
-  await setEventAsHandled([rowid]);
+  await setEventAsHandled([rowid], recipientId);
   emitter.emit(Event.DATA_UPLOADED, authorizerId, dataAddress, key);
 };
 
@@ -32,8 +34,8 @@ export const removeEvent = (eventName, callback) => {
   emitter.removeListener(eventName, callback);
 };
 
-const setEventAsHandled = async eventIds => {
-  return await acknowledgeEvents(eventIds);
+const setEventAsHandled = async (eventIds, recipientId) => {
+  return await acknowledgeEvents({ eventIds, recipientId });
 };
 
 export const Event = {

@@ -26,7 +26,10 @@ const setConnectionStatus = networkStatus => {
         mailboxWindow.send('network-connection-established');
       }
       globalManager.internetConnection.setStatus(true);
-      processEventsQueue({ accountId: myAccount.id });
+      processEventsQueue({
+        accountId: myAccount.id,
+        recipientId: myAccount.recipientId
+      });
       break;
     }
     case NETWORK_STATUS.OFFLINE: {

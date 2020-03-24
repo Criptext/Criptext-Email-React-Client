@@ -30,7 +30,11 @@ const getKeyBundlesOfRecipients = async domains => {
   if (res.status === 451) {
     throw new CustomError(string.errors.suspendedUser);
   } else if (res.status !== 200) {
-    return new Array(domains.length).fill(null);
+    throw new CustomError({
+      name: string.errors.serverError.name,
+      description: `${string.errors.serverError.description}${res.status ||
+        'Unknown'} Message: ${res.text || 'Unknown'}`
+    });
   }
   return res.body;
 };
@@ -213,9 +217,6 @@ const encryptPostEmail = async ({
     blacklistedKnownDevices,
     guestDomains
   } = await getKeyBundlesOfRecipients(domainAddresses);
-  if (keyBundles.includes(null)) {
-    throw new CustomError(string.errors.unauthorized);
-  }
   if (blacklistedKnownDevices.length) {
     const {
       domainAddressesFiltered,

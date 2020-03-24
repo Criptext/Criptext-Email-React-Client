@@ -66,7 +66,10 @@ const sendLinkDeviceStartEventToAllWindows = async data => {
     remoteData: data.params.newDeviceInfo
   });
   loadingWindow.show({});
-  return await clientManager.acknowledgeEvents([data.rowid]);
+  return await clientManager.acknowledgeEvents({
+    eventIds: [data.rowid],
+    recipientId: data.recipientId
+  });
 };
 
 const sendLinkDeviceEndEventToAllWindows = () => {
@@ -95,7 +98,10 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
     })
   });
   loadingWindow.show({});
-  return await clientManager.acknowledgeEvents([data.rowid]);
+  return await clientManager.acknowledgeEvents({
+    eventIds: [data.rowid],
+    recipientId: data.recipientId
+  });
 };
 
 // Start Up
@@ -108,12 +114,8 @@ ipc.answerRenderer('change-account-app', async accountId => {
   await dbManager.defineActiveAccountById(accountId);
   // Socket
   socketClient.restartSocket();
-  // Client
-  const accounts = await dbManager.getAccountByParams({ isLoggedIn: true });
-  const [activeAccount] = accounts.filter(account => account.isActive);
-  const clientManager = require('./../clientManager');
-  await clientManager.initClient(activeAccount.recipientId);
   //Account
+  const accounts = await dbManager.getAccountByParams({ isLoggedIn: true });
   myAccount.initialize(accounts);
 });
 

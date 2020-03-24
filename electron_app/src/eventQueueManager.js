@@ -7,7 +7,7 @@ const MALFORMED_EVENT_STATUS = 202;
 const SUCCESS_STATUS = 200;
 let isProcessingQueue = false;
 
-const processEventsQueue = async ({ accountId }) => {
+const processEventsQueue = async ({ accountId, recipientId }) => {
   if (isProcessingQueue) return;
   isProcessingQueue = true;
 
@@ -20,7 +20,10 @@ const processEventsQueue = async ({ accountId }) => {
     const { ids, parsedEvents } = await removeMalformedEvents(batch);
     if (!parsedEvents.length) continue;
 
-    const { status } = await clientManager.pushPeerEvents(parsedEvents);
+    const { status } = await clientManager.pushPeerEvents({
+      events: parsedEvents,
+      recipientId
+    });
     if (status === MALFORMED_EVENT_STATUS) {
       continue;
     } else if (status === SUCCESS_STATUS) {

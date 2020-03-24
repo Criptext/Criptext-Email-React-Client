@@ -8,7 +8,7 @@ const pinWindow = require('./pin');
 const { EVENTS, addEvent } = require('./events');
 const { createAppMenu } = require('./menu');
 const socketClient = require('./../socketClient');
-const { initClient, generateEvent } = require('./../clientManager');
+const { generateEvent } = require('./../clientManager');
 const { deleteEncryptedDatabase } = require('./../utils/dataBaseUtils');
 const { initNucleus } = require('./../nucleusManager');
 const globalManager = require('./../globalManager');
@@ -18,7 +18,7 @@ const { openLaunchWindow } = require('./launch.js');
 const { DEFAULT_PIN } = require('./../utils/const');
 
 const sendAPIevent = async event => {
-  await generateEvent(event);
+  await generateEvent({ event, recipientId: myAccount.recipientId });
 };
 
 const upStepCreateDBEncrypted = async () => {
@@ -71,7 +71,6 @@ const upStepNewUser = async () => {
   initNucleus({ language });
   const settings = { isFromStore, language };
   mySettings.initialize(settings);
-  await initClient('@');
   createAppMenu();
   loginWindow.show({});
 };
@@ -107,7 +106,6 @@ const upApp = async ({ shouldSave, pin }) => {
     await upMailboxWindow(loggedAccounts);
   } else {
     const language = await getUserLanguage();
-    await initClient('@');
     const settings = { isFromStore, language };
     mySettings.initialize(settings);
     initNucleus({ language });
@@ -123,7 +121,6 @@ const upMailboxWindow = async loggedAccounts => {
   const settings = Object.assign(appSettings, { isFromStore });
   myAccount.initialize(loggedAccounts);
   mySettings.initialize(settings);
-  await initClient(myAccount.recipientId);
   initNucleus({ language: mySettings.language });
   socketClient.add(myAccount.getDataForSocket());
   createAppMenu();

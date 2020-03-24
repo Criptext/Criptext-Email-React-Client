@@ -161,8 +161,8 @@ export const storeRecoveryKey = async params => {
 
 /* Criptext Client
 ----------------------------- */
-export const acknowledgeEvents = async eventIds => {
-  return await ipc.callMain('client-acknowledge-events', eventIds);
+export const acknowledgeEvents = async params => {
+  return await ipc.callMain('client-acknowledge-events', params);
 };
 
 export const changePassword = async params => {
@@ -177,12 +177,12 @@ export const checkExpiredSession = async params => {
   return await ipc.callMain('client-check-expired-session', params);
 };
 
-export const deleteMyAccount = async password => {
-  return await ipc.callMain('client-delete-my-account', password);
+export const deleteMyAccount = async params => {
+  return await ipc.callMain('client-delete-my-account', params);
 };
 
-export const getUserSettings = async () => {
-  return await ipc.callMain('client-get-user-settings');
+export const getUserSettings = async recipientId => {
+  return await ipc.callMain('client-get-user-settings', recipientId);
 };
 
 export const insertPreKeys = async params => {
@@ -347,8 +347,8 @@ export const getAllFeedItems = async params => {
   return await ipc.callMain('db-get-all-feed-items', params);
 };
 
-export const getDataReady = async () => {
-  return await ipc.callMain('client-get-data-ready');
+export const getDataReady = async recipientId => {
+  return await ipc.callMain('client-get-data-ready', recipientId);
 };
 
 export const getAllLabels = async params => {

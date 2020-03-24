@@ -1,5 +1,6 @@
 const ClientAPI = require('@criptext/api');
 const {
+  APP_DOMAIN,
   SERVER_URL,
   API_CLIENT_VERSION,
   LINK_DEVICES_FILE_VERSION
@@ -15,12 +16,7 @@ const { getOsAndArch } = require('./utils/osUtils');
 const { Readable } = require('stream');
 const nativeImage = require('electron').nativeImage;
 const mySettings = require('./Settings');
-let client = undefined;
 const clientsMap = new Map();
-
-const initClient = async recipientId => {
-  client = await createClient({ recipientId });
-};
 
 const initializeClient = ({
   recipientId,
@@ -29,7 +25,7 @@ const initializeClient = ({
   language,
   os
 }) => {
-  client = new ClientAPI({
+  const client = new ClientAPI({
     os,
     token,
     language,
@@ -54,7 +50,7 @@ const handleClientError = err => {
 };
 
 const createClient = async ({ recipientId, optionalToken }) => {
-  client = clientsMap[recipientId];
+  const client = clientsMap[recipientId];
   if (client) return client;
   const language = mySettings.language;
   const osAndArch = await getOsAndArch();
@@ -82,6 +78,11 @@ const createClient = async ({ recipientId, optionalToken }) => {
   });
 };
 
+const getRecipientId = data => {
+  const { recipientId, domain } = data;
+  return domain === APP_DOMAIN ? recipientId : `${recipientId}@${domain}`;
+};
+
 const checkExpiredSession = async (
   requirementResponse,
   initialRequest,
@@ -94,25 +95,27 @@ const checkExpiredSession = async (
   const SUSPENDED_ACCOUNT_REQ_STATUS = 451;
 
   const status = requirementResponse.status;
+  const { recipientId: accountRecipientId } = requestparams;
+  const [{ recipientId, refreshToken }] = accountRecipientId
+    ? await dbManager.getAccountByParams({
+        recipientId: accountRecipientId
+      })
+    : await dbManager.getAccountByParams({ isActive: true });
+
   switch (status) {
     case CHANGED_PASSWORD_STATUS: {
-      mailboxWindow.send('password-changed', null);
+      mailboxWindow.send('password-changed', recipientId);
       return { status: CHANGED_PASSWORD_STATUS };
     }
     case SUSPENDED_ACCOUNT_REQ_STATUS: {
-      mailboxWindow.send('suspended-account', null);
+      mailboxWindow.send('suspended-account', recipientId);
       return { status: SUSPENDED_ACCOUNT_REQ_STATUS };
     }
     case EXPIRED_SESSION_STATUS: {
       let newSessionToken, newRefreshToken, newSessionStatus;
-      const { recipientId: accountRecipientId } = requestparams;
-      const [{ recipientId, refreshToken }] = accountRecipientId
-        ? await dbManager.getAccountByParams({
-            recipientId: accountRecipientId
-          })
-        : await dbManager.getAccountByParams({ isActive: true });
+      const client = await createClient({ recipientId });
       if (!refreshToken) {
-        const { status, body } = await upgradeToRefreshToken();
+        const { status, body } = await upgradeToRefreshToken(client);
         newSessionStatus = status;
         newSessionToken = body.token;
         newRefreshToken = body.refreshToken;
@@ -128,7 +131,6 @@ const checkExpiredSession = async (
       }
 
       if (newSessionStatus === EXPIRED_SESSION_STATUS) {
-        mailboxWindow.send('device-removed', null);
         return { status: newSessionStatus };
       }
 
@@ -155,18 +157,27 @@ const checkExpiredSession = async (
   }
 };
 
-const acknowledgeEvents = async eventIds => {
+const acknowledgeEvents = async params => {
+  const { eventIds, recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.acknowledgeEvents(eventIds);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, acknowledgeEvents, eventIds);
+    : await checkExpiredSession(res, acknowledgeEvents, params);
 };
 
 const canLogin = async ({ username, domain }) => {
+  const recipientId = getRecipientId({ recipientId: username, domain });
+  const client = await createClient({
+    recipientId,
+    optionalToken: '@'
+  });
   return await client.canLogin({ username, domain });
 };
 
 const changeRecoveryEmail = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.changeRecoveryEmail(params);
   return res.status === 200
     ? res
@@ -174,6 +185,8 @@ const changeRecoveryEmail = async params => {
 };
 
 const changePassword = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.changePassword(params);
   return res.status === 200
     ? res
@@ -181,24 +194,40 @@ const changePassword = async params => {
 };
 
 const checkAvailableUsername = async username => {
+  const client = await createClient({
+    recipientId: username,
+    optionalToken: '@'
+  });
   return await client.checkAvailableUsername(username);
 };
 
 const deleteDeviceToken = async params => {
+  const recipientId = getRecipientId(params);
+  const client = await createClient({
+    recipientId,
+    optionalToken: '@'
+  });
   const res = await client.deleteDeviceToken(params);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, deleteDeviceToken, params);
 };
 
-const deleteMyAccount = async password => {
+const deleteMyAccount = async params => {
+  const { recipientId, password } = params;
+  const client = await createClient({ recipientId });
   const res = await client.deleteMyAccount(password);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, deleteMyAccount, password);
+    : await checkExpiredSession(res, deleteMyAccount, params);
 };
 
 const findDevices = async params => {
+  const recipientId = getRecipientId(params);
+  const client = await createClient({
+    recipientId,
+    optionalToken: '@'
+  });
   const res = await client.findDevices(params);
   return res.status === 200
     ? res
@@ -214,36 +243,35 @@ const findKeyBundles = async params => {
     : await checkExpiredSession(res, findKeyBundles, params);
 };
 
-const generateEvent = async event => {
+const generateEvent = async params => {
+  const { event, recipientId } = params;
+  const client = await createClient({ recipientId });
   await client.generateUserEvent(event);
 };
 
-const getDataReady = async () => {
+const getDataReady = async recipientId => {
+  const client = await createClient({ recipientId });
   const res = await client.getDataReady();
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, getDataReady, null);
+    : await checkExpiredSession(res, getDataReady, recipientId);
 };
 
-const getEmailBody = async bodyKey => {
-  const res = await client.getEmailBody(bodyKey);
-  return res.status === 200
-    ? { status: res.status, body: res.body }
-    : checkExpiredSession(res, getEmailBody, bodyKey);
-};
-
-const getKeyBundle = async deviceId => {
+const getKeyBundle = async params => {
+  const { deviceId, recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.getKeyBundle(deviceId);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, getKeyBundle, deviceId);
+    : await checkExpiredSession(res, getKeyBundle, params);
 };
 
-const getUserSettings = async () => {
+const getUserSettings = async recipientId => {
+  const client = await createClient({ recipientId });
   const res = await client.getUserSettings();
   return res.status === 200
     ? parseUserSettings(res.body)
-    : await checkExpiredSession(res, getUserSettings, null);
+    : await checkExpiredSession(res, getUserSettings, recipientId);
 };
 
 const parseUserSettings = settings => {
@@ -270,15 +298,19 @@ const insertPreKeys = async ({ preKeys, recipientId, optionalToken }) => {
   return await client.insertPreKeys(preKeys);
 };
 
-const isCriptextDomain = async domains => {
+const isCriptextDomain = async params => {
+  const { domains, recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.isCriptextDomain(domains);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, isCriptextDomain, domains);
+    : await checkExpiredSession(res, isCriptextDomain, params);
 };
 
-const linkAccept = async randomId => {
-  const data = { randomId, version: LINK_DEVICES_FILE_VERSION };
+const linkAccept = async params => {
+  const { randomId, recipientId } = params;
+  const client = await createClient({ recipientId });
+  const data = { randomId, recipientId, version: LINK_DEVICES_FILE_VERSION };
   const res = await client.linkAccept(data);
   return res.status === 200
     ? res
@@ -286,13 +318,13 @@ const linkAccept = async randomId => {
 };
 
 const linkAuth = async ({ newDeviceData, jwt }) => {
-  const { recipientId } = newDeviceData;
+  const recipientId = getRecipientId(newDeviceData);
   const client = await createClient({ recipientId, optionalToken: jwt });
   return await client.linkAuth(newDeviceData);
 };
 
 const linkCancel = async ({ newDeviceData, jwt }) => {
-  const { recipientId } = newDeviceData;
+  const recipientId = getRecipientId(newDeviceData);
   const client = await createClient({ recipientId, optionalToken: jwt });
   return await client.linkCancel(newDeviceData);
 };
@@ -303,44 +335,64 @@ const linkBegin = async ({ username, domain }) => {
     domain,
     version: LINK_DEVICES_FILE_VERSION
   };
+
+  const recipientId = getRecipientId({ recipientId: username, domain });
   const client = await createClient({
-    recipientId: username,
+    recipientId,
     optionalToken: '@'
   });
   return await client.linkBegin(data);
 };
 
-const linkDeny = async randomId => {
+const linkDeny = async params => {
+  const { randomId, recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.linkDeny(randomId);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, linkDeny, randomId);
+    : await checkExpiredSession(res, linkDeny, params);
 };
 
-const linkStatus = async () => {
+const linkStatus = async recipientId => {
+  const client = await createClient({ recipientId });
   const res = await client.linkStatus();
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, linkStatus, null);
+    : await checkExpiredSession(res, linkStatus, recipientId);
 };
 
 const login = async data => {
+  const { username, domain } = data;
+  const recipientId = getRecipientId({ recipientId: username, domain });
+  const client = await createClient({
+    recipientId,
+    optionalToken: '@'
+  });
   return await client.login(data);
 };
 
 const loginFirst = async data => {
+  const { username, domain } = data;
+  const recipientId = getRecipientId({ recipientId: username, domain });
+  const client = await createClient({
+    recipientId,
+    optionalToken: '@'
+  });
   return await client.loginFirst(data);
 };
 
 const logout = async recipientId => {
+  const client = await createClient({ recipientId });
   const res = await client.logout();
   if (res.status === 200) delete clientsMap[recipientId];
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, logout, null);
+    : await checkExpiredSession(res, logout, recipientId);
 };
 
 const postDataReady = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.postDataReady(params);
   return res.status === 200
     ? res
@@ -357,33 +409,37 @@ const postEmail = async params => {
 };
 
 const postKeyBundle = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.postKeyBundle(params);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, postKeyBundle, params);
 };
 
-const postPeerEvent = async ({ data, accountId }) => {
+const postPeerEvent = async ({ data, accountId, recipientId }) => {
   try {
     await dbManager.createPendingEvent({
       data: JSON.stringify(data),
       accountId
     });
-    processEventsQueue({ accountId });
+    processEventsQueue({ accountId, recipientId });
     return Promise.resolve({ status: 200 });
   } catch (e) {
     return Promise.reject({ status: 422 });
   }
 };
 
-const pushPeerEvents = async events => {
+const pushPeerEvents = async params => {
   try {
+    const { events, recipientId } = params;
+    const client = await createClient({ recipientId });
     const res = await client.postPeerEvent({
       peerEvents: [...events]
     });
     return res.status === 200
       ? res
-      : await checkExpiredSession(res, pushPeerEvents, events);
+      : await checkExpiredSession(res, pushPeerEvents, params);
   } catch (e) {
     if (e.code === 'ENOTFOUND') {
       globalManager.internetConnection.setStatus(false);
@@ -394,14 +450,19 @@ const pushPeerEvents = async events => {
 };
 
 const postUser = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId, optionalToken: '@' });
   return await client.postUser(params);
 };
 
-const removeAvatar = async () => {
+const removeAvatar = async recipientId => {
+  const client = await createClient({ recipientId });
   return await client.deleteAvatar();
 };
 
 const removeDevice = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.removeDevice(params);
   return res.status === 200
     ? res
@@ -409,20 +470,27 @@ const removeDevice = async params => {
 };
 
 const reportPhishing = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.reportContact(params);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, reportPhishing, params);
 };
 
-const resendConfirmationEmail = async () => {
+const resendConfirmationEmail = async recipientId => {
+  const client = await createClient({ recipientId });
   const res = await client.resendConfirmationEmail();
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, resendConfirmationEmail, null);
+    : await checkExpiredSession(res, resendConfirmationEmail, recipientId);
 };
 
 const resetPassword = async params => {
+  const recipientId = getRecipientId(params);
+  const client = await createClient({
+    recipientId
+  });
   const res = await client.resetPassword(params);
   return res.status === 200
     ? res
@@ -430,62 +498,77 @@ const resetPassword = async params => {
 };
 
 const sendRecoveryCode = async ({ newDeviceData, jwt }) => {
-  const { recipientId } = newDeviceData;
+  const recipientId = getRecipientId(newDeviceData);
   const client = await createClient({ recipientId, optionalToken: jwt });
   const res = await client.generateCodeTwoFactorAuth(newDeviceData);
   return res;
 };
 
-const setReadTracking = async enabled => {
+const setReadTracking = async params => {
+  const { recipientId, enabled } = params;
+  const client = await createClient({ recipientId });
   const res = await client.setReadTracking(enabled);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, setReadTracking, enabled);
+    : await checkExpiredSession(res, setReadTracking, params);
 };
 
 const setReplyTo = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.setReplyTo(params);
   return res.status === 200
     ? { status: res.status }
     : await checkExpiredSession(res, setReplyTo, params);
 };
 
-const setTwoFactorAuth = async enable => {
+const setTwoFactorAuth = async params => {
+  const { recipientId, enable } = params;
+  const client = await createClient({ recipientId });
   const res = await client.setTwoFactorAuth(enable);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, setTwoFactorAuth, enable);
+    : await checkExpiredSession(res, setTwoFactorAuth, params);
 };
 
-const syncAccept = async randomId => {
+const syncAccept = async params => {
+  const { recipientId, randomId } = params;
+  const client = await createClient({ recipientId });
   const version = LINK_DEVICES_FILE_VERSION;
   const res = await client.syncAccept({ version, randomId });
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, syncAccept, randomId);
+    : await checkExpiredSession(res, syncAccept, params);
 };
 
-const syncBegin = async () => {
+const syncBegin = async recipientId => {
+  const client = await createClient({ recipientId });
   const version = LINK_DEVICES_FILE_VERSION;
   const res = await client.syncBegin({ version });
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, syncBegin, null);
+    : await checkExpiredSession(res, syncBegin, recipientId);
 };
 
-const syncCancel = async () => {
+const syncCancel = async recipientId => {
+  const client = await createClient({ recipientId });
   const res = await client.syncCancel();
-  return res.status === 200 ? res : await checkExpiredSession(res, syncCancel);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, syncCancel, recipientId);
 };
 
-const syncDeny = async randomId => {
+const syncDeny = async params => {
+  const { recipientId, randomId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.syncDeny(randomId);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, syncDeny, randomId);
+    : await checkExpiredSession(res, syncDeny, params);
 };
 
-const syncStatus = async () => {
+const syncStatus = async recipientId => {
+  const client = await createClient({ recipientId });
   const res = await client.syncStatus();
   return res.status === 200
     ? res
@@ -493,38 +576,46 @@ const syncStatus = async () => {
 };
 
 const unlockDevice = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.unlockDevice(params);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, unlockDevice, params);
 };
 
-const updateDeviceType = async newDeviceType => {
+const updateDeviceType = async params => {
+  const { recipientId, newDeviceType } = params;
+  const client = await createClient({ recipientId });
   const res = await client.updateDeviceType(newDeviceType);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, updateDeviceType, newDeviceType);
+    : await checkExpiredSession(res, updateDeviceType, params);
 };
 
-const updateName = async ({ name }) => {
+const updateName = async params => {
+  const { name, recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.updateName(name);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, updateName, { name });
+    : await checkExpiredSession(res, updateName, params);
 };
 
-const updatePushToken = async pushToken => {
+const updatePushToken = async params => {
+  const { pushToken, recipientId } = params;
+  const client = await createClient({ recipientId });
   if (client.pushToken !== pushToken) {
     const res = await client.updatePushToken(pushToken);
     if (res.status === 200) {
       client.pushToken = pushToken;
       return res;
     }
-    return await checkExpiredSession(res, updatePushToken, pushToken);
+    return await checkExpiredSession(res, updatePushToken, params);
   }
 };
 
-const upgradeToRefreshToken = async () => {
+const upgradeToRefreshToken = async client => {
   return await client.upgradeToRefreshToken();
 };
 
@@ -546,18 +637,22 @@ const uploadAvatar = async params => {
     contentLength: imageBuffer.byteLength,
     readable: readable
   };
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   return await client.uploadAvatar(clientParams);
 };
 
 const unsendEmail = async params => {
-  const res = await client.unsendEmail(params);
+  const { recipientId, metadataKey } = params;
+  const client = await createClient({ recipientId });
+  const res = await client.unsendEmail(metadataKey);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, unsendEmail, params);
 };
 
 const validateRecoveryCode = async ({ newDeviceData, jwt }) => {
-  const { recipientId } = newDeviceData;
+  const recipientId = getRecipientId(newDeviceData);
   const client = await createClient({ recipientId, optionalToken: jwt });
   const res = await client.validateCodeTwoFactorAuth(newDeviceData);
   return res;
@@ -576,10 +671,8 @@ module.exports = {
   findKeyBundles,
   generateEvent,
   getDataReady,
-  getEmailBody,
   getKeyBundle,
   getUserSettings,
-  initClient,
   insertPreKeys,
   isCriptextDomain,
   linkAccept,

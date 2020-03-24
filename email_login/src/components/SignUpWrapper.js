@@ -35,8 +35,12 @@ class SignUpWrapper extends Component {
       isShowingPassword: !prevState.isShowingPassword
     }));
 
-  handleChange = (event, field) =>
+  handleChange = (event, field) => {
+    if (field === 'username') {
+      event.target.value = event.target.value.toLowerCase();
+    }
     this.updateFormWithValidatedData(field, event.target.value);
+  };
 
   handleClickSignUp = event => {
     event.preventDefault();

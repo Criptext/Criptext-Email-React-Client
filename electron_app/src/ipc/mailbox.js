@@ -53,7 +53,7 @@ ipc.answerRenderer('open-mailbox', ({ firstOpenApp }) => {
 ipc.answerRenderer('swap-account', ({ accountId, recipientId }) => {
   socketClient.add(myAccount.getDataForSocket());
   mailboxWindow.send('swap-account', { accountId, recipientId });
-  mailboxWindow.show();
+  mailboxWindow.show({});
 });
 
 ipc.answerRenderer('print-to-pdf', async ({ emailId, threadId }) => {
