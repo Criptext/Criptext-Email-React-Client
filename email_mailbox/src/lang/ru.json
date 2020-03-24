@@ -532,6 +532,21 @@
         "unknown": "Uknown Error ({0}), please try again"
       }
     },
+    "delete_custom_domain": {
+      "title": "Remove your domain",
+      "description": "Are you sure you want to delete your domain? Your mails will not disapear, but aliases with this domain will be deleted.",
+      "buttons": {
+        "cancelLabel": "Cancel",
+        "continueLabel": "Delete",
+        "okLabel": "Ok"
+      }, 
+      "errors": {
+        "title": "Domain could not be deleted",
+        "nodomain": "Domain not found",
+        "unknown": "Uknown Error ({0}), please try again",
+        "timeout": "Connection Timeout. Please Try Again"
+      }
+    },
     "export_backup": {
       "title": "Экспорт резервного файла",
       "switchLabel": "Зашифровать резервную копию",

@@ -118,7 +118,8 @@ class SettingAccountWrapper extends Component {
         error: undefined
       },
       deleteCustomDomainsParams: {
-        domain: undefined
+        domain: undefined,
+        error: undefined
       },
       recoveryEmailParams: {
         recoveryEmail: props.recoveryEmail,
@@ -444,7 +445,8 @@ class SettingAccountWrapper extends Component {
       case SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN: {
         newState = {
           deleteCustomDomainsParams: {
-            domain: undefined
+            domain: undefined,
+            error: undefined
           }
         };
         break;
@@ -480,7 +482,8 @@ class SettingAccountWrapper extends Component {
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN,
       deleteCustomDomainsParams: {
-        domain
+        domain,
+        error: undefined
       }
     });
   };
@@ -873,12 +876,46 @@ class SettingAccountWrapper extends Component {
     if (!this.state.deleteCustomDomainsParams) return;
     const { domain } = this.state.deleteCustomDomainsParams;
     const res = await deleteDomain(domain); //api
-    if (!res || res.status !== 200) return;
 
-    this.handleClosePopup();
-    this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN);
-    await deleteCustomDomain(domain); //database
-    this.props.onRemoveCustomDomain(domain);
+    if (!res) {
+      this.setState({
+        deleteCustomDomainsParams: {
+          ...this.state.deleteCustomDomainsParams,
+          error: string.popups.delete_custom_domain.errors.timeout
+        }
+      });
+      return;
+    }
+
+    switch (res.status) {
+      case 200: {
+        this.handleClosePopup();
+        this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN);
+        await deleteCustomDomain(domain); //database
+        this.props.onRemoveCustomDomain(domain);
+        break;
+      }
+      case 400: {
+        this.setState({
+          deleteCustomDomainsParams: {
+            ...this.state.deleteCustomDomainsParams,
+            error: string.popups.delete_custom_domain.errors.nodomain
+          }
+        });
+        break;
+      }
+      default: {
+        this.setState({
+          deleteCustomDomainsParams: {
+            ...this.state.deleteCustomDomainsParams,
+            error: string.formatString(
+              string.popups.delete_custom_domain.errors.unknown,
+              res.status
+            )
+          }
+        });
+      }
+    }
   };
 
   handleConfirmSetReplyTo = async () => {

@@ -539,6 +539,21 @@
         "unknown": "Error Desconocido ({0}), por favor intenta de nuevo"
       }
     },
+    "delete_custom_domain": {
+      "title": "Remover su dominio",
+      "description": "Estás seguro que quisieras eliminar tu dominio? tus correos no desaparecerán, pero tus aliases con este dominio sí serán eliminados.",
+      "buttons": {
+        "cancelLabel": "Cancelar",
+        "continueLabel": "Eliminar",
+        "okLabel": "Ok"
+      }, 
+      "errors": {
+        "title": "Dominio no pudo ser eliminado",
+        "nodomain": "Dominio no hallado",
+        "unknown": "Error Desconocido ({0}), por favor intenta de nuevo",
+        "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo"
+      }
+    },
     "export_backup": {
       "title": "Exportar Respaldo",
       "switchLabel": "Encriptar respaldo",
