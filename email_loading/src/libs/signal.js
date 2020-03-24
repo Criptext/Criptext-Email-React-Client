@@ -135,6 +135,7 @@ const createAcountAndGetKeyBundle = async ({
   const jsonRes = await keybundleRes.json();
   const pcName = await getComputerName();
   const keybundle = {
+    recipientId,
     deviceName: pcName || window.navigator.platform,
     deviceFriendlyName: pcName || window.navigator.platform,
     deviceType,
@@ -320,7 +321,7 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
 const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {
   let newKeyBundle;
   while (!newKeyBundle) {
-    const res = await getKeyBundle(deviceId);
+    const res = await getKeyBundle({ deviceId, recipientId });
     if (res.status === 200) {
       newKeyBundle = JSON.parse(res.text);
     }

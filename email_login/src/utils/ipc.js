@@ -68,8 +68,8 @@ export const linkBegin = async params => {
   return await ipc.callMain('client-link-begin', params);
 };
 
-export const linkStatus = async () => {
-  return await ipc.callMain('client-link-status');
+export const linkStatus = async recipientId => {
+  return await ipc.callMain('client-link-status', recipientId);
 };
 
 export const login = async params => {

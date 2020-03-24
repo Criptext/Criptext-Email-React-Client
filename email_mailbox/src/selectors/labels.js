@@ -81,6 +81,7 @@ const defineSystemLabelsToEdit = labels => {
     .filter(label => {
       return label.get('id') === LabelType.starred.id;
     })
+    .toArray()
     .map(label => {
       const text =
         string.labelsItems[toLowerCaseWithoutSpaces(label.get('text'))];

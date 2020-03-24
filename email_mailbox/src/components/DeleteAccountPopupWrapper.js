@@ -80,7 +80,9 @@ class DeleteAccountPopupWrapper extends Component {
   };
 
   handleClickConfirmDeleteAccount = async () => {
-    const params = hashPassword(this.state.value);
+    const params = {
+      password: hashPassword(this.state.value)
+    };
     const { status } = await deleteMyAccount(params);
     if (status === 200) {
       this.props.onTogglePopup();

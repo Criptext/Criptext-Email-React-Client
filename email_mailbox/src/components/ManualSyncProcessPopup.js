@@ -145,7 +145,7 @@ class ManualSyncProcessPopup extends Component {
   };
 
   checkDataStatus = async () => {
-    const { status, body } = await getDataReady();
+    const { status, body } = await getDataReady(myAccount.recipientId);
     if (status === DATA_READY_STATUS) {
       const { rowid, params } = body;
       const {
@@ -155,7 +155,10 @@ class ManualSyncProcessPopup extends Component {
         authorizerType,
         authorizerName
       } = JSON.parse(params);
-      acknowledgeEvents([rowid]);
+      acknowledgeEvents({
+        eventIds: [rowid],
+        recipientId: myAccount.recipientId
+      });
       this.setState(
         {
           oldDeviceIcon: defineDeviceIcon(authorizerType),

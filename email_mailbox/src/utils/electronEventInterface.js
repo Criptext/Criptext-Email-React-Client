@@ -1476,15 +1476,17 @@ ipcRenderer.on('update-thread-emails', (ev, data) => {
   });
 });
 
-ipcRenderer.on('device-removed', async () => {
-  await sendDeviceRemovedEvent();
-});
-
-ipcRenderer.on('password-changed', () => {
+ipcRenderer.on('password-changed', (ev, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return;
+  }
   return sendPasswordChangedEvent();
 });
 
-ipcRenderer.on('suspended-account', () => {
+ipcRenderer.on('suspended-account', (ev, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return;
+  }
   return sendSuspendedAccountEvent();
 });
 

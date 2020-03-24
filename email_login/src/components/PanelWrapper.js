@@ -888,7 +888,9 @@ class PanelWrapper extends Component {
         }
       });
     } else {
-      const { status, body } = await linkStatus();
+      const { status, body } = await linkStatus(
+        this.state.values.usernameOrEmailAddress
+      );
       switch (status) {
         case rejectedDeviceStatus: {
           this.stopCountdown();

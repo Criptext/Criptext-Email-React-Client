@@ -209,11 +209,14 @@ class LinkNewDeviceWrapper extends Component {
         showContinueWaitingButton: true
       });
     } else {
-      const { status, body } = await getDataReady();
+      const { status, body } = await getDataReady(remoteData.recipientId);
       switch (status) {
         case DATA_READY_STATUS: {
           const { rowid } = body;
-          await acknowledgeEvents([rowid]);
+          await acknowledgeEvents({
+            eventIds: [rowid],
+            recipientId: remoteData.recipientId
+          });
           const { dataAddress, key, authorizerId } = JSON.parse(body.params);
           this.downloadMailbox(authorizerId, dataAddress, key);
           return;

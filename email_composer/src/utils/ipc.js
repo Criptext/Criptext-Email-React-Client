@@ -50,8 +50,8 @@ export const findKeyBundles = async params => {
   return await ipc.callMain('client-find-key-bundles', params);
 };
 
-export const isCriptextDomain = async domains => {
-  return await ipc.callMain('client-is-criptext-domain', domains);
+export const isCriptextDomain = async params => {
+  return await ipc.callMain('client-is-criptext-domain', params);
 };
 
 export const postEmail = async params => {
