@@ -527,15 +527,17 @@ const getEmailsByIds = ({ accountId, emailIds }) => {
 };
 
 const getEmailsByLabelIds = ({ accountId, labelIds }) => {
-  return Email().findAll({
-    include: [
-      {
-        model: EmailLabel(),
-        where: { labelId: labelIds }
-      }
-    ],
-    where: { accountId }
-  });
+  return Email()
+    .findAll({
+      include: [
+        {
+          model: EmailLabel(),
+          where: { labelId: labelIds }
+        }
+      ],
+      where: { accountId }
+    })
+    .map(email => email.toJSON());
 };
 
 const getEmailsByThreadId = ({ accountId, threadId }) => {

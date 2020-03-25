@@ -39,6 +39,11 @@ const mapStateToProps = state => {
 
 const formatDevicesData = devices => {
   return devices
+    .sort((device1, device2) => {
+      const a = new Date(device1.lastActivity.date).getTime();
+      const b = new Date(device2.lastActivity.date).getTime();
+      return a > b ? -1 : a < b ? 1 : 0;
+    })
     .map(device => {
       return {
         name: device.deviceFriendlyName,
@@ -52,8 +57,7 @@ const formatDevicesData = devices => {
         },
         isCurrentDevice: device.deviceId === myAccount.deviceId
       };
-    })
-    .sort(device => !device.isCurrentDevice);
+    });
 };
 
 const deleteDeviceData = async (onUpdateApp, onClickSection) => {

@@ -21,7 +21,8 @@
         display: flex;
         margin: 26px 0 0 0;
         width: calc(100% - 50px);
-    
+        flex-wrap: wrap;
+        
         h1{
           background-color: transparent;
           font-family: NunitoSans, Roboto;

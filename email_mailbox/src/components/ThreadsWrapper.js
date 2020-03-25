@@ -82,6 +82,9 @@ class ThreadsWrapper extends Component {
     ) {
       setTimeout(() => this.setState({ isHiddenLoadingSync: true }), 1000);
     }
+    if (!this.state.isHiddenLoadingSync && this.props.totalTask === 0) {
+      this.setState({ isHiddenLoadingSync: true });
+    }
   }
 
   handleCloseMessage = () => {
