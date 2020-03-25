@@ -21,6 +21,8 @@
     text-align: left;
     width: calc(100% - 100px);
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   input{
