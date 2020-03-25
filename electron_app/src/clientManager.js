@@ -165,7 +165,8 @@ const checkExpiredSession = async (
   }
 };
 
-const activateAddress = async ({ rowId, active }) => {
+const activateAddress = async ({ rowId, active, recipientId }) => {
+  const client = await createClient({ recipientId });
   const res = await client.activateAddress(rowId, active);
   return res.status === 200
     ? res
@@ -216,7 +217,8 @@ const checkAvailableUsername = async username => {
   return await client.checkAvailableUsername(username);
 };
 
-const deleteAddress = async addressId => {
+const deleteAddress = async ({ addressId, recipientId }) => {
+  const client = await createClient({ recipientId });
   const res = await client.deleteAddress(addressId);
   return res.status === 200
     ? res
@@ -235,7 +237,8 @@ const deleteDeviceToken = async params => {
     : await checkExpiredSession(res, deleteDeviceToken, params);
 };
 
-const deleteDomain = async domain => {
+const deleteDomain = async ({ domain, recipientId }) => {
+  const client = await createClient({ recipientId });
   const res = await client.deleteDomain(domain);
   return res.status === 200
     ? res
@@ -286,18 +289,12 @@ const getDataReady = async recipientId => {
     : await checkExpiredSession(res, getDataReady, recipientId);
 };
 
-const getDomainMX = async domain => {
+const getDomainMX = async ({ domain, recipientId }) => {
+  const client = await createClient({ recipientId });
   const res = await client.getDomainMX(domain);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, getDomainMX, domain);
-};
-
-const getEmailBody = async bodyKey => {
-  const res = await client.getEmailBody(bodyKey);
-  return res.status === 200
-    ? { status: res.status, body: res.body }
-    : checkExpiredSession(res, getEmailBody, bodyKey);
 };
 
 const getKeyBundle = async params => {
@@ -317,8 +314,9 @@ const getUserSettings = async recipientId => {
     : await checkExpiredSession(res, getUserSettings, recipientId);
 };
 
-const isDomainAvailable = async domain => {
+const isDomainAvailable = async ({ domain, recipientId }) => {
   const request = { domain: { name: domain } };
+  const client = await createClient({ recipientId });
   return await client.isDomainAvailable(request);
 };
 const parseUserSettings = settings => {
@@ -503,7 +501,8 @@ const postUser = async params => {
   return await client.postUser(params);
 };
 
-const registerDomain = async domain => {
+const registerDomain = async ({ domain, recipientId }) => {
+  const client = await createClient({ recipientId });
   const res = await client.registerDomain(domain);
   return res.status === 200
     ? res
@@ -553,6 +552,7 @@ const resetPassword = async params => {
 };
 
 const setAddress = async params => {
+  const client = await createClient({ recipientId: params.recipientId });
   const res = await client.setAddress(params.username, params.domain);
   return res.status === 200
     ? res
@@ -713,7 +713,8 @@ const unsendEmail = async params => {
     : await checkExpiredSession(res, unsendEmail, params);
 };
 
-const validateDomainMX = async domain => {
+const validateDomainMX = async ({ domain, recipientId }) => {
+  const client = await createClient({ recipientId });
   const res = await client.validateDomainMX(domain);
   return res.status === 200
     ? res
@@ -744,7 +745,6 @@ module.exports = {
   generateEvent,
   getDataReady,
   getDomainMX,
-  getEmailBody,
   getKeyBundle,
   getUserSettings,
   insertPreKeys,
