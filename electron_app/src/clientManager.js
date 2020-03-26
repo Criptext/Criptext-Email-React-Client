@@ -319,6 +319,7 @@ const isDomainAvailable = async ({ domain, recipientId }) => {
   const client = await createClient({ recipientId });
   return await client.isDomainAvailable(request);
 };
+
 const parseUserSettings = settings => {
   const { devices, general, addresses } = settings;
   const {

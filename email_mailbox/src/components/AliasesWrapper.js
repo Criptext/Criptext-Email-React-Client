@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Aliases from './Aliases';
-import { setAddress, createAlias } from '../utils/ipc';
+import { setAddress, createAlias, getCustomDomainByParams } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 import { usernameRegex } from '../utils/RegexUtils';
 import string from '../lang';
@@ -14,7 +14,7 @@ class AliasesWrapper extends Component {
     const domains = [appDomain];
     this.state = {
       selectedDomain: domains[0],
-      domains,
+      domains: [appDomain],
       input: '',
       loading: false,
       success: false,
@@ -37,6 +37,14 @@ class AliasesWrapper extends Component {
         errorMessage={this.state.errorMessage}
       />
     );
+  }
+
+  async componentDidMount() {
+    const domainsRaw = await getCustomDomainByParams({});
+    const domains = domainsRaw.map(domain => domain.dataValues.name);
+    this.setState({
+      domains: [appDomain, ...domains]
+    });
   }
 
   handleCancel = () => {

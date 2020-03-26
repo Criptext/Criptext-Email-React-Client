@@ -4,7 +4,7 @@ const myAccount = require('../Account');
 
 ipc.answerRenderer('client-activate-address', params => {
   const data = { ...params, recipientId: myAccount.recipientId };
-  clientManager.activateAddress(data);
+  return clientManager.activateAddress(data);
 });
 
 ipc.answerRenderer('client-acknowledge-events', params =>
@@ -37,12 +37,12 @@ ipc.answerRenderer(
 
 ipc.answerRenderer('client-delete-address', addressId => {
   const data = { addressId, recipientId: myAccount.recipientId };
-  clientManager.deleteAddress(data);
+  return clientManager.deleteAddress(data);
 });
 
 ipc.answerRenderer('client-delete-domain', domain => {
   const data = { domain, recipientId: myAccount.recipientId };
-  clientManager.deleteDomain(data);
+  return clientManager.deleteDomain(data);
 });
 
 ipc.answerRenderer('client-delete-device-token', params =>
@@ -68,7 +68,7 @@ ipc.answerRenderer('client-get-data-ready', recipientId =>
 
 ipc.answerRenderer('client-get-domain-mx', domain => {
   const data = { domain, recipientId: myAccount.recipientId };
-  clientManager.getDomainMX(data);
+  return clientManager.getDomainMX(data);
 });
 
 ipc.answerRenderer('client-get-key-bundle', params =>
@@ -85,7 +85,7 @@ ipc.answerRenderer('client-insert-prekeys', params =>
 
 ipc.answerRenderer('client-domain-available', domain => {
   const data = { domain, recipientId: myAccount.recipientId };
-  clientManager.isDomainAvailable(data);
+  return clientManager.isDomainAvailable(data);
 });
 
 ipc.answerRenderer('client-is-criptext-domain', domains => {
@@ -153,7 +153,7 @@ ipc.answerRenderer('client-post-peer-event', params => {
 
 ipc.answerRenderer('client-register-domain', domain => {
   const data = { domain, recipientId: myAccount.recipientId };
-  clientManager.registerDomain(data);
+  return clientManager.registerDomain(data);
 });
 
 ipc.answerRenderer('client-post-user', params =>
@@ -184,7 +184,7 @@ ipc.answerRenderer('client-reset-password', params =>
 
 ipc.answerRenderer('client-set-address', params => {
   const data = { ...params, recipientId: myAccount.recipientId };
-  clientManager.setAddress(data);
+  return clientManager.setAddress(data);
 });
 
 ipc.answerRenderer('client-send-recovery-code', params =>
@@ -260,7 +260,7 @@ ipc.answerRenderer('client-upload-avatar', params => {
 
 ipc.answerRenderer('client-validate-mx-records', domain => {
   const data = { domain, recipientId: myAccount.recipientId };
-  clientManager.validateDomainMX(data);
+  return clientManager.validateDomainMX(data);
 });
 
 ipc.answerRenderer('client-validate-recovery-code', params =>

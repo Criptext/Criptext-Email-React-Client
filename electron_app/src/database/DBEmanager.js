@@ -1432,6 +1432,12 @@ const deleteAliases = ({ ids, rowIds, accountId }) => {
   return Alias().destroy({ where: whereParam });
 };
 
+const deleteAliasesByDomain = ({ domain, accountId }) => {
+  const whereParam = { domain, accountId };
+
+  return Alias().destroy({ where: whereParam });
+};
+
 /* CustomDomain
 ----------------------------- */
 const createCustomDomain = params => {
@@ -1448,13 +1454,6 @@ const getCustomDomainByParams = params => {
   return CustomDomain().findAll({ where: params });
 };
 
-const deleteCustomDomainsByIds = ({ ids, rowIds, accountId }) => {
-  const whereParam = ids
-    ? { id: ids, accountId }
-    : { rowId: rowIds, accountId };
-  return CustomDomain().destroy({ where: whereParam });
-};
-
 const deleteCustomDomainByName = ({ name, accountId }) => {
   return CustomDomain().destroy({
     where: {
@@ -1465,8 +1464,9 @@ const deleteCustomDomainByName = ({ name, accountId }) => {
 };
 
 const deleteCustomDomains = params => {
-  const { domain, accountId } = params;
-  const whereParam = { name: domain, accountId };
+  const { domain, domains, accountId } = params;
+  const theDomains = domain ? domain : domains;
+  const whereParam = { name: theDomains, accountId };
   return CustomDomain().destroy({ where: whereParam });
 };
 
@@ -1791,7 +1791,7 @@ module.exports = {
   deleteAccountNotSignalRelatedData,
   defineActiveAccountById,
   deleteAliases,
-  deleteCustomDomainsByIds,
+  deleteAliasesByDomain,
   deleteCustomDomains,
   deleteCustomDomainByName,
   deleteDatabase,

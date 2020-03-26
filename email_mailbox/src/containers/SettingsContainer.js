@@ -83,14 +83,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             name: alias.name,
             active: !!alias.status,
             rowId: alias.addressId,
-            domain: domainWithAliases.domain
+            domain: domainWithAliases.domain.name
           };
         });
         return [...result, ...myAliases];
       }, []);
 
+      const customDomains = addresses
+        .map(address => address.domain)
+        .filter(domain => domain.name !== appDomain);
+
       return {
         aliases,
+        customDomains,
         devices: formatDevicesData(devices),
         recoveryEmail,
         twoFactorAuth,

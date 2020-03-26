@@ -14,7 +14,8 @@ import {
   getAlias,
   updateAlias,
   activateAddress,
-  getCustomDomain
+  getCustomDomain,
+  deleteCustomDomain
 } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 import string from './../lang';
@@ -111,6 +112,7 @@ class SettingsContainer extends Component {
     const {
       aliases,
       devices,
+      customDomains,
       recoveryEmail,
       twoFactorAuth,
       recoveryEmailConfirmed,
@@ -137,8 +139,17 @@ class SettingsContainer extends Component {
       },
       {}
     );
-    const customDomains = await getCustomDomain({});
-    const domains = customDomains.map(domain => domain.dataValues.name);
+    const myCustomDomains = await getCustomDomain({});
+
+    const mappedMyCustomDomains = myCustomDomains.map(
+      domain => domain.dataValues.name
+    );
+    const mappedCustomDomains = customDomains.map(domain => domain.name);
+
+    const domains = await this.handleEventDomains(
+      mappedMyCustomDomains,
+      mappedCustomDomains
+    );
 
     this.setState({
       aliasesByDomain,
@@ -170,6 +181,18 @@ class SettingsContainer extends Component {
     });
   };
 
+  handleEventDomains = async (myDomains, eventDomains) => {
+    const allDomains = Array.from(new Set([...myDomains, ...eventDomains]));
+    const domainsToDelete = myDomains.filter(
+      domain => !eventDomains.includes(domain)
+    );
+    if (domainsToDelete.length) {
+      await deleteCustomDomain(domainsToDelete);
+      return allDomains.filter(domain => !domainsToDelete.includes(domain));
+    }
+    return allDomains;
+  };
+
   handleRemoveAlias = (addressId, email) => {
     const domain = email.split('@')[1];
     const aliasesByDomain = { ...this.state.aliasesByDomain };
@@ -185,8 +208,11 @@ class SettingsContainer extends Component {
 
   handleRemoveCustomDomain = domain => {
     const newDomains = this.state.domains.filter(e => e !== domain);
+    const aliasesByDomain = { ...this.state.aliasesByDomain };
+    delete aliasesByDomain[domain];
     this.setState({
-      domains: newDomains
+      domains: newDomains,
+      aliasesByDomain
     });
     sendCustomDomainDeletedMessage();
   };

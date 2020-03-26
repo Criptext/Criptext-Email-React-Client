@@ -366,6 +366,10 @@ export const deleteAliases = async params => {
   return await ipc.callMain('db-delete-alias', params);
 };
 
+export const deleteAliasesByDomain = async params => {
+  return await ipc.callMain('db-delete-aliases-by-domain', params);
+};
+
 export const deleteCustomDomainByName = async params => {
   return await ipc.callMain('db-delete-custom-domains-by-name', params);
 };

@@ -212,7 +212,12 @@ const mxTable = props => {
   if (!props.mxTable) {
     return (
       <div>
-        <p>{string.address.add.step2_2.errors.notMXRecords}</p>
+        <div className="loading-ring">
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
       </div>
     );
   }
@@ -226,16 +231,14 @@ const mxTable = props => {
         <td>{host}</td>
         <td>{cutString(pointsTo, 15)}</td>
         <td>
-          <a
-            href="criptext.com"
-            target="_blank"
+          <button
             className="custom-domain-steps-second-table-copy"
             onClick={() => {
               navigator.clipboard.writeText(pointsTo);
             }}
           >
             {string.address.add.step2_2.table.copy}
-          </a>
+          </button>
         </td>
       </tr>
     );

@@ -508,7 +508,7 @@ const initDatabaseEncrypted = async (
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       rowId: { type: Sequelize.INTEGER, unique: true },
       name: { type: Sequelize.STRING, allowNull: false },
-      domain: { type: Sequelize.INTEGER, allowNull: true },
+      domain: { type: Sequelize.STRING, allowNull: true },
       active: { type: Sequelize.BOOLEAN, defaultValue: true }
     },
     {
@@ -527,8 +527,7 @@ const initDatabaseEncrypted = async (
   CustomDomain.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      rowId: { type: Sequelize.INTEGER, unique: true },
-      name: { type: Sequelize.STRING, allowNull: false },
+      name: { type: Sequelize.STRING, allowNull: false, unique: true },
       validated: { type: Sequelize.BOOLEAN }
     },
     {

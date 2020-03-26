@@ -6,6 +6,7 @@ import {
   changeRecoveryEmail,
   deleteAddress,
   deleteAliases,
+  deleteAliasesByDomain,
   deleteCustomDomain, //database
   deleteDomain, // api
   setReplyTo,
@@ -827,7 +828,7 @@ class SettingAccountWrapper extends Component {
   handleConfirmDeleteAlias = async () => {
     if (!this.state.deleteAliasParams) return;
     const { addressId, email } = this.state.deleteAliasParams;
-    const res = await deleteAddress(addressId);
+    const res = await deleteAddress(addressId); //api call
 
     if (!res) {
       this.setState({
@@ -842,7 +843,7 @@ class SettingAccountWrapper extends Component {
       case 200: {
         this.handleClosePopup();
         this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_ALIAS);
-        await deleteAliases({ rowIds: [addressId] });
+        await deleteAliases({ rowIds: [addressId] }); //database
         this.props.onRemoveAlias(addressId, email);
         break;
       }
@@ -891,7 +892,8 @@ class SettingAccountWrapper extends Component {
       case 200: {
         this.handleClosePopup();
         this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN);
-        await deleteCustomDomain(domain); //database
+        await deleteCustomDomain(domain); //database //delete the custom domain associated //
+        await deleteAliasesByDomain({ domain }); // delete addresses in database
         this.props.onRemoveCustomDomain(domain);
         break;
       }

@@ -84,6 +84,7 @@ class CustomDomainsWrapper extends Component {
         existError: true,
         errorMessage: errors.UNKNOWN_DOMAIN_AVAILABLE
       });
+      return;
     }
 
     switch (response.status) {

@@ -84,6 +84,13 @@ ipc.answerRenderer('db-delete-alias', params => {
   return dbManager.deleteAliases(data);
 });
 
+ipc.answerRenderer('db-delete-aliases-by-domain', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteAliasesByDomain(data);
+});
+
 ipc.answerRenderer('db-delete-custom-domains', params => {
   const data = params.accountId
     ? params
