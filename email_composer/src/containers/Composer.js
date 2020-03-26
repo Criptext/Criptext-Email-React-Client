@@ -177,7 +177,10 @@ class ComposerWrapper extends Component {
       return this.state.files.filter(file => file.token === filetoken)[0];
     });
     const accounts = this.state.accounts;
-    const allAlias = await getAlias({ accountId: accounts.map(acc => acc.id) });
+    const allAlias = await getAlias({
+      accountId: accounts.map(acc => acc.id),
+      active: true
+    });
     const aliasAccounts = allAlias.map(alias => {
       const acc = accounts.find(acc => acc.id === alias.accountId);
       return {

@@ -1574,6 +1574,18 @@ const deleteAccountNotSignalRelatedData = async (accountId, trx) => {
     },
     transaction: trx
   });
+  await Alias().destroy({
+    where: {
+      accountId: accountId
+    },
+    transaction: trx
+  });
+  await CustomDomain().destroy({
+    where: {
+      accountId: accountId
+    },
+    transaction: trx
+  });
 };
 
 const cleanDataLogout = async ({ recipientId }) => {
@@ -1757,7 +1769,9 @@ const InitDatabaseEncrypted = async (
 module.exports = {
   Account,
   AccountContact,
+  Alias,
   Contact,
+  CustomDomain,
   Email,
   EmailContact,
   EmailLabel,
