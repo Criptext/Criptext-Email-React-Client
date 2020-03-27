@@ -13,6 +13,7 @@ import {
   changeAccountApp,
   checkForUpdates,
   cleanDatabase,
+  cleanDataLogout,
   createEmail,
   createEmailLabel,
   createFeedItem,
@@ -110,6 +111,7 @@ let feedItemHasAdded = false;
 let profileHasChanged = false;
 
 let newEmailNotificationList = [];
+let deleteDataIntervalId = null;
 
 const stopGettingEvents = () => {
   isGettingEvents = false;
@@ -423,7 +425,7 @@ export const handleEvent = ({
       return handleKeybundleUploaded(incomingEvent, accountRecipientId);
     }
     case SocketCommand.DEVICE_REMOVED: {
-      return handlePeerRemoveDevice(incomingEvent, accountRecipientId);
+      return handlePeerRemoveDevice(accountRecipientId);
     }
     case SocketCommand.DEVICE_LINK_REQUEST_RESPONDED: {
       return handleLinkDeviceResquestResponded(incomingEvent);
@@ -520,7 +522,7 @@ const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
 const isMailSpam = async params => {
   const { labels, from, accountId } = params;
   if (labels && !!labels.find(label => label === LabelType.spam.text))
-    return false;
+    return true;
   const contactObjectSpamToCheck = parseContactRow(from);
   const contactSpamToCheck = await getContactByEmails({
     emails: contactObjectSpamToCheck.email,
@@ -775,12 +777,14 @@ const handleNewMessageEvent = async (
       : senderDeviceId;
   const [prevEmail] = await getEmailByKey({ key: metadataKey, accountId });
 
-  const isSpam = await isMailSpam({
-    accountId,
-    labels,
-    from
-  });
   const isFromMe = accountRecipientId === recipientId;
+  const isSpam = isFromMe
+    ? false
+    : await isMailSpam({
+        accountId,
+        labels,
+        from
+      });
   const recipients = getRecipientsFromData({
     to: to || toArray,
     cc: cc || ccArray,
@@ -1043,11 +1047,11 @@ const handleSyncDeviceRequestResponded = async ({ recipientId, domain }) => {
   return { rowid: null };
 };
 
-const handlePeerRemoveDevice = async ({ rowid }, accountRecipientId) => {
+const handlePeerRemoveDevice = accountRecipientId => {
   if (accountRecipientId !== myAccount.recipientId) {
     return { rowid: null };
   }
-  await sendDeviceRemovedEvent(rowid);
+  sendDeviceRemovedEvent(true);
   return { rowid: null };
 };
 
@@ -1476,6 +1480,13 @@ ipcRenderer.on('update-thread-emails', (ev, data) => {
   });
 });
 
+ipcRenderer.on('device-removed', (ev, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return;
+  }
+  sendDeviceRemovedEvent(false);
+});
+
 ipcRenderer.on('password-changed', (ev, accountRecipientId) => {
   if (accountRecipientId !== myAccount.recipientId) {
     return;
@@ -1686,9 +1697,9 @@ export const sendResetPasswordSendLinkErrorMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
-export const sendDeviceRemovedEvent = async rowid => {
+export const sendDeviceRemovedEvent = deleteData => {
   emitter.emit(Event.DEVICE_REMOVED, null);
-  return await handleDeleteDeviceData(rowid);
+  handleDeleteDeviceData(deleteData);
 };
 
 export const sendPasswordChangedEvent = () => {
@@ -1709,18 +1720,18 @@ export const sendRestoreBackupInitEvent = () => {
   emitter.emit(Event.RESTORE_BACKUP_INIT);
 };
 
-export const handleDeleteDeviceData = async rowid => {
-  return await setTimeout(async () => {
-    await deleteAllDeviceData(myAccount.recipientId);
-    if (rowid) {
-      return { rowid };
-    }
-    return { rowid: null };
+export const handleDeleteDeviceData = deleteData => {
+  if (deleteDataIntervalId) return;
+  deleteDataIntervalId = setTimeout(async () => {
+    await deleteAllDeviceData(myAccount.recipientId, deleteData);
+    deleteDataIntervalId = null;
   }, 4000);
 };
 
-export const deleteAllDeviceData = async recipientId => {
-  const nextAccount = await cleanDatabase(recipientId);
+export const deleteAllDeviceData = async (recipientId, deleteData) => {
+  const nextAccount = deleteData
+    ? await cleanDatabase(recipientId)
+    : await cleanDataLogout({ recipientId });
   if (!nextAccount) {
     await logoutApp();
     return;

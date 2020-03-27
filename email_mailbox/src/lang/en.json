@@ -718,7 +718,7 @@
     "linked_devices": "Linked devices",
     "logout": "Logout",
     "mailbox_sync": {
-      "label": "Sync Mailbox",
+      "label": "Request Mailbox Sync",
       "description": "Lets you transfer your entire mailbox from another device into this one",
       "button": "Sync",
       "tooltip": "You must have at least one additional device to sync"

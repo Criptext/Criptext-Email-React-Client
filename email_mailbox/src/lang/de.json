@@ -662,7 +662,7 @@
     "linked_devices": "Verknüpfte Geräte",
     "logout": "Abmeldung",
     "mailbox_sync": {
-      "label": "Postfach synchronisieren",
+      "label": "Fordern Sie die Postfachsynchronisierung an",
       "description": "Ermöglicht es Ihnen, Ihr gesamtes Postfach von einem anderen Gerät in dieses zu übertragen.",
       "button": "Synchronisieren",
       "tooltip": "Sie müssen mindestens ein zusätzliches Gerät haben, um zu synchronisieren."

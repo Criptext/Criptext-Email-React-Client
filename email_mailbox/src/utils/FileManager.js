@@ -8,35 +8,46 @@ const MAX_REQUESTS = 5;
 const EXPIRED_SESSION_STATUS = 401;
 
 let fileKeyIvs = {};
+const clientsMap = new Map();
 
-export const fileManager = new FileManager({
-  auth: 'Bearer',
-  auth_token: myAccount.jwt,
-  max_requests: MAX_REQUESTS,
-  sandbox: false
-});
-
-export const { FILE_PROGRESS, FILE_FINISH, FILE_ERROR } = fileManager.Event;
+const createClient = () => {
+  const recipientId = myAccount.recipientId;
+  const client = clientsMap[recipientId];
+  if (client) return client;
+  const newClient = new FileManager({
+    auth: 'Bearer',
+    auth_token: myAccount.jwt,
+    max_requests: MAX_REQUESTS,
+    sandbox: false
+  });
+  clientsMap[recipientId] = newClient;
+  return newClient;
+};
 
 export const setCancelDownloadHandler = token => {
+  const fileManager = createClient();
   fileManager.cancelDownload(token, err => {
     return err;
   });
 };
 
 export const setFileProgressHandler = progressHandler => {
-  fileManager.on(FILE_PROGRESS, progressHandler);
+  const fileManager = createClient();
+  fileManager.on(fileManager.Event.FILE_PROGRESS, progressHandler);
 };
 
 export const setFileSuccessHandler = successHandler => {
-  fileManager.on(FILE_FINISH, successHandler);
+  const fileManager = createClient();
+  fileManager.on(fileManager.Event.FILE_FINISH, successHandler);
 };
 
 export const setFileErrorHandler = errorHandler => {
-  fileManager.on(FILE_ERROR, errorHandler);
+  const fileManager = createClient();
+  fileManager.on(fileManager.Event.FILE_ERROR, errorHandler);
 };
 
 export const setDownloadHandler = token => {
+  const fileManager = createClient();
   fileManager.downloadFile(token, async error => {
     if (error) {
       const { status } = error;
@@ -55,6 +66,7 @@ export const setDownloadHandler = token => {
 export const CHUNK_SIZE = 524288;
 
 export const setCryptoInterfaces = (ftoken, key, iv) => {
+  const fileManager = createClient();
   fileKeyIvs[ftoken] = { key, iv };
   fileManager.setCryptoInterfaces(null, (filetoken, blob, callback) => {
     const { key, iv } = fileKeyIvs[filetoken];

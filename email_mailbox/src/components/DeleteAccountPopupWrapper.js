@@ -88,9 +88,7 @@ class DeleteAccountPopupWrapper extends Component {
       this.props.onTogglePopup();
       sendAccountDeletedEvent();
       clearStorage({});
-      const nextAccount = await cleanDatabase({
-        recipientId: myAccount.recipientId
-      });
+      const nextAccount = await cleanDatabase(myAccount.recipientId);
       if (nextAccount) {
         const { id, recipientId } = nextAccount;
         return await selectAccountAsActive({ accountId: id, recipientId });
