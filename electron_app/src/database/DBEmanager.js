@@ -1495,6 +1495,12 @@ const deleteAccountNotSignalRelatedData = async (accountId, trx) => {
     },
     transaction: trx
   });
+  await Pendingevent().destroy({
+    where: {
+      accountId: accountId
+    },
+    transaction: trx
+  });
 };
 
 const cleanDataLogout = async ({ recipientId }) => {

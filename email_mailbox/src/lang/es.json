@@ -718,8 +718,8 @@
     "linked_devices": "Dispositivos enlazados",
     "logout": "Cerrar Sesión",
     "mailbox_sync": {
-      "label": "Sincronizar Buzón",
-      "description": "Transfiere todo tu buzón a otro dispositivo",
+      "label": "Solicitar Sincronización de Buzón",
+      "description": "Transfiere todo tu buzón desde otro dispositivo hacia este",
       "button": "Sincronizar",
       "tooltip": "Debes tener al menos un dispositivo adicional para sincronizar"
     },

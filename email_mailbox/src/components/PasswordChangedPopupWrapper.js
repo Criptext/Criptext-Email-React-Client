@@ -56,7 +56,7 @@ class PasswordChangedPopupWrapper extends Component {
         errorMessage: 'Canceled. Deleting data...'
       },
       () => {
-        handleDeleteDeviceData();
+        handleDeleteDeviceData(true);
       }
     );
   };

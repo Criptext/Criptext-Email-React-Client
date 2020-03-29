@@ -131,6 +131,7 @@ const checkExpiredSession = async (
       }
 
       if (newSessionStatus === EXPIRED_SESSION_STATUS) {
+        mailboxWindow.send('device-removed', recipientId);
         return { status: newSessionStatus };
       }
 
@@ -572,7 +573,7 @@ const syncStatus = async recipientId => {
   const res = await client.syncStatus();
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, syncStatus, null);
+    : await checkExpiredSession(res, syncStatus, recipientId);
 };
 
 const unlockDevice = async params => {

@@ -662,7 +662,7 @@
     "linked_devices": "Périphériques liés",
     "logout": "Déconnexion",
     "mailbox_sync": {
-      "label": "Synchroniser la boîte aux lettres",
+      "label": "Demander une synchronisation de boîte aux lettres",
       "description": "Permet de transférer l'intégralité de votre boîte aux lettres d'un autre appareil dans celui-ci",
       "button": "Sync",
       "tooltip": "Vous devez avoir au moins un appareil supplémentaire à synchroniser"

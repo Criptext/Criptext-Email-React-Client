@@ -217,7 +217,7 @@ const startBackupMonitor = account => {
         autoBackupLastSize: backupSize,
         autoBackupNextDate: nextDate.format(backupDateFormat)
       });
-      initAutoBackupMonitor();
+      startBackupMonitor(account);
     } catch (backupErr) {
       log(
         `Failed to do scheduled backup at ${pendingDate.format(
