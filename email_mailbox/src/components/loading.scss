@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 #loading-container{
   .dialog-content{
     width: 330px;
@@ -10,29 +12,27 @@
     }
 
     .dialog-title {
-      font-family: AvenirNext;
+      font-family: NunitoSans;
       font-size: 20px;
       font-weight: 600;
       text-align: center;
-      color: #000000;
     }
 
     .dialog-text {
       object-fit: contain;
-      font-family: AvenirNext;
+      font-family: NunitoSans;
       font-size: 12px;
       font-stretch: normal;
       font-style: normal;
       line-height: 1.67;
       letter-spacing: -0.38px;
-      color: #373a45;
     }
 
     .dialog-gray {
       margin-top: 0;
       margin-bottom: 0;
       object-fit: contain;
-      font-family: AvenirNext;
+      font-family: NunitoSans;
       font-size: 12px;
       font-weight: bold;
       font-stretch: normal;
@@ -159,6 +159,7 @@
       font-weight: bold;
       text-align: center;
       color: #ffffff;
+      padding-top: 3px;
 
       .loading-ring {
         top: -17px !important;
@@ -168,3 +169,53 @@
     
   }
 }
+
+/* THEME
+  ----------------------------- */
+  @mixin themable(
+    $_THEME,
+    $_COLOR_TEXT_MAIN_TITLE,
+    $_COLOR_TEXT_SECONDARY
+    ) {
+    [data-theme^="#{$_THEME}"],
+    [data-theme] [data-theme^="#{$_THEME}"] {
+      #loading-container{
+        .dialog-content{          
+          .dialog-title {
+            color: $_COLOR_TEXT_MAIN_TITLE;
+          }
+      
+          .dialog-text {
+            color: $_COLOR_TEXT_SECONDARY;
+          }
+      
+          .dialog-content-body{
+            .percent {
+              .content {
+                background-color: $_COLOR_TEXT_SECONDARY;
+      
+                span {
+                  color: $_COLOR_TEXT_MAIN_TITLE;
+                }
+              }
+            }
+          }
+          .loading-button {
+            color: $_COLOR_TEXT_MAIN_TITLE;
+          }
+          
+        }
+      }
+    }
+  }
+
+@include themable(
+  $_THEME_LIGHT,
+  $_COLOR_TEXT_MAIN_TITLE_LIGHT,
+  $_COLOR_TEXT_SECONDARY_LIGHT
+);
+@include themable(
+  $_THEME_DARK,
+  $_COLOR_TEXT_MAIN_TITLE_DARK,
+  $_COLOR_TEXT_SECONDARY_DARK
+);

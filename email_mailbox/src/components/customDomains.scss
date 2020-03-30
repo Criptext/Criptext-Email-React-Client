@@ -1,14 +1,15 @@
-
+@import "./../styles/index.scss";
 
 .custom-domains-steps-container {
   background-color: #f7f7f7;
+  height: 41px;
   position: relative;
+  padding-bottom: 0px !important;
 
   .custom-domains-steps {
     padding-left: 15px;
     font-size: 15px;
     font-weight: bold;
-    color: #6a707e;
     position: absolute;
     top: 50%;
     -ms-transform: translateY(-50%);
@@ -20,6 +21,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: calc(100% - 41px);
+  padding-bottom: 0px !important;
+  overflow-y: scroll;
 
   a {
     color: #0091ff;
@@ -29,14 +34,12 @@
   .custom-domains-steps-title {
     text-align: center;
     font-size: 20px;
-    color: #000000;
     font-weight: 600;
     margin-bottom: 3vh;
   }
 
   .custom-domains-steps-text {
     font-size: 15px;
-    color: #373a45;
     margin-bottom: 3vh;
   }
 
@@ -54,6 +57,7 @@
       font-family: NunitoSans;
       text-align: center;
       color: #ffffff;
+      padding-top: 3px;
     }
 
     .custom-domains-steps-button-back {
@@ -65,14 +69,12 @@
       font-weight: bold;
       font-family: NunitoSans;
       text-align: center;
-      background-color: white;
-      color: black;
+      padding-top: 3px;
+      background: transparent;
     }
   }
 
   .custom-domains-steps-first {
-    margin-top: 20vh;
-
     .custom-domains-steps-first-text{
       text-align: center;
     }
@@ -83,9 +85,13 @@
       min-width: 15vw;
       input {
         padding: 2px;
-        padding-left: 10px;
         border-radius: 4px;
-        border: solid 1px #008efa;
+        border: solid 1px;
+        background-color: transparent;
+        height: 26px;
+        padding-left: 5px;
+        padding-right: 5px;
+        width: calc(100% - 12px);
       }
 
       .input-error{
@@ -102,18 +108,14 @@
   }
 
   .custom-domains-steps-second {
-    margin-top: 20vh;
-
     .custom-domains-steps-second-text{
       max-width: 50vw;
       text-align: justify;
       text-justify: inter-word;
     }
-
   }
 
   .custom-domains-steps-second-2 {
-    margin-top: 15vh;
     max-width: 50vw;
 
     .custom-domains-steps-second-text{
@@ -139,7 +141,7 @@
 
       table {
         width: 100%;
-        border: solid 1px #d8dbe0;
+        border: solid 1px;
 
         tbody {
           text-align: center;
@@ -148,13 +150,11 @@
         }
   
         thead  {
-          background-color: #f7f9fa;
-          border: solid 1px #d8dbe0;
+          border: solid 1px;
           text-align: center;
           font-weight: bold;
           line-height: 2.25;
           font-size: 12px;
-          color: #8d95a5;
         }   
 
         th {
@@ -181,14 +181,6 @@
     }
   }
 
-  .custom-domains-steps-third {
-    margin-top: 20vh;
-  }
-
-  .custom-domains-steps-fourth {
-    margin-top: 20vh;
-  }
-
   .loading-button {
     min-width: 60px;
     background-color: transparent;
@@ -199,6 +191,7 @@
     font-size: 13px;
     min-height: 28px;
     border-radius: 14px;
+    padding-top: 3px;
 
     .loading-ring {
       top: -17px !important;
@@ -206,3 +199,93 @@
     }
   }
 }
+
+/* THEME
+  ----------------------------- */
+  @mixin themable(
+    $_THEME,
+    $_COLOR_TEXT_MAIN_TITLE,
+    $_BACKGROUND_COLOR_SETTINGS_TITLE,
+    $_COLOR_TEXT_SETTINGS_CONTENT,
+    $_BORDER_COLOR_POPUP_INPUT,
+    $_COLOR_TABLE_HEADER,
+    $_COLOR_TEXT_SECONDARY
+    ) {
+    [data-theme^="#{$_THEME}"],
+    [data-theme] [data-theme^="#{$_THEME}"] {
+      .custom-domains-steps-container {
+        background-color: $_BACKGROUND_COLOR_SETTINGS_TITLE;
+      
+        .custom-domains-steps {
+          color: $_COLOR_TEXT_SETTINGS_CONTENT;
+        }
+      } 
+
+      .custom-domains-main-container {
+        .custom-domains-steps-title {
+          color: $_COLOR_TEXT_MAIN_TITLE;
+        }
+      
+        .custom-domains-steps-text {
+          color: $_COLOR_TEXT_SETTINGS_CONTENT;
+        }
+      
+        .custom-domains-steps-button-container{
+          .custom-domains-steps-button-back {
+            color: $_COLOR_TEXT_MAIN_TITLE;
+          }
+        }
+
+        .custom-domains-steps-first {
+          .custom-domains-steps-first-input {
+            input {
+              border-color: $_BORDER_COLOR_POPUP_INPUT;
+            }
+          }
+        }
+      
+        .custom-domains-steps-second-2 {
+          .custom-domains-steps-second-note{
+            color: $_COLOR_TEXT_SECONDARY;
+          }
+      
+      
+          .custom-domains-steps-table-second-2{
+            table {
+              border-color: $_BORDER_COLOR_POPUP_INPUT;
+      
+              tbody {
+                color: $_COLOR_TEXT_SECONDARY;
+              }
+        
+              thead  {
+                background-color: $_COLOR_TABLE_HEADER;
+                border-color: $_BORDER_COLOR_POPUP_INPUT;
+                color: $_COLOR_TEXT_MAIN_TITLE;
+              }   
+            }
+      
+          }
+        }
+      }
+    }
+  }
+    
+@include themable(
+  $_THEME_LIGHT,
+  $_COLOR_TEXT_MAIN_TITLE_LIGHT,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_LIGHT,
+  $_COLOR_TEXT_SETTINGS_CONTENT_LIGHT,
+  $_BORDER_COLOR_POPUP_INPUT_LIGHT,
+  $_COLOR_TABLE_HEADER_LIGHT,
+  $_COLOR_TEXT_SECONDARY_LIGHT
+);
+@include themable(
+  $_THEME_DARK,
+  $_COLOR_TEXT_MAIN_TITLE_DARK,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_DARK,
+  $_COLOR_TEXT_SETTINGS_CONTENT_DARK,
+  $_BORDER_COLOR_POPUP_INPUT_DARK,
+  $_COLOR_TABLE_HEADER_DARK,
+  $_COLOR_TEXT_SECONDARY_DARK
+);

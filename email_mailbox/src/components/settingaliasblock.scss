@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .cptx-section-item-domain {
   margin-top: 15px;
 }
@@ -16,7 +18,7 @@
   max-width: 282px;
 
   .criptext-alias-item-delete {
-    color: #ff5555;
+    color: #fb6363;
     font-size: 26px;
     visibility: hidden;
     pointer-events: none;
@@ -25,7 +27,6 @@
   }
 
   &:hover {
-    background-color: #ccd1e3;
     
     .criptext-alias-item-delete {
       visibility: visible;
@@ -37,11 +38,45 @@
 
 .criptext-alias-item-name {
   font-size: 12px;
-  color: black;
   display: flex;
   align-items: center;
-
-  span {
-    color: #b7b7b7;
-  }
 }
+
+/* THEME
+   ----------------------------- */
+   @mixin themable(
+    $_THEME,
+    $_COLOR_TEXT_MAIN_TITLE,
+    $_COLOR_TEXT_DISABLE_TITLE,
+    $_BACKGROUND_SETTINGS_HOVER
+  ) {
+    [data-theme^="#{$_THEME}"],
+    [data-theme] [data-theme^="#{$_THEME}"] {
+      .criptext-alias-item-name {
+        color: $_COLOR_TEXT_MAIN_TITLE;
+      
+        span {
+          color: $_COLOR_TEXT_DISABLE_TITLE;
+        }
+      }
+
+      .criptext-alias-item-wrapper {
+        &:hover {
+          background-color: $_BACKGROUND_SETTINGS_HOVER;
+        }
+      }
+    }
+  }
+  
+  @include themable(
+    $_THEME_LIGHT,
+    $_COLOR_TEXT_MAIN_TITLE_LIGHT,
+    $_COLOR_TEXT_DISABLE_TITLE_LIGHT,
+    $_BACKGROUND_SETTINGS_HOVER_LIGHT
+  );
+  @include themable(
+    $_THEME_DARK,
+    $_COLOR_TEXT_MAIN_TITLE_DARK,
+    $_COLOR_TEXT_DISABLE_TITLE_DARK,
+    $_BACKGROUND_SETTINGS_HOVER_DARK
+  );
