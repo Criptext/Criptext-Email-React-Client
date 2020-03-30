@@ -62,9 +62,6 @@ class MxLoadingWrapper extends Component {
       });
 
       if (response && response.status === 200) {
-        this.setState({
-          animationClass: statusType.COMPLETE
-        });
         clearTimeout(this.tm);
         this.props.saveDomain();
         this.tm = setTimeout(this.increasePercentSuccesfull, delaySuccess);
@@ -105,9 +102,12 @@ class MxLoadingWrapper extends Component {
     this.setState({ percent });
     if (percent >= 100) {
       clearTimeout(this.tm);
+      this.setState({
+        animationClass: statusType.COMPLETE
+      });
       setTimeout(
         () => this.props.onClickChangeStep(this.props.currentStep + 1),
-        2000
+        3000
       );
     } else {
       this.tm = setTimeout(this.increasePercentSuccesfull, delaySuccess);

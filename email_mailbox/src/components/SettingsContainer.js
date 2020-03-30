@@ -10,13 +10,7 @@ import {
   sendAliasSuccessStatusMessage,
   sendCustomDomainDeletedMessage
 } from '../utils/electronEventInterface';
-import {
-  getAlias,
-  updateAlias,
-  activateAddress,
-  getCustomDomain,
-  deleteCustomDomain
-} from '../utils/ipc';
+import { updateAlias, activateAddress } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 import string from './../lang';
 
@@ -120,36 +114,16 @@ class SettingsContainer extends Component {
       replyToEmail
     } = res;
 
-    const myAliases = await getAlias({});
     const rowIds = new Set();
-    const aliasesWithDomain = myAliases.map(alias => {
-      return {
-        ...alias,
-        domain: alias.domain || appDomain
-      };
-    });
-    const aliasesByDomain = [...aliasesWithDomain, ...aliases].reduce(
-      (result, alias) => {
-        if (rowIds.has(alias.rowId)) return result;
-        const aliasDomain = alias.domain || appDomain;
-        if (!result[aliasDomain]) result[aliasDomain] = [];
-        result[aliasDomain].push(alias);
-        rowIds.add(alias.rowId);
-        return result;
-      },
-      {}
-    );
-    const myCustomDomains = await getCustomDomain({});
-
-    const mappedMyCustomDomains = myCustomDomains.map(
-      domain => domain.dataValues.name
-    );
-    const mappedCustomDomains = customDomains.map(domain => domain.name);
-
-    const domains = await this.handleEventDomains(
-      mappedMyCustomDomains,
-      mappedCustomDomains
-    );
+    const aliasesByDomain = aliases.reduce((result, alias) => {
+      if (rowIds.has(alias.rowId)) return result;
+      const aliasDomain = alias.domain || appDomain;
+      if (!result[aliasDomain]) result[aliasDomain] = [];
+      result[aliasDomain].push(alias);
+      rowIds.add(alias.rowId);
+      return result;
+    }, {});
+    const domains = customDomains.map(domain => domain.name);
 
     this.setState({
       aliasesByDomain,
@@ -179,18 +153,6 @@ class SettingsContainer extends Component {
     this.setState({
       aliasesByDomain
     });
-  };
-
-  handleEventDomains = async (myDomains, eventDomains) => {
-    const allDomains = Array.from(new Set([...myDomains, ...eventDomains]));
-    const domainsToDelete = myDomains.filter(
-      domain => !eventDomains.includes(domain)
-    );
-    if (domainsToDelete.length) {
-      await deleteCustomDomain(domainsToDelete);
-      return allDomains.filter(domain => !domainsToDelete.includes(domain));
-    }
-    return allDomains;
   };
 
   handleRemoveAlias = (addressId, email) => {

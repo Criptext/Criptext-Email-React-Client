@@ -2,7 +2,6 @@
 
 .custom-domains-steps-container {
   background-color: #f7f7f7;
-  height: 18px;
   position: relative;
 
   .custom-domains-steps {
@@ -46,11 +45,11 @@
     justify-content: center;
     .custom-domains-steps-button {
       min-width: 60px;
-      min-height: 24px;
+      font-size: 13px;
+      min-height: 28px;
+      border-radius: 14px;
       align-items: center;
-      border-radius: 12px;
       background-color: #008efa;
-      font-size: 12px;
       font-weight: bold;
       font-family: NunitoSans;
       text-align: center;
@@ -60,9 +59,9 @@
     .custom-domains-steps-button-back {
       margin-right: 20px;
       min-width: 60px;
-      min-height: 24px;
+      min-height: 28px;
       align-items: center;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: bold;
       font-family: NunitoSans;
       text-align: center;
@@ -114,7 +113,7 @@
   }
 
   .custom-domains-steps-second-2 {
-    margin-top: 20vh;
+    margin-top: 15vh;
     max-width: 50vw;
 
     .custom-domains-steps-second-text{
@@ -192,13 +191,14 @@
 
   .loading-button {
     min-width: 60px;
-    border-radius: 12px;
-    min-height: 24px;
-    background-color: #008efa;
+    background-color: transparent;
     font-size: 12px;
     font-weight: bold;
     text-align: center;
     color: #ffffff;
+    font-size: 13px;
+    min-height: 28px;
+    border-radius: 14px;
 
     .loading-ring {
       top: -17px !important;

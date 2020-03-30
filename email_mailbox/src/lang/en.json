@@ -72,7 +72,7 @@
         }, 
         "error2": {
           "title": "DNS records for this domain were not found",
-          "text_1": " is listed as your domain, make sure this is right; otherwise correct the domain on your Company Profile. Need help?",
+          "text_1": " is listed as your domain, make sure this is right; otherwise correct the domain on your Company Profile.",
           "text_2": "Also check that the DNS records on your domain are not empty; otherwise go back and add them from the previous steps."
         },
         "error3": {

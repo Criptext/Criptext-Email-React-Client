@@ -50,6 +50,10 @@ export const findKeyBundles = async params => {
   return await ipc.callMain('client-find-key-bundles', params);
 };
 
+export const getUserSettings = async recipientId => {
+  return await ipc.callMain('client-get-user-settings', recipientId);
+};
+
 export const isCriptextDomain = async params => {
   return await ipc.callMain('client-is-criptext-domain', params);
 };
@@ -66,6 +70,15 @@ export const getEmailByKeyWithbody = async params => {
 
 /* DataBase
    ----------------------------- */
+
+export const createAlias = async params => {
+  return await ipc.callMain('db-create-alias', params);
+};
+
+export const createCustomDomain = async params => {
+  return await ipc.callMain('db-create-custom-domain', params);
+};
+
 export const createEmail = async params => {
   return await ipc.callMain('db-create-email', params);
 };
@@ -86,6 +99,14 @@ export const createSignedPreKeyRecord = async params => {
   return await ipc.callMain('db-create-signed-prekey-record', params);
 };
 
+export const deleteAliases = async params => {
+  return await ipc.callMain('db-delete-alias', params);
+};
+
+export const deleteCustomDomains = async domains => {
+  return await ipc.callMain('db-delete-custom-domains', { domains });
+};
+
 export const deletePreKeyPair = async params => {
   return await ipc.callMain('db-delete-prekey-pair', params);
 };
@@ -104,6 +125,10 @@ export const getAllContacts = async () => {
 
 export const getContactsByEmailId = async emailId => {
   return await ipc.callMain('db-get-contact-by-emailid', emailId);
+};
+
+export const getCustomDomain = async params => {
+  return await ipc.callMain('db-get-custom-domains-by-params', params);
 };
 
 export const getFilesByEmailId = async emailId => {
@@ -135,6 +160,10 @@ export const getSessionRecordRowsByRecipientIds = async params => {
 
 export const getSignedPreKey = async params => {
   return await ipc.callMain('db-get-signed-prekey', params);
+};
+
+export const updateAlias = async params => {
+  return await ipc.callMain('db-update-alias', params);
 };
 
 export const updateIdentityKeyRecord = async params => {

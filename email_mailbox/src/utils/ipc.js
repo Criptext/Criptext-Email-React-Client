@@ -374,8 +374,8 @@ export const deleteCustomDomainByName = async params => {
   return await ipc.callMain('db-delete-custom-domains-by-name', params);
 };
 
-export const deleteCustomDomain = async domain => {
-  return await ipc.callMain('db-delete-custom-domains', { domain });
+export const deleteCustomDomains = async domains => {
+  return await ipc.callMain('db-delete-custom-domains', { domains });
 };
 
 export const deleteEmailLabel = async params => {

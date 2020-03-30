@@ -70,7 +70,11 @@ const dialogText = props => {
     return (
       <p>
         {props.domain} {string.address.add.step3.error2.text_1}{' '}
-        <a href="criptext.com" target="_blank">
+        <a
+          href="https://www.criptext.com"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           {string.address.add.need_help}
         </a>
         <br />
@@ -86,7 +90,11 @@ const dialogText = props => {
       <p>
         {' '}
         {string.address.add.step3.error3.text}{' '}
-        <a href="criptext.com" target="_blank">
+        <a
+          href="https://www.criptext.com"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           {string.address.add.need_help}
         </a>{' '}
       </p>
@@ -107,7 +115,7 @@ const dialogButton = props => {
     );
   } else if (props.animationClass === statusType.STOP) {
     return (
-      <button className="loading-button" onClick={() => props.decreaseStep()}>
+      <button className="back-button" onClick={() => props.decreaseStep()}>
         {string.address.add.backButtonLabel}
       </button>
     );

@@ -82,7 +82,11 @@ const Step2 = props => {
       <div className="custom-domains-steps-text custom-domains-steps-second-text">
         <b>1. </b>
         {string.address.add.step2.text1.first}
-        <a href="godaddy.com" target="_blank">
+        <a
+          href="http://www.godaddy.com"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           {string.address.add.step2.text1.go_daddy}
         </a>
         {string.address.add.step2.text1.second}
@@ -116,7 +120,11 @@ const Step2Two = props => {
       </div>
       <div className="custom-domains-steps-text custom-domains-steps-second-text">
         {string.address.add.step2_2.text}{' '}
-        <a href="criptext.com" target="_blank">
+        <a
+          href="https://www.criptext.com"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           {' '}
           {string.address.add.need_help}
         </a>

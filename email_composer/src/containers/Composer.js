@@ -17,7 +17,14 @@ import {
   isCriptextDomain,
   saveDraftChangesComposerWindow,
   throwError,
-  checkExpiredSession
+  checkExpiredSession,
+  getUserSettings,
+  getCustomDomain,
+  createCustomDomain,
+  deleteAliases,
+  deleteCustomDomains,
+  createAlias,
+  updateAlias
 } from './../utils/ipc';
 import {
   areEmptyAllArrays,
@@ -177,18 +184,21 @@ class ComposerWrapper extends Component {
       return this.state.files.filter(file => file.token === filetoken)[0];
     });
     const accounts = this.state.accounts;
-    const allAlias = await getAlias({
-      accountId: accounts.map(acc => acc.id),
-      active: true
-    });
-    const aliasAccounts = allAlias.map(alias => {
-      const acc = accounts.find(acc => acc.id === alias.accountId);
-      return {
-        ...acc,
-        alias: `${alias.name}@${alias.domain || appDomain}`,
-        fromAddressId: alias.rowId
-      };
-    });
+
+    await this.checkAddressesAndDomains();
+
+    const allAlias = await getAlias({ accountId: accounts.map(acc => acc.id) });
+    const aliasAccounts = allAlias
+      .map(alias => {
+        const acc = accounts.find(acc => acc.id === alias.accountId);
+        return {
+          ...acc,
+          alias: `${alias.name}@${alias.domain || appDomain}`,
+          fromAddressId: alias.rowId,
+          isAliasActive: alias.active
+        };
+      })
+      .filter(alias => alias.isAliasActive);
     state = { ...state, accounts: [...accounts, ...aliasAccounts] };
     this.setState(state);
   }
@@ -316,6 +326,101 @@ class ComposerWrapper extends Component {
         [stateKey]: emails
       };
     });
+  };
+
+  checkAddressesAndDomains = async () => {
+    const { addresses } = await getUserSettings();
+
+    const aliasinDb = await getAlias({});
+    const customDomainsinDb = await getCustomDomain({});
+
+    const aliasesInApi = addresses
+      .map(address => {
+        const domainName = address.domain.name;
+        return address.aliases.map(alias => {
+          return {
+            name: alias.name,
+            rowid: alias.addressId,
+            active: alias.status,
+            domain: domainName
+          };
+        });
+      })
+      .flat();
+    const domainsInApi = addresses
+      .map(address => address.domain)
+      .filter(domain => domain.name !== appDomain);
+
+    if (domainsInApi.length !== customDomainsinDb.length) {
+      if (domainsInApi.length > customDomainsinDb.length) {
+        await Promise.all(
+          domainsInApi.map(async domain => {
+            const customDomainsinDbExist = customDomainsinDb.find(
+              domainInDb => domain.name === domainInDb.name
+            );
+            if (!customDomainsinDbExist) {
+              const params = {
+                name: domain.name,
+                validated: domain.confirmed === 1
+              };
+              await createCustomDomain(params);
+            }
+          })
+        );
+      } else if (customDomainsinDb.length > domainsInApi.length) {
+        const customDomainsToDelete = customDomainsinDb
+          .filter(domain => {
+            const domainsInApiExist = domainsInApi.map(
+              domainInApi => domainInApi.name === domain.name
+            );
+            return !!domainsInApiExist;
+          })
+          .map(domain => domain.name);
+        await deleteCustomDomains(customDomainsToDelete);
+      }
+    }
+
+    if (aliasesInApi.length !== aliasinDb.length) {
+      if (aliasesInApi.length > aliasinDb.length) {
+        await Promise.all(
+          aliasesInApi.map(async aliasInApi => {
+            const aliasInDbExist = aliasinDb.find(
+              aliasInDB => aliasInDB.rowid === aliasInApi.rowid
+            );
+            if (!aliasInDbExist) {
+              const alias = {
+                rowId: aliasInApi.rowid,
+                name: aliasInApi.name,
+                domain:
+                  aliasInApi.domain === appDomain ? null : aliasInApi.domain,
+                active: aliasInApi.active === 1
+              };
+              await createAlias(alias);
+            } else if (
+              aliasInDbExist &&
+              // eslint-disable-next-line eqeqeq
+              aliasInDbExist.active != aliasInApi.active
+            ) {
+              // make an update
+              await updateAlias({
+                rowId: aliasInDbExist.rowId,
+                active: !aliasInDbExist.active
+              });
+            }
+          })
+        );
+      } else if (aliasinDb.length > aliasesInApi.length) {
+        const aliasToDelete = aliasinDb
+          .filter(aliasInDB => {
+            const aliasInApiExist = aliasesInApi.find(
+              aliasInApi => aliasInApi.rowid === aliasInDB.rowId
+            );
+            return !aliasInApiExist;
+          })
+          .map(alias => alias.rowId);
+        await deleteAliases({ rowIds: aliasToDelete });
+      }
+    }
   };
 
   defineFocusInput = emailToEdit => {
