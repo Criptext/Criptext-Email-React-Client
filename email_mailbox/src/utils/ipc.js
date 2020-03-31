@@ -542,6 +542,10 @@ export const updateContactSpamScore = async params => {
   return await ipc.callMain('db-update-contact-spam-acore', params);
 };
 
+export const updateCustomDomain = async params => {
+  return await ipc.callMain('db-update-custom-domains', params);
+};
+
 export const updateEmail = async params => {
   return await ipc.callMain('db-update-email', params);
 };

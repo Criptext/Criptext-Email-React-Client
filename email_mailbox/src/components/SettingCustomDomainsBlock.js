@@ -25,8 +25,9 @@ const CustomDomainsBlock = props => (
       return (
         <CustomDomainItem
           key={domain}
-          domain={domain}
+          domainObject={domain}
           onClickDeleteCustomDomain={props.onClickDeleteCustomDomain}
+          onClickIsFromNotVerifiedOption={props.onClickIsFromNotVerifiedOption}
         />
       );
     })}
@@ -36,12 +37,14 @@ const CustomDomainsBlock = props => (
 const CustomDomainItem = props => {
   return (
     <div className="criptext-cdomain-item-wrapper">
-      <div className="criptext-cdomain-item-name">{props.domain}</div>
-
+      <div className="criptext-cdomain-item-name">
+        {props.domainObject.name}
+      </div>
+      {customDomainNotValidated(props)}
       <div className="criptext-cdomain-item-delete">
         <button
           className="button-b"
-          onClick={() => props.onClickDeleteCustomDomain(props.domain)}
+          onClick={() => props.onClickDeleteCustomDomain(props.domainObject)}
         >
           <span>{string.settings.custom_domains.remove}</span>
         </button>
@@ -50,14 +53,31 @@ const CustomDomainItem = props => {
   );
 };
 
+const customDomainNotValidated = props => {
+  if (!props.domainObject.validated) {
+    return (
+      <button
+        className="criptext-cdomain-button-not-validated"
+        onClick={() =>
+          props.onClickIsFromNotVerifiedOption(props.domainObject.name)
+        }
+      >
+        {string.settings.custom_domains.not_verified}
+      </button>
+    );
+  }
+  return '';
+};
+
 CustomDomainsBlock.propTypes = {
   domains: PropTypes.array,
   onChangePanel: PropTypes.func,
-  onClickDeleteCustomDomain: PropTypes.func
+  onClickDeleteCustomDomain: PropTypes.func,
+  onClickIsFromNotVerifiedOption: PropTypes.func
 };
 
 CustomDomainItem.propTypes = {
-  domain: PropTypes.string,
+  domainObject: PropTypes.object,
   onClickDeleteCustomDomain: PropTypes.func
 };
 

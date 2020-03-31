@@ -25,6 +25,15 @@
       padding-right: 0;
     }
   }
+
+  .criptext-cdomain-button-not-validated {
+    background-color: transparent;
+    color: #d14444;
+    font-size: 12px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+
+  }
 }
 
 /* THEME
@@ -41,6 +50,7 @@
       }
     }  
   }
+
 }
   
 @include themable(

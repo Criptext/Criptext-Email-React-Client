@@ -6,7 +6,8 @@ import {
   isDomainAvailable,
   getDomainMX,
   registerDomain,
-  createCustomDomain
+  createCustomDomain,
+  updateCustomDomain
 } from '../utils/ipc';
 
 const errors = {
@@ -52,6 +53,17 @@ class CustomDomainsWrapper extends Component {
         onClickHandleDone={this.handleDone}
       />
     );
+  }
+
+  async componentDidMount() {
+    if (this.props.domainNotVerified) {
+      this.setState({
+        currentStep: 1,
+        domain: this.props.domainNotVerified
+      });
+
+      await this.handleGetMXTable(this.props.domainNotVerified);
+    }
   }
 
   handleInputDomain = ev => {
@@ -163,20 +175,26 @@ class CustomDomainsWrapper extends Component {
 
   handleSaveDomain = async () => {
     const domain = this.state.domain;
-    const params = {
+    const domainObject = {
       name: domain,
       validated: true
     };
 
-    await createCustomDomain(params);
-
-    this.props.onAddDomain(domain);
+    if (this.props.domainNotVerified) {
+      await updateCustomDomain(domainObject);
+      await this.props.onUpdateCustomDomain();
+    } else {
+      await createCustomDomain(domainObject);
+      this.props.onAddDomain(domainObject);
+    }
   };
 }
 
 CustomDomainsWrapper.propTypes = {
   onAddDomain: PropTypes.func,
-  onChangePanel: PropTypes.func
+  onChangePanel: PropTypes.func,
+  onUpdateCustomDomain: PropTypes.func,
+  domainNotVerified: PropTypes.string
 };
 
 export default CustomDomainsWrapper;

@@ -742,7 +742,8 @@
       "title": "Custom Domains",
       "description": "Send emails from a personal domain that you own.",
       "add": "Add Domain",
-      "remove": "Remove domain"
+      "remove": "Remove domain",
+      "not_verified": "(Not Verified)"
     },
     "mailbox_backup": {
       "auto": {

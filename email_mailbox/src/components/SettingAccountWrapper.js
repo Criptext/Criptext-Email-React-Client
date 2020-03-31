@@ -190,6 +190,9 @@ class SettingAccountWrapper extends Component {
         domains={this.props.domains}
         onClickDeleteAlias={this.handleClickDeleteAlias}
         onClickDeleteCustomDomain={this.handleClickDeleteCustomDomain}
+        onClickIsFromNotVerifiedOption={
+          this.props.onClickIsFromNotVerifiedOption
+        }
         changePasswordPopupParams={this.state.changePasswordPopupParams}
         changeRecoveryEmailPopupParams={
           this.state.changeRecoveryEmailPopupParams
@@ -478,12 +481,12 @@ class SettingAccountWrapper extends Component {
     });
   };
 
-  handleClickDeleteCustomDomain = domain => {
+  handleClickDeleteCustomDomain = domainObject => {
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN,
       deleteCustomDomainsParams: {
-        domain,
+        domain: domainObject,
         error: undefined
       }
     });
@@ -877,7 +880,7 @@ class SettingAccountWrapper extends Component {
   handleConfirmDeleteCustomDomain = async () => {
     if (!this.state.deleteCustomDomainsParams) return;
     const { domain } = this.state.deleteCustomDomainsParams;
-    const res = await deleteDomain(domain); //api
+    const res = await deleteDomain(domain.name); //api
 
     if (!res) {
       this.setState({
@@ -893,9 +896,9 @@ class SettingAccountWrapper extends Component {
       case 200: {
         this.handleClosePopup();
         this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN);
-        await deleteCustomDomains(domain); //database //delete the custom domain associated //
-        await deleteAliasesByDomain({ domain }); // delete addresses in database
-        this.props.onRemoveCustomDomain(domain);
+        await deleteCustomDomains(domain.name); //database
+        await deleteAliasesByDomain({ domain: domain.name });
+        this.props.onRemoveCustomDomain(domain.name);
         break;
       }
       case 400: {
@@ -1224,6 +1227,7 @@ SettingAccountWrapper.propTypes = {
   isHiddenSettingsPopup: PropTypes.bool,
   onChangeAliasStatus: PropTypes.func,
   onChangePanel: PropTypes.func,
+  onClickIsFromNotVerifiedOption: PropTypes.func,
   onDeleteDeviceData: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,

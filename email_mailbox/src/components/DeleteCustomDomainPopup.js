@@ -62,13 +62,13 @@ DeleteCustomDomainPopup.propTypes = {
 };
 
 DeleteCustomDomainPrompt.propTypes = {
-  domain: PropTypes.string,
+  domain: PropTypes.object,
   onTogglePopup: PropTypes.func,
   onConfirmDeleteCustomDomain: PropTypes.func
 };
 
 DeleteCustomDomainError.propTypes = {
-  domain: PropTypes.string,
+  domain: PropTypes.object,
   onTogglePopup: PropTypes.func,
   error: PropTypes.string
 };

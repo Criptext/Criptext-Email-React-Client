@@ -10,7 +10,7 @@ import {
   sendAliasSuccessStatusMessage,
   sendCustomDomainDeletedMessage
 } from '../utils/electronEventInterface';
-import { updateAlias, activateAddress } from '../utils/ipc';
+import { updateAlias, activateAddress, getCustomDomain } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 import string from './../lang';
 
@@ -39,7 +39,8 @@ class SettingsContainer extends Component {
       twoFactorAuth: undefined,
       readReceiptsEnabled: undefined,
       replyToEmail: undefined,
-      isHiddenSettingsPopup: true
+      isHiddenSettingsPopup: true,
+      domainNotVerified: undefined
     };
   }
 
@@ -54,7 +55,9 @@ class SettingsContainer extends Component {
               settings.addresses,
               settings.custom_domains.title
             ]}
+            domainNotVerified={this.state.domainNotVerified}
             onAddDomain={this.handleAddDomain}
+            onUpdateCustomDomain={this.handleOnUpdateCustomDomain}
             onChangePanel={this.handleChangePanel}
           />
         );
@@ -83,6 +86,7 @@ class SettingsContainer extends Component {
             onChangeAliasStatus={this.handleChangeAliasStatus}
             onChangePanel={this.handleChangePanel}
             onClickCheckForUpdates={this.props.onCheckForUpdates}
+            onClickIsFromNotVerifiedOption={this.handleIsFromNotVerifiedOption}
             onClickLogout={this.handleClickLogout}
             onClickSection={this.handleClickSection}
             onClosePopup={this.handleClosePopup}
@@ -123,7 +127,12 @@ class SettingsContainer extends Component {
       rowIds.add(alias.rowId);
       return result;
     }, {});
-    const domains = customDomains.map(domain => domain.name);
+    const domains = customDomains.map(domain => {
+      return {
+        name: domain.name,
+        validated: domain.confirmed === 1
+      };
+    });
 
     this.setState({
       aliasesByDomain,
@@ -137,11 +146,19 @@ class SettingsContainer extends Component {
     });
   }
 
-  handleAddDomain = domain => {
+  handleAddDomain = domainObject => {
     const domainArray = this.state.domains;
-    domainArray.push(domain);
+    domainArray.push(domainObject);
     this.setState({
-      domains: domainArray
+      domains: domainArray,
+      domainNotVerified: undefined
+    });
+  };
+
+  handleIsFromNotVerifiedOption = domainName => {
+    this.setState({
+      panel: PANEL.DOMAIN,
+      domainNotVerified: domainName
     });
   };
 
@@ -168,10 +185,23 @@ class SettingsContainer extends Component {
     });
   };
 
-  handleRemoveCustomDomain = domain => {
-    const newDomains = this.state.domains.filter(e => e !== domain);
+  handleOnUpdateCustomDomain = async () => {
+    const domainsRaw = await getCustomDomain({});
+    const domains = domainsRaw.map(domain => {
+      return {
+        name: domain.dataValues.name,
+        validated: domain.dataValues.validated
+      };
+    });
+    this.setState({
+      domains
+    });
+  };
+
+  handleRemoveCustomDomain = domainName => {
+    const newDomains = this.state.domains.filter(e => e.name !== domainName);
     const aliasesByDomain = { ...this.state.aliasesByDomain };
-    delete aliasesByDomain[domain];
+    delete aliasesByDomain[domainName];
     this.setState({
       domains: newDomains,
       aliasesByDomain

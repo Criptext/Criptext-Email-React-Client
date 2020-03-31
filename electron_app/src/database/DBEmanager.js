@@ -1444,9 +1444,9 @@ const createCustomDomain = params => {
   return CustomDomain().create(params);
 };
 
-const updateCustomDomain = ({ id, rowId, validated, accountId }) => {
+const updateCustomDomain = ({ id, name, validated, accountId }) => {
   if (typeof validated === 'undefined') return;
-  const whereParam = id ? { id, accountId } : { rowId, accountId };
+  const whereParam = id ? { id, accountId } : { name, accountId };
   return CustomDomain().update({ validated }, { where: whereParam });
 };
 
