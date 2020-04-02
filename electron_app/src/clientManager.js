@@ -95,12 +95,19 @@ const checkExpiredSession = async (
   const SUSPENDED_ACCOUNT_REQ_STATUS = 451;
 
   const status = requirementResponse.status;
-  const { recipientId: accountRecipientId } = requestparams;
-  const [{ recipientId, refreshToken }] = accountRecipientId
+  const accountRecipientId =
+    typeof requestparams === 'object'
+      ? requestparams.recipientId
+      : requestparams;
+  const [existingAccount] = accountRecipientId
     ? await dbManager.getAccountByParams({
         recipientId: accountRecipientId
       })
     : await dbManager.getAccountByParams({ isActive: true });
+
+  if (!existingAccount) return requirementResponse;
+
+  const { recipientId, refreshToken } = existingAccount;
 
   switch (status) {
     case CHANGED_PASSWORD_STATUS: {
