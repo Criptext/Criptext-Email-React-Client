@@ -2,7 +2,7 @@ const { getPendingEvents, deletePendingEventsByIds } = require('./database');
 const { mailformedEventRegex } = require('./utils/RegexUtils');
 let clientManager;
 
-const QUEUE_BATCH = 50;
+const QUEUE_BATCH = 100;
 const MALFORMED_EVENT_STATUS = 202;
 const SUCCESS_STATUS = 200;
 let isProcessingQueue = false;
