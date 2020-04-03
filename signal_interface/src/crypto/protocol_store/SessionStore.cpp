@@ -9,10 +9,10 @@
 int session_store_load_session(signal_buffer **record, signal_buffer **user_record, const signal_protocol_address *address, void *user_data)
 {
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
     CriptextDB::SessionRecord sessionRecord;
+
     try {
         sessionRecord = CriptextDB::getSessionRecord(account->getDB(), account->id, recipientId, deviceId);
     } catch (exception& e) {

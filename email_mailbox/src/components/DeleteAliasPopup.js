@@ -48,6 +48,7 @@ const DeleteAliasError = props => {
       </div>
       <div className="popup-paragraph">
         <p>{props.error}</p>
+        {props.remaining && <p>{props.remaining}</p>}
       </div>
       <div className="popup-buttons">
         <button
@@ -63,6 +64,7 @@ const DeleteAliasError = props => {
 
 DeleteAliasError.propTypes = {
   error: PropTypes.string,
+  remaining: PropTypes.string,
   onTogglePopup: PropTypes.func
 };
 

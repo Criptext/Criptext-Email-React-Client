@@ -10,7 +10,6 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
 
     CriptextDB::PreKey preKey;
-
     try {
         preKey = CriptextDB::getPreKey(account->getDB(), account->id, pre_key_id);
     } catch (exception& e){

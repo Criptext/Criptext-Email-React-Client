@@ -529,6 +529,7 @@
         "title": "Oops...",
         "timeout": "Connection Timeout. Please Try Again",
         "cannot": "Aliases ending in @{0} cannot be deleted within 15 days from the day they were created.",
+        "remaining": "Days Remaining: {0}",
         "unknown": "Uknown Error ({0}), please try again"
       }
     },

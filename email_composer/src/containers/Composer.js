@@ -873,7 +873,6 @@ class ComposerWrapper extends Component {
       bodyWithSign,
       preview: emailData.email.preview,
       files,
-      peer,
       externalEmailPassword,
       fromAddressId: this.state.accountSelected.fromAddressId
     };

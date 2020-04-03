@@ -1,5 +1,6 @@
 /*global libsignal util*/
 import {
+  deleteSessionRecord,
   findKeyBundles,
   getSessionRecordByRecipientIds,
   getSessionRecordRowsByRecipientIds,
@@ -81,10 +82,8 @@ const createEmails = async (
   body,
   preview,
   recipients,
-  domainAddresses,
   keyBundles,
   guestDomains,
-  peer,
   files
 ) => {
   const myKeyBundles = keyBundles.map(keybundle => {
@@ -131,7 +130,9 @@ const createEmails = async (
         };
         if (origin) {
           initObj['username'] = origin.username;
-          initObj['alias'] = origin.alias;
+          initObj['aliasUsername'] = origin.alias;
+          initObj['aliasDomain'] = domain;
+          initObj['domain'] = origin.originalDomain;
         }
         criptextEmailsByRecipientId[recipientId] = initObj;
       }
@@ -197,7 +198,6 @@ const encryptPostEmail = async ({
   subject,
   threadId,
   files,
-  peer,
   externalEmailPassword,
   fromAddressId
 }) => {
@@ -232,9 +232,14 @@ const encryptPostEmail = async ({
     );
     domainAddresses = domainAddressesFiltered;
     await Promise.all(
-      sessionIdentifiersToDelete.map(
-        async sessionIdentifier => await store.removeSession(sessionIdentifier)
-      )
+      sessionIdentifiersToDelete.map(async sessionIdentifier => {
+        const [recipientId, deviceId] = sessionIdentifier.split('.');
+        await deleteSessionRecord({
+          recipientId,
+          deviceId,
+          accountId: myAccount.id
+        });
+      })
     );
   }
   const recipientIdsFromAlias = [];
@@ -247,7 +252,7 @@ const encryptPostEmail = async ({
     let keyBundleIds = keyBundles
       .filter(
         keybundle =>
-          keybundle.domain === recipient.origin &&
+          keybundle.domain === recipient.domain &&
           keybundle.recipientId === recipient.username
       )
       .map(keybundle => keybundle.deviceId);
@@ -297,6 +302,7 @@ const encryptPostEmail = async ({
       }
     };
   });
+
   const sessionsFromAlias = await getSessionRecordRowsByRecipientIds({
     accountId: myAccount.id,
     recipientIds: recipientIdsFromAlias
@@ -313,10 +319,8 @@ const encryptPostEmail = async ({
     body,
     preview,
     newRecipients,
-    domainAddresses,
     trueKeyBundles,
     guestDomains,
-    peer,
     files
   );
 

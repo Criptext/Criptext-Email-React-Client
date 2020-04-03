@@ -536,6 +536,7 @@
         "title": "Oops...",
         "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo",
         "cannot": "Aliases que terminan en @{0} no pueden ser borrados los primeros 15 días desde su creación.",
+        "remaining": "Días Restantes: {0}",
         "unknown": "Error Desconocido ({0}), por favor intenta de nuevo"
       }
     },
