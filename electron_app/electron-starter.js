@@ -1,4 +1,4 @@
-const { app, dialog, ipcMain } = require('electron');
+const { app, dialog, ipcMain, shell } = require('electron');
 const socketClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
 const { dbManager, upStepCreateDBEncrypted, upStepCheckPIN, upStepNewUser } = require('./src/windows');
@@ -31,11 +31,30 @@ const { APP_DOMAIN } = require('./src/utils/const');
 
 globalManager.forcequit.set(false);
 
+const oldVersionUrl = () => {
+  if (isLinux) {
+    return 'https://cdn.criptext.com/Criptext-Email-Desktop/linux/old_versions/0.27.5/Criptext-0.27.5.AppImage'
+  } else if (isWindows) {
+    return 'https://cdn.criptext.com/Criptext-Email-Desktop/windows/old_versions/0.27.5/Criptext-0.27.5.exe'
+  } else {
+    return 'https://cdn.criptext.com/Criptext-Email-Desktop/mac/old_version/0.27.5/Criptext-0.27.5.dmg'
+  }
+}
+
 async function initApp() {
   const step = await checkDatabaseStep(dbManager);
   switch (step) {
     case 1:{
-      dialog.showErrorBox('Your version is outdated',' Please contact us: support@criptext.com to help you.');
+      const { response } = await dialog.showMessageBox(null, {
+        type: "warning",
+        buttons: ["Exit", "Download"],
+        title: 'Your database is outdated',
+        message: 'Your database is outdated. Download and install the following version of the app in order to migrate your data.',
+      })
+      if (response === 1) {
+        shell.openExternalSync(oldVersionUrl());
+      }
+      app.exit(0);
     }
     break;
     case 2:{

@@ -6,12 +6,12 @@
       "sources": [ 
         "main.cpp",
         "src/http/http.cpp",
-        "src/helpers/logger.cpp",
         "src/http/handlers/helpers.cpp",
         "src/http/handlers/cors.cpp",
         "src/http/handlers/encrypt.cpp",
         "src/http/handlers/decrypt.cpp",
         "src/http/handlers/keyBundle.cpp",
+        "src/http/handlers/password.cpp",
         "src/helpers/utf8.c",
         "src/crypto/crypto.c",
         "src/crypto/signal.cpp",

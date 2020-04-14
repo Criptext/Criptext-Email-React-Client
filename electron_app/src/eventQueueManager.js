@@ -1,5 +1,6 @@
 const { getPendingEvents, deletePendingEventsByIds } = require('./database');
 const { mailformedEventRegex } = require('./utils/RegexUtils');
+const { NUCLEUS_EVENTS, addEventError } = require('./nucleusManager');
 let clientManager;
 
 const QUEUE_BATCH = 100;
@@ -14,20 +15,26 @@ const processEventsQueue = async ({ accountId, recipientId }) => {
   if (!clientManager) {
     clientManager = require('./clientManager');
   }
-  const queuedEvents = await getPendingEvents(accountId);
-  while (queuedEvents.length > 0) {
-    const batch = queuedEvents.splice(0, QUEUE_BATCH);
-    const { ids, parsedEvents } = await removeMalformedEvents(batch);
-    if (!parsedEvents.length) continue;
+  const queuedEvents = await getPendingEvents(accountId).catch(ex => {
+    addEventError(NUCLEUS_EVENTS.POST_PEER_EVENT, ex);
+  });
+  while (queuedEvents && queuedEvents.length > 0) {
+    try {
+      const batch = queuedEvents.splice(0, QUEUE_BATCH);
+      const { ids, parsedEvents } = await removeMalformedEvents(batch);
+      if (!parsedEvents.length) continue;
 
-    const { status } = await clientManager.pushPeerEvents({
-      events: parsedEvents,
-      recipientId
-    });
-    if (status === MALFORMED_EVENT_STATUS) {
-      continue;
-    } else if (status === SUCCESS_STATUS) {
-      await deletePendingEventsByIds(ids);
+      const { status } = await clientManager.pushPeerEvents({
+        events: parsedEvents,
+        recipientId
+      });
+      if (status === MALFORMED_EVENT_STATUS) {
+        continue;
+      } else if (status === SUCCESS_STATUS) {
+        await deletePendingEventsByIds(ids);
+      }
+    } catch (ex) {
+      addEventError(NUCLEUS_EVENTS.POST_PEER_EVENT, ex);
     }
   }
   isProcessingQueue = false;

@@ -86,14 +86,17 @@ const SideBar = props => (
             </div>
             <span>{string.sidebar.invite_a_friend}</span>
           </li>
-          <li
-            className="nav-item"
-            onClick={() => props.onClickComposeContactSupportEmail()}
-          >
-            <div className="nav-item-icon">
-              <i className="icon-ask" />
-            </div>
-            <span>{string.settings.contact_support}</span>
+          <li className="nav-item">
+            <a
+              href="https://criptext.atlassian.net/servicedesk/customer/portals"
+              // eslint-disable-next-line react/jsx-no-target-blank
+              target="_blank"
+            >
+              <div className="nav-item-icon">
+                <i className="icon-ask" />
+              </div>
+              <span>{string.settings.contact_support}</span>
+            </a>
           </li>
           <li className="nav-item" onClick={() => props.onClickSettings()}>
             <div className="nav-item-icon">
@@ -137,7 +140,6 @@ SideBar.propTypes = {
   labels: PropTypes.object,
   mailboxSelected: PropTypes.object,
   onClickButtonComposer: PropTypes.func,
-  onClickComposeContactSupportEmail: PropTypes.func,
   onClickInviteFriend: PropTypes.func,
   onClickSection: PropTypes.func,
   onClickSettings: PropTypes.func,

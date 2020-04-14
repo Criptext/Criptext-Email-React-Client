@@ -26,6 +26,11 @@
     margin-left: 15px;
   }
 
+  a {
+    text-decoration: none;
+    display: flex;
+  }
+
   .nav-item-badge{
     margin-left: 5px;
     
@@ -138,7 +143,7 @@
           color: $_COLOR_ICON_NAVITEM_SELECTED;
         }
   
-        >span{
+        span{
           color: $_COLOR_TEXT_NAVITEM_SELECTED;
         }
       }
@@ -151,7 +156,7 @@
         color: $_COLOR_ICON_NAVITEM;
       }
 
-      >span{
+      span{
         color: $_COLOR_TEXT_NAVITEM;
       }
     }

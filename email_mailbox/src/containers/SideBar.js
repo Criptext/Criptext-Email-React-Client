@@ -6,7 +6,6 @@ import {
   composerEvents,
   formInviteFriendEmailContent
 } from './../utils/const';
-import { formContactSupportEmailContent } from '../utils/EmailUtils';
 import { openFilledComposerWindow } from './../utils/ipc';
 
 const mapStateToProps = state => {
@@ -18,13 +17,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onClickComposeContactSupportEmail: async () => {
-      const data = await formContactSupportEmailContent();
-      openFilledComposerWindow({
-        type: composerEvents.NEW_WITH_DATA,
-        data
-      });
-    },
     onClickInviteFriend: () => {
       openFilledComposerWindow({
         type: composerEvents.NEW_WITH_DATA,
