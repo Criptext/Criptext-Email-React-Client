@@ -397,14 +397,12 @@ const createEmail = (params, prevTrx) => {
 };
 
 const getKeys = (keys, accountId, trx) => {
-  return Email()
-    .findAll({
-      attributes: ['id'],
-      where: { key: keys, accountId },
-      raw: true,
-      transaction: trx
-    })
-    .then(list => list);
+  return Email().findAll({
+    attributes: ['id'],
+    where: { key: keys, accountId },
+    raw: true,
+    transaction: trx
+  });
 };
 
 const deleteEmailByKeys = async ({ accountId, keys }) => {
