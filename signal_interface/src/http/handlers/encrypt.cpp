@@ -64,6 +64,8 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char*
 
   free(myKey);
 
+  (void)[v = std::move(db)]{};
+
   if (result < 0) {
     std::string unencrypted = parseSignalError(result);
     spdlog::error("[{0}] {1}", endpointId, unencrypted.c_str());
@@ -160,6 +162,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
       cJSON_AddStringToObject(response, "bodyEncrypted", encryptedBody);
       cJSON_AddNumberToObject(response, "bodyMessageType", type);
     } catch (exception &ex) {
+      (void)[v = std::move(db)]{};
       spdlog::error("[{0}] ENCRYPT BODY ERROR {1}", endpointId, ex.what());
       sendError(conn, 500, ex.what());
       return 500;
@@ -178,6 +181,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
       cJSON_AddStringToObject(response, "previewEncrypted", encryptedPreview);
       cJSON_AddNumberToObject(response, "previewMessageType", type);
     } catch (exception &ex) {
+      (void)[v = std::move(db)]{};
       spdlog::error("[{0}] ENCRYPT PREVIEW ERROR {1}", endpointId, ex.what());
       sendError(conn, 500, ex.what());
       return 500;
@@ -201,6 +205,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
         cJSON *decryptedFileKey = cJSON_CreateString(encryptedFileKey);
         cJSON_AddItemToArray(myFileKeys, decryptedFileKey);
       } catch (exception &ex) {
+        (void)[v = std::move(db)]{};
         spdlog::error("[{0}] ENCRYPT FILEKEYS ERROR {1}", endpointId, ex.what());
         sendError(conn, 500, ex.what());
         return 500;
@@ -209,6 +214,8 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
 
     cJSON_AddItemToObject(response, "fileKeysEncrypted", myFileKeys);
   }
+
+  (void)[v = std::move(db)]{};
 
   spdlog::info("[{0}] Successful response", endpointId);
   return SendJSON(conn, response);

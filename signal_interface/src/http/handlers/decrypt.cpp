@@ -61,6 +61,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
       size_t plaintext_len = 0;
       int result = signal.decryptText(&plaintext_data, &plaintext_len, body->valuestring, senderId->valuestring, deviceId->valueint, type->valueint);
       if(result == -1001){
+        (void)[v = std::move(db)]{};
         spdlog::error("[{0}] DECRYPT BODY ERROR DUPLICATE MESSAGE", endpointId);
         sendError(conn, 409, "Duplicate Message");
         return 409;
@@ -71,6 +72,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
       string text = std::string(plaintext_data, plaintext_data + plaintext_len);
       cJSON_AddStringToObject(response, "decryptedBody", text.c_str());
     } catch (exception &ex) {
+      (void)[v = std::move(db)]{};
       spdlog::error("[{0}] DECRYPT BODY ERROR {1}", endpointId, ex.what());
       sendError(conn, 500, ex.what());
       return 500;
@@ -88,6 +90,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
       string text = std::string(plaintext_data, plaintext_data + plaintext_len);
       cJSON_AddStringToObject(response, "decryptedHeaders", text.c_str());
     } catch (exception &ex) {
+      (void)[v = std::move(db)]{};
       spdlog::error("[{0}] DECRYPT HEADER ERROR {1}", endpointId, ex.what());
       sendError(conn, 500, ex.what());
       return 500;
@@ -110,6 +113,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
         cJSON *decryptedFileKey = cJSON_CreateString(text.c_str());
         cJSON_AddItemToArray(myFileKeys, decryptedFileKey);
       } catch (exception &ex) {
+        (void)[v = std::move(db)]{};
         spdlog::error("[{0}] DECRYPT FILEKEY ERROR {1}", endpointId, ex.what());
         sendError(conn, 500, ex.what());
         return 500;
@@ -118,6 +122,8 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
 
     cJSON_AddItemToObject(response, "decryptedFileKeys", myFileKeys);
   }
+
+  (void)[v = std::move(db)]{};
   
   if (!cJSON_IsString(salt) || !cJSON_IsString(iv)) {
     spdlog::info("[{0}] Successful response", endpointId);
@@ -195,6 +201,9 @@ int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char*
   uint8_t *plaintext_data = 0;
   size_t plaintext_len = 0;
   int result = signal.decryptText(&plaintext_data, &plaintext_len, key->valuestring, recipientId->valuestring, deviceId->valueint, type->valueint);
+  
+  (void)[v = std::move(db)]{};
+  
   if (result < 0) {
     spdlog::error("[{0}] DECRYPT KEY ERROR {1}", endpointId, parseSignalError(result));
     sendError(conn, 500, parseSignalError(result));

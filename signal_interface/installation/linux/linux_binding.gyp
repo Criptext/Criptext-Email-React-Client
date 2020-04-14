@@ -11,6 +11,7 @@
         "src/http/handlers/encrypt.cpp",
         "src/http/handlers/decrypt.cpp",
         "src/http/handlers/keyBundle.cpp",
+        "src/http/handlers/password.cpp",
         "src/helpers/utf8.c",
         "src/crypto/crypto.c",
         "src/crypto/signal.cpp",
@@ -44,7 +45,7 @@
         "/usr/lib/x86_64-linux-gnu/libcrypto.a",
         "/usr/local/lib/libsqlcipher.a",
         "/home/criptext/Pedro/git/civetweb/libcivetweb.a",
-        "/usr/lib/libcivetweb.so",
+        "/usr/local/lib/libsignal-protocol-c.a",
         "/usr/local/lib/libcjson.a",
         "/usr/local/lib/libspdlog.a"
       ]

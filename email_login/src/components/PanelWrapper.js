@@ -10,7 +10,6 @@ import PopupHOC from './PopupHOC';
 import ForgotPasswordPopup from './ForgotPasswordPopup';
 import DialogPopup, { DialogTypes } from './DialogPopup';
 import { ButtonState } from './Button';
-import { toCapitalize } from './../utils/StringUtils';
 import {
   createTemporalAccount,
   deleteTemporalAccount,
@@ -25,7 +24,6 @@ import {
   closeLoginWindow,
   getAccountByParams,
   getComputerName,
-  getOsAndArch,
   linkAuth,
   linkBegin,
   linkCancel,
@@ -40,8 +38,7 @@ import { validateEmail, validateUsername } from './../validators/validators';
 import { DEVICE_TYPE, appDomain, externalDomains } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
-import string, { getLang } from './../lang';
-import { version } from './../../package.json';
+import string from './../lang';
 import './panelwrapper.scss';
 
 const { errors, help, signIn, signUp } = string;
@@ -114,7 +111,7 @@ class PanelWrapper extends Component {
     super();
     this.state = {
       buttonSignInState: ButtonState.DISABLED,
-      contactURL: '',
+      contactURL: 'https://criptext.atlassian.net/servicedesk/customer/portals',
       currentStep: mode.SIGNIN,
       lastStep: [mode.SIGNIN],
       values: {
@@ -146,11 +143,6 @@ class PanelWrapper extends Component {
         {showFooter && this.renderFooter()}
       </div>
     );
-  }
-
-  async componentDidMount() {
-    const contactURL = await this.defineContactURL();
-    this.setState({ contactURL });
   }
 
   renderFooter = () => (
@@ -619,13 +611,6 @@ class PanelWrapper extends Component {
     return usernameOrEmailAddress.includes('@')
       ? usernameOrEmailAddress
       : `${usernameOrEmailAddress}@${appDomain}`;
-  };
-
-  defineContactURL = async () => {
-    const { os, arch, installerType } = await getOsAndArch();
-    return `https://criptext.com/${getLang}/contact?version=${version}&os=${toCapitalize(
-      os
-    )}&installer=${installerType}&arch=${arch}`;
   };
 
   goToPasswordLogin = () => {
