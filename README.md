@@ -73,7 +73,7 @@ Steps to compile and run alice on Linux or MacOs:
 - enter db_interface
 - run bash ${your_os}_setup.sh
 - after completed, go to signal_interface folder
-- run bash ${your_os}/${your_os}_install_deps.sh
+- run bash installation/${your_os}/${your_os}_install_deps.sh
 - generate a binding gyp file. The easiest way is to just copy the ${your-os}/${your_os}_binding.gyp file to the root signal_interface folder and rename it as binding.gyp there.
 - Ensure that all the dependencies in the binding.gyp file exist in those paths. In case of something is wrong, feel free to modify the file.
 - install node-gyp (npm install -g node-gyp or yarn global add node-gyp) with root permissions.

@@ -1,5 +1,8 @@
 #!bin/bash
 tempBuildFolder='deps'
+lsbCommand='lsb_release'
+lsbDebian='Debian'
+lsbArch='Arch'
 
 function PSM() {
   tput setaf 2;tput bold; echo "$1"; tput sgr0;
@@ -14,9 +17,44 @@ function removeTempFolder3() {
   cd ../../..; rm -rf "${tempBuildFolder}"; exit 1;
 }
 
+PEM "    This script will try to install some packages in your system."
+PEM "    Plase use it only in a development environment."
+
+while true; do
+    read -p "    Do you want to coninue? (Yes/No):" yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+# Check lsb_release
+which $lsbCommand > /dev/null 2>&1
+RC=$?
+
+if [ $RC -ne 0 ]; then
+  PEM "    $lsbCommand not found"
+  PEM "    Please, install lsb-release package"
+  exit 1;
+fi
+
+LSB_DISTRO=$(lsb_release -is)
+
+if [ $LSB_DISTRO == $lsbDebian ]; then
+  LD_FLAGS='/usr/lib/x86_64-linux-gnu/libcrypto.a'
+  repoUpdate='apt-get update'
+elif [ $LSB_DISTRO == $lsbArch ]; then
+  LD_FLAGS='/usr/lib/libcrypto.so'
+  repoUpdate='pacman -Sy'
+else
+  PEM "    Your distro is not supported yet: $LSB_DISTRO. Please install manually."
+  exit 3
+fi
+
 # ================================================
 
-sudo apt-get update > /dev/null;
+sudo $repoUpdate > /dev/null;
 if [ $? -ne 0 ]; then
   PEM "    Failed to update repos list"
 fi
@@ -32,7 +70,12 @@ printf "  - Checking latest repos \n";
 # ================================================
 
 printf "  - Installing build dependencies \n";
-INSTALL_DEPS_ERROR=$( { sudo apt-get install libssl1.0-dev gcc cmake git pkg-config -y > /dev/null; } 2>&1 )
+if [ $LSB_DISTRO == $lsbDebian ]; then
+  INSTALL_DEPS_ERROR=$( { sudo apt-get install libssl1.0-dev gcc cmake git pkg-config -y > /dev/null; } 2>&1 )
+elif [ $LSB_DISTRO == $lsbArch ]; then
+  INSTALL_DEPS_ERROR=$( { sudo pacman -S --noconfirm base-devel cmake git pkg-config openssl tcl > /dev/null; } 2>&1 )
+fi
+
 if [ $? -ne 0 ]; then
   PEM "      Failed to install deps"
   echo "Reason: "; PEM $INSTALL_DEPS_ERROR;
