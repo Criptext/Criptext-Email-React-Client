@@ -120,7 +120,7 @@ export const formOutgoingEmailFromData = ({
     ? myAccount.recipientId
     : `${myAccount.recipientId}@${appDomain}`;
   const email = {
-    key: Date.now(),
+    key: parseInt(Date.now()).toString(),
     subject: textSubject,
     preview: cleanHTML(body).slice(0, previewLength),
     date: Date.now(),

@@ -143,9 +143,15 @@
           color: $_COLOR_ICON_NAVITEM_SELECTED;
         }
   
-        span{
+        >span {
           color: $_COLOR_TEXT_NAVITEM_SELECTED;
         }
+
+        a {
+          span{
+            color: $_COLOR_TEXT_NAVITEM_SELECTED;
+          }
+        } 
       }
       
       &:hover{
@@ -156,8 +162,14 @@
         color: $_COLOR_ICON_NAVITEM;
       }
 
-      span{
+      >span{
         color: $_COLOR_TEXT_NAVITEM;
+      }
+
+      a {
+        span{
+          color: $_COLOR_TEXT_NAVITEM;
+        }
       }
     }
   }
