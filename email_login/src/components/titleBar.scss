@@ -11,10 +11,14 @@
   &.placement-right {
     display: flex;
     flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
   }
   &.placement-left {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     > .buttons {
       display: flex;
       flex-direction: row-reverse;
@@ -44,6 +48,13 @@
         }
       }
     }
+  }
+
+  .cptx-version { 
+    color: white;
+    display: block;
+    height: 15px;
+    width: 46px;
   }
 
   .close,

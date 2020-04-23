@@ -21,6 +21,7 @@ import {
 import {
   canLogin,
   checkAvailableUsername,
+  checkForUpdates,
   closeLoginWindow,
   getAccountByParams,
   getComputerName,
@@ -148,8 +149,6 @@ class PanelWrapper extends Component {
   renderFooter = () => (
     <footer>
       <span>
-        {help.need_help}
-        &nbsp;
         <a
           className="footer-link"
           href={this.state.contactURL}
@@ -158,6 +157,15 @@ class PanelWrapper extends Component {
         >
           {help.contact_support}
         </a>
+        &nbsp;&nbsp;&#8226;&nbsp;&nbsp;
+        <a
+          className="footer-link"
+          href="/#"
+          onClick={this.handleCheckForUpdates}
+        >
+          {help.check_updates}
+        </a>
+        &nbsp;
       </span>
     </footer>
   );
@@ -311,6 +319,13 @@ class PanelWrapper extends Component {
           />
         );
     }
+  };
+
+  getRecipientIdFromUsernameOrEmail = () => {
+    const usernameOrEmailAddress = this.state.values.usernameOrEmailAddress;
+    return usernameOrEmailAddress.includes(`@${appDomain}`)
+      ? usernameOrEmailAddress.split('@')[0]
+      : usernameOrEmailAddress;
   };
 
   hangleGoToChangePassword = oldPassword => {
@@ -559,10 +574,7 @@ class PanelWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     this.setState({ buttonSignInState: ButtonState.LOADING });
-    const { usernameOrEmailAddress } = this.state.values;
-    const [recipientId] = usernameOrEmailAddress.includes(`@${appDomain}`)
-      ? usernameOrEmailAddress.split('@')
-      : [usernameOrEmailAddress];
+    const recipientId = this.getRecipientIdFromUsernameOrEmail();
     const [existsAccount] = await getAccountByParams({
       recipientId
     });
@@ -873,9 +885,8 @@ class PanelWrapper extends Component {
         }
       });
     } else {
-      const { status, body } = await linkStatus(
-        this.state.values.usernameOrEmailAddress
-      );
+      const recipientId = this.getRecipientIdFromUsernameOrEmail();
+      const { status, body } = await linkStatus(recipientId);
       switch (status) {
         case rejectedDeviceStatus: {
           this.stopCountdown();
@@ -1003,6 +1014,10 @@ class PanelWrapper extends Component {
       };
       throwError(error);
     }
+  };
+
+  handleCheckForUpdates = () => {
+    checkForUpdates(true);
   };
 }
 

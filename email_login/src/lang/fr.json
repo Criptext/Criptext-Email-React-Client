@@ -51,6 +51,7 @@
   },
   "help": {
     "need_help": "Besoin d'aide pour?",
+    "check_updates": "Rechercher des mises à jour",
     "contact_support": "Contacter le support"
   },
   "last_activity": "Dernière activité",
