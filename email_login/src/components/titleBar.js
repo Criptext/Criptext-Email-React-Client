@@ -1,6 +1,7 @@
 import React from 'react';
 import { closeLoginWindow, minimizeLoginWindow } from './../utils/ipc';
 import './titleBar.scss';
+import { version } from './../../package.json';
 
 const isWindows = () => {
   const platform = window.navigator.platform;
@@ -21,6 +22,7 @@ const titleBar = () => (
         <i className="icon-exit" />
       </span>
     </span>
+    <span className="cptx-version">v{version}</span>
   </div>
 );
 

@@ -1,5 +1,9 @@
 import ipc from '@criptext/electron-better-ipc/renderer';
 
+export const checkForUpdates = showDialog => {
+  ipc.callMain('check-for-updates', showDialog);
+};
+
 export const closeLoginWindow = params => {
   ipc.callMain('close-login', params);
 };
