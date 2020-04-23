@@ -873,6 +873,7 @@
     "trusted_devices": "périphériques fiables",
     "two_factor_authentication": "Authentification à deux facteurs",
     "two_factor_not_available_text": "Pour activer l’authentification à deux facteurs, vous devez définir et vérifier une adresse email de récupération.",
+    "upgrade_plus": "Upgrade to Plus",
     "user_labels": "Étiquettes d'utilisateur",
     "verified": "vérifié"
   },

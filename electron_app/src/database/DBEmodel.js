@@ -71,7 +71,7 @@ const deleteDatabase = () => {
   });
 };
 
-const CURRENT_VERSION = 1;
+const CURRENT_VERSION = 2;
 
 const Table = {
   ACCOUNT: 'account',
@@ -157,7 +157,8 @@ const initDatabaseEncrypted = async (
       autoBackupNextDate: Sequelize.DATE,
       autoBackupPath: Sequelize.STRING,
       isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
-      isLoggedIn: { type: Sequelize.BOOLEAN, defaultValue: true }
+      isLoggedIn: { type: Sequelize.BOOLEAN, defaultValue: true },
+      customerType: { type: Sequelize.INTEGER, defaultValue: 0 }
     },
     {
       sequelize,
@@ -554,9 +555,25 @@ const initDatabaseEncrypted = async (
       value: CURRENT_VERSION
     }
   });
+
   const emailDef = await Email.describe();
   if (emailDef.accountId && localVersion.value === CURRENT_VERSION) return;
+
   if (migrationStartCallback) migrationStartCallback();
+
+  let migrationFiles = [];
+  switch (localVersion.value) {
+    case 1:
+      migrationFiles = ['20200422145912-customerType'];
+      break;
+    default:
+      migrationFiles = [
+        '20200123161254-multipleAccounts',
+        '20200422145912-customerType'
+      ];
+      break;
+  }
+
   try {
     const migrationPath = path.join(__dirname, '/DBEmigrations');
     const migrator = new umzug({
@@ -572,7 +589,7 @@ const initDatabaseEncrypted = async (
         path: migrationPath
       }
     });
-    await migrator.up();
+    await migrator.up(migrationFiles);
     await Version.update(
       {
         value: CURRENT_VERSION

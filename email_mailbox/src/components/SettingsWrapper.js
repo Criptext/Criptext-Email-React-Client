@@ -31,7 +31,6 @@ class SettingsWrapper extends Component {
 
 SettingsWrapper.propTypes = {
   onCheckForUpdates: PropTypes.func,
-  onGetUserSettings: PropTypes.func,
   onLogout: PropTypes.func,
   onRemoveDevice: PropTypes.func
 };

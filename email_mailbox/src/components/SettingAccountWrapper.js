@@ -60,7 +60,8 @@ const SETTINGS_POPUP_TYPES = {
   NONE: 'none',
   SELECT_BACKUP_FOLDER: 'select-backup-folder',
   SET_REPLY_TO: 'reply-to',
-  TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled'
+  TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled',
+  UPGRADE_PLUS: 'upgrade-to-plus'
 };
 
 const changePasswordErrors = {
@@ -181,9 +182,10 @@ class SettingAccountWrapper extends Component {
     const devicesQuantity = this.props.devices ? this.props.devices.length : 0;
     return (
       <SettingAccount
+        onClickSection={this.props.onClickSection}
         aliasesByDomain={this.props.aliasesByDomain}
-        onChangePanel={this.props.onChangePanel}
-        onChangeAliasStatus={this.props.onChangeAliasStatus}
+        onChangePanel={this.handleChangePanel}
+        onChangeAliasStatus={this.handleChangeAliasStatus}
         onConfirmDeleteAlias={this.handleConfirmDeleteAlias}
         onConfirmDeleteCustomDomain={this.handleConfirmDeleteCustomDomain}
         deleteAliasParams={this.state.deleteAliasParams}
@@ -471,7 +473,34 @@ class SettingAccountWrapper extends Component {
     });
   };
 
+  showUpgradeToPlusPopup = () => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPopupType: SETTINGS_POPUP_TYPES.UPGRADE_PLUS
+    });
+  };
+
+  handleChangeAliasStatus = (...args) => {
+    if (!myAccount.customerType) {
+      this.showUpgradeToPlusPopup();
+      return;
+    }
+    this.props.onChangeAliasStatus(...args);
+  };
+
+  handleChangePanel = (...args) => {
+    if (!myAccount.customerType) {
+      this.showUpgradeToPlusPopup();
+      return;
+    }
+    this.props.onChangePanel(...args);
+  };
+
   handleClickDeleteAlias = (rowId, email) => {
+    if (!myAccount.customerType) {
+      this.showUpgradeToPlusPopup();
+      return;
+    }
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.DELETE_ALIAS,
@@ -485,6 +514,10 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClickDeleteCustomDomain = domainObject => {
+    if (!myAccount.customerType) {
+      this.showUpgradeToPlusPopup();
+      return;
+    }
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN,
@@ -1238,6 +1271,7 @@ SettingAccountWrapper.propTypes = {
   onChangeAliasStatus: PropTypes.func,
   onChangePanel: PropTypes.func,
   onClickIsFromNotVerifiedOption: PropTypes.func,
+  onClickSection: PropTypes.func,
   onDeleteDeviceData: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,

@@ -939,6 +939,7 @@
     "trusted_devices": "trusted devices",
     "two_factor_authentication": "Two-Factor Authentication",
     "two_factor_not_available_text": "To enable Two-Factor Authentication you must set and verify a recovery email",
+    "upgrade_plus": "Upgrade to Plus",
     "user_labels": "User Labels",
     "verified": "verified"
   },

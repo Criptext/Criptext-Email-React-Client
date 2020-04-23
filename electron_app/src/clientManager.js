@@ -323,6 +323,7 @@ const isDomainAvailable = async ({ domain, recipientId }) => {
 const parseUserSettings = settings => {
   const { devices, general, addresses } = settings;
   const {
+    customerType,
     recoveryEmail,
     recoveryEmailConfirmed,
     replyTo,
@@ -332,6 +333,7 @@ const parseUserSettings = settings => {
   return {
     devices,
     addresses,
+    customerType,
     twoFactorAuth: !!twoFactorAuth,
     recoveryEmail,
     recoveryEmailConfirmed: !!recoveryEmailConfirmed,

@@ -13,6 +13,7 @@ import {
   getCustomDomain,
   deleteCustomDomains,
   deleteAliases,
+  updateAccount,
   updateAlias,
   createAlias,
   createCustomDomain
@@ -172,12 +173,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const {
         devices,
         addresses,
+        customerType,
         recoveryEmail,
         twoFactorAuth,
         recoveryEmailConfirmed,
         readReceiptsEnabled,
         replyTo
       } = settings;
+
+      if (customerType !== myAccount.customerType) {
+        await updateAccount({
+          recipientId: myAccount.recipientId,
+          customerType
+        });
+      }
 
       await checkAddressesAndDomains(addresses); //syncro
 

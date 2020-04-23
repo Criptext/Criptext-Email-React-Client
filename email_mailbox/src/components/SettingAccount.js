@@ -81,6 +81,7 @@ const SettingAccount = props => (
       }
       onClickChangePasswordInputType={props.onClickChangePasswordInputType}
       onClickForgotPasswordLink={props.onClickForgotPasswordLink}
+      onClickSection={props.onClickSection}
       onClosePopup={props.onClosePopup}
       onConfirmChangePassword={props.onConfirmChangePassword}
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
@@ -316,10 +317,6 @@ const RecoveryEmailConfirmationMessage = ({
   );
 };
 
-CustomDomainsBlock.propTypes = {
-  onChangePanel: PropTypes.func
-};
-
 PasswordBlock.propTypes = {
   onClickChangePasswordButton: PropTypes.func
 };
@@ -397,6 +394,7 @@ SettingAccount.propTypes = {
   onClickChangeRecoveryEmailInputType: PropTypes.func,
   onClickChangePasswordInputType: PropTypes.func,
   onClickForgotPasswordLink: PropTypes.func,
+  onClickSection: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,

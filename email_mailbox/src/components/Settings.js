@@ -4,6 +4,7 @@ import SettingAccountWrapper from './SettingAccountWrapper';
 import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
 import SettingGeneral from './SettingGeneral';
+import SettingUpgradePlusWrapper from './SettingUpgradePlusWrapper';
 import { version } from './../../package.json';
 import string from '../lang';
 
@@ -11,7 +12,8 @@ const Sections = [
   string.settings.account,
   string.settings.general,
   string.sidebar.labels,
-  string.settings.trusted_devices
+  string.settings.trusted_devices,
+  string.settings.upgrade_plus
 ];
 
 const Settings = props => (
@@ -53,6 +55,8 @@ const renderSection = props => {
       return <SettingLabelsWrapper {...props} />;
     case Sections[3]:
       return <SettingDevicesWrapper {...props} />;
+    case Sections[4]:
+      return <SettingUpgradePlusWrapper {...props} />;
     default:
       break;
   }

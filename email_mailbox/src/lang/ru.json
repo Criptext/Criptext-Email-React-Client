@@ -873,6 +873,7 @@
     "trusted_devices": "надежные устройства",
     "two_factor_authentication": "Двухуровневая авторизация",
     "two_factor_not_available_text": "Чтобы включить двухфакторную аутентификацию, вам необходимо установить и подтвердить резервный адрес электронной почты",
+    "upgrade_plus": "Upgrade to Plus",
     "user_labels": "Ярлыки пользователей",
     "verified": "проверенный"
   },

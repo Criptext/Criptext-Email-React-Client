@@ -933,6 +933,7 @@
     "trusted_devices": "dispositivos verificados",
     "two_factor_authentication": "Autenticación de dos factores",
     "two_factor_not_available_text": "Para deshabilitar Autenticación de dos factores deberás introducir tu correo de recuperación",
+    "upgrade_plus": "Upgrade to Plus",
     "user_labels": "Etiquetas del Usuario",
     "verified": "verificado"
   },

@@ -132,7 +132,6 @@ AliasesWrapper.propTypes = {
   onAddAlias: PropTypes.func,
   onChangePanel: PropTypes.func,
   onCheckForUpdates: PropTypes.func,
-  onGetUserSettings: PropTypes.func,
   onLogout: PropTypes.func,
   onRemoveDevice: PropTypes.func
 };

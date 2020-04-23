@@ -14,6 +14,7 @@ import SelectBackupFolderPopup from './SelectBackupFolderPopup';
 import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
+import UpgradeToPlusPopup from './UpgradeToPlusPopup';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
@@ -27,6 +28,7 @@ const Manualsyncpopup = PopupHOC(ManualSyncPopup);
 const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
 const SelectBackupFolder = PopupHOC(SelectBackupFolderPopup);
 const SetReplyTo = PopupHOC(SetReplyToEmailPopup);
+const Upgradetopluspopup = PopupHOC(UpgradeToPlusPopup);
 
 const SettingsPopup = props => {
   const {
@@ -41,7 +43,8 @@ const SettingsPopup = props => {
     MANUAL_SYNC_DEVICE_AUTHENTICATION,
     SELECT_BACKUP_FOLDER,
     SET_REPLY_TO,
-    TWO_FACTOR_AUTH_ENABLED
+    TWO_FACTOR_AUTH_ENABLED,
+    UPGRADE_PLUS
   } = SETTINGS_POPUP_TYPES;
 
   switch (props.type) {
@@ -223,6 +226,17 @@ const SettingsPopup = props => {
         />
       );
     }
+    case UPGRADE_PLUS: {
+      return (
+        <Upgradetopluspopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          onClickSection={props.onClickSection}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+        />
+      );
+    }
     default:
       return null;
   }
@@ -242,6 +256,7 @@ SettingsPopup.propTypes = {
   onClickChangePasswordInputType: PropTypes.func,
   onClickChangeRecoveryEmailInputType: PropTypes.func,
   onClickForgotPasswordLink: PropTypes.func,
+  onClickSection: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
