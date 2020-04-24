@@ -146,6 +146,7 @@ class PanelWrapper extends Component {
     );
   }
 
+  /* eslint-disable jsx-a11y/anchor-is-valid */
   renderFooter = () => (
     <footer>
       <span>
@@ -160,7 +161,8 @@ class PanelWrapper extends Component {
         &nbsp;&nbsp;&#8226;&nbsp;&nbsp;
         <a
           className="footer-link"
-          href="/#"
+          // eslint-disable-next-line no-script-url
+          href="javascript:;"
           onClick={this.handleCheckForUpdates}
         >
           {help.check_updates}
