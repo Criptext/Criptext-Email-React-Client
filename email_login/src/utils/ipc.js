@@ -26,6 +26,10 @@ export const openPinWindow = params => {
   ipc.callMain('open-pin', params);
 };
 
+export const upgradeToPlus = token => {
+  ipc.callMain('upgrade-to-plus', token);
+};
+
 export const sendPin = params => ipc.callMain('send-pin', params);
 
 export const throwError = error => {

@@ -74,6 +74,7 @@
       },
       {
         "title": "Удалить устройства",
+        "message": "You have too many devices. You need to remove {0} device(s) more in orther to continue",
         "buttons": {
           "cancel": "назад",
           "confirm": "Удалить"
