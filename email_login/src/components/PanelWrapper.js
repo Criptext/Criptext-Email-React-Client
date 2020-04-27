@@ -411,7 +411,7 @@ class PanelWrapper extends Component {
     }
   };
 
-  handleCodeSuccess = ({ deviceId, name }) => {
+  handleCodeSuccess = ({ deviceId, name, customerType }) => {
     const [
       username,
       domain = appDomain
@@ -427,7 +427,8 @@ class PanelWrapper extends Component {
       remoteData: {
         recipientId,
         deviceId,
-        name
+        name,
+        customerType
       }
     });
     closeLoginWindow({ forceClose: true });
@@ -713,10 +714,11 @@ class PanelWrapper extends Component {
         hasTwoFactorAuth: undefined
       }));
     } else if (status === 200) {
-      const { twoFactorAuth, token } = body;
+      const { twoFactorAuth, token, customerType } = body;
       this.setState({
         ephemeralToken: token,
-        hasTwoFactorAuth: !!twoFactorAuth
+        hasTwoFactorAuth: !!twoFactorAuth,
+        customerType
       });
     }
   };
@@ -964,7 +966,8 @@ class PanelWrapper extends Component {
           socketClient.disconnect();
           const remoteData = {
             ...body,
-            recipientId: this.state.values.usernameOrEmailAddress
+            recipientId: this.state.values.usernameOrEmailAddress,
+            customerType: this.state.customerType
           };
           const hasPIN = hasPin();
           if (!hasPIN)
@@ -1050,7 +1053,7 @@ class PanelWrapper extends Component {
         ? username
         : this.state.values.usernameOrEmailAddress;
     if (status === 200) {
-      const { deviceId, name } = body;
+      const { deviceId, name, customerType } = body;
       const hasPIN = hasPin();
       if (!hasPIN)
         await sendPin({
@@ -1065,7 +1068,8 @@ class PanelWrapper extends Component {
         remoteData: {
           recipientId,
           deviceId,
-          name
+          name,
+          customerType
         }
       });
       closeLoginWindow({ forceClose: true });

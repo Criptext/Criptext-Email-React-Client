@@ -35,7 +35,8 @@ const createAccount = async ({
   password,
   name,
   deviceType,
-  recoveryEmail
+  recoveryEmail,
+  customerType
 }) => {
   const [activeAccount] = await getAccountByParams({
     isActive: true
@@ -76,7 +77,8 @@ const createAccount = async ({
       refreshToken,
       jwt: token,
       isLoggedIn: true,
-      isActive: !activeAccount
+      isActive: !activeAccount,
+      customerType
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
@@ -148,7 +150,8 @@ const createAccountWithNewDevice = async ({
   recipientId,
   deviceId,
   name,
-  deviceType
+  deviceType,
+  customerType
 }) => {
   const [activeAccount] = await getAccountByParams({
     isActive: true
@@ -174,7 +177,8 @@ const createAccountWithNewDevice = async ({
       refreshToken,
       recipientId,
       isLoggedIn: true,
-      isActive: !activeAccount
+      isActive: !activeAccount,
+      customerType
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
@@ -234,7 +238,8 @@ const createAccountToDB = async ({
   jwt,
   refreshToken,
   deviceId,
-  recipientId
+  recipientId,
+  customerType
 }) => {
   const [activeAccount] = await getAccountByParams({
     isActive: true
@@ -246,7 +251,8 @@ const createAccountToDB = async ({
       deviceId,
       recipientId,
       isLoggedIn: true,
-      isActive: !activeAccount
+      isActive: !activeAccount,
+      customerType
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
