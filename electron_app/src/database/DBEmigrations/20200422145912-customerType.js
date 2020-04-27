@@ -24,7 +24,7 @@ module.exports = {
       await migrateAccount(queryInterface, Sequelize, transaction);
       await transaction.commit();
     } catch (ex) {
-      console.log(ex);
+      console.error(ex);
       await transaction.rollback();
       throw new Error(ex.toString());
     }

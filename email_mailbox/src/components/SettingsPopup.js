@@ -234,6 +234,7 @@ const SettingsPopup = props => {
           onClickSection={props.onClickSection}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
+          type={props.upgradeToPlusType}
         />
       );
     }
@@ -266,7 +267,8 @@ SettingsPopup.propTypes = {
   onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
-  setReplyToPopupParams: PropTypes.object
+  setReplyToPopupParams: PropTypes.object,
+  upgradeToPlusType: PropTypes.string
 };
 
 export default SettingsPopup;

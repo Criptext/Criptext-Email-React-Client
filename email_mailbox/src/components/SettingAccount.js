@@ -95,6 +95,7 @@ const SettingAccount = props => (
       onSetExportBackupPassword={props.onSetExportBackupPassword}
       onSelectBackupFolder={props.onSelectBackupFolder}
       type={props.settingsPopupType}
+      upgradeToPlusType={props.upgradeToPlusType}
     />
   </div>
 );
@@ -405,7 +406,8 @@ SettingAccount.propTypes = {
   onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
   setReplyToPopupParams: PropTypes.object,
-  settingsPopupType: PropTypes.string
+  settingsPopupType: PropTypes.string,
+  upgradeToPlusType: PropTypes.string
 };
 
 export default SettingAccount;

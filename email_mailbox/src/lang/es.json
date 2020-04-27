@@ -782,6 +782,20 @@
       "message": "Ingresa el nuevo nombre para tu etiqueta",
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Guardar"
+    },
+    "upgrade_plus": {
+      "title": "Necesitas Plus para esto",
+      "alias": {
+        "message": "Con Aliases puedes manejar multiples direcciones de correo en un solo buzón"
+      },
+      "domains": {
+        "message": "Agrega direcciones de correo con un dominio que te pertenezca como tu@compania.com"
+      },
+      "message": "Obten esto y mas cuando te subscribas a Plus!",
+      "buttons": {
+        "cancel": "No, Gracias",
+        "confirm": "Obtener Plus"
+      }
     }
   },
   "settings": {

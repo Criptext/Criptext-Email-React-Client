@@ -172,7 +172,8 @@ class SettingAccountWrapper extends Component {
         showSelectPathDialog: false,
         type: '',
         password: ''
-      }
+      },
+      upgradeToPlusType: undefined
     };
     this.isEnterprise = myAccount.recipientId.includes('@');
     this.initEventHandlers();
@@ -260,6 +261,7 @@ class SettingAccountWrapper extends Component {
         onSetExportBackupPassword={this.handleSetExportBackupPassword}
         onSelectBackupFolder={this.handleSelectBackupFolder}
         onClearMailboxBackupParams={this.handleClearMailboxBackupParams}
+        upgradeToPlusType={this.state.upgradeToPlusType}
       />
     );
   }
@@ -473,16 +475,17 @@ class SettingAccountWrapper extends Component {
     });
   };
 
-  showUpgradeToPlusPopup = () => {
+  showUpgradeToPlusPopup = type => {
     this.setState({
       isHiddenSettingsPopup: false,
-      settingsPopupType: SETTINGS_POPUP_TYPES.UPGRADE_PLUS
+      settingsPopupType: SETTINGS_POPUP_TYPES.UPGRADE_PLUS,
+      upgradeToPlusType: type
     });
   };
 
   handleChangeAliasStatus = (...args) => {
     if (!myAccount.customerType) {
-      this.showUpgradeToPlusPopup();
+      this.showUpgradeToPlusPopup('alias');
       return;
     }
     this.props.onChangeAliasStatus(...args);
@@ -490,7 +493,7 @@ class SettingAccountWrapper extends Component {
 
   handleChangePanel = (...args) => {
     if (!myAccount.customerType) {
-      this.showUpgradeToPlusPopup();
+      this.showUpgradeToPlusPopup(args[0]);
       return;
     }
     this.props.onChangePanel(...args);
@@ -498,7 +501,7 @@ class SettingAccountWrapper extends Component {
 
   handleClickDeleteAlias = (rowId, email) => {
     if (!myAccount.customerType) {
-      this.showUpgradeToPlusPopup();
+      this.showUpgradeToPlusPopup('alias');
       return;
     }
     this.setState({
@@ -515,7 +518,7 @@ class SettingAccountWrapper extends Component {
 
   handleClickDeleteCustomDomain = domainObject => {
     if (!myAccount.customerType) {
-      this.showUpgradeToPlusPopup();
+      this.showUpgradeToPlusPopup('custom-domains');
       return;
     }
     this.setState({

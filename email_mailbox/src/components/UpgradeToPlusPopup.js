@@ -2,24 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import string from './../lang';
 
+import './upgradetopluspopup.scss';
+
+const upgradePlus = string.popups.upgrade_plus;
+
 const UpgradeToPlusPopup = props => {
   return (
     <div className="popup-content">
-      <div className="popup-image">
-        <img src="" />
-      </div>
+      <div className={`popup-image popup-image-${props.type}`} />
       <div className="popup-title">
-        <h1>Upgrade to Plus</h1>
+        <h1>{upgradePlus.title}</h1>
       </div>
       <div className="popup-paragraph">
-        <p>In order to use this feature you need to be a plus user</p>
+        {props.type === 'alias' ? (
+          <p>{upgradePlus.alias.message}</p>
+        ) : (
+          <p>{upgradePlus.domains.message}</p>
+        )}
+        <p>{upgradePlus.message}</p>
       </div>
       <div className="popup-buttons">
         <button
           className="button-a popup-cancel-button"
           onClick={props.onTogglePopup}
         >
-          <span>Maybe Later</span>
+          <span>{upgradePlus.buttons.cancel}</span>
         </button>
         <button
           className="button-a popup-confirm-button"
@@ -28,7 +35,7 @@ const UpgradeToPlusPopup = props => {
             props.onClickSection(string.settings.upgrade_plus);
           }}
         >
-          <span>Upgrade</span>
+          <span>{upgradePlus.buttons.confirm}</span>
         </button>
       </div>
     </div>
@@ -38,7 +45,8 @@ const UpgradeToPlusPopup = props => {
 UpgradeToPlusPopup.propTypes = {
   onClickSection: PropTypes.func,
   onUpgradeToPlus: PropTypes.func,
-  onTogglePopup: PropTypes.func
+  onTogglePopup: PropTypes.func,
+  type: PropTypes.string
 };
 
 export default UpgradeToPlusPopup;

@@ -132,6 +132,14 @@
         "unknown": "No fue posible validar el código",
         "wrong": "Código incorrecto"
       }
+    },
+    "upgradePlus": {
+      "title": "Necesitas Plus para esto",
+      "message": "Has alcanzado el maximo numero de dispositivos ({0}). Subscribete a Plus para poder vincular 5 dispositivos. Si no lo deseas, deberas remover un dispositivo para continuar.",
+      "buttons": {
+        "cancel": "No, Gracias",
+        "confirm": "Obtener Plus"
+      }
     }
   },
   "signIn": {

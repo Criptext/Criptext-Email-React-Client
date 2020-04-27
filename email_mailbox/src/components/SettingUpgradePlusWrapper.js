@@ -13,6 +13,7 @@ class SettingUpgradePlusWrapper extends Component {
       <div className="cptx-update-to-plus">
         <iframe
           id="cptx-upgrade-to-plus-iframe"
+          title="cptx-upgrade-to-plus-iframe"
           src={`https://admin.criptext.com/?#/account/billing?token=${
             myAccount.jwt
           }`}
