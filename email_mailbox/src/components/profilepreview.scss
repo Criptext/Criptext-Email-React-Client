@@ -20,11 +20,43 @@
       padding: 15px 23px;
       width: calc(100% - 46px);
 
+      .profile-plus-border-container {
+
+        .profile-plus-outer-border {
+          border-radius: 50%;
+          position: absolute;
+        }
+    
+        .profile-plus-inner-border {
+          border-radius: 50%;
+          background-image: linear-gradient(177deg, #ffcc83 3%, #c9821b 54%, #fecb81 94%);
+          position: absolute;
+        }
+    
+      }
+
       &.active{
         cursor: auto;
+
+        .profile-plus-border-container {
+
+          .profile-plus-outer-border {
+            width: 56px;
+            height: 56px;
+            transform: translate(-3px, -50%);
+          }
+      
+          .profile-plus-inner-border {
+            width: 60px;
+            height: 60px;
+            transform: translate(-5px, -50%);
+          }
+      
+        }
+
         .cptx-profile-preview-icon{
-          height: 49px;
-          width: 49px;
+          height: 50px;
+          width: 50px;
   
           span{
             font-size: 21px;
@@ -32,6 +64,11 @@
         }
 
         .cptx-profile-preview-detail{
+
+          .name-plus-container  {
+            height: 19px;
+          }
+
           .name{
             font-size: 14px;
             font-weight: 700;
@@ -45,6 +82,23 @@
   
       &.logged{
         cursor: pointer;
+
+        .profile-plus-border-container {
+
+          .profile-plus-outer-border {
+            width: 38px;
+            height: 38px;
+            transform: translate(-2px, -50%);
+          }
+      
+          .profile-plus-inner-border {
+            width: 40px;
+            height: 40px;
+            transform: translate(-3px, -50%);
+          }
+      
+        }
+
         .cptx-profile-preview-icon{
           height: 34px;
           width: 34px;
@@ -55,6 +109,11 @@
         }
 
         .cptx-profile-preview-detail{
+
+          .name-plus-container  {
+            height: 16px;
+          }
+
           .name{
             font-size: 12px;
           }
@@ -80,6 +139,7 @@
         background-color: rgba(141, 166, 210, 0.8);
         border-radius: 50%;
         display: inline-flex;
+        z-index: 100;
   
         span{
           color: white;
@@ -93,6 +153,32 @@
         margin-left: 10px;
         vertical-align: top;
         width: calc(100% - 70px);
+
+        .name-plus-container  {
+          display: flex;
+          align-items: center;
+
+          .name {
+            white-space: nowrap;
+            flex-grow: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+
+          .plus-badge {
+            display: flex;
+            align-items: center;
+            background-color: #e3a344;
+            color: white;
+            height: 14px;
+            width: 25px;
+            font-size: 9px;
+            margin-left: 5px;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 4px;
+          }
+        }
     
         .email-address{
           margin-top: 2px;
@@ -172,6 +258,10 @@
         &.active {
           background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE;
 
+          .profile-plus-outer-border {
+            background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE;
+          }
+
           .cptx-profile-preview-detail{
             .email-address {
               color: $_COLOR_TEXT_SECONDARY_ACTIVE_PROFILE_SHORTCUT;
@@ -180,6 +270,10 @@
         }
         &.logged {
           background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED;
+
+          .profile-plus-outer-border {
+            background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED;
+          }
         }
 
         .cptx-profile-preview-detail {

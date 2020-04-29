@@ -22,7 +22,8 @@ export const defineAccounts = accounts => {
       badge: element.badge || 0,
       isActive: !!element.isActive,
       name: element.name,
-      recipientId: element.recipientId
+      recipientId: element.recipientId,
+      customerType: element.customerType
     };
     return {
       ...result,
@@ -59,12 +60,14 @@ export const defineAccountVisibleParams = (account, timestamp) => {
   const emailAddress = `${username}@${domain}`;
   const avatarUrl = formAvatarUrl(username, domain, timestamp);
   const isActive = account.isActive || false;
+  const showPlusBorder = account.customerType !== 0;
   return {
     name,
     letters,
     emailAddress,
     avatarUrl,
-    isActive
+    isActive,
+    showPlusBorder
   };
 };
 

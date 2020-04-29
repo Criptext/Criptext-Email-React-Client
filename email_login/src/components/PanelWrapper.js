@@ -264,7 +264,6 @@ class PanelWrapper extends Component {
           <UpgradePlusPopup
             onDismiss={this.showRemoveDevicesPopup}
             upgradeToPlus={this.handleUpgradeToPlus}
-            maxDevices={this.state.removeDevicesData.maxDevices}
           />
         );
       default:
@@ -692,7 +691,6 @@ class PanelWrapper extends Component {
         {
           removeDevicesData: {
             customerType: body.customerType,
-            maxDevices: body.maxDevices,
             needsRemoveDevices: true
           }
         },
@@ -865,7 +863,7 @@ class PanelWrapper extends Component {
       case popupType.DELETE_DEVICE:
         {
           const popType =
-            this.state.removeDevicesData.customerType === 1
+            this.state.removeDevicesData.customerType !== 0
               ? popup
               : popupType.UPGRADE_PLUS;
           this.setState({

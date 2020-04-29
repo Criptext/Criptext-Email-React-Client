@@ -60,6 +60,10 @@ export const deleteDeviceToken = async params => {
   return await ipc.callMain('client-delete-device-token', params);
 };
 
+export const getMaxDevices = async params => {
+  return await ipc.callMain('client-get-max-devices', params);
+};
+
 export const linkAuth = async newDeviceData => {
   return await ipc.callMain('client-link-auth', newDeviceData);
 };

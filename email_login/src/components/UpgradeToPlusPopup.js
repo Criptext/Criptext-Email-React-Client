@@ -13,7 +13,7 @@ const UpgradeToPlusPopup = props => {
         <h1>{upgradePlus.title}</h1>
       </div>
       <div className="popup-paragraph">
-        <p>{string.formatString(upgradePlus.message, props.maxDevices)}</p>
+        <p>{string.formatString(upgradePlus.message, 2)}</p>
       </div>
       <div className="popup-buttons">
         <button
@@ -34,7 +34,6 @@ const UpgradeToPlusPopup = props => {
 };
 
 UpgradeToPlusPopup.propTypes = {
-  maxDevices: PropTypes.number,
   onDismiss: PropTypes.func,
   upgradeToPlus: PropTypes.func
 };

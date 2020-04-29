@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DeleteDevicePopup from './DeleteDevicePopup';
 import { ButtonState } from './Button';
-import { deleteDeviceToken } from '../utils/ipc';
+import { deleteDeviceToken, getMaxDevices } from '../utils/ipc';
 import string from './../lang';
 import { appDomain } from '../utils/const';
+import { addEvent, removeEvent } from '../utils/electronEventInterface';
 
 const { deleteDevices } = string.popUp;
 
@@ -14,7 +15,8 @@ class DeleteDeviceWrapperPopup extends Component {
     this.state = {
       confirmButtonState: ButtonState.DISABLED,
       deviceIdsChecked: [],
-      devices: props.devices
+      devices: props.devices,
+      maxDevices: 10
     };
     const [myRecipientId, myDomain = appDomain] = props.emailAddress.split('@');
     this.recipientId = myRecipientId;
@@ -26,7 +28,7 @@ class DeleteDeviceWrapperPopup extends Component {
     const devicesToRemove =
       1 +
       this.state.devices.length -
-      this.props.maxDevices -
+      this.state.maxDevices -
       this.state.deviceIdsChecked.length;
     const textButtonConfirm = `${deleteDevices[1].buttons.confirm} (${
       this.state.deviceIdsChecked.length
@@ -45,6 +47,15 @@ class DeleteDeviceWrapperPopup extends Component {
         title={deleteDevices[1].title}
       />
     );
+  }
+
+  componentDidMount() {
+    this.requestMaxDevices();
+    addEvent('get-max-devices', this.requestMaxDevices);
+  }
+
+  componentWillMount() {
+    removeEvent('get-max-devices', this.requestMaxDevices);
   }
 
   handleClickCancel = () => {
@@ -70,12 +81,40 @@ class DeleteDeviceWrapperPopup extends Component {
       const devicesToRemove =
         1 +
         this.state.devices.length -
-        this.props.maxDevices -
+        this.state.maxDevices -
         deviceIdsChecked.length;
       const confirmButtonState =
         devicesToRemove > 0 ? ButtonState.DISABLED : ButtonState.ENABLED;
       return { ...state, confirmButtonState, devices, deviceIdsChecked };
     });
+  };
+
+  requestMaxDevices = async () => {
+    const params = {
+      token: this.token,
+      recipientId: this.recipientId
+    };
+    const res = await getMaxDevices(params);
+
+    if (!res) {
+      return;
+    }
+
+    switch (res.status) {
+      case 200: {
+        const maxDevices = res.body.maxDevices;
+        if (maxDevices > this.state.devices.length) {
+          this.props.devicesDeleted(this.props.password);
+          break;
+        }
+        this.setState({
+          maxDevices
+        });
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   requestDeleteDevices = async () => {
@@ -101,7 +140,6 @@ DeleteDeviceWrapperPopup.propTypes = {
   devices: PropTypes.array,
   devicesDeleted: PropTypes.func,
   emailAddress: PropTypes.string,
-  maxDevices: PropTypes.number,
   onDismiss: PropTypes.func,
   password: PropTypes.string,
   token: PropTypes.string

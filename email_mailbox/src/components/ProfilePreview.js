@@ -40,7 +40,8 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
     letters,
     emailAddress,
     avatarUrl,
-    isActive
+    isActive,
+    showPlusBorder
   } = defineAccountVisibleParams(account, timestamp);
   const data = { accountId: account.id, recipientId: account.recipientId };
   return (
@@ -50,11 +51,20 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
       }`}
       onClick={isActive ? undefined : () => onClick(data)}
     >
+      {showPlusBorder && (
+        <div className="profile-plus-border-container">
+          <div className="profile-plus-inner-border" />
+          <div className="profile-plus-outer-border" />
+        </div>
+      )}
       <div className="cptx-profile-preview-icon">
         <AvatarImage letters={letters} avatarUrl={avatarUrl} />
       </div>
       <div className="cptx-profile-preview-detail">
-        <span className="name">{name}</span>
+        <div className="name-plus-container">
+          <span className="name">{name}</span>
+          {showPlusBorder && <span className="plus-badge">Plus</span>}
+        </div>
         <span className="email-address">{emailAddress}</span>
       </div>
       {!!account.badge && (

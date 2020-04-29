@@ -2,12 +2,34 @@
   border-radius: 50%;
   border: 1px solid transparent;
   cursor: pointer;
-  height: 39px;
+  height: 40px;
   position: relative;
-  width: 39px;
+  width: 40px;
 
   &.profile-opened{
     border-color: rgba(256, 256, 256, 0.1);
+  }
+
+  .header-profile-plus-border-container {
+
+    .header-profile-plus-outer-border {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: #373a45;
+      position: absolute;
+      transform: translate(-1px, -50%);
+    }
+
+    .header-profile-plus-inner-border {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-image: linear-gradient(177deg, #ffcc83 3%, #c9821b 54%, #fecb81 94%);
+      position: absolute;
+      transform: translate(-2px, -50%);
+    }
+
   }
 
   .header-profile{
@@ -18,10 +40,10 @@
     display: flex;
     font-size: 15px;
     font-weight: 200;
-    height: 33px;
+    height: 34px;
     justify-content: center;
     margin: 0 auto;
-    width: 33px;
+    width: 34px;
   }
 
   .cptx-header-profile-badge{

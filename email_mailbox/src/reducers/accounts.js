@@ -9,7 +9,8 @@ const formAccounts = account => {
     badge: 0,
     isActive: account.activeAccount.isActive,
     name: account.activeAccount.name,
-    recipientId: account.activeAccount.recipientId
+    recipientId: account.activeAccount.recipientId,
+    customerType: account.activeAccount.customerType
   };
   const inactiveAccounts = account.inactiveAccounts
     ? Object.keys(account.inactiveAccounts).map(key => {

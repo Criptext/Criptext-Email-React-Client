@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ProfileShortCut from './ProfileShortCut';
 import { defineAccountVisibleParams } from '../utils/AccountUtils';
+import { myAccount } from '../utils/electronInterface';
 
 class ProfileShortCutWrapper extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class ProfileShortCutWrapper extends Component {
       this.props.accounts[0],
       this.props.avatarTimestamp
     );
+    const showPlusBorder = myAccount.customerType !== 0;
     return (
       <ProfileShortCut
         avatarUrl={avatarUrl}
@@ -27,6 +29,7 @@ class ProfileShortCutWrapper extends Component {
         onClickItemAccount={this.handleClickItemAccount}
         onClickSettings={this.handleClickSettings}
         onToggleMenuProfilePreview={this.handleToggleMenuProfilePreview}
+        showPlusBorder={showPlusBorder}
         {...this.props}
       />
     );

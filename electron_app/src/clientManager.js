@@ -306,6 +306,13 @@ const getKeyBundle = async params => {
     : await checkExpiredSession(res, getKeyBundle, params);
 };
 
+const getMaxDevices = async params => {
+  const { token, recipientId } = params;
+  const client = await createClient({ recipientId });
+  const res = await client.getMaxDevices(token);
+  return res;
+};
+
 const getUserSettings = async recipientId => {
   const client = await createClient({ recipientId });
   const res = await client.getUserSettings();
@@ -749,6 +756,7 @@ module.exports = {
   getDataReady,
   getDomainMX,
   getKeyBundle,
+  getMaxDevices,
   getUserSettings,
   insertPreKeys,
   isCriptextDomain,
