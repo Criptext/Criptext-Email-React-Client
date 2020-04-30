@@ -1,7 +1,7 @@
 #!bin/bash
 tempBuildFolder='deps'
 lsbCommand='lsb_release'
-lsbDebian='Debian'
+lsbDebianFamily=("Debian Ubuntu Mint Kali")
 lsbArch='Arch'
 
 function PSM() {
@@ -21,7 +21,7 @@ PEM "    This script will try to install some packages in your system."
 PEM "    Plase use it only in a development environment."
 
 while true; do
-    read -p "    Do you want to coninue? (Yes/No):" yn
+    read -p "    Do you want to continue? (Yes/No):" yn
     case $yn in
         [Yy]* ) break;;
         [Nn]* ) exit;;
@@ -41,7 +41,7 @@ fi
 
 LSB_DISTRO=$(lsb_release -is)
 
-if [ $LSB_DISTRO == $lsbDebian ]; then
+if [[ " ${lsbDebianFamily[@]} " =~ " ${LSB_DISTRO} " ]]; then
   LD_FLAGS='/usr/lib/x86_64-linux-gnu/libcrypto.a'
   repoUpdate='apt-get update'
 elif [ $LSB_DISTRO == $lsbArch ]; then
@@ -70,8 +70,8 @@ printf "  - Checking latest repos \n";
 # ================================================
 
 printf "  - Installing build dependencies \n";
-if [ $LSB_DISTRO == $lsbDebian ]; then
-  INSTALL_DEPS_ERROR=$( { sudo apt-get install libssl1.0-dev gcc cmake git pkg-config -y > /dev/null; } 2>&1 )
+if [[ " ${lsbDebianFamily[@]} " =~ " ${LSB_DISTRO} " ]]; then
+  INSTALL_DEPS_ERROR=$( { sudo apt-get install libssl1.0-dev gcc cmake git pkg-config tcl -y > /dev/null; } 2>&1 )
 elif [ $LSB_DISTRO == $lsbArch ]; then
   INSTALL_DEPS_ERROR=$( { sudo pacman -S --noconfirm base-devel cmake git pkg-config openssl tcl > /dev/null; } 2>&1 )
 fi
@@ -140,8 +140,10 @@ printf "  - Preparing build \n";
 cd ./civetweb > /dev/null
 printf "  - Making install civetweb \n";
 make slib > /dev/null
-sudo cp include/* /usr/include/ > /dev/null
-sudo cp libcivetweb.so* /usr/lib/ > /dev/null
+sudo cp include/* /usr/local/include/ > /dev/null
+sudo cp libcivetweb.so* /usr/local/lib/ > /dev/null
+make lib > /dev/null
+sudo cp libcivetweb.a /usr/local/lib > /dev/null 
 if [ $? -ne 0 ]; then
   PEM "    Failed to make install civetweb";
   removeTempFolder3;
