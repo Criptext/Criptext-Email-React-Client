@@ -135,7 +135,7 @@
     },
     "upgradePlus": {
       "title": "You need Plus for this",
-      "message": "You've reached your maximum devices allowed ({0}). Upgrade to Plus to get up to 5 devices connected on your account. Otherwise, remove an existing device in order to continue logging in.",
+      "message": "You've reached your maximum devices allowed (2). Upgrade to Plus to get up to 5 devices connected on your account. Otherwise, remove an existing device in order to continue logging in.",
       "buttons": {
         "cancel": "No, Thanks",
         "confirm": "Get Plus"

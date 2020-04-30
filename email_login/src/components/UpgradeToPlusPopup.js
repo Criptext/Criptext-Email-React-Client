@@ -13,7 +13,7 @@ const UpgradeToPlusPopup = props => {
         <h1>{upgradePlus.title}</h1>
       </div>
       <div className="popup-paragraph">
-        <p>{string.formatString(upgradePlus.message, 2)}</p>
+        <p>{upgradePlus.message}</p>
       </div>
       <div className="popup-buttons">
         <button
