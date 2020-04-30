@@ -7,6 +7,7 @@ import SettingGeneral from './SettingGeneral';
 import SettingUpgradePlusWrapper from './SettingUpgradePlusWrapper';
 import { version } from './../../package.json';
 import string from '../lang';
+import { isPlus } from '../utils/plus';
 
 const Sections = [
   string.settings.account,
@@ -24,8 +25,7 @@ const Settings = props => (
           key={index}
           name={section}
           sectionName={
-            section === Sections[4] &&
-            (props.customerType > 0 && props.customerType < 3)
+            section === Sections[4] && isPlus(props.customerType)
               ? string.settings.billing
               : section
           }

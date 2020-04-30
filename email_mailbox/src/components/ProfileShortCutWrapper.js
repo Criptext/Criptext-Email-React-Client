@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ProfileShortCut from './ProfileShortCut';
 import { defineAccountVisibleParams } from '../utils/AccountUtils';
 import { myAccount } from '../utils/electronInterface';
+import { isPlus } from '../utils/plus';
 
 class ProfileShortCutWrapper extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class ProfileShortCutWrapper extends Component {
       this.props.accounts[0],
       this.props.avatarTimestamp
     );
-    const showPlusBorder = myAccount.customerType !== 0;
+    const showPlusBorder = isPlus(myAccount.customerType);
     return (
       <ProfileShortCut
         avatarUrl={avatarUrl}

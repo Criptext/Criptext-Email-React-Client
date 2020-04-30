@@ -40,6 +40,7 @@ import { storeResendConfirmationTimestamp } from '../utils/storage';
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 import { appDomain } from '../utils/const';
+import { isPlus } from '../utils/plus';
 
 const EDITING_MODES = {
   EDITING_NAME: 'editing-name',
@@ -484,7 +485,7 @@ class SettingAccountWrapper extends Component {
   };
 
   handleChangeAliasStatus = (...args) => {
-    if (!myAccount.customerType) {
+    if (!isPlus(myAccount.customerType)) {
       this.showUpgradeToPlusPopup('alias');
       return;
     }
@@ -492,7 +493,7 @@ class SettingAccountWrapper extends Component {
   };
 
   handleChangePanel = (...args) => {
-    if (!myAccount.customerType) {
+    if (!isPlus(myAccount.customerType)) {
       this.showUpgradeToPlusPopup(args[0]);
       return;
     }
@@ -500,7 +501,7 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClickDeleteAlias = (rowId, email) => {
-    if (!myAccount.customerType) {
+    if (!isPlus(myAccount.customerType)) {
       this.showUpgradeToPlusPopup('alias');
       return;
     }
@@ -517,7 +518,7 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClickDeleteCustomDomain = domainObject => {
-    if (!myAccount.customerType) {
+    if (!isPlus(myAccount.customerType)) {
       this.showUpgradeToPlusPopup('custom-domains');
       return;
     }
