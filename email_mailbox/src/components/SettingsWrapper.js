@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './Settings';
-import { mySettings } from '../utils/electronInterface';
+import { mySettings, myAccount } from '../utils/electronInterface';
 import string from '../lang';
 
 class SettingsWrapper extends Component {
@@ -16,6 +16,7 @@ class SettingsWrapper extends Component {
     return (
       <Settings
         {...this.props}
+        customerType={myAccount.customerType}
         sectionSelected={this.state.sectionSelected}
         isFromStore={mySettings.isFromStore}
         onClickCheckForUpdates={this.props.onCheckForUpdates}

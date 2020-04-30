@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { myAccount } from '../utils/electronInterface';
+import { myAccount, mySettings } from '../utils/electronInterface';
 import './settingupgradepluss.scss';
 
 class SettingUpgradePlusWrapper extends Component {
@@ -16,7 +16,7 @@ class SettingUpgradePlusWrapper extends Component {
           title="cptx-upgrade-to-plus-iframe"
           src={`https://admin.criptext.com/?#/account/billing?token=${
             myAccount.jwt
-          }`}
+          }&lang=${mySettings.language || 'en'}`}
         />
       </div>
     );

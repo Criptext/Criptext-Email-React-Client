@@ -47,7 +47,11 @@ class SignInPasswordWrapper extends Component {
     return (
       <SignInPassword
         {...this.props}
-        buttonState={this.state.buttonState}
+        buttonState={
+          this.props.isRemoveDevicesLinkActive
+            ? ButtonState.LOADING
+            : this.state.buttonState
+        }
         onClickForgot={this.handleClickForgot}
         onClickSignInWithPassword={this.handleClickSignInWithPassword}
         onChangeField={this.handleChangeField}
@@ -276,6 +280,7 @@ class SignInPasswordWrapper extends Component {
 SignInPasswordWrapper.propTypes = {
   goToWaitingApproval: PropTypes.func,
   hasTwoFactorAuth: PropTypes.bool,
+  isRemoveDevicesLinkActive: PropTypes.bool,
   needsRemoveDevices: PropTypes.bool,
   onGoToChangePassword: PropTypes.func,
   removeDevicesData: PropTypes.object,

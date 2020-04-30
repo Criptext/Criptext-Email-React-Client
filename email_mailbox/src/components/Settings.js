@@ -23,6 +23,12 @@ const Settings = props => (
         <Items
           key={index}
           name={section}
+          sectionName={
+            section === Sections[4] &&
+            (props.customerType > 0 && props.customerType < 3)
+              ? string.settings.billing
+              : section
+          }
           onClick={props.onClickSection}
           selected={section === props.sectionSelected}
         />
@@ -40,7 +46,7 @@ const Items = props => (
     className={'section-item' + (props.selected ? ' selected' : '')}
     onClick={() => props.onClick(props.name)}
   >
-    <span>{props.name}</span>
+    <span>{props.sectionName}</span>
   </li>
 );
 
@@ -94,10 +100,12 @@ const renderFooter = ({
 Items.propTypes = {
   name: PropTypes.string,
   onClick: PropTypes.func,
+  sectionName: PropTypes.string,
   selected: PropTypes.bool
 };
 
 Settings.propTypes = {
+  customerType: PropTypes.number,
   onClickSection: PropTypes.func,
   sectionSelected: PropTypes.string
 };

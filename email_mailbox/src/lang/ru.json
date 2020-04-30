@@ -753,6 +753,7 @@
       "add": "Add Alias"
     },
     "appearance": "вид",
+    "billing": "Billing",
     "custom_domains": {
       "title": "Custom Domains",
       "description": "Send emails from a personal domain that you own.",

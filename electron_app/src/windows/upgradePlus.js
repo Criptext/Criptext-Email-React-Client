@@ -4,8 +4,8 @@ const language = require('../lang/index');
 const openUpgradeToPlusWindow = token => {
   try {
     const workerWin = new BrowserWindow({
-      width: 400,
-      height: 700,
+      width: 700,
+      height: 560,
       transparent: false,
       center: true,
       show: true,

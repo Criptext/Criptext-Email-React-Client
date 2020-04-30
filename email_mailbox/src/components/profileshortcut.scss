@@ -44,12 +44,14 @@
     justify-content: center;
     margin: 0 auto;
     width: 34px;
+    z-index: 1;
   }
 
   .cptx-header-profile-badge{
     position: absolute;
     right: 3px;
     top: 3px;
+    z-index: 2;
 
     >div{
       height: 7px;

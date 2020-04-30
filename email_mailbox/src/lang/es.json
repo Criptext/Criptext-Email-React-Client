@@ -809,6 +809,7 @@
       "add": "Agregar Alias"
     },
     "appearance": "Apariencia",
+    "billing": "Billing",
     "custom_domains": {
       "title": "Dominio Personal",
       "description": "Envía correos desde un dominio personal que posees.",

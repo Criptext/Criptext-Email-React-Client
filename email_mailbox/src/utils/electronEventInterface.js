@@ -1379,7 +1379,7 @@ const handleCustomerTypeUpdateEvent = async (
   const recipientId = accountRecipientId || myAccount.recipientId;
 
   await updateAccount({ customerType: newCustomerType, recipientId });
-  return { rowid };
+  return { rowid, profileChanged: true };
 };
 
 const handleAddressCreatedEvent = async ({ rowid, params }, accountId) => {

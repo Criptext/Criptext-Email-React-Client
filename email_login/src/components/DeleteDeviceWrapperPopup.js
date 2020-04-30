@@ -16,7 +16,7 @@ class DeleteDeviceWrapperPopup extends Component {
       confirmButtonState: ButtonState.DISABLED,
       deviceIdsChecked: [],
       devices: props.devices,
-      maxDevices: 10
+      maxDevices: props.maxDevices
     };
     const [myRecipientId, myDomain = appDomain] = props.emailAddress.split('@');
     this.recipientId = myRecipientId;
@@ -140,6 +140,7 @@ DeleteDeviceWrapperPopup.propTypes = {
   devices: PropTypes.array,
   devicesDeleted: PropTypes.func,
   emailAddress: PropTypes.string,
+  maxDevices: PropTypes.number,
   onDismiss: PropTypes.func,
   password: PropTypes.string,
   token: PropTypes.string

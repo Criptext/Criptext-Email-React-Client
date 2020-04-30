@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SettingsContainer from './../components/SettingsContainer';
-import { updateLabel, removeLabel } from './../actions';
+import { updateLabel, removeLabel, reloadAccounts } from './../actions';
 import { myAccount } from '../utils/electronInterface';
 import {
   cleanDataLogout,
@@ -186,6 +186,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           recipientId: myAccount.recipientId,
           customerType
         });
+        dispatch(reloadAccounts());
       }
 
       await checkAddressesAndDomains(addresses); //syncro
