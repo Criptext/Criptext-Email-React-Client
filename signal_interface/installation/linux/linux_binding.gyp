@@ -44,7 +44,7 @@
         "/usr/lib/x86_64-linux-gnu/libssl.a",
         "/usr/lib/x86_64-linux-gnu/libcrypto.a",
         "/usr/local/lib/libsqlcipher.a",
-        "/home/criptext/Pedro/git/civetweb/libcivetweb.a",
+        "/usr/local/lib/libcivetweb.a",
         "/usr/local/lib/libsignal-protocol-c.a",
         "/usr/local/lib/libcjson.a",
         "/usr/local/lib/libspdlog.a"

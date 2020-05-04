@@ -10,6 +10,7 @@ const packageDirs = [
   abs('email_loading'),
   abs('email_login'),
   abs('email_mailbox'),
+  abs('email_pin'),
   abs('electron_app')
 ]
 

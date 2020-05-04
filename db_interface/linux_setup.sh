@@ -1,7 +1,7 @@
 #!bin/bash
 tempBuildFolder='deps'
 lsbCommand='lsb_release'
-lsbDebian='Debian'
+lsbDebianFamily=("Debian Ubuntu Mint Kali")
 lsbArch='Arch'
 
 function PSM() {
@@ -21,7 +21,7 @@ PEM "    This script will try to install some packages in your system."
 PEM "    Plase use it only in a development environment."
 
 while true; do
-    read -p "    Do you want to coninue? (Yes/No):" yn
+    read -p "    Do you want to continue? (Yes/No):" yn
     case $yn in
         [Yy]* ) break;;
         [Nn]* ) exit;;
@@ -41,7 +41,7 @@ fi
 
 LSB_DISTRO=$(lsb_release -is)
 
-if [ $LSB_DISTRO == $lsbDebian ]; then
+if [[ " ${lsbDebianFamily[@]} " =~ " ${LSB_DISTRO} " ]]; then
   LD_FLAGS='/usr/lib/x86_64-linux-gnu/libcrypto.a'
   repoUpdate='apt-get update'
 elif [ $LSB_DISTRO == $lsbArch ]; then
@@ -69,8 +69,8 @@ printf "  - Checking latest repos... \n";
 # Install deps
 printf "  - Installing build dependencies... \n";
 
-if [ $LSB_DISTRO == $lsbDebian ]; then
-  INSTALL_DEPS_ERROR=$( { sudo apt-get install gcc cmake git pkg-config sqlite3 libsqlite3-dev -y > /dev/null; } 2>&1 )
+if [[ " ${lsbDebianFamily[@]} " =~ " ${LSB_DISTRO} " ]]; then
+  INSTALL_DEPS_ERROR=$( { sudo apt-get install gcc cmake git pkg-config sqlite3 libsqlite3-dev tcl -y > /dev/null; } 2>&1 )
 elif [ $LSB_DISTRO == $lsbArch ]; then
   INSTALL_DEPS_ERROR=$( { sudo pacman -S --noconfirm base-devel gcc cmake git pkg-config sqlite3 openssl tcl > /dev/null; } 2>&1 )
 fi
