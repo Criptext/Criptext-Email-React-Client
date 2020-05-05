@@ -791,7 +791,7 @@
       "domains": {
         "message": "Agrega direcciones de correo con un dominio que te pertenezca como tu@compania.com"
       },
-      "message": "Obten esto y mas cuando te subscribas a Plus!",
+      "message": "Obten esto y más cuando te subscribas a Plus!",
       "buttons": {
         "cancel": "No, Gracias",
         "confirm": "Obtener Plus"
@@ -948,7 +948,7 @@
     "trusted_devices": "dispositivos verificados",
     "two_factor_authentication": "Autenticación de dos factores",
     "two_factor_not_available_text": "Para deshabilitar Autenticación de dos factores deberás introducir tu correo de recuperación",
-    "upgrade_plus": "Upgrade to Plus",
+    "upgrade_plus": "Subscribete a Plus",
     "user_labels": "Etiquetas del Usuario",
     "verified": "verificado"
   },

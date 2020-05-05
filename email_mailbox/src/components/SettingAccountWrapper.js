@@ -40,7 +40,7 @@ import { storeResendConfirmationTimestamp } from '../utils/storage';
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 import { appDomain } from '../utils/const';
-import { isPlus } from '../utils/plus';
+import { isPlus, isEnterprise } from '../utils/plus';
 
 const EDITING_MODES = {
   EDITING_NAME: 'editing-name',
@@ -176,7 +176,7 @@ class SettingAccountWrapper extends Component {
       },
       upgradeToPlusType: undefined
     };
-    this.isEnterprise = myAccount.recipientId.includes('@');
+    this.isEnterprise = isEnterprise(myAccount.customerType);
     this.initEventHandlers();
   }
 

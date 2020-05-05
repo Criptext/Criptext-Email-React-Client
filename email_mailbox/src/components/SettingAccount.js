@@ -34,10 +34,12 @@ const SettingAccount = props => (
       <div className="cptx-section-block-title">
         <h1>{string.settings.addresses}</h1>
       </div>
-      <div className="cptx-section-block-content">
-        <CustomDomainsBlock {...props} />
-        <AliasesBlock {...props} />
-      </div>
+      {!props.isEnterprise && (
+        <div className="cptx-section-block-content">
+          <CustomDomainsBlock {...props} />
+          <AliasesBlock {...props} />
+        </div>
+      )}
       <div className="cptx-section-block-title">
         <h1>{string.settings.privacy}</h1>
       </div>

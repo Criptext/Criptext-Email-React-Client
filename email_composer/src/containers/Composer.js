@@ -60,6 +60,7 @@ import {
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import { convertToHumanSize } from './../utils/StringUtils';
+import { isPlus } from '../utils/plus';
 
 const MAX_RECIPIENTS_AMOUNT = 300;
 const MAX_ATTACMENTS_TOTAL_SIZE = 25 * 1000 * 1000;
@@ -187,7 +188,11 @@ class ComposerWrapper extends Component {
 
     await this.checkAddressesAndDomains();
 
-    const allAlias = await getAlias({ accountId: accounts.map(acc => acc.id) });
+    const allAlias = await getAlias({
+      accountId: accounts
+        .filter(acc => isPlus(acc.customerType))
+        .map(acc => acc.id)
+    });
     const aliasAccounts = allAlias
       .map(alias => {
         const acc = accounts.find(acc => acc.id === alias.accountId);
