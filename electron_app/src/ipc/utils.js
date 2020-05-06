@@ -16,6 +16,7 @@ const dbManager = require('./../database/DBEmanager');
 const socketClient = require('./../socketClient');
 const { upApp } = require('./../windows');
 const myAccount = require('../Account');
+const { closeAlice } = require('../aliceManager');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -33,6 +34,7 @@ ipc.answerRenderer('process-pending-events', params => {
 });
 
 ipc.answerRenderer('restart-app', () => {
+  closeAlice();
   app.relaunch();
   app.exit(0);
 });

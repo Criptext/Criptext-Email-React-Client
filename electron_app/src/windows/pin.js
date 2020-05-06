@@ -16,6 +16,8 @@ const {
 const keytar = require('keytar');
 const globalManager = require('./../globalManager');
 const { encryptDataBase } = require('./../utils/dataBaseUtils');
+const { closeAlice } = require('../aliceManager');
+
 let pinWindow;
 let shouldCloseForce = false;
 
@@ -154,6 +156,7 @@ const setUpPin = async ({
 
   if (shouldExport || shouldResetPin) {
     setTimeout(() => {
+      closeAlice();
       app.relaunch();
       app.exit(0);
     }, 5000);
