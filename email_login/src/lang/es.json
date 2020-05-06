@@ -135,7 +135,7 @@
     },
     "upgradePlus": {
       "title": "Necesitas Plus para esto",
-      "message": "Has alcanzado el máximo número de dispositivos (2). Subscribete a Plus para poder vincular 5 dispositivos. Caso contrario deberás remover un dispositivo para continuar.",
+      "message": "Has alcanzado el máximo número de dispositivos (2). Suscríbete a Plus para poder vincular 5 dispositivos. Caso contrario deberás remover un dispositivo para continuar.",
       "buttons": {
         "cancel": "No, Gracias",
         "confirm": "Obtener Plus"
