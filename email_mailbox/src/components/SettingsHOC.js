@@ -7,15 +7,25 @@ import './settings.scss';
 
 const Logoutpopup = PopupHOC(LogoutPopup);
 
-const renderPathSection = titles => {
+const renderPathSection = (titles, goBackToSettings) => {
   return titles.reduce((result, title, index) => {
+    const isLast = index === titles.length - 1;
+    const titleComponent = (
+      <h1
+        key={index}
+        className={`settings-title-${isLast ? 'active' : 'inactive'}`}
+        onClick={isLast ? null : goBackToSettings}
+      >
+        {title}
+      </h1>
+    );
     if (!result.length) {
-      return [...result, <h1 key={index}>{title}</h1>];
+      return [...result, titleComponent];
     }
     return [
       ...result,
       <i key={`i-${index}`} className="icon-arrow-right" />,
-      <h1 key={index}>{title}</h1>
+      titleComponent
     ];
   }, []);
 };
@@ -25,6 +35,7 @@ const SettingsHOC = InComponent =>
     static propTypes = {
       titlePath: PropTypes.array,
       isHiddenSettingsPopup: PropTypes.bool,
+      onChangePanel: PropTypes.func,
       onClosePopup: PropTypes.func,
       onConfirmLogout: PropTypes.func
     };
@@ -34,7 +45,7 @@ const SettingsHOC = InComponent =>
         <div className="settings-container">
           <Message onClickSection={() => {}} />
           <div className="settings-title">
-            {renderPathSection(this.props.titlePath)}
+            {renderPathSection(this.props.titlePath, this.goBackToSettings)}
           </div>
           <InComponent {...this.props} />
           <Logoutpopup
@@ -47,6 +58,10 @@ const SettingsHOC = InComponent =>
         </div>
       );
     }
+
+    goBackToSettings = () => {
+      this.props.onChangePanel('settings');
+    };
   };
 
 export default SettingsHOC;

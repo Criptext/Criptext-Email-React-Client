@@ -2100,6 +2100,7 @@ export const Event = {
   RESTORE_BACKUP_FINISHED: 'restore-backup-finished',
   RESTORE_BACKUP_SUCCESS: 'restore-backup-success',
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
+  SETTINGS_OPENED: 'settings-opened',
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
   STOP_LOAD_SYNC: 'stop-load-sync',

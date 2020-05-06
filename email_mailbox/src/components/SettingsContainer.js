@@ -8,7 +8,10 @@ import { myAccount } from '../utils/electronInterface';
 import {
   sendRemoveDeviceErrorMessage,
   sendAliasSuccessStatusMessage,
-  sendCustomDomainDeletedMessage
+  sendCustomDomainDeletedMessage,
+  addEvent,
+  removeEvent,
+  Event
 } from '../utils/electronEventInterface';
 import { updateAlias, activateAddress, getCustomDomain } from '../utils/ipc';
 import { appDomain } from '../utils/const';
@@ -144,6 +147,12 @@ class SettingsContainer extends Component {
       replyToEmail,
       domains
     });
+
+    addEvent(Event.SETTINGS_OPENED, this.handleSetSettings);
+  }
+
+  componentWillMount() {
+    removeEvent(Event.SETTINGS_OPENED, this.handleSetSettings);
   }
 
   handleAddDomain = domainObject => {
@@ -241,6 +250,12 @@ class SettingsContainer extends Component {
         }
       }
     );
+  };
+
+  handleSetSettings = () => {
+    this.setState({
+      panel: PANEL.SETTINGS
+    });
   };
 
   handleChangePanel = panel => {

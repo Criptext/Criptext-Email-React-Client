@@ -5,7 +5,8 @@ import {
   addEvent,
   removeEvent,
   Event,
-  checkUserGuideSteps
+  checkUserGuideSteps,
+  sendMailboxEvent
 } from '../utils/electronEventInterface';
 import { checkForUpdates, processPendingEvents } from '../utils/ipc';
 import { LabelType, getPendingRestoreStatus } from '../utils/electronInterface';
@@ -156,7 +157,9 @@ class PanelWrapper extends Component {
               threadIdSelected: null
             }
           };
-          this.setState({ sectionSelected });
+          this.setState({ sectionSelected }, () => {
+            sendMailboxEvent(Event.SETTINGS_OPENED);
+          });
         }
         break;
       default:
