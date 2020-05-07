@@ -62,6 +62,7 @@ async function initApp() {
         await upStepCreateDBEncrypted();
       } catch (ex) {
         await deleteNotEncryptDatabase();
+        closeAlice();
         app.relaunch();
         app.exit(0);
         console.log(ex);

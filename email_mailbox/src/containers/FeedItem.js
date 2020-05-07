@@ -12,7 +12,14 @@ const mapStateToProps = (state, ownProps) => {
   const name = contact ? contact.get('name') : '';
   const email = contact ? contact.get('email') : '';
   const myEmailAddress = myAccount.email;
-  const contactName = email === myEmailAddress ? string.activity.someone : name;
+  const contactName =
+    email === myEmailAddress
+      ? string.activity.someone
+      : name
+        ? name
+        : email
+          ? email
+          : string.activity.someone;
   const title = contact ? `${contactName} ${action}` : '';
   const subtitle = subject;
   return {

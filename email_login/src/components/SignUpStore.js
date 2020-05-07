@@ -74,7 +74,7 @@ export const formItems = [
     icon2: '',
     errorMessage: errorMessages.EMAIL_INVALID,
     value: '',
-    optional: true
+    optional: false
   },
   {
     name: 'acceptterms',

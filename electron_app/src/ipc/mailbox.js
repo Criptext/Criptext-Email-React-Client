@@ -18,7 +18,7 @@ const {
 const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
 const { checkAlive } = require('./../reachabilityTask');
-const { restartAlice } = require('./../aliceManager');
+const { restartAlice, closeAlice } = require('./../aliceManager');
 
 ipc.answerRenderer('close-mailbox', () => {
   mailboxWindow.close();
@@ -29,6 +29,7 @@ ipc.answerRenderer('install-update', () => {
 });
 
 ipc.answerRenderer('logout-app', () => {
+  closeAlice();
   app.relaunch();
   app.exit(0);
 });

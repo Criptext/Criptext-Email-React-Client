@@ -14,6 +14,7 @@ const fileUtils = require('./utils/FileUtils');
 const myAccount = require('./Account');
 const { APP_DOMAIN } = require('./utils/const');
 const recoveryKeyManager = require('./recoveryKey');
+const { closeAlice } = require('./aliceManager');
 
 let resetKeyParams;
 
@@ -67,6 +68,7 @@ const start = async () => {
       oldPass: oldPin
     });
     if (!result) {
+      closeAlice();
       app.relaunch();
       app.exit(0);
     }
@@ -95,6 +97,7 @@ const start = async () => {
   } catch (ex) {
     console.log(ex);
   }
+  closeAlice();
   app.relaunch();
   app.exit(0);
 };
