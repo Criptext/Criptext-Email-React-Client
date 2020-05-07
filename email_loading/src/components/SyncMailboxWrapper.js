@@ -214,8 +214,9 @@ class SyncMailboxWrapper extends Component {
       const { name, description } = string.errors.unableToConnect;
       throwError({
         name,
-        description: description + statusCode
+        description: `${description} ${statusCode}`
       });
+      this.linkingDevicesThrowError();
     }
   };
 

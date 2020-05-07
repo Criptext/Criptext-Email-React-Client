@@ -71,7 +71,8 @@ import {
   EmailStatus,
   composerEvents,
   EXTERNAL_RECIPIENT_ID_SERVER,
-  NOTIFICATION_ACTIONS
+  NOTIFICATION_ACTIONS,
+  SEND_BUTTON_STATUS
 } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
@@ -935,16 +936,18 @@ const handleEmailTrackingUpdate = async (
           emails: [contactEmail],
           accountId
         });
-        const contactId = contact.id;
-        const feedItemParams = {
-          accountId,
-          date,
-          type,
-          emailId: email.id,
-          contactId
-        };
-        await createFeedItem(feedItemParams);
-        feedItemAdded = true;
+        if (contact) {
+          const contactId = contact.id;
+          const feedItemParams = {
+            accountId,
+            date,
+            type,
+            emailId: email.id,
+            contactId
+          };
+          await createFeedItem(feedItemParams);
+          feedItemAdded = true;
+        }
       }
     }
   }
@@ -1533,17 +1536,12 @@ ipcRenderer.on('save-draft-failed', () => {
 ipcRenderer.on(
   'open-mailto-in-composer',
   (ev, { subject, content, emailAddress }) => {
-    const disabledSendButtonStatus = 1;
-    const enabledSendButtonStatus = 2;
     openFilledComposerWindow({
       type: composerEvents.NEW_WITH_DATA,
       data: {
         email: { subject, content },
         recipients: { to: emailAddress },
-        status:
-          subject && content
-            ? enabledSendButtonStatus
-            : disabledSendButtonStatus
+        status: SEND_BUTTON_STATUS.ENABLED
       }
     });
   }

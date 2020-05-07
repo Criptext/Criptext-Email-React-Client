@@ -49,6 +49,7 @@ const SettingsPopup = props => {
             props.changePasswordPopupParams.isDisabledChangePasswordSubmitButton
           }
           isHidden={props.isHidden}
+          isLoading={props.changePasswordPopupParams.isLoading}
           newPasswordInput={props.changePasswordPopupParams.newPasswordInput}
           oldPasswordInput={props.changePasswordPopupParams.oldPasswordInput}
           onChangeInputValueChangePassword={
@@ -169,6 +170,7 @@ const SettingsPopup = props => {
             props.setReplyToPopupParams.isDisabledSubmitButton
           }
           isHidden={props.isHidden}
+          isLoading={props.setReplyToPopupParams.isLoading}
           onChangeInputValueOnSetReplyTo={props.onChangeInputValueOnSetReplyTo}
           onConfirmSetReplyTo={props.onConfirmSetReplyTo}
           onTogglePopup={() => {

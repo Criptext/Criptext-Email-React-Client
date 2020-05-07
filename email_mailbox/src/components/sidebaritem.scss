@@ -65,6 +65,10 @@
   width: auto;
 }
 
+@mixin collapse-nav-item-a{
+  margin: 0 auto;
+}
+
 @mixin collapse-nav-item-badge {
   margin: 0;
   position: absolute;
@@ -83,7 +87,7 @@
   font-size: 0;
   height: 7px;
   min-width: 0px;
-  width: 5px;
+  width: 3px;
 }
 
 .sidebar-app-collapse .nav-item{
@@ -95,6 +99,10 @@
       .nav-item-badge{
         @include collapse-nav-item-badge-mini;
       }
+    }
+
+    a{
+      @include collapse-nav-item-a;
     }
 
     .nav-item-icon{
@@ -120,6 +128,10 @@
       }
     }
 
+    a{
+      @include collapse-nav-item-a;
+    }
+    
     .nav-item-icon{
       @include collapse-nav-item-icon;
     }

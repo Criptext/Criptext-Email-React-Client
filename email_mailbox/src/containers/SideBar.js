@@ -4,7 +4,8 @@ import { getSystemLabels, getVisibleLabels } from '../selectors/labels';
 import {
   SectionType,
   composerEvents,
-  formInviteFriendEmailContent
+  formInviteFriendEmailContent,
+  SEND_BUTTON_STATUS
 } from './../utils/const';
 import { openFilledComposerWindow } from './../utils/ipc';
 
@@ -24,7 +25,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           email: {
             subject: 'Hey, try Criptext now!',
             content: formInviteFriendEmailContent()
-          }
+          },
+          status: SEND_BUTTON_STATUS.DISABLED
         }
       });
     },

@@ -56,19 +56,34 @@ const InputErrorMessage = ({ hasError, errorMessage, value }) => {
 
 const SetReplyToEmailPopupButtons = props => (
   <div className="popup-buttons">
-    <button
-      className="button-a popup-cancel-button"
-      onClick={props.onTogglePopup}
-    >
-      <span>{string.popups.set_reply_to.cancelButtonLabel}</span>
-    </button>
-    <button
-      className="button-a popup-confirm-button"
-      onClick={props.onConfirmSetReplyTo}
-      disabled={props.isDisabledSetReplyToSubmitButton}
-    >
-      <span>{string.popups.set_reply_to.confirmButtonLabel}</span>
-    </button>
+    {props.isLoading ? (
+      <LoadingWheel />
+    ) : (
+      <div>
+        <button
+          className="button-a popup-cancel-button"
+          onClick={props.onTogglePopup}
+        >
+          <span>{string.popups.set_reply_to.cancelButtonLabel}</span>
+        </button>
+        <button
+          className="button-a popup-confirm-button"
+          onClick={props.onConfirmSetReplyTo}
+          disabled={props.isDisabledSetReplyToSubmitButton}
+        >
+          <span>{string.popups.set_reply_to.confirmButtonLabel}</span>
+        </button>
+      </div>
+    )}
+  </div>
+);
+
+const LoadingWheel = () => (
+  <div className="loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
   </div>
 );
 
@@ -82,7 +97,8 @@ SetReplyToPopupInput.propTypes = {
 SetReplyToEmailPopupButtons.propTypes = {
   onTogglePopup: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
-  isDisabledSetReplyToSubmitButton: PropTypes.bool
+  isDisabledSetReplyToSubmitButton: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 SetReplyToEmailPopup.propTypes = {
