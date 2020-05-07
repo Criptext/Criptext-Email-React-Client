@@ -211,7 +211,8 @@
     background-color: transparent;
     display: flex;
     flex-direction: row;
-    height: 65px;
+    flex-wrap: wrap;
+    height: 105px;
 
     .email-info-letter{
       align-items: center;
@@ -277,6 +278,38 @@
             text-align: right;
           }
         }
+      }
+    }
+
+    .email-info-blocked{
+      margin-top: 20px;
+      margin-bottom: 25px;
+      background-color: transparent;
+      font-family: NunitoSans;
+      font-size: 14px;
+      font-weight: 100;
+      line-height: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #4a4a4a;
+      margin-left: 46px;
+      display: flex;
+      align-items:center;
+
+      svg {
+       height: 15px;
+       width: 15px;
+       margin-right: 5px;
+      }
+
+      button {
+        background-color: transparent;
+        color: #0091ff;
+        cursor: pointer;
+        font-family: NunitoSans;
+        font-size: 14px;
+        font-weight: 200;
       }
     }
   }

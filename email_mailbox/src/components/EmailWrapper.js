@@ -19,6 +19,7 @@ class EmailWrapper extends Component {
       displayEmail: false,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
+      isHiddenPopOverEmailBlocked: true,
       hideView: false,
       popupContent: undefined,
       inlineImages: []
@@ -34,10 +35,12 @@ class EmailWrapper extends Component {
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
         isHiddenPopOverEmailActions={this.state.isHiddenPopOverEmailActions}
+        isHiddenPopOverEmailBlocked={this.state.isHiddenPopOverEmailBlocked}
         hideView={this.state.hideView}
         onToggleEmail={this.handleToggleEmail}
         onTooglePopOverEmailMoreInfo={this.handleTooglePopOverEmailMoreInfo}
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
+        onTogglePopOverEmailBlocked={this.handleTogglePopOverEmailBlocked}
         onClickEditDraft={this.handleClickEditDraft}
         onClickUnsendButton={this.handleClickUnsendButton}
         onClickReplyEmail={this.handleReplyEmail}
@@ -142,6 +145,13 @@ class EmailWrapper extends Component {
     if (ev) ev.stopPropagation();
     this.setState({
       isHiddenPopOverEmailActions: !this.state.isHiddenPopOverEmailActions
+    });
+  };
+
+  handleTogglePopOverEmailBlocked = ev => {
+    if (ev) ev.stopPropagation();
+    this.setState({
+      isHiddenPopOverEmailBlocked: !this.state.isHiddenPopOverEmailBlocked
     });
   };
 

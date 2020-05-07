@@ -6,6 +6,7 @@ import PopupHOC from './PopupHOC';
 import DialogPopup from './DialogPopup';
 import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
+import EmailBlocked from './EmailBlocked';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import AvatarImage from './AvatarImage';
 import ButtonIcon from './ButtonIcon';
@@ -16,6 +17,7 @@ import './email.scss';
 const DeletePermanenltyPopup = PopupHOC(DialogPopup);
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);
+const PopOverEmailBlocked = MenuHOC(EmailBlocked);
 const draftText = 'Draft';
 
 const Email = props => (
@@ -70,6 +72,35 @@ const Email = props => (
           {isExpand(props.displayEmail, props.staticOpen)
             ? renderEmailInfoExpand(props)
             : renderEmailInfoCollapse(props.email.status, props.preview)}
+        </div>
+        <div className="email-info-blocked">
+          <span>
+            <svg
+              className="image-blocked"
+              data-name="Image blocked"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 40 40"
+            >
+              <path
+                className="cls-1"
+                d="M33.7,0H6.3A6.3,6.3,0,0,0,0,6.3V33.7A6.3,6.3,0,0,0,6.3,40H33.7A6.3,6.3,0,0,0,40,33.7V6.3A6.3,6.3,0,0,0,33.7,0ZM27,6.23a4,4,0,1,1-4,4A4,4,0,0,1,27,6.23Zm5.53,26H7.61a1.12,1.12,0,0,1-1.09-1.77L13.32,17a1.14,1.14,0,0,1,2.09-.19l6.84,8.93a1.67,1.67,0,0,0,2.59.16l1.67-1.69A1.6,1.6,0,0,1,29,24.4l4.33,6.19C34,31.48,33.62,32.21,32.52,32.21Z"
+              />
+            </svg>
+          </span>
+          Images blocked for your security.
+          <span>
+            <button
+              className="email-info-button-show-images"
+              onClick={ev => props.onTogglePopOverEmailBlocked(ev)}
+            >
+              Show images
+              <PopOverEmailBlocked
+                menuPosition={{ left: '285px', top: '100px' }}
+                isHidden={props.isHiddenPopOverEmailBlocked}
+                onToggleMenu={props.onTogglePopOverEmailBlocked}
+              />
+            </button>
+          </span>
         </div>
       </div>
       <hr />
@@ -337,7 +368,9 @@ Email.propTypes = {
   onToggleEmail: PropTypes.func,
   popupContent: PropTypes.object,
   preview: PropTypes.string,
-  staticOpen: PropTypes.bool
+  staticOpen: PropTypes.bool,
+  isHiddenPopOverEmailBlocked: PropTypes.bool,
+  onTogglePopOverEmailBlocked: PropTypes.func
 };
 
 export default Email;
