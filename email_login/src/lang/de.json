@@ -189,7 +189,7 @@
         "fullName": "Vollständiger Name",
         "password": "Passwort ändern",
         "confirmPassword": "Passwort bestätigen",
-        "recoveryEmail": "Wiederherstellungs-E-Mail-Adresse (optional)",
+        "recoveryEmail": "Wiederherstellungs-E-Mail-Adresse",
         "checkbox": {
           "prefix": "Ich habe die Allgemeinen Geschäftsbedingungen gelesen und bin damit einverstanden",
           "suffix": "Allgemeine Geschäftsbedingungen"

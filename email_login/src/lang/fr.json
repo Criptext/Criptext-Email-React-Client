@@ -189,7 +189,7 @@
         "fullName": "Nom complet",
         "password": "Changer le mot de passe",
         "confirmPassword": "Confirmez le mot de passe",
-        "recoveryEmail": "Adresse email de récupération (facultatif)",
+        "recoveryEmail": "Adresse email de récupération",
         "checkbox": {
           "prefix": "J'ai lu et j'accepte les",
           "suffix": "Conditions d'utilisation"

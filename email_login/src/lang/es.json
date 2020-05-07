@@ -190,7 +190,7 @@
         "fullName": "Nombre completo",
         "password": "Contraseña",
         "confirmPassword": "Confirma la contraseña",
-        "recoveryEmail": "Correo de recuperación (opcional)",
+        "recoveryEmail": "Correo de recuperación",
         "checkbox": {
           "prefix": "He leído y estoy de acuerdo con los",
           "suffix": "Términos y Condiciones"

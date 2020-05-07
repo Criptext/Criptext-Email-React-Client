@@ -190,7 +190,7 @@
         "fullName": "Full name",
         "password": "Password",
         "confirmPassword": "Confirm password",
-        "recoveryEmail": "Recovery email address (optional)",
+        "recoveryEmail": "Recovery email address",
         "checkbox": {
           "prefix": "I have read and agree with the ",
           "suffix": "Terms and Conditions"
