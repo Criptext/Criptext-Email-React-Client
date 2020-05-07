@@ -107,19 +107,34 @@ const InputErrorMessage = ({ hasError, errorMessage, value }) => {
 
 const ChangePasswordPopupButtons = props => (
   <div className="popup-buttons">
-    <button
-      className="button-a popup-cancel-button"
-      onClick={props.onTogglePopup}
-    >
-      <span>{string.popups.change_password.cancelButtonLabel}</span>
-    </button>
-    <button
-      className="button-a popup-confirm-button"
-      onClick={props.onConfirmChangePassword}
-      disabled={props.isDisabledChangePasswordSubmitButton}
-    >
-      <span>{string.popups.change_password.confirmButtonLabel}</span>
-    </button>
+    {props.isLoading ? (
+      <LoadingWheel />
+    ) : (
+      <div>
+        <button
+          className="button-a popup-cancel-button"
+          onClick={props.onTogglePopup}
+        >
+          <span>{string.popups.change_password.cancelButtonLabel}</span>
+        </button>
+        <button
+          className="button-a popup-confirm-button"
+          onClick={props.onConfirmChangePassword}
+          disabled={props.isDisabledChangePasswordSubmitButton}
+        >
+          <span>{string.popups.change_password.confirmButtonLabel}</span>
+        </button>
+      </div>
+    )}
+  </div>
+);
+
+const LoadingWheel = () => (
+  <div className="loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
   </div>
 );
 
@@ -146,6 +161,7 @@ ChangePasswordPopupInput.propTypes = {
 
 ChangePasswordPopupButtons.propTypes = {
   isDisabledChangePasswordSubmitButton: PropTypes.bool,
+  isLoading: PropTypes.bool,
   onConfirmChangePassword: PropTypes.func,
   onTogglePopup: PropTypes.func
 };

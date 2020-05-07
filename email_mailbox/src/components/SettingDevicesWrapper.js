@@ -56,6 +56,7 @@ class SettingDevicesWrapper extends Component {
     } else {
       sendRemoveDeviceErrorMessage();
     }
+    return isSuccess;
   };
 }
 

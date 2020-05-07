@@ -59,7 +59,7 @@ const definePreviewAndContent = (email, isCollapse, inlineImages) => {
       ? hasInlineImages
         ? email.content
         : emptyEmailText
-      : addCollapseDiv(email.content, email.key, isCollapse)
+      : addCollapseDiv(email.content || emptyEmailText, email.key, isCollapse)
   };
 };
 

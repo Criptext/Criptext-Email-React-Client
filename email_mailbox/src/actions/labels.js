@@ -59,7 +59,7 @@ export const removeLabels = labelIds => {
 export const removeLabel = (id, uuid) => {
   return async dispatch => {
     try {
-      const response = await deleteLabelById(id);
+      const response = await deleteLabelById({ id });
       if (!response) return;
       dispatch(removeLabelOnSuccess(id));
       const eventParams = {

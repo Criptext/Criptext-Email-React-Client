@@ -155,7 +155,8 @@ const destroy = async ({
       params = { threadId };
     } else if (
       type === composerEvents.REPLY ||
-      type === composerEvents.REPLY_ALL
+      type === composerEvents.REPLY_ALL ||
+      type === composerEvents.FORWARD
     ) {
       if (discard) {
         params.threadId = undefined;
@@ -180,7 +181,8 @@ const sendEventToMailbox = (eventName, data) => {
 };
 
 const saveDraftToDatabase = async (composerId, data) => {
-  const { accountId, accountEmail: username } = data;
+  const { accountId, accountEmail: username, isEmpty } = data;
+  if (isEmpty) return;
   const filteredRecipients = {
     from: data.recipients.from,
     to: filterInvalidEmailAddresses(data.recipients.to),

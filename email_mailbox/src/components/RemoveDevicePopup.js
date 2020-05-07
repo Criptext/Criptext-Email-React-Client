@@ -19,23 +19,38 @@ const RemoveDevicePopup = props => {
         <PasswordChangedPopupInput {...props} />
       </div>
       <div className="popup-buttons">
-        <button
-          className="button-a popup-cancel-button"
-          onClick={props.onClickCancelRemoveDevice}
-        >
-          <span>{string.popups.remove_device.cancelButtonLabel}</span>
-        </button>
-        <button
-          className="button-a popup-confirm-button"
-          onClick={props.onClickConfirmRemoveDevice}
-          disabled={props.isDisabledConfirmButton}
-        >
-          <span>{string.popups.remove_device.confirmButtonLabel}</span>
-        </button>
+        {props.isLoading ? (
+          <LoadingWheel />
+        ) : (
+          <div>
+            <button
+              className="button-a popup-cancel-button"
+              onClick={props.onClickCancelRemoveDevice}
+            >
+              <span>{string.popups.remove_device.cancelButtonLabel}</span>
+            </button>
+            <button
+              className="button-a popup-confirm-button"
+              onClick={props.onClickConfirmRemoveDevice}
+              disabled={props.isDisabledConfirmButton}
+            >
+              <span>{string.popups.remove_device.confirmButtonLabel}</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
+const LoadingWheel = () => (
+  <div className="loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
 
 const PasswordChangedPopupInput = ({
   type,
@@ -90,6 +105,7 @@ PasswordChangedPopupInput.propTypes = {
 
 RemoveDevicePopup.propTypes = {
   isDisabledConfirmButton: PropTypes.bool,
+  isLoading: PropTypes.bool,
   onClickCancelRemoveDevice: PropTypes.func,
   onClickConfirmRemoveDevice: PropTypes.func
 };

@@ -16,7 +16,8 @@ class RemoveDevicePopupWrapper extends Component {
       icon: 'icon-not-show',
       value: '',
       errorMessage: '',
-      hasError: false
+      hasError: false,
+      isLoading: false
     };
   }
 
@@ -30,6 +31,7 @@ class RemoveDevicePopupWrapper extends Component {
         value={this.state.value}
         errorMessage={this.state.errorMessage}
         hasError={this.state.hasError}
+        isLoading={this.state.isLoading}
         onChangeInputValue={this.handleChangeInputValue}
         onClickCancelPasswordChanged={this.handleClickCancelPasswordChanged}
         onClickChangeInputType={this.handleClickChangeInputType}
@@ -68,12 +70,14 @@ class RemoveDevicePopupWrapper extends Component {
     this.setState({ type, icon });
   };
 
-  handleClickConfirmRemoveDevice = () => {
+  handleClickConfirmRemoveDevice = async () => {
     const params = {
       deviceId: this.props.deviceId,
       password: hashPassword(this.state.value)
     };
-    this.props.onDeviceToRemove(params);
+    this.setState({ isLoading: true });
+    const isSuccess = await this.props.onDeviceToRemove(params);
+    if (!isSuccess) this.setState({ isLoading: false });
   };
 }
 

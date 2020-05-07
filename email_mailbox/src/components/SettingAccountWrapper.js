@@ -723,10 +723,17 @@ class SettingAccountWrapper extends Component {
         this.state.changePasswordPopupParams.newPasswordInput.value
       )
     };
+    this.setState({
+      changePasswordPopupParams: {
+        ...this.state.changePasswordPopupParams,
+        isLoading: true
+      }
+    });
     const { status } = await changePassword(params);
     if (status === 400) {
       const changePasswordPopupParams = {
         ...this.state.changePasswordPopupParams,
+        isLoading: false,
         oldPasswordInput: {
           ...this.state.changePasswordPopupParams.oldPasswordInput,
           hasError: true,
@@ -741,12 +748,25 @@ class SettingAccountWrapper extends Component {
       this.handleClearPopupParams(SETTINGS_POPUP_TYPES.CHANGE_PASSWORD);
       return;
     }
+    this.setState({
+      changePasswordPopupParams: {
+        ...this.state.changePasswordPopupParams,
+        isLoading: false
+      }
+    });
     sendChangePasswordErrorMessage();
   };
 
   handleConfirmSetReplyTo = async () => {
     const email = this.state.setReplyToPopupParams.replyToInput.email;
     const SUCCESS_STATUS = 200;
+
+    this.setState({
+      setReplyToPopupParams: {
+        ...this.state.setReplyToPopupParams,
+        isLoading: true
+      }
+    });
 
     const { status } = await setReplyTo({
       enable: true,
@@ -782,6 +802,7 @@ class SettingAccountWrapper extends Component {
           settingsPopupType: SETTINGS_POPUP_TYPES.NONE,
           setReplyToPopupParams: {
             isDisabledSubmitButton: true,
+            isLoading: false,
             replyToInput: {
               email: this.state.replyToParams.replyToEmail,
               hasError: false,
