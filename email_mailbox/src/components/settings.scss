@@ -9,10 +9,27 @@
   .settings-title {
     height: 40px;
     margin-left: 40px;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+
+    i {
+      font-size: 26px;
+      margin-top: 5px;
+    }
 
     h1 {
       margin-top: 14px;
+      margin-left: 6px;
       text-transform: uppercase;
+    }
+
+    .settings-title-active {
+      cursor: pointer;
+    }
+
+    .settings-title-inactive {
+      cursor: pointer;
     }
   }
 
@@ -267,7 +284,8 @@
   $_COLOR_TEXT_MAIN_TITLE,
   $_BACKGROUND_COLOR_SETTINGS,
   $_COLOR_TEXT_SETTINGS_TITLE,
-  $_BORDER_COLOR_SETTINGS_HEADER
+  $_BORDER_COLOR_SETTINGS_HEADER,
+  $_COLOR_TEXT_SETTINGS_BREADCRUMBS_TITLE
 ) {
   [data-theme^="#{$_THEME}"],
   [data-theme] [data-theme^="#{$_THEME}"] {
@@ -277,6 +295,22 @@
       .settings-title {
         h1 {
           color: $_COLOR_TEXT_MAIN_TITLE;
+        }
+
+        i {
+          color: $_COLOR_TEXT_MAIN_TITLE;
+        }
+
+        .settings-title-active {
+          color: $_COLOR_TEXT_SETTINGS_TITLE;
+        }
+
+        .settings-title-inactive {
+          color: $_COLOR_TEXT_SETTINGS_BREADCRUMBS_TITLE;
+        }
+
+        .icon-arrow-right {
+          color: $_COLOR_TEXT_SETTINGS_BREADCRUMBS_TITLE;
         }
       }
 
@@ -343,7 +377,8 @@
   $_COLOR_TEXT_MAIN_TITLE_LIGHT,
   $_BACKGROUND_COLOR_SETTINGS_LIGHT,
   $_COLOR_TEXT_SETTINGS_TITLE_LIGHT,
-  $_BORDER_COLOR_SETTINGS_HEADER_LIGHT
+  $_BORDER_COLOR_SETTINGS_HEADER_LIGHT,
+  $_COLOR_TEXT_SETTINGS_BREADCRUMBS_TITLE_LIGHT
 );
 @include themable(
   $_THEME_DARK,
@@ -352,5 +387,6 @@
   $_COLOR_TEXT_MAIN_TITLE_DARK,
   $_BACKGROUND_COLOR_SETTINGS_DARK,
   $_COLOR_TEXT_SETTINGS_TITLE_DARK,
-  $_BORDER_COLOR_SETTINGS_HEADER_DARK
+  $_BORDER_COLOR_SETTINGS_HEADER_DARK,
+  $_COLOR_TEXT_SETTINGS_BREADCRUMBS_TITLE_DARK
 );

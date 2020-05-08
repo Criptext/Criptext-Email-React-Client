@@ -14,15 +14,21 @@ import {
   checkForUpdates,
   cleanDatabase,
   cleanDataLogout,
+  createAlias,
+  createCustomDomain,
   createEmail,
   createEmailLabel,
   createFeedItem,
   createLabel,
+  deleteAliases,
+  deleteCustomDomainByName,
   deleteEmailByKeys,
   deleteEmailContent,
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   deleteLabelById,
+  getAlias,
+  getCustomDomainByParams,
   getEmailByKey,
   getEmailByParams,
   getEmailLabelsByEmailId,
@@ -42,6 +48,7 @@ import {
   sendStartLinkDevicesEvent,
   unsendEmail,
   updateAccount,
+  updateAlias,
   updateContactByEmail,
   updateContactSpamScore,
   updateEmail,
@@ -501,6 +508,24 @@ export const handleEvent = ({
     }
     case SocketCommand.REACTIVATED_ACCOUNT_EVENT: {
       return handleReactivatedAccountEvent(incomingEvent, accountRecipientId);
+    }
+    case SocketCommand.CUSTOMER_TYPE_UPDATE: {
+      return handleCustomerTypeUpdateEvent(incomingEvent, accountRecipientId);
+    }
+    case SocketCommand.ADDRESS_CREATED: {
+      return handleAddressCreatedEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.ADDRESS_STATUS_UDATE: {
+      return handleAddressStatusUpdateEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.ADDRESS_DELETED: {
+      return handlesAddressDeletedEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.CUSTOM_DOMAIN_CREATED: {
+      return handleDomainCreatedEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.CUSTOM_DOMAIN_DELETED: {
+      return handleDomainDeletedEvent(incomingEvent, accountId);
     }
     default: {
       return { rowid: null };
@@ -1346,6 +1371,84 @@ const handleReactivatedAccountEvent = accountRecipientId => {
   return { rowid: null };
 };
 
+const handleCustomerTypeUpdateEvent = async (
+  { rowid, params },
+  accountRecipientId
+) => {
+  const { newCustomerType } = params;
+  const recipientId = accountRecipientId || myAccount.recipientId;
+
+  await updateAccount({ customerType: newCustomerType, recipientId });
+  return { rowid, profileChanged: true };
+};
+
+const handleAddressCreatedEvent = async ({ rowid, params }, accountId) => {
+  const { addressId, addressName, addressDomain } = params;
+
+  const [existingAlias] = await getAlias({
+    rowId: addressId,
+    accountId
+  });
+  if (existingAlias) return { rowid };
+
+  const alias = {
+    rowId: addressId,
+    name: addressName,
+    domain: addressDomain === appDomain ? null : addressDomain,
+    accountId
+  };
+  await createAlias(alias);
+  return { rowid };
+};
+
+const handleAddressStatusUpdateEvent = async ({ rowid, params }, accountId) => {
+  const { addressId, activate } = params;
+  const alias = {
+    rowId: addressId,
+    active: activate,
+    accountId
+  };
+  await updateAlias(alias);
+  return { rowid };
+};
+
+const handlesAddressDeletedEvent = async ({ rowid, params }, accountId) => {
+  const { addressId } = params;
+  const aliases = {
+    rowIds: [addressId],
+    accountId
+  };
+  await deleteAliases(aliases);
+  return { rowid };
+};
+
+const handleDomainCreatedEvent = async ({ rowid, params }, accountId) => {
+  const { customDomain } = params;
+
+  const [existingDomain] = await getCustomDomainByParams({
+    name: customDomain,
+    accountId
+  });
+  if (existingDomain) return { rowid };
+
+  const domain = {
+    name: customDomain,
+    accountId
+  };
+  await createCustomDomain(domain);
+  return { rowid };
+};
+
+const handleDomainDeletedEvent = async ({ rowid, params }, accountId) => {
+  const { customDomain } = params;
+  const domain = {
+    name: customDomain,
+    accountId
+  };
+  await deleteCustomDomainByName(domain);
+  return { rowid };
+};
+
 const handleSendEmailError = ({ rowid }) => {
   return { rowid };
 };
@@ -1566,6 +1669,25 @@ ipcRenderer.on('lost-network-connection', () => {
 
 /* Window events
   ----------------------------- */
+export const sendAliasSuccessStatusMessage = active => {
+  const message = active
+    ? Messages.success.aliasActivated
+    : Messages.success.aliasDeactivated;
+  const messageData = {
+    ...message,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendCustomDomainDeletedMessage = () => {
+  const messageData = {
+    ...Messages.success.customDomainDeleted,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendOpenEventErrorMessage = () => {
   const messageData = {
     ...Messages.error.sendOpenEvent,
@@ -1978,6 +2100,7 @@ export const Event = {
   RESTORE_BACKUP_FINISHED: 'restore-backup-finished',
   RESTORE_BACKUP_SUCCESS: 'restore-backup-success',
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
+  SETTINGS_OPENED: 'settings-opened',
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
   STOP_LOAD_SYNC: 'stop-load-sync',

@@ -5,6 +5,8 @@ import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import ChangeSecurityPinPopup from './ChangeSecurityPinPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
+import DeleteAliasPopup from './DeleteAliasPopup';
+import DeleteCustomDomainPopup from './DeleteCustomDomainPopup';
 import ExportBackupPopupWrapper from './ExportBackupPopupWrapper';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
@@ -12,17 +14,21 @@ import SelectBackupFolderPopup from './SelectBackupFolderPopup';
 import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
+import UpgradeToPlusPopup from './UpgradeToPlusPopup';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 const Changesecuritypinpopup = PopupHOC(ChangeSecurityPinPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
+const Deletealiaspopup = PopupHOC(DeleteAliasPopup);
+const Deletecustomdomainpopup = PopupHOC(DeleteCustomDomainPopup);
 const Exportbackuppopup = PopupHOC(ExportBackupPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
 const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
 const SelectBackupFolder = PopupHOC(SelectBackupFolderPopup);
 const SetReplyTo = PopupHOC(SetReplyToEmailPopup);
+const Upgradetopluspopup = PopupHOC(UpgradeToPlusPopup);
 
 const SettingsPopup = props => {
   const {
@@ -30,12 +36,15 @@ const SettingsPopup = props => {
     CHANGE_RECOVERY_EMAIL,
     CHANGE_SECURITY_PIN,
     DELETE_ACCOUNT,
+    DELETE_ALIAS,
+    DELETE_CUSTOM_DOMAIN,
     EXPORT_BACKUP,
     MANUAL_SYNC,
     MANUAL_SYNC_DEVICE_AUTHENTICATION,
     SELECT_BACKUP_FOLDER,
     SET_REPLY_TO,
-    TWO_FACTOR_AUTH_ENABLED
+    TWO_FACTOR_AUTH_ENABLED,
+    UPGRADE_PLUS
   } = SETTINGS_POPUP_TYPES;
 
   switch (props.type) {
@@ -118,6 +127,30 @@ const SettingsPopup = props => {
         />
       );
     }
+    case DELETE_ALIAS: {
+      return (
+        <Deletealiaspopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          onConfirmDeleteAlias={props.onConfirmDeleteAlias}
+          {...props.deleteAliasParams}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+        />
+      );
+    }
+    case DELETE_CUSTOM_DOMAIN: {
+      return (
+        <Deletecustomdomainpopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          onConfirmDeleteCustomDomain={props.onConfirmDeleteCustomDomain}
+          {...props.deleteCustomDomainsParams}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+        />
+      );
+    }
     case EXPORT_BACKUP: {
       return (
         <Exportbackuppopup
@@ -193,6 +226,18 @@ const SettingsPopup = props => {
         />
       );
     }
+    case UPGRADE_PLUS: {
+      return (
+        <Upgradetopluspopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          onClickSection={props.onClickSection}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+          type={props.upgradeToPlusType}
+        />
+      );
+    }
     default:
       return null;
   }
@@ -201,6 +246,8 @@ const SettingsPopup = props => {
 SettingsPopup.propTypes = {
   changePasswordPopupParams: PropTypes.object,
   changeRecoveryEmailPopupParams: PropTypes.object,
+  deleteAliasParams: PropTypes.object,
+  deleteCustomDomainsParams: PropTypes.object,
   isHidden: PropTypes.bool,
   type: PropTypes.string,
   onChangeInputValueChangePassword: PropTypes.func,
@@ -210,14 +257,18 @@ SettingsPopup.propTypes = {
   onClickChangePasswordInputType: PropTypes.func,
   onClickChangeRecoveryEmailInputType: PropTypes.func,
   onClickForgotPasswordLink: PropTypes.func,
+  onClickSection: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
+  onConfirmDeleteAlias: PropTypes.func,
+  onConfirmDeleteCustomDomain: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
   onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
-  setReplyToPopupParams: PropTypes.object
+  setReplyToPopupParams: PropTypes.object,
+  upgradeToPlusType: PropTypes.string
 };
 
 export default SettingsPopup;

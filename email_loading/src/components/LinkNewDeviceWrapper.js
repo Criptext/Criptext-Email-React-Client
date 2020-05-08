@@ -171,7 +171,8 @@ class LinkNewDeviceWrapper extends Component {
             ...remoteData,
             ...accountData,
             recipientId: getRecipientIdFromRemoteData(),
-            deviceId: remoteData.deviceId
+            deviceId: remoteData.deviceId,
+            customerType: remoteData.customerType || 0
           };
           const response = await signal.createAccountToDB(newAccountData);
           this.setState(

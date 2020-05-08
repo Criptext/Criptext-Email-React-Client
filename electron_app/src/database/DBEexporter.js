@@ -8,7 +8,9 @@ const moment = require('moment');
 const {
   Account,
   AccountContact,
+  Alias,
   Contact,
+  CustomDomain,
   Email,
   EmailContact,
   EmailLabel,
@@ -57,6 +59,8 @@ const EMAIL_LABELS_BATCH = 500;
 const EMAILS_BATCH = 100;
 const FEEDITEM_BATCH = 100;
 const FILES_BATCH = 200;
+const ALIAS_BATCH = 50;
+const CUSTOM_DOMAINS_BATCH = 50;
 const IDENTITYKEYRECORD_BATCH = 50;
 const LABELS_BATCH = 50;
 const PENDINGEVENT_BATCH = 50;
@@ -759,6 +763,60 @@ const exportFileTable = async accountId => {
   return formatTableRowsToString(Table.FILE, fileRows);
 };
 
+const exportAliasTable = async accountId => {
+  let aliasRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await Alias()
+      .findAll({
+        attributes: ['id', 'rowId', 'name', 'domain', 'active'],
+        where: { accountId },
+        offset,
+        limit: SELECT_ALL_BATCH
+      })
+      .then(rows => {
+        return rows.map(row => {
+          const myRow = row.toJSON();
+          if (!myRow.domain) delete myRow.domain;
+          return myRow;
+        });
+      });
+    aliasRows = [...aliasRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString(Table.ALIAS, aliasRows);
+};
+
+const exportCustomDomainsTable = async accountId => {
+  let customDomainsRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await CustomDomain()
+      .findAll({
+        attributes: ['id', 'name', 'validated'],
+        where: { accountId },
+        offset,
+        limit: SELECT_ALL_BATCH
+      })
+      .then(rows => {
+        return rows.map(row => row.toJSON());
+      });
+    customDomainsRows = [...customDomainsRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString(Table.CUSTOM_DOMAIN, customDomainsRows);
+};
+
 const exportEncryptDatabaseToFile = async ({ outputPath, accountObj }) => {
   const filepath = outputPath;
 
@@ -790,6 +848,12 @@ const exportEncryptDatabaseToFile = async ({ outputPath, accountObj }) => {
 
   const files = await exportFileTable(accountId);
   saveToFile({ data: files, filepath, mode: 'a' });
+
+  const aliases = await exportAliasTable(accountId);
+  saveToFile({ data: aliases, filepath, mode: 'a' });
+
+  const customDomains = await exportCustomDomainsTable(accountId);
+  saveToFile({ data: customDomains, filepath, mode: 'a' });
 };
 
 const importDatabaseFromFile = async ({
@@ -811,6 +875,8 @@ const importDatabaseFromFile = async ({
   let sessionrecords = [];
   let settings = [];
   let signedprekeyrecords = [];
+  let aliases = [];
+  let customDomains = [];
 
   const sequelize = getDB();
 
@@ -943,6 +1009,18 @@ const importDatabaseFromFile = async ({
                   files = [];
                   break;
                 }
+                case Table.ALIAS: {
+                  await Alias().bulkCreate(aliases, { transaction: trx });
+                  aliases = [];
+                  break;
+                }
+                case Table.CUSTOM_DOMAIN: {
+                  await CustomDomain().bulkCreate(customDomains, {
+                    transaction: trx
+                  });
+                  customDomains = [];
+                  break;
+                }
                 case Table.IDENTITYKEYRECORD: {
                   await Identitykeyrecord().bulkCreate(identities, {
                     transaction: trx
@@ -1068,6 +1146,24 @@ const importDatabaseFromFile = async ({
                 insertRows = files.length > FILES_BATCH;
                 break;
               }
+              case Table.ALIAS: {
+                delete object.id;
+                aliases.push({
+                  ...object,
+                  accountId
+                });
+                insertRows = aliases.length > ALIAS_BATCH;
+                break;
+              }
+              case Table.CUSTOM_DOMAIN: {
+                delete object.id;
+                customDomains.push({
+                  ...object,
+                  accountId
+                });
+                insertRows = customDomains.length > CUSTOM_DOMAINS_BATCH;
+                break;
+              }
               case Table.IDENTITYKEYRECORD: {
                 identities.push({
                   ...object,
@@ -1147,6 +1243,8 @@ const importDatabaseFromFile = async ({
             );
             await insertRemainingRows(feeditems, Feeditem(), trx);
             await insertRemainingRows(files, File(), trx);
+            await insertRemainingRows(aliases, Alias(), trx);
+            await insertRemainingRows(customDomains, CustomDomain(), trx);
             await insertRemainingRows(identities, Identitykeyrecord(), trx);
             await insertRemainingRows(prekeyrecords, Prekeyrecord(), trx);
             await insertRemainingRows(pendingevents, Pendingevent(), trx);

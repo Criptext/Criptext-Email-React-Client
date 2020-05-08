@@ -54,9 +54,21 @@ const messagesContent = {
     }
   },
   success: {
+    aliasActivated: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.alias_status.success.activated
+    },
+    aliasDeactivated: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.alias_status.success.deactivated
+    },
     changePassword: {
       priority: messagePriorities.MEDIUM,
-      description: string.messages.change_password.success.description
+      description: string.messages.alias_status.success.deactivated
+    },
+    customDomainDeleted: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.custom_domain_deleted.success.description
     },
     downloadFile: {
       priority: messagePriorities.MEDIUM,

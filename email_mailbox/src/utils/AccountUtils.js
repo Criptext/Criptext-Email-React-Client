@@ -2,6 +2,7 @@ import { getTwoCapitalLetters } from './StringUtils';
 import { LabelType, myAccount } from './electronInterface';
 import { avatarBaseUrl, appDomain } from './const';
 import { getEmailsUnredByLabelId } from './ipc';
+import { isPlus } from './plus';
 
 export const compareAccounts = (account1, account2) => {
   return (
@@ -22,7 +23,8 @@ export const defineAccounts = accounts => {
       badge: element.badge || 0,
       isActive: !!element.isActive,
       name: element.name,
-      recipientId: element.recipientId
+      recipientId: element.recipientId,
+      customerType: element.customerType
     };
     return {
       ...result,
@@ -59,12 +61,14 @@ export const defineAccountVisibleParams = (account, timestamp) => {
   const emailAddress = `${username}@${domain}`;
   const avatarUrl = formAvatarUrl(username, domain, timestamp);
   const isActive = account.isActive || false;
+  const showPlusBorder = isPlus(account.customerType);
   return {
     name,
     letters,
     emailAddress,
     avatarUrl,
-    isActive
+    isActive,
+    showPlusBorder
   };
 };
 

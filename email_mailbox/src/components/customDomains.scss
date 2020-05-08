@@ -1,0 +1,291 @@
+@import "./../styles/index.scss";
+
+.custom-domains-steps-container {
+  background-color: #f7f7f7;
+  height: 41px;
+  position: relative;
+  padding-bottom: 0px !important;
+
+  .custom-domains-steps {
+    padding-left: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+}
+
+.custom-domains-main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100% - 41px);
+  padding-bottom: 0px !important;
+  overflow-y: scroll;
+
+  a {
+    color: #0091ff;
+    text-decoration: none;
+  }
+
+  .custom-domains-steps-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 3vh;
+  }
+
+  .custom-domains-steps-text {
+    font-size: 15px;
+    margin-bottom: 3vh;
+  }
+
+  .custom-domains-steps-button-container{
+    display: flex;
+    justify-content: center;
+    .custom-domains-steps-button {
+      min-width: 60px;
+      font-size: 13px;
+      min-height: 28px;
+      border-radius: 14px;
+      align-items: center;
+      background-color: #008efa;
+      font-weight: bold;
+      font-family: NunitoSans;
+      text-align: center;
+      color: #ffffff;
+      padding-top: 3px;
+    }
+
+    .custom-domains-steps-button-back {
+      margin-right: 20px;
+      min-width: 60px;
+      min-height: 28px;
+      align-items: center;
+      font-size: 13px;
+      font-weight: bold;
+      font-family: NunitoSans;
+      text-align: center;
+      padding-top: 3px;
+      background: transparent;
+    }
+  }
+
+  .custom-domains-steps-first {
+    .custom-domains-steps-first-text{
+      text-align: center;
+    }
+
+
+    .custom-domains-steps-first-input {
+      margin-bottom: 3vh;
+      min-width: 15vw;
+      input {
+        padding: 2px;
+        border-radius: 4px;
+        border: solid 1px;
+        background-color: transparent;
+        height: 26px;
+        padding-left: 5px;
+        padding-right: 5px;
+        width: calc(100% - 12px);
+      }
+
+      .input-error{
+        border: solid 1px #da341a;
+      }
+      
+    }
+
+    .custom-domain-input-text-error {
+      padding-top: 2px;
+      font-size: 12px;
+      color: #da341a;
+    }
+  }
+
+  .custom-domains-steps-second {
+    .custom-domains-steps-second-text{
+      max-width: 50vw;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+  }
+
+  .custom-domains-steps-second-2 {
+    max-width: 50vw;
+
+    .custom-domains-steps-second-text{
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    .custom-domains-steps-second-note{
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: justify;
+      color: #373a45;
+    }
+
+
+    .custom-domains-steps-table-second-2{
+      display: flex;
+      justify-content: center;
+
+      table {
+        width: 100%;
+        border: solid 1px;
+
+        tbody {
+          text-align: center;
+          color: #373b45;
+          font-size: 12px;
+        }
+  
+        thead  {
+          border: solid 1px;
+          text-align: center;
+          font-weight: bold;
+          line-height: 2.25;
+          font-size: 12px;
+        }   
+
+        th {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        td {
+          padding: 10px;
+        }
+
+        .custom-domain-steps-second-table-copy {
+          object-fit: contain;
+          font-family: NunitoSans;
+          font-size: 10px;
+          line-height: 2.7;
+          color: #0091ff;
+          text-decoration: none;
+          padding-left:0;
+          background-color: transparent;
+        }
+      }
+
+    }
+  }
+
+  .loading-button {
+    min-width: 60px;
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff;
+    font-size: 13px;
+    min-height: 28px;
+    border-radius: 14px;
+    padding-top: 3px;
+
+    .loading-ring {
+      top: -17px !important;
+      left:-13px !important;
+    }
+  }
+}
+
+/* THEME
+  ----------------------------- */
+  @mixin themable(
+    $_THEME,
+    $_COLOR_TEXT_MAIN_TITLE,
+    $_BACKGROUND_COLOR_SETTINGS_TITLE,
+    $_COLOR_TEXT_SETTINGS_CONTENT,
+    $_BORDER_COLOR_POPUP_INPUT,
+    $_COLOR_TABLE_HEADER,
+    $_COLOR_TEXT_SECONDARY
+    ) {
+    [data-theme^="#{$_THEME}"],
+    [data-theme] [data-theme^="#{$_THEME}"] {
+      .custom-domains-steps-container {
+        background-color: $_BACKGROUND_COLOR_SETTINGS_TITLE;
+      
+        .custom-domains-steps {
+          color: $_COLOR_TEXT_SETTINGS_CONTENT;
+        }
+      } 
+
+      .custom-domains-main-container {
+        .custom-domains-steps-title {
+          color: $_COLOR_TEXT_MAIN_TITLE;
+        }
+      
+        .custom-domains-steps-text {
+          color: $_COLOR_TEXT_SETTINGS_CONTENT;
+        }
+      
+        .custom-domains-steps-button-container{
+          .custom-domains-steps-button-back {
+            color: $_COLOR_TEXT_MAIN_TITLE;
+          }
+        }
+
+        .custom-domains-steps-first {
+          .custom-domains-steps-first-input {
+            input {
+              border-color: $_BORDER_COLOR_POPUP_INPUT;
+            }
+          }
+        }
+      
+        .custom-domains-steps-second-2 {
+          .custom-domains-steps-second-note{
+            color: $_COLOR_TEXT_SECONDARY;
+          }
+      
+      
+          .custom-domains-steps-table-second-2{
+            table {
+              border-color: $_BORDER_COLOR_POPUP_INPUT;
+      
+              tbody {
+                color: $_COLOR_TEXT_SECONDARY;
+              }
+        
+              thead  {
+                background-color: $_COLOR_TABLE_HEADER;
+                border-color: $_BORDER_COLOR_POPUP_INPUT;
+                color: $_COLOR_TEXT_MAIN_TITLE;
+              }   
+            }
+      
+          }
+        }
+      }
+    }
+  }
+    
+@include themable(
+  $_THEME_LIGHT,
+  $_COLOR_TEXT_MAIN_TITLE_LIGHT,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_LIGHT,
+  $_COLOR_TEXT_SETTINGS_CONTENT_LIGHT,
+  $_BORDER_COLOR_POPUP_INPUT_LIGHT,
+  $_COLOR_TABLE_HEADER_LIGHT,
+  $_COLOR_TEXT_SECONDARY_LIGHT
+);
+@include themable(
+  $_THEME_DARK,
+  $_COLOR_TEXT_MAIN_TITLE_DARK,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_DARK,
+  $_COLOR_TEXT_SETTINGS_CONTENT_DARK,
+  $_BORDER_COLOR_POPUP_INPUT_DARK,
+  $_COLOR_TABLE_HEADER_DARK,
+  $_COLOR_TEXT_SECONDARY_DARK
+);

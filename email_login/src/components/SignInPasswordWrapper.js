@@ -6,6 +6,7 @@ import SignInPassword from './SignInPassword';
 import { validatePassword } from '../validators/validators';
 import {
   closeLoginWindow,
+  findDevices,
   login,
   openCreateKeysLoadingWindow,
   resetPassword,
@@ -46,7 +47,11 @@ class SignInPasswordWrapper extends Component {
     return (
       <SignInPassword
         {...this.props}
-        buttonState={this.state.buttonState}
+        buttonState={
+          this.props.isRemoveDevicesLinkActive
+            ? ButtonState.LOADING
+            : this.state.buttonState
+        }
         onClickForgot={this.handleClickForgot}
         onClickSignInWithPassword={this.handleClickSignInWithPassword}
         onChangeField={this.handleChangeField}
@@ -85,29 +90,88 @@ class SignInPasswordWrapper extends Component {
     event.stopPropagation();
     if (this.props.hasTwoFactorAuth) {
       this.props.goToWaitingApproval(this.state.values.password);
+    } else if (
+      this.props.removeDevicesData &&
+      this.props.removeDevicesData.needsRemoveDevices
+    ) {
+      await this.requestFindDevices();
     } else {
-      this.setState({
-        buttonState: ButtonState.LOADING
-      });
-      const [
-        username,
-        domain = appDomain
-      ] = this.state.values.usernameOrEmailAddress.split('@');
-      const password = this.state.values.password;
-      const hashedPassword = hashPassword(password);
-      const submittedData = {
-        username,
-        domain,
-        password: hashedPassword
-      };
-      const res = await login(submittedData);
-      const { status, body, headers } = res;
-      const recipientId =
-        domain === appDomain
-          ? username
-          : this.state.values.usernameOrEmailAddress;
-      await this.handleLoginStatus(status, body, headers, recipientId);
+      await this.handleSignInWithPassword();
     }
+  };
+
+  requestFindDevices = async () => {
+    this.setState({
+      buttonState: ButtonState.LOADING
+    });
+    const [
+      recipientId,
+      domain
+    ] = this.state.values.usernameOrEmailAddress.split('@');
+    this.recipientId = recipientId;
+    this.domain = domain || appDomain;
+    const password = hashPassword(this.state.values.password);
+    const params = {
+      recipientId,
+      domain: this.domain,
+      password
+    };
+
+    const res = await findDevices(params);
+    if (res.status === 200) {
+      const devices = res.body.devices
+        .map(device => {
+          return {
+            checked: false,
+            deviceId: device.deviceId,
+            deviceType: device.deviceType,
+            lastActivity: device.lastActivity,
+            name: device.deviceFriendlyName
+          };
+        })
+        .sort((a, b) => {
+          if (!b.lastActivity.date || !a.lastActivity.date) return 0;
+          return new Date(b.lastActivity.date) - new Date(a.lastActivity.date);
+        });
+      this.token = res.body.token;
+      this.props.setPopupContent(popupType.DELETE_DEVICE, {
+        token: res.body.token,
+        devices,
+        password: this.state.values.password
+      });
+    } else if (res.status === 400) {
+      this.throwLoginError(string.errors.wrongCredentials);
+    } else if (res.status === 429) {
+      const popup = popupType.TOO_MANY_REQUEST;
+      this.props.setPopupContent(popup);
+    }
+    this.setState({
+      buttonState: ButtonState.ENABLED
+    });
+  };
+
+  handleSignInWithPassword = async () => {
+    this.setState({
+      buttonState: ButtonState.LOADING
+    });
+    const [
+      username,
+      domain = appDomain
+    ] = this.state.values.usernameOrEmailAddress.split('@');
+    const password = this.state.values.password;
+    const hashedPassword = hashPassword(password);
+    const submittedData = {
+      username,
+      domain,
+      password: hashedPassword
+    };
+    const res = await login(submittedData);
+    const { status, body, headers } = res;
+    const recipientId =
+      domain === appDomain
+        ? username
+        : this.state.values.usernameOrEmailAddress;
+    await this.handleLoginStatus(status, body, headers, recipientId);
   };
 
   handleLoginStatus = async (status, body, headers, recipientId) => {
@@ -121,14 +185,15 @@ class SignInPasswordWrapper extends Component {
             shouldExport: false,
             shouldOnlySetPIN: true
           });
-        const { deviceId, name } = body;
+        const { deviceId, name, customerType } = body;
         openCreateKeysLoadingWindow({
           loadingType: 'signin',
           shouldResetPIN: !hasPIN,
           remoteData: {
             recipientId,
             deviceId,
-            name
+            name,
+            customerType: customerType || 0
           }
         });
         closeLoginWindow({ forceClose: true });
@@ -216,9 +281,11 @@ class SignInPasswordWrapper extends Component {
 SignInPasswordWrapper.propTypes = {
   goToWaitingApproval: PropTypes.func,
   hasTwoFactorAuth: PropTypes.bool,
+  isRemoveDevicesLinkActive: PropTypes.bool,
+  needsRemoveDevices: PropTypes.bool,
   onGoToChangePassword: PropTypes.func,
+  removeDevicesData: PropTypes.object,
   setPopupContent: PropTypes.func,
-  usernameValue: PropTypes.string,
   value: PropTypes.string
 };
 

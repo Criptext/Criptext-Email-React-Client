@@ -1,0 +1,64 @@
+@import "./../styles/index.scss";
+
+.criptext-cdomain-item-wrapper {
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  padding-top: 10px;
+
+  .criptext-cdomain-item-name {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    padding-bottom: 5px;
+  
+  }
+  .criptext-cdomain-item-delete {
+    font-size: 12px;
+    text-align: right;
+    margin-left: auto;
+    
+
+    .button-b {
+      color: #d14444 !important;
+      padding-right: 0;
+    }
+  }
+
+  .criptext-cdomain-button-not-validated {
+    background-color: transparent;
+    color: #d14444;
+    font-size: 12px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+
+  }
+}
+
+/* THEME
+  ----------------------------- */
+@mixin themable(
+  $_THEME,
+  $_COLOR_TEXT_MAIN_TITLE
+  ) {
+  [data-theme^="#{$_THEME}"],
+  [data-theme] [data-theme^="#{$_THEME}"] {
+    .criptext-cdomain-item-wrapper {
+      .criptext-cdomain-item-name {
+        color: $_COLOR_TEXT_MAIN_TITLE;
+      }
+    }  
+  }
+
+}
+  
+@include themable(
+  $_THEME_LIGHT,
+  $_COLOR_TEXT_MAIN_TITLE_LIGHT
+);
+@include themable(
+  $_THEME_DARK,
+  $_COLOR_TEXT_MAIN_TITLE_DARK
+);
+

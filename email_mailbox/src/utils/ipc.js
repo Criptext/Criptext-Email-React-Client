@@ -161,6 +161,9 @@ export const storeRecoveryKey = async params => {
 
 /* Criptext Client
 ----------------------------- */
+export const activateAddress = async params => {
+  return await ipc.callMain('client-activate-address', params);
+};
 export const acknowledgeEvents = async params => {
   return await ipc.callMain('client-acknowledge-events', params);
 };
@@ -177,8 +180,20 @@ export const checkExpiredSession = async params => {
   return await ipc.callMain('client-check-expired-session', params);
 };
 
+export const deleteAddress = async addressId => {
+  return await ipc.callMain('client-delete-address', addressId);
+};
+
+export const deleteDomain = async domain => {
+  return await ipc.callMain('client-delete-domain', domain);
+};
+
 export const deleteMyAccount = async params => {
   return await ipc.callMain('client-delete-my-account', params);
+};
+
+export const getDomainMX = async domain => {
+  return await ipc.callMain('client-get-domain-mx', domain);
 };
 
 export const getUserSettings = async recipientId => {
@@ -189,12 +204,20 @@ export const insertPreKeys = async params => {
   return await ipc.callMain('client-insert-prekeys', params);
 };
 
+export const isDomainAvailable = async domain => {
+  return await ipc.callMain('client-domain-available', domain);
+};
+
 export const logout = async () => {
   return await ipc.callMain('client-logout');
 };
 
 export const postPeerEvent = async params => {
   return await ipc.callMain('client-post-peer-event', params);
+};
+
+export const registerDomain = async domain => {
+  return await ipc.callMain('client-register-domain', domain);
 };
 
 export const removeAvatar = async params => {
@@ -215,6 +238,10 @@ export const resendConfirmationEmail = async () => {
 
 export const resetPassword = async recipientId => {
   return await ipc.callMain('client-reset-password', recipientId);
+};
+
+export const setAddress = async params => {
+  return await ipc.callMain('client-set-address', params);
 };
 
 export const setReadTracking = async enabled => {
@@ -265,6 +292,10 @@ export const uploadAvatar = async params => {
   return await ipc.callMain('client-upload-avatar', params);
 };
 
+export const validateDomainMX = async domain => {
+  return await ipc.callMain('client-validate-mx-records', domain);
+};
+
 /*  DataBase
 ----------------------------- */
 export const cleanDatabase = async recipientId => {
@@ -273,6 +304,26 @@ export const cleanDatabase = async recipientId => {
 
 export const cleanDataLogout = async params => {
   return await ipc.callMain('db-clean-data-logout', params);
+};
+
+export const createAlias = async params => {
+  return await ipc.callMain('db-create-alias', params);
+};
+
+export const createCustomDomain = async params => {
+  return await ipc.callMain('db-create-custom-domain', params);
+};
+
+export const getAlias = async params => {
+  return await ipc.callMain('db-get-alias-by-params', params);
+};
+
+export const getCustomDomainByParams = async params => {
+  return await ipc.callMain('db-get-custom-domains-by-params', params);
+};
+
+export const getCustomDomain = async params => {
+  return await ipc.callMain('db-get-custom-domains-by-params', params);
 };
 
 export const createEmail = async params => {
@@ -309,6 +360,22 @@ export const createSignedPreKeyRecord = async params => {
 
 export const deleteEmailByKeys = async params => {
   return await ipc.callMain('db-delete-email-by-keys', params);
+};
+
+export const deleteAliases = async params => {
+  return await ipc.callMain('db-delete-alias', params);
+};
+
+export const deleteAliasesByDomain = async params => {
+  return await ipc.callMain('db-delete-aliases-by-domain', params);
+};
+
+export const deleteCustomDomainByName = async params => {
+  return await ipc.callMain('db-delete-custom-domains-by-name', params);
+};
+
+export const deleteCustomDomains = async domains => {
+  return await ipc.callMain('db-delete-custom-domains', { domains });
 };
 
 export const deleteEmailLabel = async params => {
@@ -463,12 +530,20 @@ export const updateAccount = async params => {
   return await ipc.callMain('db-update-account', params);
 };
 
+export const updateAlias = async params => {
+  return await ipc.callMain('db-update-alias', params);
+};
+
 export const updateContactByEmail = async ({ email, name }) => {
   return await ipc.callMain('db-update-contact-by-email', { email, name });
 };
 
 export const updateContactSpamScore = async params => {
   return await ipc.callMain('db-update-contact-spam-acore', params);
+};
+
+export const updateCustomDomain = async params => {
+  return await ipc.callMain('db-update-custom-domains', params);
 };
 
 export const updateEmail = async params => {

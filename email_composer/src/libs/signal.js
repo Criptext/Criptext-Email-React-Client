@@ -1,7 +1,9 @@
 /*global libsignal util*/
 import {
+  deleteSessionRecord,
   findKeyBundles,
   getSessionRecordByRecipientIds,
+  getSessionRecordRowsByRecipientIds,
   postEmail,
   restartAlice
 } from './../utils/ipc';
@@ -80,10 +82,8 @@ const createEmails = async (
   body,
   preview,
   recipients,
-  domainAddresses,
   keyBundles,
   guestDomains,
-  peer,
   files
 ) => {
   const myKeyBundles = keyBundles.map(keybundle => {
@@ -108,37 +108,36 @@ const createEmails = async (
   const criptextEmailsByRecipientId = {};
   await Promise.all(
     recipients.map(async recipient => {
-      const { recipientId, type, username, domain } = recipient;
+      const {
+        recipientId,
+        type,
+        username,
+        domain,
+        origin,
+        devices
+      } = recipient;
 
       if (guestDomains.indexOf(domain) > -1) {
         return;
       }
 
       if (!criptextEmailsByRecipientId[recipientId]) {
-        criptextEmailsByRecipientId[recipientId] = {
+        const initObj = {
           username,
           domain,
           type,
           emails: []
         };
+        if (origin) {
+          initObj['username'] = origin.username;
+          initObj['aliasUsername'] = origin.alias;
+          initObj['aliasDomain'] = domain;
+          initObj['domain'] = origin.originalDomain;
+        }
+        criptextEmailsByRecipientId[recipientId] = initObj;
       }
 
-      const domainIndex = domainAddresses.findIndex(domainAddress => {
-        return domainAddress.name === domain;
-      });
-
-      const knownDeviceIds =
-        domainAddresses[domainIndex].knownAddresses[username] || [];
-      const newDevicesIds = keyBundles
-        .filter(
-          keybundle =>
-            keybundle.recipientId === username && keybundle.domain === domain
-        )
-        .map(keybundle => keybundle.deviceId);
-      const deviceIds = [...knownDeviceIds, ...newDevicesIds].filter(
-        deviceId => peer.recipientId !== username || peer.deviceId !== deviceId
-      );
-      for (const deviceId of deviceIds) {
+      for (const deviceId of devices) {
         const fileKeys = files
           ? files.reduce((result, file) => {
               if (!file.key || !file.iv) {
@@ -153,7 +152,7 @@ const createEmails = async (
             body,
             preview,
             fileKeys,
-            recipientId,
+            recipientId: origin ? origin.recipientId : recipientId,
             deviceId
           });
         });
@@ -170,7 +169,7 @@ const createEmails = async (
             : null;
 
         let criptextEmail = {
-          recipientId: username,
+          recipientId: origin ? origin.username : username,
           deviceId,
           body: bodyEncrypted,
           messageType: bodyMessageType,
@@ -199,8 +198,8 @@ const encryptPostEmail = async ({
   subject,
   threadId,
   files,
-  peer,
-  externalEmailPassword
+  externalEmailPassword,
+  fromAddressId
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const sessions = await getSessionRecordByRecipientIds({
@@ -213,10 +212,15 @@ const encryptPostEmail = async ({
     appDomain
   );
   const {
+    addresses,
     keyBundles,
     blacklistedKnownDevices,
     guestDomains
   } = await getKeyBundlesOfRecipients(domainAddresses);
+  if (keyBundles.includes(null)) {
+    throw new CustomError(string.errors.unauthorized);
+  }
+
   if (blacklistedKnownDevices.length) {
     const {
       domainAddressesFiltered,
@@ -228,21 +232,98 @@ const encryptPostEmail = async ({
     );
     domainAddresses = domainAddressesFiltered;
     await Promise.all(
-      sessionIdentifiersToDelete.map(
-        async sessionIdentifier => await store.removeSession(sessionIdentifier)
-      )
+      sessionIdentifiersToDelete.map(async sessionIdentifier => {
+        const [recipientId, deviceId] = sessionIdentifier.split('.');
+        await deleteSessionRecord({
+          recipientId,
+          deviceId,
+          accountId: myAccount.id
+        });
+      })
     );
   }
+  const recipientIdsFromAlias = [];
+  const newRecipients = recipients.map(recipient => {
+    let addressIndex = domainAddresses.findIndex(
+      domainAddress => domainAddress.name === recipient.domain
+    );
+    let knownDeviceIds =
+      domainAddresses[addressIndex].knownAddresses[recipient.username];
+    let keyBundleIds = keyBundles
+      .filter(
+        keybundle =>
+          keybundle.domain === recipient.domain &&
+          keybundle.recipientId === recipient.username
+      )
+      .map(keybundle => keybundle.deviceId);
+    const index = addresses.findIndex(
+      address => address.domain === recipient.domain
+    );
+    if (index < 0)
+      return {
+        ...recipient,
+        devices: [...knownDeviceIds, ...keyBundleIds]
+      };
+    const userIndex = addresses[index].users.findIndex(
+      user => user.alias === recipient.username
+    );
+    if (userIndex < 0)
+      return {
+        ...recipient,
+        devices: [...knownDeviceIds, ...keyBundleIds]
+      };
+    const user = addresses[index].users[userIndex];
+    const recipientId =
+      user.originalDomain === appDomain
+        ? user.username
+        : `${user.username}@${user.originalDomain}`;
+    recipientIdsFromAlias.push(recipientId);
+    addressIndex = domainAddresses.findIndex(
+      domainAddress => domainAddress.name === user.originalDomain
+    );
+    knownDeviceIds =
+      addressIndex > -1
+        ? domainAddresses[addressIndex].knownAddresses[user.username] || []
+        : [];
+    keyBundleIds = keyBundles
+      .filter(
+        keybundle =>
+          keybundle.domain === user.originalDomain &&
+          keybundle.recipientId === user.username
+      )
+      .map(keybundle => keybundle.deviceId);
+    return {
+      ...recipient,
+      devices: [...knownDeviceIds, ...keyBundleIds],
+      origin: {
+        ...user,
+        domain: user.originalDomain,
+        recipientId
+      }
+    };
+  });
+
+  const sessionsFromAlias = await getSessionRecordRowsByRecipientIds({
+    accountId: myAccount.id,
+    recipientIds: recipientIdsFromAlias
+  });
+  const trueKeyBundles = keyBundles.filter(keybundle => {
+    const index = sessionsFromAlias.findIndex(
+      session =>
+        session.recipientId === keybundle.recipientId &&
+        session.deviceId === keybundle.deviceId
+    );
+    return index <= -1;
+  });
   const criptextEmails = await createEmails(
     body,
     preview,
-    recipients,
-    domainAddresses,
-    keyBundles,
+    newRecipients,
+    trueKeyBundles,
     guestDomains,
-    peer,
     files
   );
+
   const guestEmail = await createGuestEmail({
     externalEmailPassword,
     recipients,
@@ -256,7 +337,8 @@ const encryptPostEmail = async ({
     threadId,
     criptextEmails,
     guestEmail,
-    files: files ? files : null
+    files: files ? files : null,
+    fromAddressId: fromAddressId || null
   });
   const res = await postEmail(data);
   if (res.status === 429) {

@@ -14,6 +14,12 @@ const ProfileShortCut = props => (
       (!props.isHiddenMenuProfilePreview ? ' profile-opened' : '')
     }
   >
+    {props.showPlusBorder && (
+      <div className="header-profile-plus-border-container">
+        <div className="header-profile-plus-inner-border" />
+        <div className="header-profile-plus-outer-border" />
+      </div>
+    )}
     <span
       className="header-profile"
       onClick={() => props.onToggleMenuProfilePreview()}
@@ -55,7 +61,8 @@ ProfileShortCut.propTypes = {
   onClickAddAccount: PropTypes.func,
   onClickSettings: PropTypes.func,
   onToggleMenuProfilePreview: PropTypes.func,
-  onClickItemAccount: PropTypes.func
+  onClickItemAccount: PropTypes.func,
+  showPlusBorder: PropTypes.bool
 };
 
 export default ProfileShortCut;

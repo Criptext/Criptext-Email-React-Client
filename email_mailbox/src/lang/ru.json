@@ -10,6 +10,105 @@
     "opened": "открыто",
     "someone": "Кто-то"
   },
+  "address": {
+    "add": {
+      "nextButtonLabel": "Next",
+      "backButtonLabel": "Back",
+      "need_help": "Need help?",
+      "title" : {
+        "first": "Step ",
+        "second": " of 4"
+      },
+      "step1": {
+        "title": "Let's set up your domain",
+        "text": "Enter the custom domain you wish to add.",
+        "errors": {
+          "usedDomain": "This domain is already in use",
+          "unknownError": "Server error. Try again later."
+        }
+      },
+      "step2": {
+        "title": "Visit your DNS Manager",
+        "text1": {
+          "first": "Go to ",
+          "go_daddy": "Go Daddy ",
+          "second": "or whomever your domain provider is and access the ",
+          "blackened": "DNS Manager ",
+          "third": "where you can add MX and Text records."
+        },
+        "text2": "Delete any existing MX records before proceeding."
+      },
+      "step2_2": {
+        "title": "Add Records for Criptext",
+        "text": "Add the following records in your DNS Manager. This will verify your domain ownership and configure Criptext email settings.",
+        "note": {
+          "text": "If you see the field TTL (time to live), enter 3600 seconds (1hour). Your host may not include a field called “Name”, “Host”, or “Alias”.",
+          "blackened": "Note: "
+        },
+        "table": {
+          "type": "Type",
+          "priority": "Priority",
+          "name": "Name/Host/Alias",
+          "value": "Value/Destination",
+          "copy": "Copy"
+        },
+        "errors": {
+          "notMXRecords": "Ups, can't retrieve MX records"
+        }
+      },
+      "step3": {
+        "running": {
+          "title": "Verifying Domain Ownership",
+          "timer": {
+            "first": "About",
+            "second": "minute",
+            "third": "left"
+          } 
+        },
+        "error1": {
+          "title": "MX records don’t match",
+          "text": "Go back and verify that you've added the right information into your",
+          "DNSRecords": "DNS records."
+        }, 
+        "error2": {
+          "title": "DNS records for this domain were not found",
+          "text_1": " is listed as your domain, make sure this is right; otherwise correct the domain on your Company Profile.",
+          "text_2": "Also check that the DNS records on your domain are not empty; otherwise go back and add them from the previous steps."
+        },
+        "error3": {
+          "title": "Something Went Wrong",
+          "text": "Try again in a couple of minutes."
+        },
+        "complete": {
+          "title": "Your Domain Was Verified Succesfully",
+          "text": "Done!"
+        }
+      },
+      "step4": {
+        "title": "Domain Setup Complete 🥳",
+        "text": "You can now add an alias with ",
+        "mxButton": "Create Alias"
+      }
+    }
+  },
+  "alias": {
+    "add": {
+      "title": "New Alias",
+      "description": "You will be able to send and receive emails from this new address.",
+      "cancelButtonLabel": "Cancel",
+      "saveButtonLabel": "Save",
+      "doneButtonLabel": "Done",
+      "successTitle": "A new alias was added 🎉",
+      "successMessage": "You can now use your new alias “{0}”",
+      "errors": {
+        "invalid": "Username not valid",
+        "timeout": "Timeout Error. Please try again",
+        "exists": "This address is already in use",
+        "limit": "You have reached the maximum number of aliases",
+        "unknown": "Uknown Error ({0}), please try again"
+      }
+    }
+  },
   "crash": {
     "title": "К сожалению! Похоже, что-то пошло не так",
     "counter": {
@@ -165,6 +264,14 @@
       },
       "error": {
         "description": "Произошла ошибка во время загрузки. Файл не был сохранен"
+      }
+    },
+    "custom_domain_deleted": {
+      "success": {
+        "description": "Domain deleted successfully"
+      },
+      "error": {
+        "description": "Failed to delete domain"
       }
     },
     "save_draft": {
@@ -409,6 +516,38 @@
       "cancelButtonLabel": "Отмена",
       "confirmButtonLabel": "Удалить"
     },
+    "delete_alias": {
+      "title": "Delete Alias",
+      "description": "If you delete this Alias your emails will remain intact, but you will no longer be able to send or receive emails under that address.",
+      "question": "Are you sure you want to delete {0}?",
+      "buttons": {
+        "cancelLabel": "Cancel",
+        "continueLabel": "Delete",
+        "okLabel": "Ok"
+      },
+      "errors": {
+        "title": "Oops...",
+        "timeout": "Connection Timeout. Please Try Again",
+        "cannot": "Aliases ending in @{0} cannot be deleted within 15 days from the day they were created.",
+        "remaining": "Days Remaining: {0}",
+        "unknown": "Uknown Error ({0}), please try again"
+      }
+    },
+    "delete_custom_domain": {
+      "title": "Remove your domain",
+      "description": "Are you sure you want to delete your domain? Your mails will not disapear, but aliases with this domain will be deleted.",
+      "buttons": {
+        "cancelLabel": "Cancel",
+        "continueLabel": "Delete",
+        "okLabel": "Ok"
+      }, 
+      "errors": {
+        "title": "Domain could not be deleted",
+        "nodomain": "Domain not found",
+        "unknown": "Uknown Error ({0}), please try again",
+        "timeout": "Connection Timeout. Please Try Again"
+      }
+    },
     "export_backup": {
       "title": "Экспорт резервного файла",
       "switchLabel": "Зашифровать резервную копию",
@@ -587,13 +726,41 @@
       "message": "Введите новое имя для вашего метки",
       "cancelButtonLabel": "Отмена",
       "confirmButtonLabel": "Сохранить"
+    },
+    "upgrade_plus": {
+      "title": "You need Plus for this",
+      "alias": {
+        "message": "With Aliases you can manage multiple addresses in one inbox"
+      },
+      "domains": {
+        "message": "Add custom email addresses with a Domain that you already own like you@company.com"
+      },
+      "message": "Get this and more when you upgrade to Criptext Plus.",
+      "buttons": {
+        "cancel": "No, Thanks",
+        "confirm": "Get Plus"
+      }
     }
   },
   "settings": {
     "about": "около",
     "account": "учетная запись",
     "action": "Действие",
+    "addresses": "Addresses",
+    "aliases": {
+      "title": "Aliases",
+      "description": "Create a secondary address for your existing inbox.",
+      "add": "Add Alias"
+    },
     "appearance": "вид",
+    "billing": "Billing",
+    "custom_domains": {
+      "title": "Custom Domains",
+      "description": "Send emails from a personal domain that you own.",
+      "add": "Add Domain",
+      "remove": "Remove domain",
+      "not_verified": "(Not Verified)"
+    },
     "mailbox_backup": {
       "auto": {
         "label": "Автоматическое резервное копирование",
@@ -721,6 +888,7 @@
     "trusted_devices": "надежные устройства",
     "two_factor_authentication": "Двухуровневая авторизация",
     "two_factor_not_available_text": "Чтобы включить двухфакторную аутентификацию, вам необходимо установить и подтвердить резервный адрес электронной почты",
+    "upgrade_plus": "Upgrade to Plus",
     "user_labels": "Ярлыки пользователей",
     "verified": "проверенный"
   },

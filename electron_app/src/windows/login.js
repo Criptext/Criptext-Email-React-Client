@@ -62,6 +62,11 @@ const show = async () => {
       loginWindow.show();
       addEventTrack(NUCLEUS_EVENTS.LOGIN_OPENED);
     });
+    loginWindow.on('focus', () => {
+      if (loginWindow) {
+        loginWindow.send('get-max-devices');
+      }
+    });
   }
 };
 

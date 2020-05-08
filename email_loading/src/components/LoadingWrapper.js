@@ -75,7 +75,8 @@ class LoadingWrapper extends Component {
           deviceId,
           name,
           deviceType,
-          isRecipientApp
+          isRecipientApp,
+          customerType: remoteData.customerType || 0
         });
       }
     }
@@ -93,7 +94,8 @@ class LoadingWrapper extends Component {
       recipientId: remoteData.username,
       password: remoteData.password,
       name: remoteData.name,
-      deviceType: remoteData.deviceType
+      deviceType: remoteData.deviceType,
+      customerType: remoteData.customerType || 0
     };
     if (remoteData.recoveryEmail !== '') {
       userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
@@ -123,7 +125,8 @@ class LoadingWrapper extends Component {
     deviceId,
     name,
     deviceType,
-    isRecipientApp
+    isRecipientApp,
+    customerType
   }) => {
     try {
       const response = await signal.createAccountWithNewDevice({
@@ -131,7 +134,8 @@ class LoadingWrapper extends Component {
         deviceId,
         name,
         deviceType,
-        isRecipientApp
+        isRecipientApp,
+        customerType
       });
       this.setState({
         accountResponse: response,

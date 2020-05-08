@@ -1,0 +1,16 @@
+@import "./../styles/index.scss";
+
+.popup-image {
+  height: 106px;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  margin-bottom: 25px;
+}
+
+.popup-image-alias {
+  background-image: url(../#{$_PATH_TO_IMAGES}/img-aliases.svg);
+}
+
+.popup-image-custom-domains {
+background-image: url(../#{$_PATH_TO_IMAGES}/img-domain.svg);
+}

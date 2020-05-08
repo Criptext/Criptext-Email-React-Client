@@ -46,6 +46,10 @@
     font-size: 12px;
     font-weight: 200;
     margin-left: 10px;
+
+    &.cptx-alias-origin {
+      opacity: 0.6;
+    }
   }
 }
 

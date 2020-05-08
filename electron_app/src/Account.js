@@ -3,6 +3,7 @@ const { APP_DOMAIN } = require('./utils/const');
 const accountProperties = [
   'jwt',
   'name',
+  'customerType',
   'signature',
   'signatureEnabled',
   'signFooter',
@@ -38,6 +39,9 @@ class Account {
   }
   get jwt() {
     return this.activeAccount.jwt;
+  }
+  get customerType() {
+    return this.activeAccount.customerType;
   }
   get privKey() {
     return this.activeAccount.privKey;

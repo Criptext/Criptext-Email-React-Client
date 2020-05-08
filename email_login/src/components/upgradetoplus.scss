@@ -1,0 +1,9 @@
+@import "./../styles/index.scss";
+
+.popup-image {
+    background-image: url(../#{$_PATH_TO_IMAGES}/upgrade-plus-remove.svg);
+    height: 106px;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    margin-bottom: 25px;
+}

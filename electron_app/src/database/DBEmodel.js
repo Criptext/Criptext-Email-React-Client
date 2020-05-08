@@ -71,11 +71,13 @@ const deleteDatabase = () => {
   });
 };
 
-const CURRENT_VERSION = 1;
+const CURRENT_VERSION = 2;
 
 const Table = {
   ACCOUNT: 'account',
   ACCOUNT_CONTACT: 'accountContact',
+  ALIAS: 'alias',
+  CUSTOM_DOMAIN: 'customDomain',
   EMAIL: 'email',
   LABEL: 'label',
   EMAIL_LABEL: 'emailLabel',
@@ -97,6 +99,8 @@ const Table = {
 class Contact extends Model {}
 class Account extends Model {}
 class AccountContact extends Model {}
+class Alias extends Model {}
+class CustomDomain extends Model {}
 class Email extends Model {}
 class EmailContact extends Model {}
 class Label extends Model {}
@@ -153,7 +157,8 @@ const initDatabaseEncrypted = async (
       autoBackupNextDate: Sequelize.DATE,
       autoBackupPath: Sequelize.STRING,
       isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
-      isLoggedIn: { type: Sequelize.BOOLEAN, defaultValue: true }
+      isLoggedIn: { type: Sequelize.BOOLEAN, defaultValue: true },
+      customerType: { type: Sequelize.INTEGER, defaultValue: 0 }
     },
     {
       sequelize,
@@ -499,6 +504,46 @@ const initDatabaseEncrypted = async (
     }
   );
 
+  Alias.init(
+    {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      rowId: { type: Sequelize.INTEGER, unique: true },
+      name: { type: Sequelize.STRING, allowNull: false },
+      domain: { type: Sequelize.STRING, allowNull: true },
+      active: { type: Sequelize.BOOLEAN, defaultValue: true }
+    },
+    {
+      sequelize,
+      tableName: Table.ALIAS,
+      freezeTableName: true,
+      timestamps: false
+    }
+  );
+
+  Account.hasMany(Alias, {
+    foreignKey: 'accountId',
+    onDelete: 'CASCADE'
+  });
+
+  CustomDomain.init(
+    {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      name: { type: Sequelize.STRING, allowNull: false, unique: true },
+      validated: { type: Sequelize.BOOLEAN }
+    },
+    {
+      sequelize,
+      tableName: Table.CUSTOM_DOMAIN,
+      freezeTableName: true,
+      timestamps: false
+    }
+  );
+
+  Account.hasMany(CustomDomain, {
+    foreignKey: 'accountId',
+    onDelete: 'CASCADE'
+  });
+
   await sequelize.sync({});
 
   const [localVersion] = await Version.findOrCreate({
@@ -510,9 +555,25 @@ const initDatabaseEncrypted = async (
       value: CURRENT_VERSION
     }
   });
+
   const emailDef = await Email.describe();
   if (emailDef.accountId && localVersion.value === CURRENT_VERSION) return;
+
   if (migrationStartCallback) migrationStartCallback();
+
+  let migrationFiles = [];
+  switch (localVersion.value) {
+    case 1:
+      migrationFiles = ['20200422145912-customerType'];
+      break;
+    default:
+      migrationFiles = [
+        '20200123161254-multipleAccounts',
+        '20200422145912-customerType'
+      ];
+      break;
+  }
+
   try {
     const migrationPath = path.join(__dirname, '/DBEmigrations');
     const migrator = new umzug({
@@ -528,7 +589,7 @@ const initDatabaseEncrypted = async (
         path: migrationPath
       }
     });
-    await migrator.up();
+    await migrator.up(migrationFiles);
     await Version.update(
       {
         value: CURRENT_VERSION
@@ -566,7 +627,9 @@ const rawCheckPin = async pin => {
 module.exports = {
   Account: () => Account,
   AccountContact: () => AccountContact,
+  Alias: () => Alias,
   Contact: () => Contact,
+  CustomDomain: () => CustomDomain,
   Email: () => Email,
   EmailContact: () => EmailContact,
   EmailLabel: () => EmailLabel,

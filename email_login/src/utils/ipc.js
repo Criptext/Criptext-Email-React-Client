@@ -26,6 +26,10 @@ export const openPinWindow = params => {
   ipc.callMain('open-pin', params);
 };
 
+export const upgradeToPlus = token => {
+  ipc.callMain('upgrade-to-plus', token);
+};
+
 export const sendPin = params => ipc.callMain('send-pin', params);
 
 export const throwError = error => {
@@ -54,6 +58,10 @@ export const checkAvailableUsername = async username => {
 
 export const deleteDeviceToken = async params => {
   return await ipc.callMain('client-delete-device-token', params);
+};
+
+export const getMaxDevices = async params => {
+  return await ipc.callMain('client-get-max-devices', params);
 };
 
 export const linkAuth = async newDeviceData => {

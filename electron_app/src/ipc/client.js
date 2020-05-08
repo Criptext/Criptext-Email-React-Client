@@ -2,6 +2,11 @@ const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const clientManager = require('./../clientManager');
 const myAccount = require('../Account');
 
+ipc.answerRenderer('client-activate-address', params => {
+  const data = { ...params, recipientId: myAccount.recipientId };
+  return clientManager.activateAddress(data);
+});
+
 ipc.answerRenderer('client-acknowledge-events', params =>
   clientManager.acknowledgeEvents(params)
 );
@@ -30,6 +35,16 @@ ipc.answerRenderer(
     clientManager.checkExpiredSession(response, initialRequest, requestParams)
 );
 
+ipc.answerRenderer('client-delete-address', addressId => {
+  const data = { addressId, recipientId: myAccount.recipientId };
+  return clientManager.deleteAddress(data);
+});
+
+ipc.answerRenderer('client-delete-domain', domain => {
+  const data = { domain, recipientId: myAccount.recipientId };
+  return clientManager.deleteDomain(data);
+});
+
 ipc.answerRenderer('client-delete-device-token', params =>
   clientManager.deleteDeviceToken(params)
 );
@@ -51,8 +66,17 @@ ipc.answerRenderer('client-get-data-ready', recipientId =>
   clientManager.getDataReady(recipientId)
 );
 
+ipc.answerRenderer('client-get-domain-mx', domain => {
+  const data = { domain, recipientId: myAccount.recipientId };
+  return clientManager.getDomainMX(data);
+});
+
 ipc.answerRenderer('client-get-key-bundle', params =>
   clientManager.getKeyBundle(params)
+);
+
+ipc.answerRenderer('client-get-max-devices', params =>
+  clientManager.getMaxDevices(params)
 );
 
 ipc.answerRenderer('client-get-user-settings', () =>
@@ -62,6 +86,11 @@ ipc.answerRenderer('client-get-user-settings', () =>
 ipc.answerRenderer('client-insert-prekeys', params =>
   clientManager.insertPreKeys(params)
 );
+
+ipc.answerRenderer('client-domain-available', domain => {
+  const data = { domain, recipientId: myAccount.recipientId };
+  return clientManager.isDomainAvailable(data);
+});
 
 ipc.answerRenderer('client-is-criptext-domain', domains => {
   const data = { domains, recipientId: myAccount.recipientId };
@@ -126,6 +155,11 @@ ipc.answerRenderer('client-post-peer-event', params => {
   return clientManager.postPeerEvent(data);
 });
 
+ipc.answerRenderer('client-register-domain', domain => {
+  const data = { domain, recipientId: myAccount.recipientId };
+  return clientManager.registerDomain(data);
+});
+
 ipc.answerRenderer('client-post-user', params =>
   clientManager.postUser(params)
 );
@@ -151,6 +185,11 @@ ipc.answerRenderer('client-resend-confirmation-email', () => {
 ipc.answerRenderer('client-reset-password', params =>
   clientManager.resetPassword(params)
 );
+
+ipc.answerRenderer('client-set-address', params => {
+  const data = { ...params, recipientId: myAccount.recipientId };
+  return clientManager.setAddress(data);
+});
 
 ipc.answerRenderer('client-send-recovery-code', params =>
   clientManager.sendRecoveryCode(params)
@@ -221,6 +260,11 @@ ipc.answerRenderer('client-update-push-token', pushToken => {
 ipc.answerRenderer('client-upload-avatar', params => {
   const data = { ...params, recipientId: myAccount.recipientId };
   return clientManager.uploadAvatar(data);
+});
+
+ipc.answerRenderer('client-validate-mx-records', domain => {
+  const data = { domain, recipientId: myAccount.recipientId };
+  return clientManager.validateDomainMX(data);
 });
 
 ipc.answerRenderer('client-validate-recovery-code', params =>

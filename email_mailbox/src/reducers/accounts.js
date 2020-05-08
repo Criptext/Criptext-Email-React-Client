@@ -9,7 +9,8 @@ const formAccounts = account => {
     badge: 0,
     isActive: account.activeAccount.isActive,
     name: account.activeAccount.name,
-    recipientId: account.activeAccount.recipientId
+    recipientId: account.activeAccount.recipientId,
+    customerType: account.activeAccount.customerType
   };
   const inactiveAccounts = account.inactiveAccounts
     ? Object.keys(account.inactiveAccounts).map(key => {
@@ -45,11 +46,13 @@ const accounts = (state = initAccounts(myAccount), action) => {
       return initAccounts(myAccount).reduce((result, item) => {
         const accountId = item.get('id');
         const accountName = item.get('name');
+        const customerType = item.get('customerType');
         const accountItem = result.get(`${accountId}`);
         return result.set(
           `${accountId}`,
           account(accountItem, {
             accountName,
+            customerType,
             type: action.type
           })
         );
@@ -69,9 +72,10 @@ const account = (state, action) => {
       });
     }
     case Account.RELOAD_ACCOUNTS: {
-      const { accountName: name } = action;
+      const { accountName: name, customerType } = action;
       return state.merge({
-        name
+        name,
+        customerType
       });
     }
     default:

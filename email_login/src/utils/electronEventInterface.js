@@ -19,6 +19,10 @@ ipcRenderer.on('socket-message', (ev, message) => {
   }
 });
 
+ipcRenderer.on('get-max-devices', () => {
+  emitter.emit('get-max-devices');
+});
+
 const handleDeviceLinkAuthorizationConfirmation = ({ params }) => {
   const { deviceId, name } = params;
   const { recipientId } = getTemporalAccount();

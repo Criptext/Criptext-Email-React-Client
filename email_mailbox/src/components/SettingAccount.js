@@ -10,6 +10,8 @@ import SettingBlockManualSync from './SettingBlockManualSync';
 import SettingBlockProfile from '../containers/SettingBlockProfile';
 import SettingsAccountBackupWrapper from './SettingsAccountBackupWrapper';
 import SettingsAccountRestoreBackupc from './SettingsAccountRestoreBackup';
+import AliasesBlock from './SettingAliasBlock';
+import CustomDomainsBlock from './SettingCustomDomainsBlock';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import './settingaccount.scss';
@@ -29,6 +31,15 @@ const SettingAccount = props => (
       <div className="cptx-section-block-content">
         <SettingBlockProfile {...props} />
       </div>
+      <div className="cptx-section-block-title">
+        <h1>{string.settings.addresses}</h1>
+      </div>
+      {!props.isEnterprise && (
+        <div className="cptx-section-block-content">
+          <CustomDomainsBlock {...props} />
+          <AliasesBlock {...props} />
+        </div>
+      )}
       <div className="cptx-section-block-title">
         <h1>{string.settings.privacy}</h1>
       </div>
@@ -72,15 +83,21 @@ const SettingAccount = props => (
       }
       onClickChangePasswordInputType={props.onClickChangePasswordInputType}
       onClickForgotPasswordLink={props.onClickForgotPasswordLink}
+      onClickSection={props.onClickSection}
       onClosePopup={props.onClosePopup}
       onConfirmChangePassword={props.onConfirmChangePassword}
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
       onConfirmSetReplyTo={props.onConfirmSetReplyTo}
+      onConfirmDeleteAlias={props.onConfirmDeleteAlias}
+      onConfirmDeleteCustomDomain={props.onConfirmDeleteCustomDomain}
       onShowSettingsPopup={props.onShowSettingsPopup}
+      deleteAliasParams={props.deleteAliasParams}
+      deleteCustomDomainsParams={props.deleteCustomDomainsParams}
       setReplyToPopupParams={props.setReplyToPopupParams}
       onSetExportBackupPassword={props.onSetExportBackupPassword}
       onSelectBackupFolder={props.onSelectBackupFolder}
       type={props.settingsPopupType}
+      upgradeToPlusType={props.upgradeToPlusType}
     />
   </div>
 );
@@ -368,6 +385,8 @@ RecoveryEmailConfirmationMessage.propTypes = {
 SettingAccount.propTypes = {
   changePasswordPopupParams: PropTypes.object,
   changeRecoveryEmailPopupParams: PropTypes.object,
+  deleteAliasParams: PropTypes.object,
+  deleteCustomDomainsParams: PropTypes.object,
   devicesQuantity: PropTypes.number,
   isEnterprise: PropTypes.bool,
   isHiddenSettingsPopup: PropTypes.bool,
@@ -378,15 +397,19 @@ SettingAccount.propTypes = {
   onClickChangeRecoveryEmailInputType: PropTypes.func,
   onClickChangePasswordInputType: PropTypes.func,
   onClickForgotPasswordLink: PropTypes.func,
+  onClickSection: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
+  onConfirmDeleteAlias: PropTypes.func,
+  onConfirmDeleteCustomDomain: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
   onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
   setReplyToPopupParams: PropTypes.object,
-  settingsPopupType: PropTypes.string
+  settingsPopupType: PropTypes.string,
+  upgradeToPlusType: PropTypes.string
 };
 
 export default SettingAccount;

@@ -74,6 +74,7 @@
       },
       {
         "title": "Remove Devices",
+        "message": "You have too many devices. You need to remove {0} device(s) more in orther to continue",
         "buttons": {
           "cancel": "Back",
           "confirm": "Remove"
@@ -130,6 +131,14 @@
       "errors": {
         "unknown": "Unable to validate code",
         "wrong": "You entered a wrong code"
+      }
+    },
+    "upgradePlus": {
+      "title": "You need Plus for this",
+      "message": "You've reached your maximum devices allowed (2). Upgrade to Plus to get up to 5 devices connected on your account. Otherwise, remove an existing device in order to continue logging in.",
+      "buttons": {
+        "cancel": "No, Thanks",
+        "confirm": "Get Plus"
       }
     }
   },

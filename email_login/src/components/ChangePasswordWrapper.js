@@ -20,7 +20,8 @@ import * as ErrorMsgs from './SignUpErrorMsgs';
 const LOGIN_FIRST_STATUS = {
   SUCCESS: 200,
   WRONG_CREDENTIALS: 400,
-  VALIDATION_ERROR: 422
+  VALIDATION_ERROR: 422,
+  DEVICE_LIMIT: 439
 };
 
 const { changePassword } = string;
@@ -145,6 +146,10 @@ class ChangePasswordWrapper extends Component {
         this.throwLoginError(text);
         break;
       }
+      case LOGIN_FIRST_STATUS.DEVICE_LIMIT: {
+        this.props.goBack();
+        break;
+      }
       default:
         break;
     }
@@ -207,6 +212,7 @@ class ChangePasswordWrapper extends Component {
 }
 
 ChangePasswordWrapper.propTypes = {
+  goBack: PropTypes.func,
   emailAddress: PropTypes.string,
   oldPassword: PropTypes.string
 };
