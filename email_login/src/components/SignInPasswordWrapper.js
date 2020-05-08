@@ -185,14 +185,15 @@ class SignInPasswordWrapper extends Component {
             shouldExport: false,
             shouldOnlySetPIN: true
           });
-        const { deviceId, name } = body;
+        const { deviceId, name, customerType } = body;
         openCreateKeysLoadingWindow({
           loadingType: 'signin',
           shouldResetPIN: !hasPIN,
           remoteData: {
             recipientId,
             deviceId,
-            name
+            name,
+            customerType: customerType || 0
           }
         });
         closeLoginWindow({ forceClose: true });
