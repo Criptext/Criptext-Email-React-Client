@@ -63,6 +63,20 @@
       "name": "Error al crear el usuario",
       "description": "Ha ocurrido un error al crear el usuario.\nCódigo: "
     },
+    "encryptionService": {
+      "createAccount": {
+        "name": "Error al crear cuenta",
+        "description": "No fue posible crear la cuenta. Por favor intenta de nuevo"
+      },
+      "createKeybundles": {
+        "name": "Error al crear llaves",
+        "description": "No fue posible crear las llaves de tu cuenta. Por favor intenta de nuevo"
+      },
+      "unknown": {
+        "name": "Error desconocido al crear la Cuenta",
+        "description": "No fue posible crear la cuenta. Por favor intenta de nuevo"
+      }
+    },
     "noResponse": {
       "name": "No hay respuesta",
       "description": "No se ha obtenido respuesta del servidor"

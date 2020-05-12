@@ -125,14 +125,14 @@ const createAcountAndGetKeyBundle = async ({
       deviceId
     });
   });
-  if (accountRes.status !== 200) {
-    throw CustomError(string.errors.updateAccountData);
+  if (!accountRes || accountRes.status !== 200) {
+    throw CustomError(string.errors.encryptionService.createAccount);
   }
   const keybundleRes = await aliceRequestWrapper(() => {
     return generateKeyBundle({ recipientId });
   });
-  if (keybundleRes.status !== 200) {
-    throw CustomError(string.errors.prekeybundleFailed);
+  if (!keybundleRes || keybundleRes.status !== 200) {
+    throw CustomError(string.errors.encryptionService.createKeybundles);
   }
   const jsonRes = await keybundleRes.json();
   const pcName = await getComputerName();
