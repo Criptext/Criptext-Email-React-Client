@@ -48,6 +48,7 @@ const SettingAccount = props => (
       <div className="cptx-section-block-content">
         <ReadReceiptsBlock {...props} />
         <TwoFactorAuthenticationBlock {...props} />
+        <EmailBlockingBlock {...props} />
         <SecurityPin {...props} />
       </div>
       <div className="cptx-section-block-title">
@@ -204,6 +205,27 @@ const TwoFactorAuthenticationBlock = props => (
             !props.recoveryEmailConfirmed ||
             props.twoFactorLabelIsLoading
           }
+        />
+      )}
+    </div>
+  </div>
+);
+
+const EmailBlockingBlock = props => (
+  <div id="settings-general-two-factor" className="cptx-section-item">
+    <span className="cptx-section-item-title">Block Images</span>
+    <span className="cptx-section-item-description">
+      Block images from unauthorized devices.
+    </span>
+    <div className="cptx-section-item-control">
+      {props.twoFactorLabelIsLoading ? (
+        <TwoFactorLoadingLabel />
+      ) : (
+        <Switch
+          theme="two"
+          name="emailBlockingSwitch"
+          onChange={props.onChangeSwitchTwoFactor}
+          checked={!!props.twoFactorEnabled}
         />
       )}
     </div>

@@ -106,7 +106,7 @@ const Email = props => (
       <hr />
       <div className="email-body">
         <div disabled={props.hideView || props.isUnsend} className="email-text">
-          <div dangerouslySetInnerHTML={{ __html: props.content }} />
+          <div dangerouslySetInnerHTML={{ __html: theMail(props.content) }} />
         </div>
         {!!props.files.length &&
           isExpand(props.displayEmail, props.staticOpen) && (
@@ -273,6 +273,44 @@ const renderIconSecure = (onMouseEnterTooltip, onMouseLeaveTooltip, id) => {
       <i className="icon-secure" />
     </div>
   );
+};
+
+const theMail = content => {
+  const blockImages = true;
+  if (!blockImages) return `<div class="email-container">${content}</div>`;
+  return getDOM(content);
+};
+
+const getDOM = html => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(
+    `<div class="email-container">${html}</div>`,
+    'text/html'
+  );
+  const allImages = doc.getElementsByTagName('img');
+  for (let img of allImages) {
+    const originalHeight = img.height;
+    const originalWidth = img.width;
+    const el = doc.createElement('div');
+    el.innerHTML = `<div style='height: ${originalHeight}; width: ${originalWidth}; min-width: 15px; min-height: 15px; max-width: 30px; max-height: 30px; border: 1px solid #4a4a4a;'>
+                              <svg
+                                class="image-blocked"
+                                data-name="Image blocked"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 40 40"
+                              >
+                                <path
+                                  class="cls-1"
+                                  d="M33.7,0H6.3A6.3,6.3,0,0,0,0,6.3V33.7A6.3,6.3,0,0,0,6.3,40H33.7A6.3,6.3,0,0,0,40,33.7V6.3A6.3,6.3,0,0,0,33.7,0ZM27,6.23a4,4,0,1,1-4,4A4,4,0,0,1,27,6.23Zm5.53,26H7.61a1.12,1.12,0,0,1-1.09-1.77L13.32,17a1.14,1.14,0,0,1,2.09-.19l6.84,8.93a1.67,1.67,0,0,0,2.59.16l1.67-1.69A1.6,1.6,0,0,1,29,24.4l4.33,6.19C34,31.48,33.62,32.21,32.52,32.21Z"
+                                />
+                              </svg>
+                            </div>`;
+    img.insertAdjacentElement('afterend', el);
+    img.remove();
+  }
+  return `<div class="email-container">${new XMLSerializer().serializeToString(
+    doc
+  )}</div>`;
 };
 
 const defineEmailStatus = status => {
