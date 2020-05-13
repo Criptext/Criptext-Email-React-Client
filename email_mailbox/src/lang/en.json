@@ -249,7 +249,9 @@
     "email_source": "Show Source",
     "empty_body": "This email has no content",
     "empty_subject": "No subject",
-    "unsentText": "Unsent"
+    "unsentText": "Unsent",
+    "next_message": "Go to next message",
+    "previous_message": "Go to previous message"
   },
   "messages": {
     "alias_status": {
