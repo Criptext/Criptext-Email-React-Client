@@ -30,9 +30,8 @@ class SettingUpgradePlusWrapper extends Component {
         <iframe
           id="cptx-upgrade-to-plus-iframe"
           title="cptx-upgrade-to-plus-iframe"
-          src={`https://admin.criptext.com/?#/account/billing?token=${
-            myAccount.jwt
-          }&lang=${mySettings.language || 'en'}`}
+          src={`https://admin.criptext.com/?#/account/billing?lang=${mySettings.language ||
+            'en'}&token=${myAccount.jwt}`}
           onLoad={this.handleLoad}
           className={
             this.state.loading

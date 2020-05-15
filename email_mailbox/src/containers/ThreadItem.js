@@ -20,7 +20,8 @@ import {
   EmailStatus,
   SectionType,
   composerEvents,
-  avatarBaseUrl
+  avatarBaseUrl,
+  avatarBorderUrl
 } from '../utils/const';
 import { parseContactRow } from '../utils/EmailUtils';
 import string from './../lang';
@@ -148,11 +149,13 @@ const mapStateToProps = (state, ownProps) => {
   );
   const [username, domain = appDomain] = lastRecipient.email.split(`@`);
   const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
+  const borderUrl = `${avatarBorderUrl}${domain}/${username}?date=${avatarTimestamp}`;
   const { preview, isUnsend, isEmpty } = definePreviewAndStatus(thread);
   const hasNoSubject = thread.get('subject') === EMPTY_SUBJECT_DEFAULT;
   const isSecure = thread.get('secure');
   return {
     avatarUrl,
+    borderUrl,
     color,
     hasNoSubject,
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),

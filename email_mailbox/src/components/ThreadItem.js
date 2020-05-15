@@ -143,9 +143,9 @@ class ThreadItem extends Component {
           <AvatarImage
             key={this.props.avatarUrl}
             avatarUrl={this.props.avatarUrl}
+            borderUrl={this.props.borderUrl}
             letters={this.props.letters}
             color={this.props.color}
-            showBorder={true}
           />
         </div>
       </div>
@@ -302,6 +302,7 @@ HoverMenuItem.propTypes = {
 
 ThreadItem.propTypes = {
   avatarUrl: PropTypes.string,
+  borderUrl: PropTypes.string,
   color: PropTypes.string,
   checked: PropTypes.bool,
   hasNoSubject: PropTypes.bool,

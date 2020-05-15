@@ -36,10 +36,12 @@ const ProfilePreview = props => (
 
 const ProfileItem = ({ account, timestamp, onClick }) => {
   const {
+    customerColor,
     name,
     letters,
     emailAddress,
     avatarUrl,
+    borderUrl,
     isActive,
     showPlusBorder
   } = defineAccountVisibleParams(account, timestamp);
@@ -55,13 +57,21 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
         <AvatarImage
           letters={letters}
           avatarUrl={avatarUrl}
+          borderUrl={borderUrl}
           showBorder={showPlusBorder}
         />
       </div>
       <div className="cptx-profile-preview-detail">
         <div className="name-plus-container">
           <span className="name">{name}</span>
-          {showPlusBorder && <span className="plus-badge">Plus</span>}
+          {showPlusBorder && (
+            <span
+              className="plus-badge"
+              style={{ backgroundColor: customerColor }}
+            >
+              Plus
+            </span>
+          )}
         </div>
         <span className="email-address">{emailAddress}</span>
       </div>

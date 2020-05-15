@@ -105,13 +105,13 @@ const SideBar = props => (
             </div>
             <span>{string.sidebar.settings}</span>
           </li>
-          {!props.isPlus && (
+          {props.canUpgrade && (
             <li
               className="nav-item join-plus"
               onClick={() => props.onClickSettings({ tab: TAB.PLUS })}
             >
               <div className="nav-item-icon">
-                <i className="icon-settings" />
+                <div className="icon-crown" />
               </div>
               <span>{string.sidebar.join_plus}</span>
             </li>
@@ -149,7 +149,7 @@ const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
 SideBar.propTypes = {
   buttonComposerStatus: PropTypes.number,
   items: PropTypes.array,
-  isPlus: PropTypes.bool,
+  canUpgrade: PropTypes.bool,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.object,
   onClickButtonComposer: PropTypes.func,

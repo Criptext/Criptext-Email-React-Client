@@ -21,6 +21,7 @@ const ProfileShortCut = props => (
       <AvatarImage
         key={props.avatarUrl}
         avatarUrl={props.avatarUrl}
+        borderUrl={props.borderUrl}
         letters={props.letters}
         showBorder={props.showPlusBorder}
       />
@@ -48,6 +49,7 @@ const ProfileShortCut = props => (
 ProfileShortCut.propTypes = {
   avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
+  borderUrl: PropTypes.string,
   badgeAccount: PropTypes.bool,
   letters: PropTypes.string,
   accountsLimitReached: PropTypes.bool,

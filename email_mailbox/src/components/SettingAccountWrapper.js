@@ -46,7 +46,7 @@ import {
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 import { appDomain } from '../utils/const';
-import { isPlus, isEnterprise } from '../utils/plus';
+import { isEnterprise, canUpgrade } from '../utils/plus';
 
 const EDITING_MODES = {
   EDITING_NAME: 'editing-name',
@@ -493,7 +493,7 @@ class SettingAccountWrapper extends Component {
   };
 
   handleChangeAliasStatus = (...args) => {
-    if (!isPlus(myAccount.customerType) && !getShownAliasPlusPopup()) {
+    if (canUpgrade(myAccount.customerType) && !getShownAliasPlusPopup()) {
       this.resumeCallback = () => {
         this.handleChangeAliasStatus(...args);
       };
@@ -509,7 +509,7 @@ class SettingAccountWrapper extends Component {
       args[0] === 'alias'
         ? getShownAliasPlusPopup()
         : getShownCustomDomainsPlusPopup();
-    if (!isPlus(myAccount.customerType) && !hasShownPopup) {
+    if (canUpgrade(myAccount.customerType) && !hasShownPopup) {
       this.resumeCallback = () => {
         this.handleChangePanel(...args);
       };
@@ -525,7 +525,7 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClickDeleteAlias = (rowId, email) => {
-    if (!isPlus(myAccount.customerType) && !getShownAliasPlusPopup()) {
+    if (canUpgrade(myAccount.customerType) && !getShownAliasPlusPopup()) {
       this.showUpgradeToPlusPopup('alias');
       this.resumeCallback = () => {
         this.handleClickDeleteAlias(rowId, email);
@@ -546,7 +546,10 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClickDeleteCustomDomain = domainObject => {
-    if (!isPlus(myAccount.customerType) && !getShownCustomDomainsPlusPopup()) {
+    if (
+      canUpgrade(myAccount.customerType) &&
+      !getShownCustomDomainsPlusPopup()
+    ) {
       this.showUpgradeToPlusPopup('custom-domains');
       setShownCustomDomainsPlusPopup(true);
       this.resumeCallback = () => {

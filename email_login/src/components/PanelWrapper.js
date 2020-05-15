@@ -867,15 +867,13 @@ class PanelWrapper extends Component {
         }
         break;
       case popupType.DELETE_DEVICE:
-        {
-          this.setState({
-            popupType: popup,
-            removeDevicesData: {
-              ...this.state.removeDevicesData,
-              ...data
-            }
-          });
-        }
+        this.setState({
+          popupType: popup,
+          removeDevicesData: {
+            ...this.state.removeDevicesData,
+            ...data
+          }
+        });
         break;
       default:
         break;

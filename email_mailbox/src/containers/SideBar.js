@@ -10,7 +10,7 @@ import {
 import { openFilledComposerWindow } from './../utils/ipc';
 import { getAllAccounts } from '../selectors/accounts';
 import { myAccount } from '../utils/electronInterface';
-import { isPlus } from '../utils/plus';
+import { canUpgrade } from '../utils/plus';
 
 const mapStateToProps = state => {
   const accounts = getAllAccounts(state);
@@ -21,7 +21,7 @@ const mapStateToProps = state => {
   return {
     items: getSystemLabels(state),
     labels: getVisibleLabels(state),
-    isPlus: isPlus(activeAccount.customerType)
+    canUpgrade: canUpgrade(activeAccount.customerType)
   };
 };
 
