@@ -8,11 +8,20 @@ import {
   SEND_BUTTON_STATUS
 } from './../utils/const';
 import { openFilledComposerWindow } from './../utils/ipc';
+import { getAllAccounts } from '../selectors/accounts';
+import { myAccount } from '../utils/electronInterface';
+import { isPlus } from '../utils/plus';
 
 const mapStateToProps = state => {
+  const accounts = getAllAccounts(state);
+  const activeAccount = accounts.find(
+    acc => acc.recipientId === myAccount.recipientId
+  );
+
   return {
     items: getSystemLabels(state),
-    labels: getVisibleLabels(state)
+    labels: getVisibleLabels(state),
+    isPlus: isPlus(activeAccount.customerType)
   };
 };
 
@@ -30,9 +39,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       });
     },
-    onClickSettings: () => {
+    onClickSettings: params => {
       const type = SectionType.SETTINGS;
-      ownProps.onClickSection(type);
+      ownProps.onClickSection(type, params);
     }
   };
 };

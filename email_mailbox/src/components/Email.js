@@ -42,6 +42,7 @@ const Email = props => (
             color={props.color}
             avatarUrl={props.avatarUrl}
             letters={props.letters}
+            showBorder={true}
           />
         </div>
         <div className="email-info-content">

@@ -7,8 +7,14 @@ import string from '../lang';
 class SettingsWrapper extends Component {
   constructor(props) {
     super(props);
+    const sectionSelected =
+      props.sectionSelected &&
+      props.sectionSelected.params &&
+      props.sectionSelected.params.tabSelected
+        ? props.sectionSelected.params.tabSelected
+        : string.settings.account;
     this.state = {
-      sectionSelected: string.settings.account
+      sectionSelected
     };
   }
 
@@ -33,7 +39,8 @@ class SettingsWrapper extends Component {
 SettingsWrapper.propTypes = {
   onCheckForUpdates: PropTypes.func,
   onLogout: PropTypes.func,
-  onRemoveDevice: PropTypes.func
+  onRemoveDevice: PropTypes.func,
+  sectionSelected: PropTypes.object
 };
 
 export default SettingsWrapper;

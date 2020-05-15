@@ -145,6 +145,7 @@ class ThreadItem extends Component {
             avatarUrl={this.props.avatarUrl}
             letters={this.props.letters}
             color={this.props.color}
+            showBorder={true}
           />
         </div>
       </div>

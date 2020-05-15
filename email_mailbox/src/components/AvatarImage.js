@@ -19,6 +19,18 @@ class AvatarImage extends Component {
     const color = !this.state.showAvatar ? this.props.color : null;
     return (
       <div style={{ background: color }} className="avatar-letters">
+        {this.props.showBorder && (
+          <svg className="cptx-svg-border">
+            <circle
+              r="calc(100%/2 - 2)"
+              cx="calc(100% / 2)"
+              cy="calc(100% / 2)"
+              strokeWidth="1"
+              fill="none"
+              stroke="url(#criptextGradientColor)"
+            />
+          </svg>
+        )}
         {(this.state.isLoading || this.state.showAvatar) && (
           <img
             src={this.props.avatarUrl}
@@ -63,7 +75,8 @@ AvatarImage.propTypes = {
   avatarUrl: PropTypes.string,
   color: PropTypes.string,
   letters: PropTypes.string,
-  name: PropTypes.string
+  name: PropTypes.string,
+  showBorder: PropTypes.bool
 };
 
 export default AvatarImage;

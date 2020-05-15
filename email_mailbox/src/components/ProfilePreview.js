@@ -51,14 +51,12 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
       }`}
       onClick={isActive ? undefined : () => onClick(data)}
     >
-      {showPlusBorder && (
-        <div className="profile-plus-border-container">
-          <div className="profile-plus-inner-border" />
-          <div className="profile-plus-outer-border" />
-        </div>
-      )}
       <div className="cptx-profile-preview-icon">
-        <AvatarImage letters={letters} avatarUrl={avatarUrl} />
+        <AvatarImage
+          letters={letters}
+          avatarUrl={avatarUrl}
+          showBorder={showPlusBorder}
+        />
       </div>
       <div className="cptx-profile-preview-detail">
         <div className="name-plus-container">

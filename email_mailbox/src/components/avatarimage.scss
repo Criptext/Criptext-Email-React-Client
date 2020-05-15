@@ -3,9 +3,17 @@
   align-items: center;
   border-radius: 50%;
   display: flex;
-  overflow: hidden;
+  overflow: visible;
   height: 100%;
   width: 100%;
+
+  .cptx-svg-border {
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    left: -6px;
+    overflow: overlay;
+    position: absolute;
+  }
 
   img {
     object-fit: cover;
