@@ -43,7 +43,6 @@ import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
 import './panelwrapper.scss';
-import { isPlus } from '../utils/plus';
 
 const { errors, help, signIn, signUp } = string;
 
@@ -869,11 +868,8 @@ class PanelWrapper extends Component {
         break;
       case popupType.DELETE_DEVICE:
         {
-          const popType = isPlus(this.state.removeDevicesData.customerType)
-            ? popup
-            : popupType.UPGRADE_PLUS;
           this.setState({
-            popupType: popType,
+            popupType: popup,
             removeDevicesData: {
               ...this.state.removeDevicesData,
               ...data

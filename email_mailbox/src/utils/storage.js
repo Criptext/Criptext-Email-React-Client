@@ -64,6 +64,24 @@ export const getResendConfirmationTimestamp = () => {
   return isNaN(timestamp) ? null : timestamp;
 };
 
+/*  Alias Custom Domains Plus Popup
+-------------------------------------*/
+export const setShownAliasPlusPopup = status => {
+  localStorage.setItem('shownAliasPlusPopup', status);
+};
+
+export const getShownAliasPlusPopup = () => {
+  return localStorage.getItem('shownAliasPlusPopup') === 'true';
+};
+
+export const setShownCustomDomainsPlusPopup = status => {
+  localStorage.setItem('shownCustomDomainsPlusPopup', status);
+};
+
+export const getShownCustomDomainsPlusPopup = () => {
+  return localStorage.getItem('shownCustomDomainsPlusPopup') === 'true';
+};
+
 /*  Show Email Preview Last Status
 -------------------------------------*/
 export const setShowEmailPreviewStatus = status => {

@@ -230,7 +230,7 @@ const SettingsPopup = props => {
       return (
         <Upgradetopluspopup
           isHidden={props.isHidden}
-          onTogglePopup={props.onClosePopup}
+          onTogglePopup={props.onClosePlusPopup}
           onClickSection={props.onClickSection}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
@@ -258,6 +258,7 @@ SettingsPopup.propTypes = {
   onClickChangeRecoveryEmailInputType: PropTypes.func,
   onClickForgotPasswordLink: PropTypes.func,
   onClickSection: PropTypes.func,
+  onClosePlusPopup: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,

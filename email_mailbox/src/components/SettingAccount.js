@@ -98,6 +98,7 @@ const SettingAccount = props => (
       onSelectBackupFolder={props.onSelectBackupFolder}
       type={props.settingsPopupType}
       upgradeToPlusType={props.upgradeToPlusType}
+      onClosePlusPopup={props.onClosePlusPopup}
     />
   </div>
 );
@@ -398,6 +399,7 @@ SettingAccount.propTypes = {
   onClickChangePasswordInputType: PropTypes.func,
   onClickForgotPasswordLink: PropTypes.func,
   onClickSection: PropTypes.func,
+  onClosePlusPopup: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
