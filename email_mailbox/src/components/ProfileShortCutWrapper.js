@@ -15,7 +15,7 @@ class ProfileShortCutWrapper extends Component {
   }
 
   render() {
-    const { letters, avatarUrl } = defineAccountVisibleParams(
+    const { letters, avatarUrl, borderUrl } = defineAccountVisibleParams(
       this.props.accounts[0],
       this.props.avatarTimestamp
     );
@@ -23,6 +23,7 @@ class ProfileShortCutWrapper extends Component {
     return (
       <ProfileShortCut
         avatarUrl={avatarUrl}
+        borderUrl={borderUrl}
         letters={letters}
         hasUnreadsEmailsOtherAccounts={this.state.hasUnreadsEmailsOtherAccounts}
         isHiddenMenuProfilePreview={this.state.isHiddenMenuProfilePreview}

@@ -34,7 +34,8 @@ import {
   EmailStatus,
   composerEvents,
   appDomain,
-  avatarBaseUrl
+  avatarBaseUrl,
+  avatarBorderUrl
 } from '../utils/const';
 import {
   setFileSuccessHandler,
@@ -80,6 +81,7 @@ const makeMapStateToProps = () => {
     const letters = getTwoCapitalLetters(senderName || senderEmail || '');
     const [username, domain = appDomain] = senderEmail.split(`@`);
     const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
+    const borderUrl = `${avatarBorderUrl}${domain}/${username}?date=${avatarTimestamp}`;
     const date = email.date;
     const { files, inlineImages } = getFiles(state, email);
     const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);
@@ -101,6 +103,7 @@ const makeMapStateToProps = () => {
         : true;
     return {
       avatarUrl,
+      borderUrl,
       color,
       content,
       date: defineTimeByToday(date),

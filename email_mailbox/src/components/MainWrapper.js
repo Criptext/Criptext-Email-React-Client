@@ -96,6 +96,7 @@ class MainWrapper extends Component {
           <SettingsContainer
             onClickSection={this.props.onClickSection}
             onUpdateApp={this.props.onUpdateApp}
+            sectionSelected={this.props.sectionSelected}
           />
         );
       }
@@ -138,6 +139,7 @@ class MainWrapper extends Component {
               threadIdSelected={
                 this.props.sectionSelected.params.threadIdSelected
               }
+              onClickSelectedItem={this.props.onClickSection}
             />
           )}
         </div>

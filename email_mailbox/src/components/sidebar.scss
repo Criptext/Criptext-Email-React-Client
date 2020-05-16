@@ -71,6 +71,19 @@
           width: auto;
         }
       }
+
+      li.join-plus {
+        span, i {
+          color: #e3a344;
+        }
+      }
+
+      .icon-crown {
+        background-image: url(../#{$_PATH_TO_IMAGES}/crown.svg);
+        background-size: 100% auto;
+        height: 18px;
+        width: 18px;
+      }
     }
 
     hr{

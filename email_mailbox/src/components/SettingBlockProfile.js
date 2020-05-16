@@ -25,6 +25,7 @@ const renderBlockAvatar = props => (
         key={props.avatarUrl}
         avatarUrl={props.avatarUrl}
         letters={props.letters}
+        showBorder={true}
       />
       {props.avatarIsLoading && (
         <div className="cptx-profile-avatar-loading-overlay">

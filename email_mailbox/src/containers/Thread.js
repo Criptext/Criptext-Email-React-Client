@@ -10,17 +10,25 @@ import { parseContactRow } from '../utils/EmailUtils';
 import { matchOwnEmail } from '../utils/ContactUtils';
 import { makeGetEmails } from './../selectors/emails';
 import { makeGetLabels } from './../selectors/labels';
-import { makeGetThread } from './../selectors/threads';
+import {
+  makeGetThread,
+  makeGetThreads,
+  makeGetThreadIds
+} from './../selectors/threads';
 import ThreadView from '../components/Thread';
 import { LabelType, myAccount } from '../utils/electronInterface';
+import { SectionType } from '../utils/const';
 
 const makeMapStateToProps = () => {
   const getEmails = makeGetEmails();
   const getLabels = makeGetLabels();
   const getThread = makeGetThread();
+  const getThreads = makeGetThreads();
+  const getThreadIds = makeGetThreadIds();
 
   const mapStateToProps = (state, ownProps) => {
     const thread = getThread(state, ownProps);
+    const threads = Array.from(getThreads(state, ownProps));
     const emailIds = thread ? thread.emailIds : [];
     const { emails, emailKeysUnread, emailsUnread } = getEmails(state, {
       emailIds
@@ -31,6 +39,13 @@ const makeMapStateToProps = () => {
     const starred = thread
       ? thread.allLabels.includes(LabelType.starred.id)
       : undefined;
+    const threadIds = Array.from(getThreadIds(state, ownProps));
+    const threadId = threadIds.indexOf(thread.threadId);
+    const isFirstThread = thread.threadId === threadIds[0] ? true : false;
+    const isLastThread =
+      thread.threadId === threadIds[threadIds.length - 1] ? true : false;
+    const nextThread = !isFirstThread ? threads[threadId - 1].toJS() : null;
+    const previousThread = !isLastThread ? threads[threadId + 1].toJS() : null;
     return {
       emailKeysUnread,
       emails,
@@ -38,7 +53,11 @@ const makeMapStateToProps = () => {
       indexFirstUnread,
       labels,
       starred,
-      thread
+      thread,
+      isFirstThread,
+      isLastThread,
+      nextThread,
+      previousThread
     };
   };
   return mapStateToProps;
@@ -89,6 +108,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           sendOpenEvent(emailKeysUnread, emailsUnread, threadId, labelId)
         );
       }
+    },
+    onSelectThread: thread => {
+      const threadIdDb = thread.threadId;
+      const type = SectionType.THREAD;
+      const params = {
+        mailboxSelected: ownProps.mailboxSelected,
+        threadIdSelected: threadIdDb
+      };
+      ownProps.onClickSelectedItem(type, params);
     }
   };
 };

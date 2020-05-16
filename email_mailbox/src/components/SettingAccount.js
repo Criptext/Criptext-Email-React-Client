@@ -31,9 +31,11 @@ const SettingAccount = props => (
       <div className="cptx-section-block-content">
         <SettingBlockProfile {...props} />
       </div>
-      <div className="cptx-section-block-title">
-        <h1>{string.settings.addresses}</h1>
-      </div>
+      {!props.isEnterprise && (
+        <div className="cptx-section-block-title">
+          <h1>{string.settings.addresses}</h1>
+        </div>
+      )}
       {!props.isEnterprise && (
         <div className="cptx-section-block-content">
           <CustomDomainsBlock {...props} />
@@ -98,6 +100,7 @@ const SettingAccount = props => (
       onSelectBackupFolder={props.onSelectBackupFolder}
       type={props.settingsPopupType}
       upgradeToPlusType={props.upgradeToPlusType}
+      onClosePlusPopup={props.onClosePlusPopup}
     />
   </div>
 );
@@ -398,6 +401,7 @@ SettingAccount.propTypes = {
   onClickChangePasswordInputType: PropTypes.func,
   onClickForgotPasswordLink: PropTypes.func,
   onClickSection: PropTypes.func,
+  onClosePlusPopup: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,

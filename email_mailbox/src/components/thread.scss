@@ -99,9 +99,84 @@
   }
 }
 
+.thread-navigation-control{
+  align-items: flex-start;
+  border: 1px solid transparent;
+  border-radius: 17px;
+  display: flex;
+  height: 28px;
+  margin: 22px 10px 0 0;
+  width: 80px;
+
+  > div{
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    justify-content: center;
+
+    &:nth-child(1){
+      border-top-left-radius: 17px;
+      border-bottom-left-radius: 17px;
+      padding-left: 4px;
+    }
+
+    &:nth-child(2){
+      border-top-right-radius: 17px;
+      border-bottom-right-radius: 17px;
+      border-left: 1px solid transparent;
+      padding-right: 4px;
+    }
+
+    i{
+      background-color: transparent;
+      color: rgba(60, 72, 88, 0.6);
+      font-size: 19px;
+      margin-right: 5px;
+    }
+
+    span{
+      background-color: transparent;
+      font-family: NunitoSans;
+      font-size: 12px;
+    }
+
+    &:hover{
+      background-color: #0091ff;
+      i, span{
+        color: white;
+      }
+    }
+  }
+}
+
+.button-nav-disabled {
+  &:hover{
+    background-color: transparent !important;
+    i {
+      color: #8a919b !important;
+    }
+  }
+}
+
+.thread-previous-button {
+  i {
+    transform: scaleX(-1);
+  }
+}
+
+.labels-tooltip{
+  border-radius: 3px;
+  font-family: NunitoSans;
+  font-size: 12px;
+  font-weight: normal;
+}
+
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_THREAD_ITEM, $_COLOR_TEXT_THREAD_EMAIL_EXPAND, $_BORDER_COLOR_THREAD_EMAIL_EXPAND){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_THREAD_ITEM, $_COLOR_TEXT_THREAD_EMAIL_EXPAND, $_BORDER_COLOR_THREAD_EMAIL_EXPAND, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .cptx-thread-content{
@@ -125,9 +200,35 @@
         }
       }
     }
+
+    .thread-navigation-control {
+      background-color: $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT;
+      border-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
+    
+      > div{      
+        &:nth-child(2){
+          border-left-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
+          border-right-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
+        }
+    
+        i{
+          color: $_COLOR_ICON_EMAIL_BUTTON_SEGMENT;
+        }
+    
+        span{
+          color: $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT;
+        }
+
+        &:hover{
+          i, span{
+            color: white;
+          }
+        }
+      }
+    }
     
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_BACKGROUND_COLOR_THREAD_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_THREAD_EMAIL_EXPAND_LIGHT, $_BORDER_COLOR_THREAD_EMAIL_EXPAND_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_BACKGROUND_COLOR_THREAD_ITEM_UNREAD_DARK, $_COLOR_TEXT_THREAD_EMAIL_EXPAND_DARK, $_BORDER_COLOR_THREAD_EMAIL_EXPAND_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_BACKGROUND_COLOR_THREAD_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_THREAD_EMAIL_EXPAND_LIGHT, $_BORDER_COLOR_THREAD_EMAIL_EXPAND_LIGHT, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT_LIGHT, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT_LIGHT, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT_LIGHT, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_BACKGROUND_COLOR_THREAD_ITEM_UNREAD_DARK, $_COLOR_TEXT_THREAD_EMAIL_EXPAND_DARK, $_BORDER_COLOR_THREAD_EMAIL_EXPAND_DARK, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT_DARK, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT_DARK, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT_DARK, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT_DARK);

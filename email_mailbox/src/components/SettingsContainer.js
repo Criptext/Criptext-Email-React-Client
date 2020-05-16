@@ -91,7 +91,6 @@ class SettingsContainer extends Component {
             onClickCheckForUpdates={this.props.onCheckForUpdates}
             onClickIsFromNotVerifiedOption={this.handleIsFromNotVerifiedOption}
             onClickLogout={this.handleClickLogout}
-            onClickSection={this.handleClickSection}
             onClosePopup={this.handleClosePopup}
             onConfirmLogout={this.handleConfirmLogout}
             onRemoveAlias={this.handleRemoveAlias}
@@ -99,7 +98,6 @@ class SettingsContainer extends Component {
             onRemoveDevice={this.handleRemoveDevice}
             recoveryEmail={this.state.recoveryEmail}
             recoveryEmailConfirmed={this.state.recoveryEmailConfirmed}
-            sectionSelected={this.state.sectionSelected}
             twoFactorAuth={this.state.twoFactorAuth}
             readReceiptsEnabled={this.state.readReceiptsEnabled}
             replyToEmail={this.state.replyToEmail}
@@ -262,10 +260,6 @@ class SettingsContainer extends Component {
     this.setState({
       panel
     });
-  };
-
-  handleClickSection = section => {
-    this.setState({ sectionSelected: section });
   };
 
   handleClosePopup = () => {

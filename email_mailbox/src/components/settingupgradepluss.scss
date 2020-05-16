@@ -1,9 +1,26 @@
 .cptx-update-to-plus {
   height: calc(100% - 50px);
+  position: relative;
 
   iframe {
     width: 100%;
     height: 100%;
     border: 0px;
+  }
+
+  .cptx-join-plus-loader {
+    position: absolute;
+    width: 20px;
+    height: 30px;
+    left: calc(50% - 10px);
+    top: calc(50% - 50px);
+  }
+
+  .cptx-join-plus-visible {
+    visibility: visible;
+  }
+
+  .cptx-join-plus-invisible {
+    visibility: hidden;
   }
 }

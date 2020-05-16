@@ -19,6 +19,7 @@ import {
   updateLabels
 } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
+import { TAB } from './Settings';
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
@@ -123,6 +124,7 @@ class PanelWrapper extends Component {
             sectionSelected: {
               type,
               params: {
+                tabSelected: null,
                 mailboxSelected,
                 threadIdSelected: null,
                 searchParams: searchParamsChecked
@@ -139,6 +141,7 @@ class PanelWrapper extends Component {
             sectionSelected: {
               type,
               params: {
+                tabSelected: null,
                 mailboxSelected,
                 threadIdSelected,
                 searchParams:
@@ -150,11 +153,13 @@ class PanelWrapper extends Component {
         break;
       case SectionType.SETTINGS:
         {
+          const tabSelected = params && params.tab ? params.tab : TAB.ACCOUNT;
           const sectionSelected = {
             type,
             params: {
               mailboxSelected: null,
-              threadIdSelected: null
+              threadIdSelected: null,
+              tabSelected
             }
           };
           this.setState({ sectionSelected }, () => {

@@ -12,6 +12,11 @@ export const avatarBaseUrl =
     ? process.env.REACT_APP_AVATAR_URL
     : `https://api.criptext.com/user/avatar/`;
 
+export const avatarBorderUrl =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_BORDER_URL
+    : `https://api.criptext.com/user/avatar/frame/`;
+
 export const unsentText = 'This content was unsent';
 
 export const sidebarItemsOrder = [
