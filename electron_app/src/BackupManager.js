@@ -5,7 +5,7 @@ const { app } = require('electron');
 const myAccount = require('./Account');
 const { databasePath } = require('./database/DBEmodel');
 const { backupFilenameRegex } = require('./utils/RegexUtils');
-const { createPathRecursive } = require('./utils/FileUtils');
+const { createPathRecursive, store } = require('./utils/FileUtils');
 const {
   decryptStreamFileWithPassword,
   encryptStreamFile,
@@ -164,7 +164,7 @@ const exportBackupUnencrypted = async ({ backupPath, accountObj }) => {
     // Move to destination
     try {
       cleanPreviousBackupFilesInFolder(path.join(backupPath, '..'));
-      fs.writeFileSync(backupPath, fs.readFileSync(ExportZippedFilename));
+      await store(backupPath, fs.readFileSync(ExportZippedFilename));
     } catch (fileErr) {
       throw new Error('Failed to move backup file');
     }
@@ -203,7 +203,7 @@ const exportBackupEncrypted = async ({ backupPath, password, accountObj }) => {
     // Move to destination
     try {
       cleanPreviousBackupFilesInFolder(path.join(backupPath, '..'));
-      fs.writeFileSync(backupPath, fs.readFileSync(ExportEncryptedFilename));
+      await store(backupPath, fs.readFileSync(ExportEncryptedFilename));
     } catch (fileErr) {
       throw new Error('Failed to create backup file');
     }

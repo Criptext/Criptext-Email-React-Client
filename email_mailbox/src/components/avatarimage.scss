@@ -3,16 +3,32 @@
   align-items: center;
   border-radius: 50%;
   display: flex;
-  overflow: hidden;
+  overflow: visible;
   height: 100%;
   width: 100%;
 
-  img {
+  .cptx-svg-border {
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    left: -6px;
+    overflow: overlay;
+    position: absolute;
+  }
+
+  .cptx-avatar-img {
     object-fit: cover;
     width: 100%;
     height: 100%;
     position: absolute;
     border-radius: 50%;
+  }
+
+  .cptx-avatar-border {
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    position: absolute;
+    left: -5px;
+    object-fit: cover;
   }
 
   span{

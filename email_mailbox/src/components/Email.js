@@ -41,6 +41,7 @@ const Email = props => (
           <AvatarImage
             color={props.color}
             avatarUrl={props.avatarUrl}
+            borderUrl={props.borderUrl}
             letters={props.letters}
           />
         </div>
@@ -281,6 +282,7 @@ const isExpand = (displayEmail, staticOpen) => {
 };
 
 renderEmailInfoExpand.propTypes = {
+  borderUrl: PropTypes.string,
   buttonReplyStatus: PropTypes.number,
   buttonUnsendStatus: PropTypes.number,
   dateLong: PropTypes.string,
@@ -312,6 +314,7 @@ renderEmailInfoExpand.propTypes = {
 
 Email.propTypes = {
   avatarUrl: PropTypes.string,
+  borderUrl: PropTypes.string,
   color: PropTypes.string,
   content: PropTypes.string,
   date: PropTypes.string,

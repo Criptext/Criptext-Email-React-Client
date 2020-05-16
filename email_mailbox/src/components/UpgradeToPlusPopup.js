@@ -11,7 +11,11 @@ const UpgradeToPlusPopup = props => {
     <div className="popup-content">
       <div className={`popup-image popup-image-${props.type}`} />
       <div className="popup-title">
-        <h1>{upgradePlus.title}</h1>
+        {props.type === 'alias' ? (
+          <h1>{upgradePlus.alias.title}</h1>
+        ) : (
+          <h1>{upgradePlus.domains.title}</h1>
+        )}
       </div>
       <div className="popup-paragraph">
         {props.type === 'alias' ? (

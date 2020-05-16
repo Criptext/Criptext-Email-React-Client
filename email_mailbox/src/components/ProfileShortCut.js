@@ -14,12 +14,6 @@ const ProfileShortCut = props => (
       (!props.isHiddenMenuProfilePreview ? ' profile-opened' : '')
     }
   >
-    {props.showPlusBorder && (
-      <div className="header-profile-plus-border-container">
-        <div className="header-profile-plus-inner-border" />
-        <div className="header-profile-plus-outer-border" />
-      </div>
-    )}
     <span
       className="header-profile"
       onClick={() => props.onToggleMenuProfilePreview()}
@@ -27,7 +21,9 @@ const ProfileShortCut = props => (
       <AvatarImage
         key={props.avatarUrl}
         avatarUrl={props.avatarUrl}
+        borderUrl={props.borderUrl}
         letters={props.letters}
+        showBorder={props.showPlusBorder}
       />
     </span>
     {props.badgeAccount && (
@@ -53,6 +49,7 @@ const ProfileShortCut = props => (
 ProfileShortCut.propTypes = {
   avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
+  borderUrl: PropTypes.string,
   badgeAccount: PropTypes.bool,
   letters: PropTypes.string,
   accountsLimitReached: PropTypes.bool,

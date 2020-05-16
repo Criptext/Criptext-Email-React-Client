@@ -1,8 +1,8 @@
 import { getTwoCapitalLetters } from './StringUtils';
 import { LabelType, myAccount } from './electronInterface';
-import { avatarBaseUrl, appDomain } from './const';
+import { avatarBaseUrl, appDomain, avatarBorderUrl } from './const';
 import { getEmailsUnredByLabelId } from './ipc';
-import { isPlus } from './plus';
+import { isPlus, plusColor } from './plus';
 
 export const compareAccounts = (account1, account2) => {
   return (
@@ -60,13 +60,17 @@ export const defineAccountVisibleParams = (account, timestamp) => {
   const [username, domain = appDomain] = recipientId.split('@');
   const emailAddress = `${username}@${domain}`;
   const avatarUrl = formAvatarUrl(username, domain, timestamp);
+  const borderUrl = formBorderUrl(username, domain, timestamp);
   const isActive = account.isActive || false;
   const showPlusBorder = isPlus(account.customerType);
+  const customerColor = plusColor(account.customerType);
   return {
+    customerColor,
     name,
     letters,
     emailAddress,
     avatarUrl,
+    borderUrl,
     isActive,
     showPlusBorder
   };
@@ -74,4 +78,8 @@ export const defineAccountVisibleParams = (account, timestamp) => {
 
 export const formAvatarUrl = (username, domain, timestamp) => {
   return `${avatarBaseUrl}${domain}/${username}?date=${timestamp}`;
+};
+
+export const formBorderUrl = (username, domain, timestamp) => {
+  return `${avatarBorderUrl}${domain}/${username}?date=${timestamp}`;
 };

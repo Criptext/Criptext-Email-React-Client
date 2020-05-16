@@ -17,6 +17,14 @@ const Sections = [
   string.settings.upgrade_plus
 ];
 
+export const TAB = {
+  ACCOUNT: Sections[0],
+  GENERAL: Sections[1],
+  LABELS: Sections[2],
+  DEVICES: Sections[3],
+  PLUS: Sections[4]
+};
+
 const Settings = props => (
   <div className="settings-content">
     <ul className="settings-content-items">
@@ -25,7 +33,7 @@ const Settings = props => (
           key={index}
           name={section}
           sectionName={
-            section === Sections[4] && isPlus(props.customerType)
+            section === TAB.PLUS && isPlus(props.customerType)
               ? string.settings.billing
               : section
           }

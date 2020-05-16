@@ -15,9 +15,9 @@ const openUpgradeToPlusWindow = token => {
       }
     });
     workerWin.loadURL(
-      `https://admin.criptext.com/?#/account/billing?token=${token}&lang=${
+      `https://admin.criptext.com/?#/account/billing?lang=${
         language.currentLanguage
-      }`
+      }&token=${token}`
     );
     workerWin.webContents.closeDevTools();
     return workerWin;

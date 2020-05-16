@@ -85,11 +85,14 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
   const dbConn = await createNotEncryptDatabaseConnection(databasePath);
   const accountsData = await _exportAccountTable(dbConn);
   globalManager.progressDBE.set({ add: 1 });
-  saveToFile({ data: accountsData.rowsString, filepath, mode: 'w' }, true);
+  await saveToFile(
+    { data: accountsData.rowsString, filepath, mode: 'w' },
+    true
+  );
   const contacts = await _exportContactTable(dbConn);
-  saveToFile({ data: contacts, filepath, mode: 'a' });
+  await saveToFile({ data: contacts, filepath, mode: 'a' });
   const labels = await _exportLabelTable(dbConn);
-  saveToFile({ data: labels, filepath, mode: 'a' });
+  await saveToFile({ data: labels, filepath, mode: 'a' });
 
   let userEmail;
   if (myAccount && myAccount.recipientId) {
@@ -101,27 +104,27 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
       : `${firstAccount.recipientId}@${APP_DOMAIN}`;
   }
   const emails = await _exportEmailTable(dbConn, userEmail);
-  saveToFile({ data: emails, filepath, mode: 'a' });
+  await saveToFile({ data: emails, filepath, mode: 'a' });
   const emailContacts = await _exportEmailContactTable(dbConn);
-  saveToFile({ data: emailContacts, filepath, mode: 'a' });
+  await saveToFile({ data: emailContacts, filepath, mode: 'a' });
   const emailLabels = await _exportEmailLabelTable(dbConn);
-  saveToFile({ data: emailLabels, filepath, mode: 'a' });
+  await saveToFile({ data: emailLabels, filepath, mode: 'a' });
   const feeditems = await _exportFeedItemTable(dbConn);
-  saveToFile({ data: feeditems, filepath, mode: 'a' });
+  await saveToFile({ data: feeditems, filepath, mode: 'a' });
   const files = await _exportFileTable(dbConn);
-  saveToFile({ data: files, filepath, mode: 'a' });
+  await saveToFile({ data: files, filepath, mode: 'a' });
   const identities = await _exportIdentitykeyrecordTable(dbConn);
-  saveToFile({ data: identities, filepath, mode: 'a' });
+  await saveToFile({ data: identities, filepath, mode: 'a' });
   const pendingevents = await _exportPendingeventTable(dbConn);
-  saveToFile({ data: pendingevents, filepath, mode: 'a' });
+  await saveToFile({ data: pendingevents, filepath, mode: 'a' });
   const prekeyrecords = await _exportPrekeyrecordTable(dbConn);
-  saveToFile({ data: prekeyrecords, filepath, mode: 'a' });
+  await saveToFile({ data: prekeyrecords, filepath, mode: 'a' });
   const sessionrecords = await _exportSessionrecordTable(dbConn);
-  saveToFile({ data: sessionrecords, filepath, mode: 'a' });
+  await saveToFile({ data: sessionrecords, filepath, mode: 'a' });
   const settings = await _exportSettingsTable(dbConn);
-  saveToFile({ data: settings, filepath, mode: 'a' });
+  await saveToFile({ data: settings, filepath, mode: 'a' });
   const signedprekeyrecords = await _exportSignedprekeyrecordTable(dbConn);
-  saveToFile({ data: signedprekeyrecords, filepath, mode: 'a' });
+  await saveToFile({ data: signedprekeyrecords, filepath, mode: 'a' });
 
   await closeDatabaseConnection(dbConn);
 };
@@ -829,31 +832,31 @@ const exportEncryptDatabaseToFile = async ({ outputPath, accountObj }) => {
     recipientId: recipientId,
     domain: domain || APP_DOMAIN
   });
-  saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
+  await saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
 
   const contacts = await exportContactTable(accountId);
-  saveToFile({ data: contacts, filepath, mode: 'a' });
+  await saveToFile({ data: contacts, filepath, mode: 'a' });
 
   const labels = await exportLabelTable(accountId);
-  saveToFile({ data: labels, filepath, mode: 'a' });
+  await saveToFile({ data: labels, filepath, mode: 'a' });
 
   const emails = await exportEmailTable(accountId);
-  saveToFile({ data: emails, filepath, mode: 'a' });
+  await saveToFile({ data: emails, filepath, mode: 'a' });
 
   const emailContacts = await exportEmailContactTable(accountId);
-  saveToFile({ data: emailContacts, filepath, mode: 'a' });
+  await saveToFile({ data: emailContacts, filepath, mode: 'a' });
 
   const emailLabels = await exportEmailLabelTable(accountId);
-  saveToFile({ data: emailLabels, filepath, mode: 'a' });
+  await saveToFile({ data: emailLabels, filepath, mode: 'a' });
 
   const files = await exportFileTable(accountId);
-  saveToFile({ data: files, filepath, mode: 'a' });
+  await saveToFile({ data: files, filepath, mode: 'a' });
 
   const aliases = await exportAliasTable(accountId);
-  saveToFile({ data: aliases, filepath, mode: 'a' });
+  await saveToFile({ data: aliases, filepath, mode: 'a' });
 
   const customDomains = await exportCustomDomainsTable(accountId);
-  saveToFile({ data: customDomains, filepath, mode: 'a' });
+  await saveToFile({ data: customDomains, filepath, mode: 'a' });
 };
 
 const importDatabaseFromFile = async ({
@@ -1530,14 +1533,19 @@ const readBytesSync = (filePath, filePosition, bytesToRead) => {
 
 const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
   const flag = mode || 'w';
-  try {
-    if (data.length > 0) {
-      const dataToWrite = isFirstRecord ? data : '\n' + data;
-      fs.writeFileSync(filepath, dataToWrite, { encoding: 'utf-8', flag });
-    }
-  } catch (e) {
+  if (data.length <= 0) {
     return;
   }
+  return new Promise((resolve, reject) => {
+    const dataToWrite = isFirstRecord ? data : '\n' + data;
+    fs.writeFile(filepath, dataToWrite, { encoding: 'utf-8', flag }, error => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
 };
 
 module.exports = {

@@ -96,6 +96,7 @@ class MainWrapper extends Component {
           <SettingsContainer
             onClickSection={this.props.onClickSection}
             onUpdateApp={this.props.onUpdateApp}
+            sectionSelected={this.props.sectionSelected}
           />
         );
       }

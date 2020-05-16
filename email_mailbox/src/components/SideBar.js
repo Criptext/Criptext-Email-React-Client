@@ -4,6 +4,7 @@ import SideBarItem from './SideBarItem';
 import Button, { ButtonTypes } from './Button';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelAdd from './../containers/LabelAdd';
+import { TAB } from './Settings';
 
 import string from './../lang';
 import './sidebar.scss';
@@ -104,6 +105,17 @@ const SideBar = props => (
             </div>
             <span>{string.sidebar.settings}</span>
           </li>
+          {props.canUpgrade && (
+            <li
+              className="nav-item join-plus"
+              onClick={() => props.onClickSettings({ tab: TAB.PLUS })}
+            >
+              <div className="nav-item-icon">
+                <div className="icon-crown" />
+              </div>
+              <span>{string.sidebar.join_plus}</span>
+            </li>
+          )}
         </ul>
       </nav>
     </div>
@@ -137,6 +149,7 @@ const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
 SideBar.propTypes = {
   buttonComposerStatus: PropTypes.number,
   items: PropTypes.array,
+  canUpgrade: PropTypes.bool,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.object,
   onClickButtonComposer: PropTypes.func,

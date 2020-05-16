@@ -36,11 +36,17 @@ import {
   validateConfirmPassword
 } from '../validators/validators';
 import { hashPassword } from '../utils/hashUtils';
-import { storeResendConfirmationTimestamp } from '../utils/storage';
+import {
+  storeResendConfirmationTimestamp,
+  getShownAliasPlusPopup,
+  getShownCustomDomainsPlusPopup,
+  setShownAliasPlusPopup,
+  setShownCustomDomainsPlusPopup
+} from '../utils/storage';
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 import { appDomain } from '../utils/const';
-import { isPlus, isEnterprise } from '../utils/plus';
+import { isEnterprise, canUpgrade } from '../utils/plus';
 
 const EDITING_MODES = {
   EDITING_NAME: 'editing-name',
@@ -176,6 +182,7 @@ class SettingAccountWrapper extends Component {
       },
       upgradeToPlusType: undefined
     };
+    this.resumeCallback = null;
     this.isEnterprise = isEnterprise(myAccount.customerType);
     this.initEventHandlers();
   }
@@ -263,6 +270,7 @@ class SettingAccountWrapper extends Component {
         onSelectBackupFolder={this.handleSelectBackupFolder}
         onClearMailboxBackupParams={this.handleClearMailboxBackupParams}
         upgradeToPlusType={this.state.upgradeToPlusType}
+        onClosePlusPopup={this.handleClosePlusPopup}
       />
     );
   }
@@ -485,7 +493,11 @@ class SettingAccountWrapper extends Component {
   };
 
   handleChangeAliasStatus = (...args) => {
-    if (!isPlus(myAccount.customerType)) {
+    if (canUpgrade(myAccount.customerType) && !getShownAliasPlusPopup()) {
+      this.resumeCallback = () => {
+        this.handleChangeAliasStatus(...args);
+      };
+      setShownAliasPlusPopup(true);
       this.showUpgradeToPlusPopup('alias');
       return;
     }
@@ -493,16 +505,32 @@ class SettingAccountWrapper extends Component {
   };
 
   handleChangePanel = (...args) => {
-    if (!isPlus(myAccount.customerType)) {
+    const hasShownPopup =
+      args[0] === 'alias'
+        ? getShownAliasPlusPopup()
+        : getShownCustomDomainsPlusPopup();
+    if (canUpgrade(myAccount.customerType) && !hasShownPopup) {
+      this.resumeCallback = () => {
+        this.handleChangePanel(...args);
+      };
       this.showUpgradeToPlusPopup(args[0]);
+      if (args[0] === 'alias') {
+        setShownAliasPlusPopup(true);
+      } else {
+        setShownCustomDomainsPlusPopup(true);
+      }
       return;
     }
     this.props.onChangePanel(...args);
   };
 
   handleClickDeleteAlias = (rowId, email) => {
-    if (!isPlus(myAccount.customerType)) {
+    if (canUpgrade(myAccount.customerType) && !getShownAliasPlusPopup()) {
       this.showUpgradeToPlusPopup('alias');
+      this.resumeCallback = () => {
+        this.handleClickDeleteAlias(rowId, email);
+      };
+      setShownAliasPlusPopup(true);
       return;
     }
     this.setState({
@@ -518,8 +546,15 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClickDeleteCustomDomain = domainObject => {
-    if (!isPlus(myAccount.customerType)) {
+    if (
+      canUpgrade(myAccount.customerType) &&
+      !getShownCustomDomainsPlusPopup()
+    ) {
       this.showUpgradeToPlusPopup('custom-domains');
+      setShownCustomDomainsPlusPopup(true);
+      this.resumeCallback = () => {
+        this.handleClickDeleteCustomDomain(domainObject);
+      };
       return;
     }
     this.setState({
@@ -1220,6 +1255,17 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClosePopup = () => {
+    this.setState({
+      isHiddenSettingsPopup: true,
+      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
+    });
+  };
+
+  handleClosePlusPopup = () => {
+    if (this.resumeCallback) {
+      this.resumeCallback();
+      this.resumeCallback = null;
+    }
     this.setState({
       isHiddenSettingsPopup: true,
       settingsPopupType: SETTINGS_POPUP_TYPES.NONE

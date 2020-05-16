@@ -728,17 +728,18 @@
       "confirmButtonLabel": "Speichern"
     },
     "upgrade_plus": {
-      "title": "You need Plus for this",
       "alias": {
+        "title": "Enjoy Aliases",
         "message": "With Aliases you can manage multiple addresses in one inbox"
       },
       "domains": {
+        "title": "Enjoy Custom Domains",
         "message": "Add custom email addresses with a Domain that you already own like you@company.com"
       },
-      "message": "Get this and more when you upgrade to Criptext Plus.",
+      "message": "Help us bring more awesome features to all, by joining Plus.",
       "buttons": {
-        "cancel": "No, Thanks",
-        "confirm": "Get Plus"
+        "cancel": "Not Now",
+        "confirm": "Join Plus"
       }
     }
   },
@@ -888,7 +889,7 @@
     "trusted_devices": "vertrauenswürdige Geräte",
     "two_factor_authentication": "Zwei-Faktor-Authentifizierung",
     "two_factor_not_available_text": "Um die Zwei-Faktor-Authentifizierung zu aktivieren, müssen Sie eine Wiederherstellungs-E-Mail einrichten und überprüfen.",
-    "upgrade_plus": "Upgrade to Plus",
+    "upgrade_plus": "Join Plus",
     "user_labels": "Benutzer-Labels",
     "verified": "verifiziert"
   },
@@ -898,6 +899,7 @@
     "invite_a_friend": "Einen Freund einladen",
     "labels": "Labels",
     "new_label": "Neues Label",
+    "join_plus": "Join Plus",
     "settings": "Einstellungen"
   },
   "tooltips": {
