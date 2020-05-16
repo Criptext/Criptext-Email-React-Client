@@ -10,7 +10,7 @@ class AvatarImage extends Component {
       isLoading: true,
       isLoadingBorder: true,
       showAvatar: false,
-      showBorder: true
+      showBorder: false
     };
   }
 
@@ -53,9 +53,12 @@ class AvatarImage extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       nextProps.avatarUrl !== this.props.avatarUrl ||
+      nextProps.borderUrl !== this.props.borderUrl ||
       nextProps.letters !== this.props.letters ||
       nextState.isLoading !== this.state.isLoading ||
-      nextState.showAvatar !== this.state.showAvatar
+      nextState.showAvatar !== this.state.showAvatar ||
+      nextState.isLoadingBorder !== this.state.isLoadingBorder ||
+      nextState.showBorder !== this.state.showBorder
     );
   }
 

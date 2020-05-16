@@ -28,7 +28,7 @@ const UpgradeToPlusPopup = props => {
       <div className="popup-buttons">
         <button
           className="button-a popup-cancel-button"
-          onClick={props.onTogglePopup}
+          onClick={props.onClosePlusPopup}
         >
           <span>{upgradePlus.buttons.cancel}</span>
         </button>
@@ -48,6 +48,7 @@ const UpgradeToPlusPopup = props => {
 
 UpgradeToPlusPopup.propTypes = {
   onClickSection: PropTypes.func,
+  onClosePlusPopup: PropTypes.func,
   onUpgradeToPlus: PropTypes.func,
   onTogglePopup: PropTypes.func,
   type: PropTypes.string
