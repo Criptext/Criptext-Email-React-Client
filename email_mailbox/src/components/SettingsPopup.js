@@ -230,7 +230,8 @@ const SettingsPopup = props => {
       return (
         <Upgradetopluspopup
           isHidden={props.isHidden}
-          onTogglePopup={props.onClosePlusPopup}
+          onClosePlusPopup={props.onClosePlusPopup}
+          onTogglePopup={props.onClosePopup}
           onClickSection={props.onClickSection}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
