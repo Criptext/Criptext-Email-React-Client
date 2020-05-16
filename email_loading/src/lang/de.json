@@ -63,6 +63,20 @@
       "name": "Fehler beim Erstellen des Benutzers",
       "description": "Benutzer konnte nicht erstellt werden.\nCode: "
     },
+    "encryptionService": {
+      "createAccount": {
+        "name": "Unable to create Account",
+        "description": "It was not possible to create your account. Please try again"
+      },
+      "createKeybundles": {
+        "name": "Unable to create Keys",
+        "description": "It was not posible to create your account's keys. Please try again"
+      },
+      "unknown": {
+        "name": "Unknown Error while creating Account",
+        "description": "It was not posible to create your account. Please try again"
+      }
+    },
     "noResponse": {
       "name": "Keine Antwort",
       "description": "Keine Antwort vom Server"
