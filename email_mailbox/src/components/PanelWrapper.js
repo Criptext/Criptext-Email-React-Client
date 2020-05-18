@@ -288,6 +288,7 @@ class PanelWrapper extends Component {
       Event.LOCAL_BACKUP_ENABLE_EVENTS,
       this.localBackupEnableEventsListenerCallback
     );
+    addEvent(Event.OPEN_PLUS, this.handleOpenPlus);
     addEvent(Event.RESTORE_BACKUP_INIT, this.restoreBackupInitListenerCallback);
     addEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
   };
@@ -327,6 +328,7 @@ class PanelWrapper extends Component {
       this.restoreBackupInitListenerCallback
     );
     removeEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
+    removeEvent(Event.OPEN_PLUS, this.handleOpenPlus);
   };
 
   enableWindowListenerCallback = () => {
@@ -628,6 +630,12 @@ class PanelWrapper extends Component {
       LabelType.inbox.id,
       LabelType.spam.id
     ]);
+  };
+
+  handleOpenPlus = () => {
+    this.handleClickSection(SectionType.SETTINGS, {
+      tab: TAB.PLUS
+    });
   };
 }
 
