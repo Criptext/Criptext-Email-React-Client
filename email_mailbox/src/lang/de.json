@@ -247,7 +247,9 @@
     "email_source": "Quelle anzeigen",
     "empty_body": "(Kein Inhalt)",
     "empty_subject": "Kein Betreff",
-    "unsentText": "zurückgerufen"
+    "unsentText": "zurückgerufen",
+    "next_message": "Next Email",
+    "previous_message": "Previous Email"
   },
   "messages": {
     "change_password": {

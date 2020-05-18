@@ -247,7 +247,9 @@
     "email_source": "Voir L'origine",
     "empty_body": "(Pas de contenu)",
     "empty_subject": "Pas de sujet",
-    "unsentText": "Envoi annulé"
+    "unsentText": "Envoi annulé",
+    "next_message": "Next Email",
+    "previous_message": "Previous Email"
   },
   "messages": {
     "change_password": {

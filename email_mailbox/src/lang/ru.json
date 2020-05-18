@@ -247,7 +247,9 @@
     "email_source": "Показать источник",
     "empty_body": "(Нет содержимого)",
     "empty_subject": "Без темы",
-    "unsentText": "Не отправлено"
+    "unsentText": "Не отправлено",
+    "next_message": "Next Email",
+    "previous_message": "Previous Email"
   },
   "messages": {
     "change_password": {
