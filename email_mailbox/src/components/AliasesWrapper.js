@@ -57,7 +57,7 @@ class AliasesWrapper extends Component {
   };
 
   handleChangeInput = ev => {
-    const value = ev.target.value;
+    const value = ev.target.value.toLowerCase();
     const error =
       value.length > 3 && !usernameRegex.test(value)
         ? errors.invalid

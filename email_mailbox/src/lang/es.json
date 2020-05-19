@@ -101,7 +101,7 @@
       "successTitle": "Un nuevo Alias ha sido creado 🎉",
       "successMessage": "Ahora puedes usar tu nuevo alias “{0}”",
       "errors": {
-        "invalid": "Nombre de usuario inválido",
+        "invalid": "Nombre de usuario inválido. Al menos 3 caracteres. Debe comenzar con letras a-z.",
         "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo",
         "exists": "Esta dirección ya está en uso",
         "limit": "Has alcanzado el numero máximo de Alias",

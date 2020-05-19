@@ -47,7 +47,11 @@ const AddAlias = props => (
         <button className="button-cancel" onClick={props.onCancel}>
           {alias.add.cancelButtonLabel}
         </button>
-        <button className="button-confirm" onClick={props.onSave}>
+        <button
+          className="button-confirm"
+          onClick={props.onSave}
+          disabled={props.errorMessage}
+        >
           {alias.add.saveButtonLabel}
         </button>
       </div>
