@@ -210,6 +210,7 @@ const renderIsDomainButton = props => {
     <button
       className="custom-domains-steps-button"
       onClick={() => props.onClickIsDomainAvailable()}
+      disabled={!props.domain}
     >
       {string.address.add.nextButtonLabel}
     </button>
@@ -319,6 +320,7 @@ Step4.propTypes = {
 };
 
 renderIsDomainButton.propTypes = {
+  domain: PropTypes.string,
   isLoadingDomain: PropTypes.bool,
   onClickIsDomainAvailable: PropTypes.func
 };
