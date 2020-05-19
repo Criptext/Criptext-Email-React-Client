@@ -101,7 +101,7 @@
       "successTitle": "A new alias was added 🎉",
       "successMessage": "You can now use your new alias “{0}”",
       "errors": {
-        "invalid": "Username not valid",
+        "invalid": "Username not valid. At least 3 characters. Must begin with letters a-z.",
         "timeout": "Timeout Error. Please try again",
         "exists": "This address is already in use",
         "limit": "You have reached the maximum number of aliases",
