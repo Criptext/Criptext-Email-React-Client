@@ -21,7 +21,9 @@ import {
   sendOpenEmailSource,
   downloadFileInFileSystem,
   checkFileDownloaded,
-  reportPhishing
+  reportPhishing,
+  changeEmailBlockedAccount,
+  changeEmailBlockedContact
 } from './../utils/ipc';
 import {
   removeEmails,
@@ -105,6 +107,7 @@ const makeMapStateToProps = () => {
       avatarUrl,
       borderUrl,
       color,
+      blockRemoteContent: myAccount.activeAccount.blockRemoteContent,
       content,
       date: defineTimeByToday(date),
       dateLong: defineLargeTime(date),
@@ -265,6 +268,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         return;
       }
       onMarkAsSpam();
+    },
+    onChangeEmailBlockingContact: async () => {
+      await changeEmailBlockedContact({
+        contactId: email.fromContactIds,
+        isTrusted: true
+      });
+    },
+    onChangeEmailBlockedAccount: async () => {
+      await changeEmailBlockedAccount({
+        id: email.accountId,
+        blockRemoteContent: false
+      });
     },
     onUnsendEmail: () => {
       const contactIds = [...email.toIds, ...email.ccIds, ...email.bccIds];

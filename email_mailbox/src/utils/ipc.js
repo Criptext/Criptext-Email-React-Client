@@ -314,6 +314,14 @@ export const createCustomDomain = async params => {
   return await ipc.callMain('db-create-custom-domain', params);
 };
 
+export const changeEmailBlockedAccount = async params => {
+  return await ipc.callMain('db-change-account-blocked', params);
+};
+
+export const changeEmailBlockedContact = async params => {
+  return await ipc.callMain('db-change-contact-blocked', params);
+};
+
 export const getAlias = async params => {
   return await ipc.callMain('db-get-alias-by-params', params);
 };

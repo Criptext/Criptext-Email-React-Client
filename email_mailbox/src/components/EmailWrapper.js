@@ -5,6 +5,7 @@ import Email from './Email';
 import { ButtonUnsendStatus } from './ButtonUnsend';
 import { ButtonStatus } from './ButtonIcon';
 import { checkUserGuideSteps } from '../utils/electronEventInterface';
+import { getContactByIds } from '../utils/ipc';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import string from '../lang';
 
@@ -17,6 +18,7 @@ class EmailWrapper extends Component {
       buttonUnsendStatus: ButtonUnsendStatus.NORMAL,
       buttonReplyStatus: ButtonStatus.NORMAL,
       displayEmail: false,
+      blockImagesInline: true,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
       isHiddenPopOverEmailBlocked: true,
@@ -34,6 +36,10 @@ class EmailWrapper extends Component {
         buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
+        handleBlockingEmail={this.handleBlockingEmailInline}
+        handleBlockRemoteContentAccount={this.handleBlockRemoteContentAccount}
+        handleIsTrustedContact={this.handleIsTrustedContact}
+        blockImagesInline={this.state.blockImagesInline}
         isHiddenPopOverEmailActions={this.state.isHiddenPopOverEmailActions}
         isHiddenPopOverEmailBlocked={this.state.isHiddenPopOverEmailBlocked}
         hideView={this.state.hideView}
@@ -54,9 +60,15 @@ class EmailWrapper extends Component {
     );
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const newState = {};
-    const { inlineImages, email } = this.props;
+    const { inlineImages, email, blockRemoteContent } = this.props;
+    const [contacts] = await getContactByIds(email.fromContactIds);
+    const contactIsTrusted = contacts.isTrusted === 1;
+    const blocking = blockRemoteContent
+      ? blockRemoteContent
+      : !contactIsTrusted;
+    newState['blockImagesInline'] = blocking;
     if (email.unread) newState['displayEmail'] = true;
     if (inlineImages && inlineImages.length > 0)
       newState['inlineImages'] = inlineImages;
@@ -201,13 +213,36 @@ class EmailWrapper extends Component {
       }
     );
   };
+
+  handleBlockingEmailInline = ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.setState({ blockImagesInline: false });
+  };
+
+  handleBlockRemoteContentAccount = async ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    await this.props.onChangeEmailBlockedAccount();
+    this.setState({ blockImagesInline: false });
+  };
+
+  handleIsTrustedContact = async ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    await this.props.onChangeEmailBlockingContact();
+    this.setState({ blockImagesInline: false });
+  };
 }
 
 EmailWrapper.propTypes = {
   displayEmail: PropTypes.func,
+  blockRemoteContent: PropTypes.bool,
   email: PropTypes.object,
   files: PropTypes.array,
   inlineImages: PropTypes.array,
+  onChangeEmailBlockedAccount: PropTypes.func,
+  onChangeEmailBlockingContact: PropTypes.func,
   onEditDraft: PropTypes.func,
   onDeletePermanently: PropTypes.func,
   onDownloadInlineImages: PropTypes.func,

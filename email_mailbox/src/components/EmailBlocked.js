@@ -8,31 +8,38 @@ const EmailBlocked = props => {
       <ul>
         <li
           onClick={ev => {
-            props.onReplyEmail(ev);
+            props.onBlockImagesInline(ev);
             props.onToggleMenu(ev);
           }}
         >
-          <span>Once</span>
+          <span>{string.mailbox.blocked.once}</span>
         </li>
         <li
           onClick={ev => {
-            props.onReplyAll(ev);
+            props.onBlockImagesContact(ev);
             props.onToggleMenu(ev);
           }}
         >
-          <span>Always from this sender</span>
+          <span>{string.mailbox.blocked.contact}</span>
         </li>
         <li
           onClick={ev => {
-            props.onForward(ev);
+            props.onBlockImagesAccount(ev);
             props.onToggleMenu(ev);
           }}
         >
-          <span>Turn off image blocking</span>
+          <span>{string.mailbox.blocked.total}</span>
         </li>
       </ul>
     </div>
   );
+};
+
+EmailBlocked.propTypes = {
+  onBlockImagesInline: PropTypes.func,
+  onBlockImagesContact: PropTypes.func,
+  onBlockImagesAccount: PropTypes.func,
+  onToggleMenu: PropTypes.func
 };
 
 export default EmailBlocked;

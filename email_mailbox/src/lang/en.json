@@ -183,6 +183,11 @@
   "mailbox": {
     "all": "all",
     "bcc": "Bcc",
+    "blocked": {
+      "once": "Once",
+      "contact": "Always from this sender",
+      "total": "Turn off image blocking"
+    },
     "cc": "Cc",
     "date": "Date",
     "delete": "Delete",

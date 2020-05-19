@@ -12,7 +12,7 @@ const HighOrderBoundarie = AppComponent =>
       hasError: false,
       errorTitle: '',
       errorInfo: '',
-      counter: 11000
+      counter: 11
     };
 
     componentDidCatch(error, info) {

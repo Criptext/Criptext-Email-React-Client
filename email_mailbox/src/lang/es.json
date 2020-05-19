@@ -183,6 +183,11 @@
   "mailbox": {
     "all": "todos",
     "bcc": "Bcc",
+    "blocked": {
+      "once": "Esta vez",
+      "contact": "Siempre de este contacto",
+      "total": "Apagar bloqueo de imágenes"
+    },
     "cc": "Cc",
     "date": "Fecha",
     "delete": "Borrar",

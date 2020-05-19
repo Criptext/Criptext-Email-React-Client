@@ -13,7 +13,8 @@ const accountProperties = [
   'autoBackupLastDate',
   'autoBackupLastSize',
   'autoBackupNextDate',
-  'autoBackupPath'
+  'autoBackupPath',
+  'blockRemoteContent'
 ];
 
 class Account {
@@ -84,6 +85,9 @@ class Account {
   }
   get loggedAccounts() {
     return [this.activeAccount, ...this.inactiveAccounts];
+  }
+  get blockRemoteContent() {
+    return this.activeAccount.blockRemoteContent;
   }
 
   get email() {

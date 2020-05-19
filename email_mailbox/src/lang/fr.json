@@ -182,6 +182,11 @@
   "mailbox": {
     "all": "tout",
     "bcc": "Cci",
+    "blocked": {
+      "once": "Once",
+      "contact": "Always from this sender",
+      "total": "Turn off image blocking"
+    },
     "cc": "Cc",
     "date": "Date",
     "delete": "Supprimer",
