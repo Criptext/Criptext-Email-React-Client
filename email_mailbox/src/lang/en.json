@@ -250,8 +250,8 @@
     "empty_body": "This email has no content",
     "empty_subject": "No subject",
     "unsentText": "Unsent",
-    "next_message": "Go to next message",
-    "previous_message": "Go to previous message"
+    "next_message": "Next Email",
+    "previous_message": "Previous Email"
   },
   "messages": {
     "alias_status": {

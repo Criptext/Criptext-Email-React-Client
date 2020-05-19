@@ -26,6 +26,8 @@ const mailboxSize = {
   height: 800
 };
 
+const adminUrl = 'https://admin.criptext.com/?#/account/billing';
+
 const iconPath = path.join(
   __dirname,
   './../../resources/launch-icons/icon.png'
@@ -171,6 +173,9 @@ const openLinkInDefaultBrowser = (ev, url) => {
       content: '',
       emailAddress
     });
+    return;
+  } else if (url === adminUrl) {
+    mailboxWindow.webContents.send('open-plus');
     return;
   }
   shell.openExternal(url);

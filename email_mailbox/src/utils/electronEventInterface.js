@@ -2038,6 +2038,10 @@ ipcRenderer.on('local-backup-success', () => {
   emitter.emit(Event.LOCAL_BACKUP_SUCCESS);
 });
 
+ipcRenderer.on('open-plus', () => {
+  emitter.emit(Event.OPEN_PLUS);
+});
+
 ipcRenderer.on('restore-backup-disable-events', () => {
   emitter.emit(Event.RESTORE_BACKUP_DISABLE_EVENTS);
 });
@@ -2087,6 +2091,7 @@ export const Event = {
   LOCAL_BACKUP_EXPORT_FINISHED: 'local-backup-export-finished',
   LOCAL_BACKUP_ENCRYPT_FINISHED: 'local-backup-encrypt-finished',
   LOCAL_BACKUP_SUCCESS: 'local-backup-success',
+  OPEN_PLUS: 'open-plus',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',
   REACTIVATED_ACCOUNT: 'reactivated-account',

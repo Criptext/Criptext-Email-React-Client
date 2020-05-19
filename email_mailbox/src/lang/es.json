@@ -249,7 +249,9 @@
     "email_source": "Mostrar Original",
     "empty_body": "Este correo no tiene contenido",
     "empty_subject": "Sin asunto",
-    "unsentText": "Retractado"
+    "unsentText": "Retractado",
+    "next_message": "Siguiente Correo",
+    "previous_message": "Correo Anterior"
   },
   "messages": {
     "change_password": {
