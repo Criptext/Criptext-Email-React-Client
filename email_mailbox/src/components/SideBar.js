@@ -81,6 +81,17 @@ const SideBar = props => (
       <nav className="nav-footer">
         <hr />
         <ul>
+          {props.canUpgrade && (
+            <li
+              className="nav-item join-plus"
+              onClick={() => props.onClickSettings({ tab: TAB.PLUS })}
+            >
+              <div className="nav-item-icon">
+                <div className="icon-crown" />
+              </div>
+              <span>{string.sidebar.join_plus}</span>
+            </li>
+          )}
           <li className="nav-item" onClick={() => props.onClickInviteFriend()}>
             <div className="nav-item-icon">
               <i className="icon-add-friend" />
@@ -105,17 +116,6 @@ const SideBar = props => (
             </div>
             <span>{string.sidebar.settings}</span>
           </li>
-          {props.canUpgrade && (
-            <li
-              className="nav-item join-plus"
-              onClick={() => props.onClickSettings({ tab: TAB.PLUS })}
-            >
-              <div className="nav-item-icon">
-                <div className="icon-crown" />
-              </div>
-              <span>{string.sidebar.join_plus}</span>
-            </li>
-          )}
         </ul>
       </nav>
     </div>
