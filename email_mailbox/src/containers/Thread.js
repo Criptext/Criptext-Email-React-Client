@@ -10,7 +10,7 @@ import { parseContactRow } from '../utils/EmailUtils';
 import { matchOwnEmail } from '../utils/ContactUtils';
 import { makeGetEmails } from './../selectors/emails';
 import { makeGetLabels } from './../selectors/labels';
-import { makeGetThread, makeGetThreadIds } from './../selectors/threads';
+import { makeGetThread } from './../selectors/threads';
 import ThreadView from '../components/Thread';
 import { LabelType, myAccount } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
@@ -19,7 +19,6 @@ const makeMapStateToProps = () => {
   const getEmails = makeGetEmails();
   const getLabels = makeGetLabels();
   const getThread = makeGetThread();
-  const getThreadIds = makeGetThreadIds();
 
   const mapStateToProps = (state, ownProps) => {
     const thread = getThread(state, ownProps);
@@ -35,7 +34,7 @@ const makeMapStateToProps = () => {
     const starred = thread
       ? thread.allLabels.includes(LabelType.starred.id)
       : undefined;
-    const threadIds = thread ? Array.from(getThreadIds(state, ownProps)) : [];
+    const threadIds = threads.map(thread => thread.toJS().uniqueId);
     const threadId = thread ? threadIds.indexOf(thread.threadId) : -1;
     const isFirstThread =
       thread && thread.threadId === threadIds[0] ? true : false;
@@ -44,9 +43,9 @@ const makeMapStateToProps = () => {
         ? true
         : false;
     const nextThread =
-      thread && !isFirstThread ? threads[threadId - 1].toJS() : null;
-    const previousThread =
       thread && !isLastThread ? threads[threadId + 1].toJS() : null;
+    const previousThread =
+      thread && !isFirstThread ? threads[threadId - 1].toJS() : null;
     return {
       emailKeysUnread,
       emails,

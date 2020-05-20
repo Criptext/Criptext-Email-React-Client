@@ -54,19 +54,19 @@ class Thread extends Component {
               <div
                 id="btnPrevNav"
                 className={`thread-previous-button ${
-                  this.props.isLastThread ? 'button-nav-disabled' : ''
+                  this.props.isFirstThread ? 'button-nav-disabled' : ''
                 }`}
                 data-tip
                 data-for="btnPrevNav"
                 onClick={
-                  !this.props.isLastThread &&
+                  !this.props.isFirstThread &&
                   (() => {
                     onSelectThread(this.props.previousThread);
                   })
                 }
               >
                 <i className="icon-arrow-right" />
-                {!this.props.isLastThread && (
+                {!this.props.isFirstThread && (
                   <HeaderActionTooltip
                     className="ignore-transform"
                     target="btnPrevNav"
@@ -76,20 +76,18 @@ class Thread extends Component {
               </div>
               <div
                 id="btnNextNav"
-                className={
-                  this.props.isFirstThread ? 'button-nav-disabled' : ''
-                }
+                className={this.props.isLastThread ? 'button-nav-disabled' : ''}
                 data-tip
                 data-for="btnNextNav"
                 onClick={
-                  !this.props.isFirstThread &&
+                  !this.props.isLastThread &&
                   (() => {
                     onSelectThread(this.props.nextThread);
                   })
                 }
               >
                 <i className="icon-arrow-right" />
-                {!this.props.isFirstThread && (
+                {!this.props.isLastThread && (
                   <HeaderActionTooltip
                     target="btnNextNav"
                     tip={string.mailbox.next_message}
