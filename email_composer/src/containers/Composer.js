@@ -164,9 +164,11 @@ class ComposerWrapper extends Component {
 
   async componentDidMount() {
     let state;
+    let fromAddress;
     if (this.emailToEdit) {
       const composerData = await this.getComposerDataByType(this.emailToEdit);
       const composerDataChecked = await this.checkContactDomains(composerData);
+      fromAddress = composerData.fromAddress;
       state = {
         ...composerDataChecked,
         status: composerData.status || Status.ENABLED,
@@ -202,6 +204,15 @@ class ComposerWrapper extends Component {
       })
       .filter(alias => alias.isAliasActive);
     state = { ...state, accounts: [...accounts, ...aliasAccounts] };
+    if (fromAddress) {
+      const accountSelected = aliasAccounts.find(
+        aliasAcc => aliasAcc.alias === fromAddress
+      );
+      if (accountSelected) {
+        setMyAccount(accountSelected.recipientId);
+        state = { ...state, accountSelected };
+      }
+    }
     this.setState(state);
   }
 

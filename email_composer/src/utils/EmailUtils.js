@@ -2,7 +2,8 @@ import { myAccount, LabelType } from './electronInterface';
 import {
   getContactsByEmailId,
   getFilesByEmailId,
-  getEmailByKeyWithbody
+  getEmailByKeyWithbody,
+  getAlias
 } from './ipc';
 import { cleanHTML, removeActionsFromSubject } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
@@ -260,6 +261,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
 
   const threadId = emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
+  const aliases = await getAlias({ accountId: myAccount.id });
 
   const emailFrom = parseContactRow(emailData.fromAddress);
   const from = emailData.replyTo
@@ -267,7 +269,6 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     : emailFrom.name
       ? emailFrom
       : contacts.from[0];
-
   const content = formReplyForwardContent(
     replyType,
     emailData.subject,
@@ -284,13 +285,47 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const forwardSufix = 'FW: ';
   const sufix = emailIsForward ? forwardSufix : replySufix;
   const textSubject = sufix + removeActionsFromSubject(emailData.subject);
-  const toEmails = formToEmails([from], contacts.to, replyType, myEmailAddress);
-  const previusCcEmails = filterRecipientObject(contacts.cc, myEmailAddress);
+  const toEmails = formToEmails(
+    from,
+    contacts.to,
+    replyType,
+    myEmailAddress,
+    aliases
+  );
+  const previousCcEmails = filterRecipientObject(
+    contacts.cc,
+    myEmailAddress,
+    aliases
+  );
   const ccEmails =
-    replyType === composerEvents.REPLY_ALL ? previusCcEmails : [];
+    replyType === composerEvents.REPLY_ALL ? previousCcEmails : [];
 
   const bccEmails = [];
+
+  const fromEmail = from.email ? from.email : from;
+  const isFromMe = fromEmail === myEmailAddress;
+
+  const aliasRecipient =
+    !isFromMe &&
+    aliases.find(alias => {
+      const aliasEmail = `${alias.name}@${alias.domain || appDomain}`;
+      const aliasInToContacts = contacts.to.find(
+        recipient => recipient.email === aliasEmail
+      );
+      if (replyType === composerEvents.FORWARD && aliasEmail === fromEmail)
+        return true;
+      if (aliasInToContacts) return true;
+      const aliasInCcContacts = contacts.cc.find(
+        recipient => recipient.email === aliasEmail
+      );
+      if (aliasInCcContacts) return true;
+      return false;
+    });
+  const fromAddress = aliasRecipient
+    ? `${aliasRecipient.name}@${aliasRecipient.domain || appDomain}`
+    : myEmailAddress;
   return {
+    fromAddress,
     toEmails,
     ccEmails,
     bccEmails,
@@ -302,13 +337,14 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   };
 };
 
-const formToEmails = (from, to, replyType, myEmailAddress) => {
-  const [isFromMe] = from.map(
-    contact =>
-      contact.email
-        ? contact.email === myEmailAddress
-        : contact === myEmailAddress
-  );
+const formToEmails = (from, to, replyType, myEmailAddress, aliases) => {
+  const fromEmail = from.email ? from.email : from;
+  let isFromMe = fromEmail === myEmailAddress;
+  if (!isFromMe)
+    isFromMe = !!aliases.find(
+      alias => `${alias.name}@${alias.domain || appDomain}` === fromEmail
+    );
+
   if (
     replyType === composerEvents.REPLY ||
     replyType === composerEvents.REPLY_ALL
@@ -316,8 +352,8 @@ const formToEmails = (from, to, replyType, myEmailAddress) => {
     if (isFromMe) {
       return to.map(contact => formRecipientObject(contact));
     }
-    const othersToEmails = filterRecipientObject(to, myEmailAddress);
-    const fromContacts = from.map(contact => formRecipientObject(contact));
+    const othersToEmails = filterRecipientObject(to, myEmailAddress, aliases);
+    const fromContacts = [formRecipientObject(from)];
     return replyType === composerEvents.REPLY_ALL
       ? fromContacts.concat(othersToEmails)
       : fromContacts;
@@ -325,11 +361,14 @@ const formToEmails = (from, to, replyType, myEmailAddress) => {
   return [];
 };
 
-const filterRecipientObject = (contacts, rejectEmailAddress) => {
+const filterRecipientObject = (contacts, rejectEmailAddress, aliases) => {
   return contacts
     .map(contact => formRecipientObject(contact))
     .filter(contact => {
-      return contact.email !== rejectEmailAddress;
+      const isAlias = aliases.find(
+        alias => `${alias.name}@${alias.domain || appDomain}` === contact.email
+      );
+      return contact.email !== rejectEmailAddress && !isAlias;
     });
 };
 

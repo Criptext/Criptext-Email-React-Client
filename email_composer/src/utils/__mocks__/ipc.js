@@ -56,6 +56,8 @@ const fileKeys = [
 
 export const emailId = 1;
 
+export const getAlias = () => [];
+
 export const getContactsByEmailId = id => {
   const response = {
     to: [{ email: contacts[0].email }],
