@@ -43,7 +43,8 @@ class SettingsContainer extends Component {
       readReceiptsEnabled: undefined,
       replyToEmail: undefined,
       isHiddenSettingsPopup: true,
-      domainNotVerified: undefined
+      domainNotVerified: undefined,
+      blockRemoteContent: undefined
     };
   }
 
@@ -98,6 +99,7 @@ class SettingsContainer extends Component {
             onRemoveDevice={this.handleRemoveDevice}
             recoveryEmail={this.state.recoveryEmail}
             recoveryEmailConfirmed={this.state.recoveryEmailConfirmed}
+            blockRemoteContent={this.state.blockRemoteContent}
             twoFactorAuth={this.state.twoFactorAuth}
             readReceiptsEnabled={this.state.readReceiptsEnabled}
             replyToEmail={this.state.replyToEmail}
@@ -110,6 +112,7 @@ class SettingsContainer extends Component {
     const res = await this.props.onGetUserSettings();
     const {
       aliases,
+      blockRemoteContent,
       devices,
       customDomains,
       recoveryEmail,
@@ -137,6 +140,7 @@ class SettingsContainer extends Component {
 
     this.setState({
       aliasesByDomain,
+      blockRemoteContent,
       devices,
       recoveryEmail,
       recoveryEmailConfirmed,

@@ -35,9 +35,7 @@ ipc.answerRenderer('db-change-contact-blocked', params => {
 });
 
 ipc.answerRenderer('db-change-account-blocked', params => {
-  const data = params.accountId
-    ? params
-    : { ...params, accountId: myAccount.id };
+  const data = params.id ? params : { ...params, id: myAccount.id };
   return dbManager.updateAccount(data);
 });
 

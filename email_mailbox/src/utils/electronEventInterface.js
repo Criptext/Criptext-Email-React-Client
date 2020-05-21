@@ -1906,6 +1906,22 @@ export const sendTwoFactorAuthenticationTurnedOffMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendBlockRemoteContentTurnedOff = () => {
+  const messageData = {
+    ...Messages.success.blockRemoteTurnOff,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendBlockRemoteContentTurnedOn = () => {
+  const messageData = {
+    ...Messages.success.blockRemoteTurnOn,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendAccountDeletedEvent = () => {
   emitter.emit(Event.ACCOUNT_DELETED);
 };

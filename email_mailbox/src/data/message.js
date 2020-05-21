@@ -62,6 +62,14 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.alias_status.success.deactivated
     },
+    blockRemoteTurnOff: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.block_remote_content.success.deactivated
+    },
+    blockRemoteTurnOn: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.block_remote_content.success.activated
+    },
     changePassword: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.alias_status.success.deactivated

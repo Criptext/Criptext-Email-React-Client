@@ -259,6 +259,18 @@
     "previous_message": "Correo Anterior"
   },
   "messages": {
+    "alias_status": {
+      "success": {
+        "activated": "Aliases activados",
+        "deactivated": "Alias desactivados"
+      }
+    },
+    "block_remote_content": {
+      "success": {
+        "activated": "Las imágenes serán bloqueadas",
+        "deactivated": "Las imágenes no serán bloqueadas"
+      }
+    },
     "change_password": {
       "success": {
         "description": "Se ha modificado su contraseña"

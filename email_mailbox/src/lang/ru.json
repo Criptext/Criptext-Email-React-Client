@@ -257,6 +257,18 @@
     "previous_message": "Previous Email"
   },
   "messages": {
+    "alias_status": {
+      "success": {
+        "activated": "Alias activated",
+        "deactivated": "Alias deactivated"
+      }
+    },
+    "block_remote_content": {
+      "success": {
+        "activated": "The images will be locked",
+        "deactivated": "The images will not be locked"
+      }
+    },
     "change_password": {
       "success": {
         "description": "Пароль изменен"

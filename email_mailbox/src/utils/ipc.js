@@ -256,6 +256,10 @@ export const setTwoFactorAuth = async enable => {
   return await ipc.callMain('client-set-two-factor-auth', enable);
 };
 
+export const setBlockRemoteContent = async enable => {
+  return await ipc.callMain('client-set-block-remote-content', enable);
+};
+
 export const syncBegin = async () => {
   return await ipc.callMain('client-sync-begin');
 };

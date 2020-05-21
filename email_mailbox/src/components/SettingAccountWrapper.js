@@ -4,6 +4,7 @@ import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import {
   changePassword,
   changeRecoveryEmail,
+  changeEmailBlockedAccount,
   deleteAddress,
   deleteAliases,
   deleteAliasesByDomain,
@@ -11,6 +12,7 @@ import {
   deleteDomain, // api
   setReplyTo,
   setTwoFactorAuth,
+  setBlockRemoteContent,
   createDefaultBackupFolder
 } from './../utils/ipc';
 import {
@@ -27,6 +29,8 @@ import {
   sendChangePasswordErrorMessage,
   sendChangePasswordSuccessMessage,
   sendTwoFactorAuthenticationTurnedOffMessage,
+  sendBlockRemoteContentTurnedOff,
+  sendBlockRemoteContentTurnedOn,
   sendSetReplyToSuccessMessage,
   sendSetReplyToErrorMessage
 } from '../utils/electronEventInterface';
@@ -120,6 +124,10 @@ class SettingAccountWrapper extends Component {
           errorMessage: '',
           hasError: true
         }
+      },
+      blockRemoteContentParams: {
+        blockRemoteContentEnabled: props.blockRemoteContent,
+        isLoading: true
       },
       deleteAliasParams: {
         addressId: undefined,
@@ -246,8 +254,15 @@ class SettingAccountWrapper extends Component {
         }
         settingsPopupType={this.state.settingsPopupType}
         twoFactorEnabled={this.state.twoFactorParams.twoFactorEnabled}
+        blockRemoteContentEnabled={
+          this.state.blockRemoteContentParams.blockRemoteContentEnabled
+        }
         twoFactorLabelIsLoading={this.state.twoFactorParams.isLoading}
+        blockRemoteContentIsLoading={
+          this.state.blockRemoteContentParams.isLoading
+        }
         onChangeSwitchTwoFactor={this.handleChangeSwitchTwoFactor}
+        onChangeBlockRemoteContent={this.handleChangeSwitchBlockingRemote}
         onChangeInputValueOnChangeRecoveryEmailPopup={
           this.handleChangeInputValueOnChangeRecoveryEmailPopup
         }
@@ -314,6 +329,7 @@ class SettingAccountWrapper extends Component {
   componentWillReceiveProps(nextProps) {
     const newRecoveryEmailParams = {};
     const newTwoFactorParams = {};
+    const newBlockRemoteContentParams = {};
     const newReadReceipts = {};
     const newReplyToParams = {};
     const popupParams = {};
@@ -336,6 +352,14 @@ class SettingAccountWrapper extends Component {
       newTwoFactorParams.isLoading = false;
     }
     if (
+      this.state.blockRemoteContentParams.blockRemoteContentEnabled !==
+      nextProps.blockRemoteContent
+    ) {
+      newBlockRemoteContentParams.blockRemoteContentEnabled =
+        nextProps.blockRemoteContent;
+      newBlockRemoteContentParams.isLoading = false;
+    }
+    if (
       nextProps.readReceiptsEnabled &&
       this.state.readReceipts.enabled !== nextProps.readReceiptsEnabled
     ) {
@@ -354,6 +378,10 @@ class SettingAccountWrapper extends Component {
       twoFactorParams: {
         ...this.state.twoFactorParams,
         ...newTwoFactorParams
+      },
+      blockRemoteContentParams: {
+        ...this.state.blockRemoteContentParams,
+        ...newBlockRemoteContentParams
       },
       readReceipts: {
         ...this.state.readReceipts,
@@ -718,6 +746,46 @@ class SettingAccountWrapper extends Component {
         } else {
           twoFactorParams['isLoading'] = false;
           this.setState({ twoFactorParams });
+        }
+      }
+    );
+  };
+
+  handleChangeSwitchBlockingRemote = ev => {
+    const nextValue = ev.target.checked;
+    this.setState(
+      {
+        blockRemoteContentParams: {
+          ...this.state.blockRemoteContentParams,
+          isLoading: true
+        }
+      },
+      async () => {
+        const { status } = await setBlockRemoteContent(nextValue);
+        const blockRemoteContentParams = {
+          ...this.state.blockRemoteContentParams
+        };
+        if (status === 200) {
+          let newState;
+          blockRemoteContentParams['blockRemoteContentEnabled'] = nextValue;
+          blockRemoteContentParams['isLoading'] = false;
+          await changeEmailBlockedAccount({
+            blockRemoteContent: nextValue
+          });
+          if (nextValue === true) {
+            sendBlockRemoteContentTurnedOn();
+          } else {
+            sendBlockRemoteContentTurnedOff();
+          }
+          // eslint-disable-next-line prefer-const
+          newState = {
+            ...newState,
+            blockRemoteContentParams
+          };
+          this.setState(newState);
+        } else {
+          blockRemoteContentParams['isLoading'] = false;
+          this.setState({ blockRemoteContentParams });
         }
       }
     );
@@ -1333,7 +1401,8 @@ SettingAccountWrapper.propTypes = {
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   replyToEmail: PropTypes.string,
-  twoFactorAuth: PropTypes.bool
+  twoFactorAuth: PropTypes.bool,
+  blockRemoteContent: PropTypes.bool
 };
 
 export {

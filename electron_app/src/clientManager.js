@@ -182,6 +182,15 @@ const acknowledgeEvents = async params => {
     : await checkExpiredSession(res, acknowledgeEvents, params);
 };
 
+const blockRemoteContent = async params => {
+  const { recipientId, enable } = params;
+  const client = await createClient({ recipientId });
+  const res = await client.blockRemoteContent(enable);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, blockRemoteContent, params);
+};
+
 const canLogin = async ({ username, domain }) => {
   const recipientId = getRecipientId({ recipientId: username, domain });
   const client = await createClient({
@@ -316,6 +325,7 @@ const getMaxDevices = async params => {
 const getUserSettings = async recipientId => {
   const client = await createClient({ recipientId });
   const res = await client.getUserSettings();
+
   return res.status === 200
     ? parseUserSettings(res.body)
     : await checkExpiredSession(res, getUserSettings, recipientId);
@@ -335,10 +345,12 @@ const parseUserSettings = settings => {
     recoveryEmailConfirmed,
     replyTo,
     twoFactorAuth,
-    trackEmailRead
+    trackEmailRead,
+    blockRemoteContent
   } = general;
   return {
     devices,
+    blockRemoteContent: !!blockRemoteContent,
     addresses,
     customerType,
     twoFactorAuth: !!twoFactorAuth,
@@ -742,6 +754,7 @@ module.exports = {
   activateAddress,
   acknowledgeEvents,
   canLogin,
+  blockRemoteContent,
   changePassword,
   changeRecoveryEmail,
   checkAvailableUsername,
