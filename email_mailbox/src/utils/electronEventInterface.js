@@ -1922,6 +1922,14 @@ export const sendBlockRemoteContentTurnedOn = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendBlockRemoteContentError = () => {
+  const messageData = {
+    ...Messages.error.blockRemoteTurnOff,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendAccountDeletedEvent = () => {
   emitter.emit(Event.ACCOUNT_DELETED);
 };

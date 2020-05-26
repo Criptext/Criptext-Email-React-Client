@@ -4,8 +4,12 @@ import PropTypes from 'prop-types';
 import Email from './Email';
 import { ButtonUnsendStatus } from './ButtonUnsend';
 import { ButtonStatus } from './ButtonIcon';
-import { checkUserGuideSteps } from '../utils/electronEventInterface';
-import { getContactByIds } from '../utils/ipc';
+import {
+  checkUserGuideSteps,
+  sendBlockRemoteContentTurnedOff,
+  sendBlockRemoteContentError
+} from '../utils/electronEventInterface';
+import { getContactByIds, setBlockRemoteContent } from '../utils/ipc';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import string from '../lang';
 
@@ -24,6 +28,7 @@ class EmailWrapper extends Component {
       isHiddenPopOverEmailBlocked: true,
       hideView: false,
       popupContent: undefined,
+      popupContentBlockRemoteContent: undefined,
       inlineImages: []
     };
   }
@@ -51,11 +56,16 @@ class EmailWrapper extends Component {
         onClickUnsendButton={this.handleClickUnsendButton}
         onClickReplyEmail={this.handleReplyEmail}
         popupContent={this.state.popupContent}
+        popupContentBlockRemoteContent={
+          this.state.popupContentBlockRemoteContent
+        }
         handlePopupConfirm={this.handlePopupConfirm}
+        handlePopupConfirmBlock={this.handlePopupConfirmBlock}
         dismissPopup={this.dismissPopup}
         handleClickPermanentlyDeleteEmail={
           this.handleClickPermanentlyDeleteEmail
         }
+        handleClickBlockRemoteContent={this.handleClickBlockRemoteContent}
       />
     );
   }
@@ -189,15 +199,40 @@ class EmailWrapper extends Component {
     });
   };
 
+  handleClickBlockRemoteContent = ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.setState({
+      popupContentBlockRemoteContent: popups.block_remote_content
+    });
+  };
+
   handlePopupConfirm = ev => {
     ev.stopPropagation();
     ev.preventDefault();
     this.setState({ popupContent: undefined }, this.props.onDeletePermanently);
   };
 
+  handlePopupConfirmBlock = async ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    const { status } = await setBlockRemoteContent(false);
+    if (status === 200) {
+      await this.props.onChangeEmailBlockedAccount();
+      sendBlockRemoteContentTurnedOff();
+    } else {
+      sendBlockRemoteContentError();
+    }
+    this.setState({
+      popupContentBlockRemoteContent: undefined,
+      blockImagesInline: false
+    });
+  };
+
   dismissPopup = () => {
     this.setState({
-      popupContent: undefined
+      popupContent: undefined,
+      popupContentBlockRemoteContent: undefined
     });
   };
 
@@ -217,13 +252,6 @@ class EmailWrapper extends Component {
   handleBlockingEmailInline = ev => {
     ev.stopPropagation();
     ev.preventDefault();
-    this.setState({ blockImagesInline: false });
-  };
-
-  handleBlockRemoteContentAccount = async ev => {
-    ev.stopPropagation();
-    ev.preventDefault();
-    await this.props.onChangeEmailBlockedAccount();
     this.setState({ blockImagesInline: false });
   };
 

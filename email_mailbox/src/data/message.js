@@ -131,6 +131,10 @@ const messagesContent = {
     }
   },
   error: {
+    blockRemoteTurnOff: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.block_remote_content.error
+    },
     changePassword: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.change_password.error.description

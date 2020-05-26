@@ -269,7 +269,8 @@
       "success": {
         "activated": "Las imágenes serán bloqueadas",
         "deactivated": "Las imágenes no serán bloqueadas"
-      }
+      },
+      "error": "Something went wrong at blocking email"
     },
     "change_password": {
       "success": {
@@ -463,6 +464,12 @@
       "paragraphs": {
         "header": "Eliminando toda la información..."
       }
+    },
+    "block_remote_content": {
+      "title": "Turn Off Image Block ",
+      "message": "Your security is affected by deactivating this function. You can reactivate this function from the general menu.",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Save"
     },
     "password_changed": {
       "title": "Confirma tu nueva contraseña",

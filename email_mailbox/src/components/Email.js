@@ -4,6 +4,7 @@ import FileWrapper from './FileWrapper';
 import MenuHOC from './MenuHOC';
 import PopupHOC from './PopupHOC';
 import DialogPopup from './DialogPopup';
+import BlockRemoteContentPopup from './BlockRemoteContentPopup';
 import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import EmailBlocked from './EmailBlocked';
@@ -15,6 +16,7 @@ import string from '../lang';
 import './email.scss';
 
 const DeletePermanenltyPopup = PopupHOC(DialogPopup);
+const BlockRemotePopup = PopupHOC(BlockRemoteContentPopup);
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);
 const PopOverEmailBlocked = MenuHOC(EmailBlocked);
@@ -27,6 +29,16 @@ const Email = props => (
         popupPosition={{ left: '45%', top: '45%' }}
         {...props.popupContent}
         onRightButtonClick={props.handlePopupConfirm}
+        onLeftButtonClick={props.dismissPopup}
+        onTogglePopup={props.dismissPopup}
+        theme={'dark'}
+      />
+    )}
+    {props.popupContentBlockRemoteContent && (
+      <BlockRemotePopup
+        popupPosition={{ left: '45%', top: '45%' }}
+        {...props.popupContentBlockRemoteContent}
+        onRightButtonClick={props.handlePopupConfirmBlock}
         onLeftButtonClick={props.dismissPopup}
         onTogglePopup={props.dismissPopup}
         theme={'dark'}
@@ -150,7 +162,7 @@ const renderEmailBlocked = props => {
               isHidden={props.isHiddenPopOverEmailBlocked}
               onToggleMenu={props.onTogglePopOverEmailBlocked}
               onBlockImagesInline={props.handleBlockingEmail}
-              onBlockImagesAccount={props.handleBlockRemoteContentAccount}
+              onBlockImagesAccount={props.handleClickBlockRemoteContent}
               onBlockImagesContact={props.handleIsTrustedContact}
             />
           </button>
@@ -418,6 +430,8 @@ Email.propTypes = {
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
   popupContent: PropTypes.object,
+  popupContentBlockRemoteContent: PropTypes.object,
+  handlePopupConfirmBlock: PropTypes.func,
   preview: PropTypes.string,
   staticOpen: PropTypes.bool,
   isHiddenPopOverEmailBlocked: PropTypes.bool,
