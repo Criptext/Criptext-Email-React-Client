@@ -73,8 +73,10 @@ class EmailWrapper extends Component {
   async componentDidMount() {
     const newState = {};
     const { inlineImages, email, blockRemoteContent } = this.props;
-    const [contacts] = await getContactByIds(email.fromContactIds);
-    const contactIsTrusted = contacts.isTrusted === 1;
+    const contactIsTrusted = await this.handleContactIsTrusted(
+      email.from[0],
+      email.fromContactIds
+    );
     const blocking = blockRemoteContent
       ? blockRemoteContent
       : !contactIsTrusted;
@@ -146,6 +148,14 @@ class EmailWrapper extends Component {
   handleClickEditDraft = ev => {
     if (ev) ev.stopPropagation();
     this.props.onEditDraft();
+  };
+
+  handleContactIsTrusted = async (contact, contactIds) => {
+    if (contact.isTrusted) {
+      return contact.isTrusted === 1;
+    }
+    const [contactsDB] = await getContactByIds(contactIds);
+    return contactsDB.isTrusted === 1;
   };
 
   handleReplyEmail = ev => {

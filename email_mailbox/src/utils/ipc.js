@@ -546,8 +546,12 @@ export const updateAlias = async params => {
   return await ipc.callMain('db-update-alias', params);
 };
 
-export const updateContactByEmail = async ({ email, name }) => {
-  return await ipc.callMain('db-update-contact-by-email', { email, name });
+export const updateContactByEmail = async ({ email, name, isTrusted }) => {
+  return await ipc.callMain('db-update-contact-by-email', {
+    email,
+    name,
+    isTrusted
+  });
 };
 
 export const updateContactSpamScore = async params => {

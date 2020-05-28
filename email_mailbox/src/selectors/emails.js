@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { defineContact, getContacts } from './contacts';
+import { defineContact, getContacts, defineContactFrom } from './contacts';
 import { compareEmailDate, parseContactRow } from '../utils/EmailUtils';
 import string from './../lang';
 
@@ -14,9 +14,11 @@ const defineEmails = (emails, contacts, emailIds) => {
         .map(emailId => {
           const email = emails.get(`${emailId}`).toJS();
           const fromTmp = parseContactRow(email.fromAddress || '');
-          const from = fromTmp.name
-            ? [fromTmp]
-            : defineContact(contacts, email.fromContactIds);
+          const from = defineContactFrom(
+            contacts,
+            email.fromContactIds,
+            fromTmp
+          );
           const toIds = email.to;
           const to = defineContact(contacts, toIds);
           const ccIds = email.cc;

@@ -494,6 +494,9 @@ export const handleEvent = ({
     case SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED: {
       return handlePeerRecoveryEmailConfirmed(accountRecipientId);
     }
+    case SocketCommand.PEER_SET_TRUSTED_EMAIL: {
+      return handlePeerSetTrustedEvent(incomingEvent, accountRecipientId);
+    }
     case SocketCommand.NEW_ANNOUNCEMENT: {
       return handleNewAnnouncementEvent(incomingEvent);
     }
@@ -1321,6 +1324,15 @@ const handlePeerRecoveryEmailConfirmed = accountRecipientId => {
     return { rowid: null };
   }
   emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
+  return { rowid: null };
+};
+
+const handlePeerSetTrustedEvent = async ({ params }, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
+  const { email, trusted } = params;
+  await updateContactByEmail({ email, isTrusted: trusted });
   return { rowid: null };
 };
 

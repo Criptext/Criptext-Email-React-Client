@@ -270,7 +270,7 @@
         "activated": "The images will be locked",
         "deactivated": "The images will not be locked"
       },
-      "error": "Something went wrong at blocking email"
+      "error": "Something went wrong at blocking email. Try again later"
     },
     "change_password": {
       "success": {

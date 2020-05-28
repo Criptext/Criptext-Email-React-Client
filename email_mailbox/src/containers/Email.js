@@ -7,6 +7,7 @@ import {
   defineLargeTime,
   defineUnsentText
 } from './../utils/TimeUtils';
+import { SocketCommand } from './../utils/const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { getTwoCapitalLetters, hasAnySubstring } from './../utils/StringUtils';
@@ -23,9 +24,11 @@ import {
   checkFileDownloaded,
   reportPhishing,
   changeEmailBlockedAccount,
-  changeEmailBlockedContact
+  changeEmailBlockedContact,
+  postPeerEvent
 } from './../utils/ipc';
 import {
+  modifyContactIsTrusted,
   removeEmails,
   unsendEmail,
   updateEmailLabels,
@@ -274,6 +277,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         contactId: email.fromContactIds,
         isTrusted: true
       });
+      const emailText = email.from[0].email;
+      const eventParams = {
+        cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+        params: {
+          email: emailText,
+          trusted: true
+        }
+      };
+      await postPeerEvent({ data: eventParams });
+
+      dispatch(modifyContactIsTrusted(email.fromContactIds[0], true));
     },
     onChangeEmailBlockedAccount: async () => {
       await changeEmailBlockedAccount({

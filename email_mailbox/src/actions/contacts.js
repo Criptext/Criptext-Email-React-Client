@@ -8,6 +8,14 @@ export const addContacts = contacts => {
   };
 };
 
+export const modifyContactIsTrusted = (contactId, isTrusted) => {
+  return {
+    type: Contact.MODIFY_IS_TRUSTED,
+    contactId,
+    isTrusted
+  };
+};
+
 export const loadContacts = ids => {
   return async dispatch => {
     try {

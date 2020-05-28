@@ -10,7 +10,7 @@ import {
   updateLoadingSync,
   updateSwitchThreads
 } from './activity';
-import { addContacts, loadContacts } from './contacts';
+import { addContacts, modifyContactIsTrusted, loadContacts } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
   addLabelIdThread,
@@ -103,6 +103,7 @@ export {
   loadSuggestions,
   loadThreads,
   logout,
+  modifyContactIsTrusted,
   moveThreads,
   reloadAccounts,
   removeAllThreads,

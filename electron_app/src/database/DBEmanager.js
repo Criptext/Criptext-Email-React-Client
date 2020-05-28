@@ -291,9 +291,10 @@ const getContactByIds = (ids, trx) => {
   });
 };
 
-const updateContactByEmail = ({ email, name }, trx) => {
+const updateContactByEmail = ({ email, name, isTrusted }, trx) => {
+  const updatedParam = name ? name : isTrusted;
   return Contact().update(
-    { name },
+    { updatedParam },
     { where: { email: { [Op.eq]: email } }, transaction: trx }
   );
 };

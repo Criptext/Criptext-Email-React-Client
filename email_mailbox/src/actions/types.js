@@ -21,7 +21,8 @@ export const Activity = {
 };
 
 export const Contact = {
-  ADD_BATCH: 'ADD_CONTACTS'
+  ADD_BATCH: 'ADD_CONTACTS',
+  MODIFY_IS_TRUSTED: 'MODIFY_IS_TRUSTED'
 };
 
 export const Email = {
