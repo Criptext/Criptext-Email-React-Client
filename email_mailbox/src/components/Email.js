@@ -350,14 +350,15 @@ const getDOM = html => {
     `<div class="email-container">${html}</div>`,
     'text/html'
   );
-  const allImages = doc.getElementsByTagName('img');
+  const allImages = [...doc.getElementsByTagName('img')];
   // eslint-disable-next-line prefer-const
-  for (let img of allImages) {
+  for (let i = 0; i < allImages.length; i++) {
+    const img = allImages[i];
     const originalHeight = img.height;
     const originalWidth = img.width;
     const el = doc.createElement('div');
-    el.innerHTML = `<div style='height: ${originalHeight}; width: ${originalWidth}; min-width: 15px; min-height: 15px; max-width: 30px; max-height: 30px; border: 1px solid #4a4a4a;'>
-                      <svg class="image-blocked" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    el.innerHTML = `<div style='height: ${originalHeight}px; width: ${originalWidth}px; min-width: 18px; min-height: 18px; border: solid 1px #bfc3c8;'>
+                      <svg style='max-height: 25%; max-width: 25%;'  viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>Group 3</title>
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                           <g id="BRC-Desktop" transform="translate(-296.000000, -210.000000)" fill="#BFC3C8">
