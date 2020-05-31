@@ -70,6 +70,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.block_remote_content.success.activated
     },
+    contactIsTrusted: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.contact_is_trusted.success.description
+    },
     changePassword: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.alias_status.success.deactivated

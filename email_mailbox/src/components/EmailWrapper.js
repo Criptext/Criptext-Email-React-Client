@@ -7,6 +7,7 @@ import { ButtonStatus } from './ButtonIcon';
 import {
   checkUserGuideSteps,
   sendBlockRemoteContentTurnedOff,
+  sendContactIsTrusted,
   sendBlockRemoteContentError
 } from '../utils/electronEventInterface';
 import { getContactByIds, setBlockRemoteContent } from '../utils/ipc';
@@ -23,6 +24,8 @@ class EmailWrapper extends Component {
       buttonReplyStatus: ButtonStatus.NORMAL,
       displayEmail: false,
       blockImagesInline: true,
+      blockImagesContact: true,
+      blockImagesAccount: true,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
       isHiddenPopOverEmailBlocked: true,
@@ -45,6 +48,8 @@ class EmailWrapper extends Component {
         handleBlockRemoteContentAccount={this.handleBlockRemoteContentAccount}
         handleIsTrustedContact={this.handleIsTrustedContact}
         blockImagesInline={this.state.blockImagesInline}
+        blockImagesContact={this.state.blockImagesContact}
+        blockImagesAccount={this.state.blockImagesAccount}
         isHiddenPopOverEmailActions={this.state.isHiddenPopOverEmailActions}
         isHiddenPopOverEmailBlocked={this.state.isHiddenPopOverEmailBlocked}
         hideView={this.state.hideView}
@@ -73,14 +78,21 @@ class EmailWrapper extends Component {
   async componentDidMount() {
     const newState = {};
     const { inlineImages, email, blockRemoteContent } = this.props;
+    const isSpam = this.props.isSpam;
     const contactIsTrusted = await this.handleContactIsTrusted(
       email.from[0],
       email.fromContactIds
     );
-    const blocking = blockRemoteContent
-      ? blockRemoteContent
-      : !contactIsTrusted;
-    newState['blockImagesInline'] = blocking;
+    const blockingInline = isSpam
+      ? isSpam
+      : blockRemoteContent
+        ? blockRemoteContent
+        : !contactIsTrusted;
+    const blockImagesContact = !isSpam && !contactIsTrusted;
+    const blockImagesAccount = !isSpam && blockRemoteContent;
+    newState['blockImagesInline'] = blockingInline;
+    newState['blockImagesContact'] = blockImagesContact;
+    newState['blockImagesAccount'] = blockImagesAccount;
     if (email.unread) newState['displayEmail'] = true;
     if (inlineImages && inlineImages.length > 0)
       newState['inlineImages'] = inlineImages;
@@ -209,14 +221,6 @@ class EmailWrapper extends Component {
     });
   };
 
-  handleClickBlockRemoteContent = ev => {
-    ev.stopPropagation();
-    ev.preventDefault();
-    this.setState({
-      popupContentBlockRemoteContent: popups.block_remote_content
-    });
-  };
-
   handlePopupConfirm = ev => {
     ev.stopPropagation();
     ev.preventDefault();
@@ -269,7 +273,41 @@ class EmailWrapper extends Component {
     ev.stopPropagation();
     ev.preventDefault();
     await this.props.onChangeEmailBlockingContact();
-    this.setState({ blockImagesInline: false });
+    sendContactIsTrusted();
+    this.setState({
+      blockImagesInline: false,
+      blockImagesContact: false,
+      blockImagesAccount: false
+    });
+  };
+
+  handleClickBlockRemoteContent = ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.setState({
+      popupContentBlockRemoteContent: popups.block_remote_content
+    });
+  };
+
+  handlePopupConfirmBlock = async ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    const { status } = await setBlockRemoteContent(false);
+    if (status === 200) {
+      await this.props.onChangeEmailBlockedAccount();
+      sendBlockRemoteContentTurnedOff();
+      this.setState({
+        popupContentBlockRemoteContent: undefined,
+        blockImagesInline: false,
+        blockImagesAccount: false,
+        blockImagesContact: false
+      });
+    } else {
+      sendBlockRemoteContentError();
+      this.setState({
+        popupContentBlockRemoteContent: undefined
+      });
+    }
   };
 }
 
@@ -279,6 +317,7 @@ EmailWrapper.propTypes = {
   email: PropTypes.object,
   files: PropTypes.array,
   inlineImages: PropTypes.array,
+  isSpam: PropTypes.bool,
   onChangeEmailBlockedAccount: PropTypes.func,
   onChangeEmailBlockingContact: PropTypes.func,
   onEditDraft: PropTypes.func,

@@ -202,13 +202,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: composerEvents.FORWARD
       });
     },
-    onMarkAsSpam: ev => {
+    onMarkAsSpam: async ev => {
       ev.stopPropagation();
       const params = {
         emails: [email.from[0].email],
         type: 'spam'
       };
       reportPhishing(params);
+
+      await changeEmailBlockedContact({
+        contactId: email.fromContactIds,
+        isTrusted: false
+      });
+      const emailText = email.from[0].email;
+      const eventParams = {
+        cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+        params: {
+          email: emailText,
+          trusted: false
+        }
+      };
+      await postPeerEvent({ data: eventParams });
+
       onMarkAsSpam();
     },
     onMarkUnread: ev => {
@@ -270,6 +285,21 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         sendMailboxEvent(Event.DISPLAY_MESSAGE, messageData);
         return;
       }
+
+      await changeEmailBlockedContact({
+        contactId: email.fromContactIds,
+        isTrusted: false
+      });
+      const emailText = email.from[0].email;
+      const eventParams = {
+        cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+        params: {
+          email: emailText,
+          trusted: false
+        }
+      };
+      await postPeerEvent({ data: eventParams });
+
       onMarkAsSpam();
     },
     onChangeEmailBlockingContact: async () => {

@@ -50,7 +50,18 @@ const Email = props => (
         props.staticOpen
       )} ${defineEmailType(props.isUnsend, props.isDraft, props.isEmpty)}`}
     >
-      <div className="email-info" onClick={props.onToggleEmail}>
+      <div
+        className="email-info"
+        style={{
+          height:
+            props.blockImagesInline ||
+            props.blockImagesContact ||
+            props.blockImagesAccount
+              ? '105px'
+              : '65px'
+        }}
+        onClick={props.onToggleEmail}
+      >
         <div className="email-info-letter">
           <AvatarImage
             color={props.color}
@@ -134,7 +145,11 @@ const renderEmailInfoCollapse = (status, preview) => (
 );
 
 const renderEmailBlocked = props => {
-  if (props.blockImagesInline) {
+  if (
+    props.blockImagesInline ||
+    props.blockImagesContact ||
+    props.blockImagesAccount
+  ) {
     return (
       <div className="email-info-blocked">
         <span>
@@ -142,21 +157,42 @@ const renderEmailBlocked = props => {
             className="image-blocked"
             data-name="Image blocked"
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 40 40"
+            viewBox="0 0 16 15"
+            version="1.1"
           >
-            <path
-              className="cls-1"
-              d="M33.7,0H6.3A6.3,6.3,0,0,0,0,6.3V33.7A6.3,6.3,0,0,0,6.3,40H33.7A6.3,6.3,0,0,0,40,33.7V6.3A6.3,6.3,0,0,0,33.7,0ZM27,6.23a4,4,0,1,1-4,4A4,4,0,0,1,27,6.23Zm5.53,26H7.61a1.12,1.12,0,0,1-1.09-1.77L13.32,17a1.14,1.14,0,0,1,2.09-.19l6.84,8.93a1.67,1.67,0,0,0,2.59.16l1.67-1.69A1.6,1.6,0,0,1,29,24.4l4.33,6.19C34,31.48,33.62,32.21,32.52,32.21Z"
-            />
+            <title>Group 3</title>
+            <g id="Page-1" stroke="none" fill="none">
+              <g
+                id="BRC-Desktop"
+                transform="translate(-296.000000, -210.000000)"
+                fill="#BFC3C8"
+              >
+                <g id="Group" transform="translate(296.000000, 210.000000)">
+                  <g id="Group-3">
+                    <path
+                      d="M7.90386809,13.0000855 L2.56152307,13.0000855 C2.08180568,13.0000855 1.86804559,12.6544802 2.08429126,12.2280413 L5.06699009,6.34697814 C5.28323575,5.9205392 5.6950139,5.88177203 5.98665556,6.26119545 L8.98592494,10.1634829 C9.2775666,10.5429064 9.78711099,10.5750749 10.1251502,10.2352435 L10.858397,9.49536778 C11.1956077,9.15553636 11.6918956,9.19760287 11.9677952,9.58857397 L13.8676087,12.2907287 C14.1418513,12.6825246 13.9761458,13.0000855 13.4964284,13.0000855 L7.90386809,13.0000855 Z M12.9999145,5.0000855 C12.9999145,6.10399398 12.103823,7.0000855 10.9999145,7.0000855 C9.89505273,7.0000855 8.9999145,6.10399398 8.9999145,5.0000855 C8.9999145,3.89617702 9.89505273,3.0000855 10.9999145,3.0000855 C12.103823,3.0000855 12.9999145,3.89617702 12.9999145,5.0000855 Z M1.80972598,8.55e-05 C0.811496627,8.55e-05 -8.55e-05,0.810963882 -8.55e-05,1.81101944 L-8.55e-05,13.1916517 C-8.55e-05,14.1900405 0.811496627,15.0000855 1.80972598,15.0000855 L14.1909363,15.0000855 C15.1883324,15.0000855 15.9999145,14.1900405 15.9999145,13.1916517 L15.9999145,1.81101944 C15.9999145,0.810963882 15.1891656,8.55e-05 14.1909363,8.55e-05 L1.80972598,8.55e-05 Z"
+                      id="Fill-1"
+                    />
+                  </g>
+                </g>
+              </g>
+            </g>
           </svg>
         </span>
-        Images blocked for your security.
+
+        {!props.blockImagesInline &&
+        (props.blockImagesContact || props.blockImagesAccount)
+          ? string.mailbox.blockRemote.text_2
+          : string.mailbox.blockRemote.text}
         <span>
           <button
             className="email-info-button-show-images"
             onClick={ev => props.onTogglePopOverEmailBlocked(ev)}
           >
-            Show images
+            {!props.blockImagesInline &&
+            (props.blockImagesContact || props.blockImagesAccount)
+              ? string.mailbox.blockRemote.show_always
+              : string.mailbox.blockRemote.show_images}
             <PopOverEmailBlocked
               menuPosition={{ left: '285px', top: '100px' }}
               isHidden={props.isHiddenPopOverEmailBlocked}
@@ -164,6 +200,9 @@ const renderEmailBlocked = props => {
               onBlockImagesInline={props.handleBlockingEmail}
               onBlockImagesAccount={props.handleClickBlockRemoteContent}
               onBlockImagesContact={props.handleIsTrustedContact}
+              blockImagesInline={props.blockImagesInline}
+              blockImagesContact={props.blockImagesContact}
+              blockImagesAccount={props.blockImagesAccount}
             />
           </button>
         </span>
@@ -318,18 +357,19 @@ const getDOM = html => {
     const originalWidth = img.width;
     const el = doc.createElement('div');
     el.innerHTML = `<div style='height: ${originalHeight}; width: ${originalWidth}; min-width: 15px; min-height: 15px; max-width: 30px; max-height: 30px; border: 1px solid #4a4a4a;'>
-                              <svg
-                                class="image-blocked"
-                                data-name="Image blocked"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 40 40"
-                              >
-                                <path
-                                  class="cls-1"
-                                  d="M33.7,0H6.3A6.3,6.3,0,0,0,0,6.3V33.7A6.3,6.3,0,0,0,6.3,40H33.7A6.3,6.3,0,0,0,40,33.7V6.3A6.3,6.3,0,0,0,33.7,0ZM27,6.23a4,4,0,1,1-4,4A4,4,0,0,1,27,6.23Zm5.53,26H7.61a1.12,1.12,0,0,1-1.09-1.77L13.32,17a1.14,1.14,0,0,1,2.09-.19l6.84,8.93a1.67,1.67,0,0,0,2.59.16l1.67-1.69A1.6,1.6,0,0,1,29,24.4l4.33,6.19C34,31.48,33.62,32.21,32.52,32.21Z"
-                                />
-                              </svg>
-                            </div>`;
+                      <svg class="image-blocked" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <title>Group 3</title>
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <g id="BRC-Desktop" transform="translate(-296.000000, -210.000000)" fill="#BFC3C8">
+                            <g id="Group" transform="translate(296.000000, 210.000000)">
+                              <g id="Group-3">
+                                <path d="M7.90386809,13.0000855 L2.56152307,13.0000855 C2.08180568,13.0000855 1.86804559,12.6544802 2.08429126,12.2280413 L5.06699009,6.34697814 C5.28323575,5.9205392 5.6950139,5.88177203 5.98665556,6.26119545 L8.98592494,10.1634829 C9.2775666,10.5429064 9.78711099,10.5750749 10.1251502,10.2352435 L10.858397,9.49536778 C11.1956077,9.15553636 11.6918956,9.19760287 11.9677952,9.58857397 L13.8676087,12.2907287 C14.1418513,12.6825246 13.9761458,13.0000855 13.4964284,13.0000855 L7.90386809,13.0000855 Z M12.9999145,5.0000855 C12.9999145,6.10399398 12.103823,7.0000855 10.9999145,7.0000855 C9.89505273,7.0000855 8.9999145,6.10399398 8.9999145,5.0000855 C8.9999145,3.89617702 9.89505273,3.0000855 10.9999145,3.0000855 C12.103823,3.0000855 12.9999145,3.89617702 12.9999145,5.0000855 Z M1.80972598,8.55e-05 C0.811496627,8.55e-05 -8.55e-05,0.810963882 -8.55e-05,1.81101944 L-8.55e-05,13.1916517 C-8.55e-05,14.1900405 0.811496627,15.0000855 1.80972598,15.0000855 L14.1909363,15.0000855 C15.1883324,15.0000855 15.9999145,14.1900405 15.9999145,13.1916517 L15.9999145,1.81101944 C15.9999145,0.810963882 15.1891656,8.55e-05 14.1909363,8.55e-05 L1.80972598,8.55e-05 Z" id="Fill-1"></path>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </div>`;
     img.insertAdjacentElement('afterend', el);
     img.remove();
   }
@@ -408,6 +448,9 @@ renderEmailInfoExpand.propTypes = {
 
 Email.propTypes = {
   avatarUrl: PropTypes.string,
+  blockImagesInline: PropTypes.bool,
+  blockImagesContact: PropTypes.bool,
+  blockImagesAccount: PropTypes.bool,
   borderUrl: PropTypes.string,
   color: PropTypes.string,
   content: PropTypes.string,

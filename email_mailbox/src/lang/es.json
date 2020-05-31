@@ -183,6 +183,12 @@
   "mailbox": {
     "all": "todos",
     "bcc": "Bcc",
+    "blockRemote": {
+      "text": "Imágenes bloqueadas por tu seguridad.",
+      "show_images": "Mostrar Imágenes",
+      "text_2": "Imágenes desplegadas.",
+      "show_always": "Mostrar siempre"
+    },
     "blocked": {
       "once": "Esta vez",
       "contact": "Siempre de este contacto",
@@ -278,6 +284,11 @@
       },
       "error": {
         "description": "Error al cambiar la contraseña. La contraseña no ha sido modificada"
+      }
+    },
+    "contact_is_trusted": {
+      "success": {
+        "description": "Contacto marcado como confiable"
       }
     },
     "download_file": {

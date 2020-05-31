@@ -269,6 +269,10 @@ class PanelWrapper extends Component {
       Event.UPDATE_THREAD_EMAILS,
       this.updateThreadEmailsListenerCallback
     );
+    addEvent(
+      Event.CHANGE_SET_TRUSTED_ACCOUNT,
+      this.changeAccountIsTrustedCallback
+    );
     addEvent(Event.DEVICE_REMOVED, this.deviceRemovedListenerCallback);
     addEvent(Event.PASSWORD_CHANGED, this.passwordChangedListenerCallback);
     addEvent(Event.DISABLE_WINDOW, this.disableWindowListenerCallback);
@@ -304,6 +308,10 @@ class PanelWrapper extends Component {
     removeEvent(
       Event.UPDATE_THREAD_EMAILS,
       this.updateThreadEmailsListenerCallback
+    );
+    removeEvent(
+      Event.CHANGE_SET_TRUSTED_ACCOUNT,
+      this.changeAccountIsTrustedCallback
     );
     removeEvent(Event.DEVICE_REMOVED, this.deviceRemovedListenerCallback);
     removeEvent(Event.PASSWORD_CHANGED, this.passwordChangedListenerCallback);
@@ -509,6 +517,10 @@ class PanelWrapper extends Component {
     }
   };
 
+  changeAccountIsTrustedCallback = eventParams => {
+    this.props.onChangingTrustedContact(eventParams);
+  };
+
   updateLoadingSync = eventParams => {
     const { totalTask, completedTask } = eventParams;
     this.props.onUpdateLoadingSync({ totalTask, completedTask });
@@ -644,6 +656,7 @@ PanelWrapper.propTypes = {
   onAccountsChanged: PropTypes.func,
   onAddDataApp: PropTypes.func,
   onAddLabels: PropTypes.func,
+  onChangingTrustedContact: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onLoadEvents: PropTypes.func,
   onLoadFeedItems: PropTypes.func,

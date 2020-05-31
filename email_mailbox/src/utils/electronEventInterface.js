@@ -1333,6 +1333,12 @@ const handlePeerSetTrustedEvent = async ({ params }, accountRecipientId) => {
   }
   const { email, trusted } = params;
   await updateContactByEmail({ email, isTrusted: trusted });
+  const [contact] = await getContactByEmails({ emails: [email] });
+  const contactId = contact.id;
+  emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
+    contactId,
+    isTrusted: trusted
+  });
   return { rowid: null };
 };
 
@@ -1926,6 +1932,14 @@ export const sendBlockRemoteContentTurnedOff = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendContactIsTrusted = () => {
+  const messageData = {
+    ...Messages.success.contactIsTrusted,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendBlockRemoteContentTurnedOn = () => {
   const messageData = {
     ...Messages.success.blockRemoteTurnOn,
@@ -2111,6 +2125,7 @@ export const sendMailboxEvent = (eventName, eventData) => {
 export const Event = {
   ACCOUNT_DELETED: 'account-deleted',
   BIG_UPDATE_AVAILABLE: 'big-update-available',
+  CHANGE_SET_TRUSTED_ACCOUNT: 'change-set-trusted-account',
   DEVICE_REMOVED: 'device-removed',
   DISABLE_WINDOW: 'add-window-overlay',
   DISPLAY_MESSAGE: 'display-message',

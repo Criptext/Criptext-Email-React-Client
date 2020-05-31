@@ -6,6 +6,18 @@ const EmailBlocked = props => {
   return (
     <div className="email-more-menu">
       <ul>
+        {renderShowOnce(props)}
+        {renderShowContact(props)}
+        {renderShowAccount(props)}
+      </ul>
+    </div>
+  );
+};
+
+const renderShowOnce = props => {
+  if (props.blockImagesInline) {
+    return (
+      <div>
         <li
           onClick={ev => {
             props.onBlockImagesInline(ev);
@@ -14,6 +26,15 @@ const EmailBlocked = props => {
         >
           <span>{string.mailbox.blocked.once}</span>
         </li>
+      </div>
+    );
+  }
+};
+
+const renderShowContact = props => {
+  if (props.blockImagesContact) {
+    return (
+      <div>
         <li
           onClick={ev => {
             props.onBlockImagesContact(ev);
@@ -22,6 +43,15 @@ const EmailBlocked = props => {
         >
           <span>{string.mailbox.blocked.contact}</span>
         </li>
+      </div>
+    );
+  }
+};
+
+const renderShowAccount = props => {
+  if (props.blockImagesAccount) {
+    return (
+      <div>
         <li
           onClick={ev => {
             props.onBlockImagesAccount(ev);
@@ -30,9 +60,9 @@ const EmailBlocked = props => {
         >
           <span>{string.mailbox.blocked.total}</span>
         </li>
-      </ul>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 EmailBlocked.propTypes = {

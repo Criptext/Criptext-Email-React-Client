@@ -182,6 +182,12 @@
   "mailbox": {
     "all": "все",
     "bcc": "Скрытая Копия",
+    "blockRemote": {
+      "text": "Images blocked for your security.",
+      "show_images": "Show images",
+      "text_2": "Images currently displayed.",
+      "show_always": "Show always"
+    },
     "blocked": {
       "once": "Once",
       "contact": "Always from this sender",
@@ -276,6 +282,11 @@
       },
       "error": {
         "description": "Не удалось изменить пароль. Пароль не был изменен"
+      }
+    },
+    "contact_is_trusted": {
+      "success": {
+        "description": "Contact marked as trusted"
       }
     },
     "download_file": {

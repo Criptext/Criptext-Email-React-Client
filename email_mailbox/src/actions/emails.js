@@ -29,12 +29,14 @@ import {
   sendUpdateThreadLabelsErrorMessage,
   sendRemoveThreadsErrorMessage
 } from './../utils/electronEventInterface';
+import { LabelType } from './../utils/electronInterface';
 import {
   filterCriptextRecipients,
   formEmailLabel
 } from './../utils/EmailUtils';
 import { defineContacts } from './../utils/ContactUtils';
 import { defineFiles } from './../utils/FileUtils';
+import { modifyContactIsTrusted } from './contacts';
 
 const eventlessEmailStatuses = [EmailStatus.FAIL, EmailStatus.SENDING];
 
@@ -260,18 +262,19 @@ export const updateEmailLabels = ({
           const addedLabels = await getLabelsByText({ text: labelsAdded });
           const addedLabelsIds = addedLabels.map(label => label.id);
           dispatch(addEmailLabels([email], addedLabelsIds));
-        }
 
-        if (labelsAdded.length) {
-          const addedLabels = await getLabelsByText({ text: labelsAdded });
-          const addedLabelsIds = addedLabels.map(label => label.id);
           const emailLabelsToAdd = formEmailLabel({
             emailId: email.id,
             labels: addedLabelsIds
           });
 
           await createEmailLabel({ emailLabels: emailLabelsToAdd });
+
+          if (labelsAdded.includes(LabelType.spam.text)) {
+            dispatch(modifyContactIsTrusted(email.fromContactIds[0], false));
+          }
         }
+
         if (labelsRemoved.length) {
           const removedLabels = await getLabelsByText({ text: labelsRemoved });
           const removedLabelsIds = removedLabels.map(label => label.id);

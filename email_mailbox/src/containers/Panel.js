@@ -7,6 +7,7 @@ import {
   loadFeedItems,
   loadThreads,
   logout,
+  modifyContactIsTrusted,
   reloadAccounts,
   updateUnreadThreads,
   updateBadgeAccounts,
@@ -130,6 +131,9 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateLoadingSync: ({ totalTask, completedTask }) => {
       dispatch(updateLoadingSync({ totalTask, completedTask }));
+    },
+    onChangingTrustedContact: ({ contactId, isTrusted }) => {
+      dispatch(modifyContactIsTrusted(contactId, isTrusted));
     },
     onUpdateEmailIdsThread: ({
       labelId,
