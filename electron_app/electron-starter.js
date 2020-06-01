@@ -28,6 +28,7 @@ require('./src/ipc/client.js');
 const ipcUtils = require('./src/ipc/utils.js');
 const { checkDatabaseStep, deleteNotEncryptDatabase } = require('./src/utils/dataBaseUtils');
 const { APP_DOMAIN } = require('./src/utils/const');
+const logger = require('./src/logger');
 
 globalManager.forcequit.set(false);
 
@@ -40,6 +41,16 @@ const oldVersionUrl = () => {
     return 'https://cdn.criptext.com/Criptext-Email-Desktop/mac/old_version/0.27.5/Criptext-0.27.5.dmg'
   }
 }
+
+process.on('uncaughtException', err => {
+  logger.error('Uncaught Error: ', err);
+  closeAlice();
+  process.exit(1);
+})
+
+process.on('unhandledRejection', err => {
+  logger.error('Unhandled Rejection: ', err);
+})
 
 async function initApp() {
   const step = await checkDatabaseStep(dbManager);
@@ -65,7 +76,7 @@ async function initApp() {
         closeAlice();
         app.relaunch();
         app.exit(0);
-        console.log(ex);
+        logger.error(ex)
       }
       break;
     }
@@ -73,7 +84,7 @@ async function initApp() {
       try {
         await upStepNewUser();
       } catch (ex) {
-        console.log(ex);
+        logger.error(ex)
       }
       break;
     }

@@ -18,6 +18,8 @@ CriptextEncrypt.db-wal
 recovery.key
 umzug.json
 migration.json
+criptext-*.log
+*-audit.json
 
 # production
 *_interface/build

@@ -30,7 +30,8 @@ const create = () => {
     transparent: true,
     center: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      devTools: true
     }
   });
   loadingWindow.loadURL(loadingUrl);

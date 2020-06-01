@@ -8,6 +8,8 @@ const {
   File
 } = require('../DBEmodel');
 
+const logger = require('../../logger');
+
 const TABLE_ACCOUNT_ID_INDEX = '_accountid_index';
 const tables = [
   Table.EMAIL,
@@ -456,7 +458,7 @@ module.exports = {
 
       await transaction.commit();
     } catch (ex) {
-      console.log(ex);
+      logger.error(ex);
       await transaction.rollback();
       throw new Error(ex.toString());
     }
