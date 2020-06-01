@@ -246,7 +246,7 @@
         justify-content: space-between;
 
         &:last-child{
-          height: 26px;
+          height: 35px;
         }
 
         .email-info-content-from{
@@ -281,9 +281,8 @@
     }
 
     .email-info-blocked{
-      margin-top: 20px;
-      margin-bottom: 25px;
       background-color: transparent;
+      margin-bottom: 15px;
       font-family: NunitoSans;
       font-size: 14px;
       font-weight: 100;

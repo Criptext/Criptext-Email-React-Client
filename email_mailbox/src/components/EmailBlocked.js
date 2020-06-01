@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import string from '../lang';
+import './emailblocked.scss';
 
 const EmailBlocked = props => {
   return (

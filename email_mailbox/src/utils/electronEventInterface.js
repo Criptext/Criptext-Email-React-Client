@@ -11,6 +11,7 @@ import {
 } from './electronInterface';
 import {
   changeAccountApp,
+  changeEmailBlockedAccount,
   checkForUpdates,
   cleanDatabase,
   cleanDataLogout,
@@ -494,8 +495,11 @@ export const handleEvent = ({
     case SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED: {
       return handlePeerRecoveryEmailConfirmed(accountRecipientId);
     }
+    case SocketCommand.PEER_SET_BLOCK_REMOTE_CONTENT: {
+      return handleBlockRemoteContentEvent(incomingEvent, accountId);
+    }
     case SocketCommand.PEER_SET_TRUSTED_EMAIL: {
-      return handlePeerSetTrustedEvent(incomingEvent, accountRecipientId);
+      return handlePeerSetTrustedEvent(incomingEvent);
     }
     case SocketCommand.NEW_ANNOUNCEMENT: {
       return handleNewAnnouncementEvent(incomingEvent);
@@ -1327,21 +1331,6 @@ const handlePeerRecoveryEmailConfirmed = accountRecipientId => {
   return { rowid: null };
 };
 
-const handlePeerSetTrustedEvent = async ({ params }, accountRecipientId) => {
-  if (accountRecipientId !== myAccount.recipientId) {
-    return { rowid: null };
-  }
-  const { email, trusted } = params;
-  await updateContactByEmail({ email, isTrusted: trusted });
-  const [contact] = await getContactByEmails({ emails: [email] });
-  const contactId = contact.id;
-  emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
-    contactId,
-    isTrusted: trusted
-  });
-  return { rowid: null };
-};
-
 const handleNewAnnouncementEvent = async ({ rowid, params }) => {
   const { code } = params;
   const updateAnnouncement = await getNews({ code });
@@ -1416,6 +1405,29 @@ const handleAddressCreatedEvent = async ({ rowid, params }, accountId) => {
     accountId
   };
   await createAlias(alias);
+  return { rowid };
+};
+
+const handlePeerSetTrustedEvent = async ({ rowid, params }) => {
+  const { email, trusted } = params;
+  await updateContactByEmail({ email, isTrusted: trusted });
+  const [contact] = await getContactByEmails({ emails: [email] });
+  const contactId = contact.id;
+  emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
+    contactId,
+    isTrusted: trusted
+  });
+  return { rowid };
+};
+
+const handleBlockRemoteContentEvent = async ({ rowid, params }, accountId) => {
+  // domain not exist in account :O
+  const { recipientId, block } = params;
+  await changeEmailBlockedAccount({
+    id: accountId,
+    recipientId,
+    blockRemoteContent: block ? 1 : 0
+  });
   return { rowid };
 };
 

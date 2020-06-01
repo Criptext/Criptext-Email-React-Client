@@ -38,6 +38,7 @@ const Email = props => (
       <BlockRemotePopup
         popupPosition={{ left: '45%', top: '45%' }}
         {...props.popupContentBlockRemoteContent}
+        isLoading={props.isLoadingBlockRemote}
         onRightButtonClick={props.handlePopupConfirmBlock}
         onLeftButtonClick={props.dismissPopup}
         onTogglePopup={props.dismissPopup}
@@ -57,7 +58,7 @@ const Email = props => (
             props.blockImagesInline ||
             props.blockImagesContact ||
             props.blockImagesAccount
-              ? '105px'
+              ? '95px'
               : '65px'
         }}
         onClick={props.onToggleEmail}
@@ -150,6 +151,11 @@ const renderEmailBlocked = props => {
     props.blockImagesContact ||
     props.blockImagesAccount
   ) {
+    const width =
+      !props.blockImagesInline &&
+      (props.blockImagesContact || props.blockImagesAccount)
+        ? '250px'
+        : '285px';
     return (
       <div className="email-info-blocked">
         <span>
@@ -194,7 +200,7 @@ const renderEmailBlocked = props => {
               ? string.mailbox.blockRemote.show_always
               : string.mailbox.blockRemote.show_images}
             <PopOverEmailBlocked
-              menuPosition={{ left: '285px', top: '100px' }}
+              menuPosition={{ left: width, top: '90px' }}
               isHidden={props.isHiddenPopOverEmailBlocked}
               onToggleMenu={props.onTogglePopOverEmailBlocked}
               onBlockImagesInline={props.handleBlockingEmail}
@@ -358,7 +364,7 @@ const getDOM = html => {
     const originalWidth = img.width;
     const el = doc.createElement('div');
     el.innerHTML = `<div style='height: ${originalHeight}px; width: ${originalWidth}px; min-width: 18px; min-height: 18px; border: solid 1px #bfc3c8;'>
-                      <svg style='max-height: 25%; max-width: 25%;'  viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                      <svg style='max-height: 50%; max-width: 50%;'  viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>Group 3</title>
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                           <g id="BRC-Desktop" transform="translate(-296.000000, -210.000000)" fill="#BFC3C8">
@@ -465,6 +471,7 @@ Email.propTypes = {
   hideView: PropTypes.bool,
   isDraft: PropTypes.bool,
   isEmpty: PropTypes.bool,
+  isLoadingBlockRemote: PropTypes.bool,
   isUnsend: PropTypes.bool,
   letters: PropTypes.string,
   onForward: PropTypes.func,

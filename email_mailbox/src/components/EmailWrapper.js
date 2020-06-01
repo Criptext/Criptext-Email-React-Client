@@ -32,7 +32,8 @@ class EmailWrapper extends Component {
       hideView: false,
       popupContent: undefined,
       popupContentBlockRemoteContent: undefined,
-      inlineImages: []
+      inlineImages: [],
+      isLoadingBlockRemote: false
     };
   }
 
@@ -52,6 +53,7 @@ class EmailWrapper extends Component {
         blockImagesAccount={this.state.blockImagesAccount}
         isHiddenPopOverEmailActions={this.state.isHiddenPopOverEmailActions}
         isHiddenPopOverEmailBlocked={this.state.isHiddenPopOverEmailBlocked}
+        isLoadingBlockRemote={this.state.isLoadingBlockRemote}
         hideView={this.state.hideView}
         onToggleEmail={this.handleToggleEmail}
         onTooglePopOverEmailMoreInfo={this.handleTooglePopOverEmailMoreInfo}
@@ -84,12 +86,20 @@ class EmailWrapper extends Component {
       email.fromContactIds
     );
     const blockingInline = isSpam
-      ? isSpam
+      ? true
       : blockRemoteContent
-        ? blockRemoteContent
-        : !contactIsTrusted;
-    const blockImagesContact = !isSpam && !contactIsTrusted;
-    const blockImagesAccount = !isSpam && blockRemoteContent;
+        ? !contactIsTrusted
+        : false;
+    const blockImagesAccount = isSpam
+      ? false
+      : blockRemoteContent
+        ? !contactIsTrusted
+        : false;
+    const blockImagesContact = isSpam
+      ? false
+      : blockRemoteContent
+        ? !contactIsTrusted
+        : false;
     newState['blockImagesInline'] = blockingInline;
     newState['blockImagesContact'] = blockImagesContact;
     newState['blockImagesAccount'] = blockImagesAccount;
@@ -290,6 +300,7 @@ class EmailWrapper extends Component {
   };
 
   handlePopupConfirmBlock = async ev => {
+    this.setState({ isLoadingBlockRemote: true });
     ev.stopPropagation();
     ev.preventDefault();
     const { status } = await setBlockRemoteContent(false);
@@ -300,12 +311,14 @@ class EmailWrapper extends Component {
         popupContentBlockRemoteContent: undefined,
         blockImagesInline: false,
         blockImagesAccount: false,
-        blockImagesContact: false
+        blockImagesContact: false,
+        isLoadingBlockRemote: false
       });
     } else {
       sendBlockRemoteContentError();
       this.setState({
-        popupContentBlockRemoteContent: undefined
+        popupContentBlockRemoteContent: undefined,
+        isLoadingBlockRemote: false
       });
     }
   };
