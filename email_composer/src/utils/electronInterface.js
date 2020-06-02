@@ -1,6 +1,7 @@
 import { labels } from './systemLabels';
 const electron = window.require('electron');
-const { remote, ipcRenderer } = electron;
+const spellChecker = window.require('spellchecker');
+const { remote, ipcRenderer, webFrame } = electron;
 const composerId = remote.getCurrentWindow().id;
 const globalManager = remote.require('./src/globalManager');
 export const getAlicePort = remote.require('./src/aliceManager').getPort;
@@ -33,3 +34,13 @@ export const LabelType = labels;
 export const sendEventToMailbox = (name, params) => {
   ipcRenderer.send(name, params);
 };
+
+webFrame.setSpellCheckProvider(mySettings.language, {
+  spellCheck(words, callback) {
+    const checker = new spellChecker.Spellchecker();
+    const misspelled = words.filter(x => {
+      return checker.isMisspelled(x);
+    });
+    callback(misspelled);
+  }
+});
