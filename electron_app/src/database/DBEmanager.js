@@ -292,11 +292,11 @@ const getContactByIds = (ids, trx) => {
 };
 
 const updateContactByEmail = ({ email, name, isTrusted }, trx) => {
-  const updatedParam = name ? name : isTrusted;
-  return Contact().update(
-    { updatedParam },
-    { where: { email: { [Op.eq]: email } }, transaction: trx }
-  );
+  const updatedParam = name ? { name } : { isTrusted };
+  return Contact().update(updatedParam, {
+    where: { email: { [Op.eq]: email } },
+    transaction: trx
+  });
 };
 
 const updateContactScore = async (emailId, trx) => {

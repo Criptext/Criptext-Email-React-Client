@@ -24,7 +24,8 @@ const account2 = {
 
 const contact = {
   email: 'user@domain.com',
-  name: 'User'
+  name: 'User',
+  isTrusted: 0
 };
 
 const insertAccount = async () => {
@@ -52,7 +53,8 @@ describe('Store data contact to Contact Table:', () => {
   it('should insert contact to database', async () => {
     const contact = {
       email: 'userhello@domain.com',
-      name: 'User Hello'
+      name: 'User Hello',
+      isTrusted: 0
     };
     const contactCreated = await DBManager.createContact({
       contacts: [contact],

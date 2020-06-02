@@ -1412,11 +1412,13 @@ const handlePeerSetTrustedEvent = async ({ rowid, params }) => {
   const { email, trusted } = params;
   await updateContactByEmail({ email, isTrusted: trusted });
   const [contact] = await getContactByEmails({ emails: [email] });
-  const contactId = contact.id;
-  emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
-    contactId,
-    isTrusted: trusted
-  });
+  if (contact) {
+    const contactId = contact.id;
+    emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
+      contactId,
+      isTrusted: trusted
+    });
+  }
   return { rowid };
 };
 

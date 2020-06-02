@@ -29,6 +29,7 @@ class EmailWrapper extends Component {
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
       isHiddenPopOverEmailBlocked: true,
+      hasImages: false,
       hideView: false,
       popupContent: undefined,
       popupContentBlockRemoteContent: undefined,
@@ -79,30 +80,30 @@ class EmailWrapper extends Component {
 
   async componentDidMount() {
     const newState = {};
-    const { inlineImages, email, blockRemoteContent } = this.props;
-    const isSpam = this.props.isSpam;
+    const { inlineImages, email, blockRemoteContent, isSpam } = this.props;
     const contactIsTrusted = await this.handleContactIsTrusted(
       email.from[0],
       email.fromContactIds
     );
-    const blockingInline = isSpam
-      ? true
-      : blockRemoteContent
-        ? !contactIsTrusted
-        : false;
-    const blockImagesAccount = isSpam
-      ? false
-      : blockRemoteContent
-        ? !contactIsTrusted
-        : false;
-    const blockImagesContact = isSpam
-      ? false
-      : blockRemoteContent
-        ? !contactIsTrusted
-        : false;
+
+    const hasImages = this.hasImages();
+
+    const {
+      blockingInline,
+      blockImagesContact,
+      blockImagesAccount
+    } = this.setBlockingVariables({
+      blockRemoteContent,
+      contactIsTrusted,
+      isSpam,
+      displayEmail: this.state.displayEmail,
+      staticOpen: this.props.staticOpen,
+      hasImages
+    });
     newState['blockImagesInline'] = blockingInline;
     newState['blockImagesContact'] = blockImagesContact;
     newState['blockImagesAccount'] = blockImagesAccount;
+    newState['hasImages'] = hasImages;
     if (email.unread) newState['displayEmail'] = true;
     if (inlineImages && inlineImages.length > 0)
       newState['inlineImages'] = inlineImages;
@@ -159,10 +160,62 @@ class EmailWrapper extends Component {
     }
   };
 
-  handleToggleEmail = () => {
+  setBlockingVariables = ({
+    blockRemoteContent,
+    contactIsTrusted,
+    isSpam,
+    displayEmail,
+    staticOpen,
+    hasImages
+  }) => {
+    if (!hasImages || (!displayEmail && !staticOpen)) {
+      return {
+        blockingInline: false,
+        blockImagesContact: false,
+        blockImagesAccount: false
+      };
+    } else if (isSpam) {
+      return {
+        blockingInline: true,
+        blockImagesContact: false,
+        blockImagesAccount: false
+      };
+    }
+    const theValue = blockRemoteContent ? !contactIsTrusted : false;
+
+    return {
+      blockingInline: theValue,
+      blockImagesContact: theValue,
+      blockImagesAccount: theValue
+    };
+  };
+
+  handleToggleEmail = async () => {
     if (!this.props.staticOpen) {
+      const { blockRemoteContent, isSpam, staticOpen, email } = this.props;
+      const { displayEmail, hasImages } = this.state;
+      const contactIsTrusted = await this.handleContactIsTrusted(
+        email.from[0],
+        email.fromContactIds
+      );
+
+      const {
+        blockingInline,
+        blockImagesContact,
+        blockImagesAccount
+      } = this.setBlockingVariables({
+        blockRemoteContent,
+        contactIsTrusted,
+        isSpam,
+        displayEmail: !displayEmail,
+        staticOpen,
+        hasImages
+      });
       this.setState({
-        displayEmail: !this.state.displayEmail
+        displayEmail: !displayEmail,
+        blockImagesInline: blockingInline,
+        blockImagesContact,
+        blockImagesAccount
       });
     }
   };
@@ -322,11 +375,21 @@ class EmailWrapper extends Component {
       });
     }
   };
+
+  hasImages = () => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(
+      `<div class="email-container">${this.props.content}</div>`,
+      'text/html'
+    );
+    return [...doc.getElementsByTagName('img')].length;
+  };
 }
 
 EmailWrapper.propTypes = {
   displayEmail: PropTypes.func,
   blockRemoteContent: PropTypes.bool,
+  content: PropTypes.string,
   email: PropTypes.object,
   files: PropTypes.array,
   inlineImages: PropTypes.array,
