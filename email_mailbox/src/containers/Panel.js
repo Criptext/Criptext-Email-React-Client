@@ -133,7 +133,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateLoadingSync({ totalTask, completedTask }));
     },
     onChangingTrustedContact: ({ contactId, isTrusted }) => {
-      dispatch(modifyContactIsTrusted(contactId, isTrusted));
+      dispatch(modifyContactIsTrusted([contactId], isTrusted));
     },
     onUpdateEmailIdsThread: ({
       labelId,

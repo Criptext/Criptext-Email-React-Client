@@ -363,8 +363,8 @@ const getDOM = html => {
     const originalHeight = img.height;
     const originalWidth = img.width;
     const el = doc.createElement('div');
-    el.innerHTML = `<div style='height: ${originalHeight}px; width: ${originalWidth}px; min-width: 18px; min-height: 18px; border: solid 1px #bfc3c8;'>
-                      <svg style='max-height: 50%; max-width: 50%;'  viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    el.innerHTML = `<div style='height: ${originalHeight}px; width: ${originalWidth}px; min-width: 20px; min-height: 20px; border: solid 1px #bfc3c8;'>
+                      <svg style='max-height: 20px; max-width: 20px;'  viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>Group 3</title>
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                           <g id="BRC-Desktop" transform="translate(-296.000000, -210.000000)" fill="#BFC3C8">

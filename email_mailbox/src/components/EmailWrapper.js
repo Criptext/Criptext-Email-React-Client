@@ -23,9 +23,9 @@ class EmailWrapper extends Component {
       buttonUnsendStatus: ButtonUnsendStatus.NORMAL,
       buttonReplyStatus: ButtonStatus.NORMAL,
       displayEmail: false,
-      blockImagesInline: true,
-      blockImagesContact: true,
-      blockImagesAccount: true,
+      blockImagesInline: false,
+      blockImagesContact: false,
+      blockImagesAccount: false,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
       isHiddenPopOverEmailBlocked: true,
@@ -80,7 +80,13 @@ class EmailWrapper extends Component {
 
   async componentDidMount() {
     const newState = {};
-    const { inlineImages, email, blockRemoteContent, isSpam } = this.props;
+    const {
+      inlineImages,
+      email,
+      blockRemoteContent,
+      isSpam,
+      isFromMe
+    } = this.props;
     const contactIsTrusted = await this.handleContactIsTrusted(
       email.from[0],
       email.fromContactIds
@@ -98,7 +104,8 @@ class EmailWrapper extends Component {
       isSpam,
       displayEmail: this.state.displayEmail,
       staticOpen: this.props.staticOpen,
-      hasImages
+      hasImages,
+      isFromMe
     });
     newState['blockImagesInline'] = blockingInline;
     newState['blockImagesContact'] = blockImagesContact;
@@ -166,9 +173,10 @@ class EmailWrapper extends Component {
     isSpam,
     displayEmail,
     staticOpen,
-    hasImages
+    hasImages,
+    isFromMe
   }) => {
-    if (!hasImages || (!displayEmail && !staticOpen)) {
+    if (isFromMe || !hasImages || (!displayEmail && !staticOpen)) {
       return {
         blockingInline: false,
         blockImagesContact: false,
@@ -192,7 +200,13 @@ class EmailWrapper extends Component {
 
   handleToggleEmail = async () => {
     if (!this.props.staticOpen) {
-      const { blockRemoteContent, isSpam, staticOpen, email } = this.props;
+      const {
+        blockRemoteContent,
+        isSpam,
+        staticOpen,
+        email,
+        isFromMe
+      } = this.props;
       const { displayEmail, hasImages } = this.state;
       const contactIsTrusted = await this.handleContactIsTrusted(
         email.from[0],
@@ -209,7 +223,8 @@ class EmailWrapper extends Component {
         isSpam,
         displayEmail: !displayEmail,
         staticOpen,
-        hasImages
+        hasImages,
+        isFromMe
       });
       this.setState({
         displayEmail: !displayEmail,
@@ -394,6 +409,8 @@ EmailWrapper.propTypes = {
   files: PropTypes.array,
   inlineImages: PropTypes.array,
   isSpam: PropTypes.bool,
+  isFromMe: PropTypes.bool,
+
   onChangeEmailBlockedAccount: PropTypes.func,
   onChangeEmailBlockingContact: PropTypes.func,
   onEditDraft: PropTypes.func,

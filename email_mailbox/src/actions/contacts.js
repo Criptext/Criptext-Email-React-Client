@@ -8,10 +8,10 @@ export const addContacts = contacts => {
   };
 };
 
-export const modifyContactIsTrusted = (contactId, isTrusted) => {
+export const modifyContactIsTrusted = (contactIds, isTrusted) => {
   return {
     type: Contact.MODIFY_IS_TRUSTED,
-    contactId,
+    contactIds,
     isTrusted
   };
 };

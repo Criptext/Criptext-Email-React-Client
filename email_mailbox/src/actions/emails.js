@@ -271,7 +271,7 @@ export const updateEmailLabels = ({
           await createEmailLabel({ emailLabels: emailLabelsToAdd });
 
           if (labelsAdded.includes(LabelType.spam.text)) {
-            dispatch(modifyContactIsTrusted(email.fromContactIds[0], false));
+            dispatch(modifyContactIsTrusted([email.fromContactIds[0]], false));
           }
         }
 

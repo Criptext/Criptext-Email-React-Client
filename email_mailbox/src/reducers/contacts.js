@@ -7,12 +7,16 @@ const contacts = (state = new Map(), action) => {
       return state.merge(fromJS(action.contacts));
     }
     case Contact.MODIFY_IS_TRUSTED: {
-      const { contactId } = action;
-      if (!contactId) return state;
-      const contactItem = state.get(`${contactId}`);
-      if (!contactItem) return state;
-
-      return state.set(`${contactId}`, contact(contactItem, action));
+      const contacts = action.contactIds;
+      if (!contacts || !contacts.length) return state;
+      const isTrusted = action.isTrusted;
+      if (isTrusted === undefined) return state;
+      return contacts.reduce((state, contactId) => {
+        const contactState = state.get(`${contactId}`);
+        if (!contactState) return state;
+        const action = { type: Contact.MODIFY_IS_TRUSTED, isTrusted };
+        return state.set(`${contactId}`, contact(contactState, action));
+      }, state);
     }
     case Activity.LOGOUT:
       return new Map();
