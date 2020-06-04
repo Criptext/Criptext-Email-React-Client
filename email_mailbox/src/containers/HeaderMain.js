@@ -53,7 +53,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const type = SectionType.THREAD;
       const mailboxSelected = LabelType.search;
       const params = {
-        mailboxSelected,
+        mailboxSelected: {
+          ...mailboxSelected,
+          fromSuggestions: true
+        },
         threadIdSelected: threadId,
         searchParams
       };

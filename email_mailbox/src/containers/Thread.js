@@ -43,9 +43,13 @@ const makeMapStateToProps = () => {
         ? true
         : false;
     const nextThread =
-      thread && !isLastThread ? threads[threadId + 1].toJS() : null;
+      thread && threads.length && !isLastThread && threads[threadId + 1]
+        ? threads[threadId + 1].toJS()
+        : null;
     const previousThread =
-      thread && !isFirstThread ? threads[threadId - 1].toJS() : null;
+      thread && threads.length && !isFirstThread && threads[threadId - 1]
+        ? threads[threadId - 1].toJS()
+        : null;
     return {
       emailKeysUnread,
       emails,
