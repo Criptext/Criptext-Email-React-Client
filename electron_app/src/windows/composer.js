@@ -7,6 +7,7 @@ const { EVENTS, callEvent } = require('./events');
 const fileUtils = require('../utils/FileUtils');
 const { API_TRACKING_EVENT } = require('../utils/const');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
+const spellChecker = require('spellchecker');
 
 const lang = require('./../lang');
 const { windowTitle } = lang.strings.windows.composer;
@@ -87,7 +88,28 @@ const createComposerWindow = () => {
     window,
     showSaveImageAs: false,
     showInspectElement: false,
-    showCopyImageAddress: false
+    showCopyImageAddress: false,
+    prepend: (defaultActions, browserWindow) => {
+      const checker = new spellChecker.Spellchecker();
+
+      let options = [];
+      if (defaultActions.misspelledWord) {
+        options = options.concat(
+          checker
+            .getCorrectionsForMisspelling(defaultActions.misspelledWord)
+            .map(word => {
+              return {
+                label: word,
+                click: () => {
+                  browserWindow.webContents.insertText(word);
+                }
+              };
+            })
+            .slice(0, 5)
+        );
+      }
+      return options;
+    }
   });
   return window;
 };
