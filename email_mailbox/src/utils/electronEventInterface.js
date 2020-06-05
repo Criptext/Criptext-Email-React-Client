@@ -1508,6 +1508,10 @@ export const sendLoadEventsEvent = params => {
   emitter.emit(Event.LOAD_EVENTS, params);
 };
 
+ipcRenderer.on('backup-progress', (ev, data) => {
+  emitter.emit(Event.BACKUP_PROGRESS, data);
+});
+
 ipcRenderer.on('socket-message', async (ev, message) => {
   const { cmd, recipientId, domain } = message;
   if (cmd === 400) {
@@ -2137,6 +2141,7 @@ export const sendMailboxEvent = (eventName, eventData) => {
 
 export const Event = {
   ACCOUNT_DELETED: 'account-deleted',
+  BACKUP_PROGRESS: 'backup-progress',
   BIG_UPDATE_AVAILABLE: 'big-update-available',
   CHANGE_SET_TRUSTED_ACCOUNT: 'change-set-trusted-account',
   DEVICE_REMOVED: 'device-removed',
@@ -2155,6 +2160,7 @@ export const Event = {
   LOCAL_BACKUP_EXPORT_FINISHED: 'local-backup-export-finished',
   LOCAL_BACKUP_ENCRYPT_FINISHED: 'local-backup-encrypt-finished',
   LOCAL_BACKUP_SUCCESS: 'local-backup-success',
+  LOCAL_BACKUP_FAILED: 'local-backup-failed',
   OPEN_PLUS: 'open-plus',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',

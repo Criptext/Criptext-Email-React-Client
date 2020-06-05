@@ -614,38 +614,40 @@ const exportEmailTable = async accountId => {
         }
       )
       .then(async rows => {
-        return await Promise.all(
-          rows.map(async row => {
-            let newRow = row.toJSON();
-            if (!newRow.unsentDate) delete newRow.unsentDate;
-            if (!newRow.trashDate) delete newRow.trashDate;
-            if (newRow.replyTo === null) newRow = { ...newRow, replyTo: '' };
-            if (!newRow.boundary) delete newRow.boundary;
+        const emailRows = [];
 
-            const body =
-              (await getEmailBody({
-                username,
-                metadataKey: newRow.key,
-                password: globalManager.databaseKey.get()
-              })) ||
-              newRow.content ||
-              '';
-            const headers = await getEmailHeaders({
+        for (const emailRow of rows) {
+          let newRow = emailRow.toJSON();
+          if (!newRow.unsentDate) delete newRow.unsentDate;
+          if (!newRow.trashDate) delete newRow.trashDate;
+          if (newRow.replyTo === null) newRow = { ...newRow, replyTo: '' };
+          if (!newRow.boundary) delete newRow.boundary;
+
+          const body =
+            (await getEmailBody({
               username,
               metadataKey: newRow.key,
               password: globalManager.databaseKey.get()
-            });
+            })) ||
+            newRow.content ||
+            '';
+          const headers = await getEmailHeaders({
+            username,
+            metadataKey: newRow.key,
+            password: globalManager.databaseKey.get()
+          });
 
-            const key = parseInt(newRow.key);
-            return {
-              ...newRow,
-              content: body,
-              key,
-              date: parseOutgoingDate(newRow.date),
-              headers: headers || undefined
-            };
-          })
-        );
+          const key = parseInt(newRow.key);
+          emailRows.push({
+            ...newRow,
+            content: body,
+            key,
+            date: parseOutgoingDate(newRow.date),
+            headers: headers || undefined
+          });
+        }
+
+        return emailRows;
       });
     emailRows = [...emailRows, ...result];
     if (result.length < SELECT_ALL_BATCH) {
@@ -820,8 +822,23 @@ const exportCustomDomainsTable = async accountId => {
   return formatTableRowsToString(Table.CUSTOM_DOMAIN, customDomainsRows);
 };
 
-const exportEncryptDatabaseToFile = async ({ outputPath, accountObj }) => {
+const handleProgressCallback = (progress, message, email, progressCallback) => {
+  if (!progressCallback) return;
+  progressCallback({
+    progress: parseInt(progress),
+    message,
+    email
+  });
+};
+
+const exportEncryptDatabaseToFile = async ({
+  outputPath,
+  accountObj,
+  progressCallback
+}) => {
   const filepath = outputPath;
+  const PROGRESS_TOTAL_STEPS = 19;
+  let exportProgress = 0;
 
   const [recipientId, domain] = accountObj
     ? accountObj.recipientId.split('@')
@@ -832,31 +849,81 @@ const exportEncryptDatabaseToFile = async ({ outputPath, accountObj }) => {
     recipientId: recipientId,
     domain: domain || APP_DOMAIN
   });
+
+  exportProgress += 100 / PROGRESS_TOTAL_STEPS;
+  handleProgressCallback(
+    exportProgress,
+    'saving_account',
+    `${recipientId}@${domain || APP_DOMAIN}`,
+    progressCallback
+  );
+
   await saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
 
-  const contacts = await exportContactTable(accountId);
-  await saveToFile({ data: contacts, filepath, mode: 'a' });
+  const exportTables = [
+    {
+      export: exportContactTable,
+      suffix: 'contacts'
+    },
+    {
+      export: exportLabelTable,
+      suffix: 'labels'
+    },
+    {
+      export: exportEmailTable,
+      suffix: 'emails'
+    },
+    {
+      export: exportEmailContactTable,
+      suffix: 'email_contacts'
+    },
+    {
+      export: exportEmailLabelTable,
+      suffix: 'email_labels'
+    },
+    {
+      export: exportFileTable,
+      suffix: 'files'
+    },
+    {
+      export: exportAliasTable,
+      suffix: 'aliases'
+    },
+    {
+      export: exportCustomDomainsTable,
+      suffix: 'domains'
+    }
+  ];
 
-  const labels = await exportLabelTable(accountId);
-  await saveToFile({ data: labels, filepath, mode: 'a' });
+  for (const exportTable of exportTables) {
+    exportProgress += 100 / PROGRESS_TOTAL_STEPS;
+    handleProgressCallback(
+      exportProgress,
+      `exporting_${exportTable.suffix}`,
+      `${recipientId}@${domain || APP_DOMAIN}`,
+      progressCallback
+    );
 
-  const emails = await exportEmailTable(accountId);
-  await saveToFile({ data: emails, filepath, mode: 'a' });
+    const result = await exportTable.export(accountId);
 
-  const emailContacts = await exportEmailContactTable(accountId);
-  await saveToFile({ data: emailContacts, filepath, mode: 'a' });
+    exportProgress += 100 / PROGRESS_TOTAL_STEPS;
+    handleProgressCallback(
+      exportProgress,
+      `saving_${exportTable.suffix}`,
+      `${recipientId}@${domain || APP_DOMAIN}`,
+      progressCallback
+    );
 
-  const emailLabels = await exportEmailLabelTable(accountId);
-  await saveToFile({ data: emailLabels, filepath, mode: 'a' });
+    await saveToFile({ data: result, filepath, mode: 'a' });
+  }
 
-  const files = await exportFileTable(accountId);
-  await saveToFile({ data: files, filepath, mode: 'a' });
-
-  const aliases = await exportAliasTable(accountId);
-  await saveToFile({ data: aliases, filepath, mode: 'a' });
-
-  const customDomains = await exportCustomDomainsTable(accountId);
-  await saveToFile({ data: customDomains, filepath, mode: 'a' });
+  exportProgress = 99;
+  handleProgressCallback(
+    exportProgress,
+    'almost_done',
+    `${recipientId}@${domain || APP_DOMAIN}`,
+    progressCallback
+  );
 };
 
 const importDatabaseFromFile = async ({

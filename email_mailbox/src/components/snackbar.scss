@@ -1,0 +1,114 @@
+@import "./../styles/index.scss";
+
+.snackbar-wrapper {
+  position: absolute;
+  right: 30px;
+  bottom: 10px;
+  border-radius: 5px;
+  padding: 12px;
+  width: 240px;
+  height: 30px;
+  display: flex;
+  z-index: 1000;
+}
+
+.snackbar-loader-container {
+  position: relative;
+  width: 42px;
+  height: 100%;
+  margin-left: 8px;
+
+  .loading-ring {
+    position: absolute;
+    left: -10px;
+    top: -5px;
+
+    > div {
+      width: 35px;
+      height: 35px;
+    }
+  }
+
+  span {
+    top: 8px;
+    left: -1px;
+    font-size: 11px;
+    position: absolute;
+  }
+}
+
+.snackbar-message-contianer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .snackbar-message { 
+    font-size: 13px;
+  }
+
+  .snackbar-account {
+    font-size: 12px;
+  }
+}
+
+.snackbar-success-progress {
+  position: absolute;
+  width: 30px;
+  height: 100%;
+  background: #58a40b;
+  border-radius: 50%;
+  top: -1px;
+  left: -7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  color: white;
+}
+
+.snackbar-failure-progress {
+  position: absolute;
+  width: 30px;
+  height: 100%;
+  background: #ff3366;
+  border-radius: 50%;
+  top: -1px;
+  left: -7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  color: white;
+}
+
+.snackbar-close{
+  position: absolute;
+  width: 40px;
+  height: 30px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  color: #ff3366;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_SIDEBAR, $_COLOR_ICON_NAVITEM_SELECTED){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .snackbar-wrapper{
+      background: $_BACKGROUND_COLOR_SIDEBAR;
+      color: $_COLOR_ICON_NAVITEM_SELECTED;
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SIDEBAR_LIGHT, $_COLOR_ICON_NAVITEM_SELECTED_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SIDEBAR_DARK, $_COLOR_ICON_NAVITEM_SELECTED_DARK);

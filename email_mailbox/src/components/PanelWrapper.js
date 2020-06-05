@@ -20,6 +20,9 @@ import {
 } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import { TAB } from './Settings';
+import string from '../lang';
+
+const backupString = string.backup;
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
@@ -46,6 +49,7 @@ class PanelWrapper extends Component {
       isOpenWelcome: true,
       mailboxPopupType: undefined,
       mailboxPopupData: undefined,
+      backupSnackbar: undefined,
       sectionSelected: {
         type: SectionType.MAILBOX,
         params: {
@@ -86,6 +90,8 @@ class PanelWrapper extends Component {
         onUpdateApp={this.handleUpdateApp}
         sectionSelected={this.state.sectionSelected}
         onUpdateNow={this.handleUpdateNow}
+        backupSnackbar={this.state.backupSnackbar}
+        onDismissSnackbar={this.handleSnackbarDismiss}
         {...this.props}
       />
     );
@@ -280,6 +286,7 @@ class PanelWrapper extends Component {
     addEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
     addEvent(Event.SUSPENDED_ACCOUNT, this.suspendedAccountListenerCallback);
     addEvent(Event.BIG_UPDATE_AVAILABLE, this.handleBigUpdateListenerCallback);
+    addEvent(Event.BACKUP_PROGRESS, this.handleBackupProgress);
     addEvent(
       Event.REACTIVATED_ACCOUNT,
       this.reactivatedAccountListenerCallback
@@ -295,6 +302,8 @@ class PanelWrapper extends Component {
     addEvent(Event.OPEN_PLUS, this.handleOpenPlus);
     addEvent(Event.RESTORE_BACKUP_INIT, this.restoreBackupInitListenerCallback);
     addEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
+    addEvent(Event.LOCAL_BACKUP_SUCCESS, this.handleBackupFinish);
+    addEvent(Event.LOCAL_BACKUP_FAILED, this.handleBackupFailed);
   };
 
   removeEventHandlers = () => {
@@ -319,6 +328,7 @@ class PanelWrapper extends Component {
     removeEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
     removeEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
     removeEvent(Event.SUSPENDED_ACCOUNT, this.suspendedAccountListenerCallback);
+    removeEvent(Event.BACKUP_PROGRESS, this.handleBackupProgress);
     removeEvent(
       Event.REACTIVATED_ACCOUNT,
       this.reactivatedAccountListenerCallback
@@ -337,6 +347,8 @@ class PanelWrapper extends Component {
     );
     removeEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
     removeEvent(Event.OPEN_PLUS, this.handleOpenPlus);
+    removeEvent(Event.LOCAL_BACKUP_SUCCESS, this.handleBackupFinish);
+    removeEvent(Event.LOCAL_BACKUP_FAILED, this.handleBackupFailed);
   };
 
   enableWindowListenerCallback = () => {
@@ -519,6 +531,66 @@ class PanelWrapper extends Component {
 
   changeAccountIsTrustedCallback = eventParams => {
     this.props.onChangingTrustedContact(eventParams);
+  };
+
+  handleSnackbarDismiss = () => {
+    const currentSnackbar = this.state.backupSnackbar || {};
+    this.setState({
+      backupSnackbar: {
+        ...currentSnackbar,
+        hide: true
+      }
+    });
+  };
+
+  handleBackupProgress = data => {
+    const currentSnackbar = this.state.backupSnackbar || {};
+    const newMessage = backupString[data.message] || currentSnackbar.message;
+    this.setState({
+      backupSnackbar: {
+        ...currentSnackbar,
+        ...data,
+        message: newMessage
+      }
+    });
+  };
+
+  handleBackupFinish = () => {
+    const currentSnackbar = this.state.backupSnackbar || {};
+    this.setState(
+      {
+        backupSnackbar: {
+          ...currentSnackbar,
+          progress: 100,
+          message: backupString.success_backup
+        }
+      },
+      () => {
+        setTimeout(this.handleBackupCleanUp, 2000);
+      }
+    );
+  };
+
+  handleBackupFailed = () => {
+    const currentSnackbar = this.state.backupSnackbar || {};
+    this.setState(
+      {
+        backupSnackbar: {
+          ...currentSnackbar,
+          progress: -2,
+          message: backupString.failure_backup
+        }
+      },
+      () => {
+        setTimeout(this.handleBackupCleanUp, 2000);
+      }
+    );
+  };
+
+  handleBackupCleanUp = () => {
+    this.setState({
+      backupSnackbar: undefined
+    });
   };
 
   updateLoadingSync = eventParams => {

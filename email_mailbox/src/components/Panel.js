@@ -16,6 +16,7 @@ import UpdatePopup from './UpdatePopup';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import { mySettings } from '../utils/electronInterface';
 import UserGuide from './UserGuide';
+import Snackbar from './Snackbar';
 import './panel.scss';
 
 const Panel = props => (
@@ -56,6 +57,13 @@ const Panel = props => (
         ...props
       })}
     <UserGuide />
+    {props.backupSnackbar &&
+      !props.backupSnackbar.hide && (
+        <Snackbar
+          {...props.backupSnackbar}
+          onDismissSnackbar={props.onDismissSnackbar}
+        />
+      )}
   </div>
 );
 
@@ -178,6 +186,7 @@ renderMailboxPopup.propTypes = {
 };
 
 Panel.propTypes = {
+  backupSnackbar: PropTypes.object,
   isHiddenMailboxPopup: PropTypes.bool,
   isOpenActivityPanel: PropTypes.bool,
   isOpenSideBar: PropTypes.bool,
@@ -187,6 +196,7 @@ Panel.propTypes = {
   onClickCloseWelcome: PropTypes.func,
   onClickThreadBack: PropTypes.func,
   onClickSection: PropTypes.func,
+  onDismissSnackbar: PropTypes.func,
   onToggleActivityPanel: PropTypes.func,
   onToggleSideBar: PropTypes.func,
   onUpdateApp: PropTypes.func,

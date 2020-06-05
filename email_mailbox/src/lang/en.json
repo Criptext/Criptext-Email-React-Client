@@ -109,6 +109,28 @@
       }
     }
   },
+  "backup": {
+    "starting_backup": "Starting Backup...",
+    "saving_account": "Saving Account...",
+    "exporting_contacts": "Exporting Contacts...",
+    "saving_contacts": "Saving Contacts...",
+    "exporting_labels": "Exporting Labels...",
+    "saving_labels": "Saving Labels...",
+    "exporting_emails": "Exporting Emails...",
+    "saving_emails": "Saving Emails...",
+    "exporting_email_contacts": "Exporting Email Contacts...",
+    "saving_email_contacts": "Saving Email Contacts...",
+    "exporting_email_labels": "Exporting Email Labels...",
+    "saving_email_labels": "Saving Email Labels...",
+    "exporting_files": "Exporting Files...",
+    "saving_files": "Saving Files...",
+    "exporting_aliases": "Exporting Aliases...",
+    "saving_aliases": "Saving Aliases...",
+    "exporting_domains": "Exporting Custom Domains...",
+    "saving_domains": "Saving Custom Domains",
+    "success_backup": "Backup Success!!",
+    "failure_backup": "Backup Failed!"
+  },
   "crash": {
     "title": "Oops! It looks like something went wrong",
     "counter": {
