@@ -1410,20 +1410,19 @@ const handleAddressCreatedEvent = async ({ rowid, params }, accountId) => {
 
 const handlePeerSetTrustedEvent = async ({ rowid, params }) => {
   const { email, trusted } = params;
-  await updateContactByEmail({ email, isTrusted: trusted });
   const [contact] = await getContactByEmails({ emails: [email] });
-  if (contact) {
-    const contactId = contact.id;
-    emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
-      contactId,
-      isTrusted: trusted
-    });
-  }
+  if (!contact) return { rowid };
+  const response = await updateContactByEmail({ email, isTrusted: trusted });
+  if (!response) return { rowid: null };
+  const contactId = contact.id;
+  emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
+    contactId,
+    isTrusted: trusted
+  });
   return { rowid };
 };
 
 const handleBlockRemoteContentEvent = async ({ rowid, params }, accountId) => {
-  // domain not exist in account :O
   const { recipientId, block } = params;
   await changeEmailBlockedAccount({
     id: accountId,

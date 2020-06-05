@@ -10,7 +10,7 @@ const migrateBlockRemoteContent = async (
     transaction
   });
 
-  if (accountDef.blockAll === undefined) {
+  if (accountDef.blockRemoteContent === undefined) {
     await queryInterface.addColumn(
       Table.ACCOUNT,
       'blockRemoteContent',
@@ -25,7 +25,7 @@ const rollbackBlockRemoteContent = async (queryInterface, transaction) => {
     transaction
   });
 
-  if (accountDef.blockAll !== undefined) {
+  if (accountDef.blockRemoteContent !== undefined) {
     await queryInterface.removeColumn(Table.ACCOUNT, 'blockRemoteContent', {
       transaction
     });

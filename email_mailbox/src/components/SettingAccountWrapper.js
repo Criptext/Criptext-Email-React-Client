@@ -766,7 +766,6 @@ class SettingAccountWrapper extends Component {
           ...this.state.blockRemoteContentParams
         };
         if (status === 200) {
-          let newState;
           blockRemoteContentParams['blockRemoteContentEnabled'] = nextValue;
           blockRemoteContentParams['isLoading'] = false;
           await changeEmailBlockedAccount({
@@ -777,12 +776,7 @@ class SettingAccountWrapper extends Component {
           } else {
             sendBlockRemoteContentTurnedOff();
           }
-          // eslint-disable-next-line prefer-const
-          newState = {
-            ...newState,
-            blockRemoteContentParams
-          };
-          this.setState(newState);
+          this.setState({ blockRemoteContentParams });
         } else {
           blockRemoteContentParams['isLoading'] = false;
           this.setState({ blockRemoteContentParams });

@@ -184,9 +184,9 @@
     "all": "todos",
     "bcc": "Bcc",
     "blockRemote": {
-      "text": "Imágenes bloqueadas por tu seguridad.",
+      "text": "Imágenes bloqueadas por tu seguridad",
       "show_images": "Mostrar Imágenes",
-      "text_2": "Imágenes desplegadas.",
+      "text_2": "Imágenes desplegadas",
       "show_always": "Mostrar siempre"
     },
     "blocked": {

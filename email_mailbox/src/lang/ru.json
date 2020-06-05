@@ -183,9 +183,9 @@
     "all": "все",
     "bcc": "Скрытая Копия",
     "blockRemote": {
-      "text": "Images blocked for your security.",
+      "text": "Images blocked for your security",
       "show_images": "Show images",
-      "text_2": "Images currently displayed.",
+      "text_2": "Images currently displayed",
       "show_always": "Show always"
     },
     "blocked": {

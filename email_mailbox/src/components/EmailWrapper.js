@@ -10,6 +10,7 @@ import {
   sendContactIsTrusted,
   sendBlockRemoteContentError
 } from '../utils/electronEventInterface';
+import { mySettings } from '../utils/electronInterface';
 import { getContactByIds, setBlockRemoteContent } from '../utils/ipc';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import string from '../lang';
@@ -34,7 +35,8 @@ class EmailWrapper extends Component {
       popupContent: undefined,
       popupContentBlockRemoteContent: undefined,
       inlineImages: [],
-      isLoadingBlockRemote: false
+      isLoadingBlockRemote: false,
+      language: 'en'
     };
   }
 
@@ -42,6 +44,7 @@ class EmailWrapper extends Component {
     return (
       <Email
         {...this.props}
+        language={this.state.language}
         buttonReplyStatus={this.state.buttonReplyStatus}
         buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
@@ -111,6 +114,7 @@ class EmailWrapper extends Component {
     newState['blockImagesContact'] = blockImagesContact;
     newState['blockImagesAccount'] = blockImagesAccount;
     newState['hasImages'] = hasImages;
+    newState['language'] = mySettings.language;
     if (email.unread) newState['displayEmail'] = true;
     if (inlineImages && inlineImages.length > 0)
       newState['inlineImages'] = inlineImages;
@@ -226,12 +230,17 @@ class EmailWrapper extends Component {
         hasImages,
         isFromMe
       });
-      this.setState({
-        displayEmail: !displayEmail,
-        blockImagesInline: blockingInline,
-        blockImagesContact,
-        blockImagesAccount
-      });
+      this.setState(
+        {
+          displayEmail: !displayEmail,
+          blockImagesInline: blockingInline,
+          blockImagesContact,
+          blockImagesAccount
+        },
+        () => {
+          this.setCollapseListener('add');
+        }
+      );
     }
   };
 
@@ -300,25 +309,8 @@ class EmailWrapper extends Component {
   };
 
   handlePopupConfirm = ev => {
-    ev.stopPropagation();
-    ev.preventDefault();
+    if (ev) ev.stopPropagation();
     this.setState({ popupContent: undefined }, this.props.onDeletePermanently);
-  };
-
-  handlePopupConfirmBlock = async ev => {
-    ev.stopPropagation();
-    ev.preventDefault();
-    const { status } = await setBlockRemoteContent(false);
-    if (status === 200) {
-      await this.props.onChangeEmailBlockedAccount();
-      sendBlockRemoteContentTurnedOff();
-    } else {
-      sendBlockRemoteContentError();
-    }
-    this.setState({
-      popupContentBlockRemoteContent: undefined,
-      blockImagesInline: false
-    });
   };
 
   dismissPopup = () => {
@@ -342,26 +334,30 @@ class EmailWrapper extends Component {
   };
 
   handleBlockingEmailInline = ev => {
-    ev.stopPropagation();
-    ev.preventDefault();
-    this.setState({ blockImagesInline: false });
-  };
-
-  handleIsTrustedContact = async ev => {
-    ev.stopPropagation();
-    ev.preventDefault();
-    await this.props.onChangeEmailBlockingContact();
-    sendContactIsTrusted();
-    this.setState({
-      blockImagesInline: false,
-      blockImagesContact: false,
-      blockImagesAccount: false
+    if (ev) ev.stopPropagation();
+    this.setState({ blockImagesInline: false }, () => {
+      this.setCollapseListener('add');
     });
   };
 
+  handleIsTrustedContact = async ev => {
+    if (ev) ev.stopPropagation();
+    await this.props.onChangeEmailBlockingContact();
+    sendContactIsTrusted();
+    this.setState(
+      {
+        blockImagesInline: false,
+        blockImagesContact: false,
+        blockImagesAccount: false
+      },
+      () => {
+        this.setCollapseListener('add');
+      }
+    );
+  };
+
   handleClickBlockRemoteContent = ev => {
-    ev.stopPropagation();
-    ev.preventDefault();
+    if (ev) ev.stopPropagation();
     this.setState({
       popupContentBlockRemoteContent: popups.block_remote_content
     });
@@ -369,19 +365,23 @@ class EmailWrapper extends Component {
 
   handlePopupConfirmBlock = async ev => {
     this.setState({ isLoadingBlockRemote: true });
-    ev.stopPropagation();
-    ev.preventDefault();
+    if (ev) ev.stopPropagation();
     const { status } = await setBlockRemoteContent(false);
     if (status === 200) {
       await this.props.onChangeEmailBlockedAccount();
       sendBlockRemoteContentTurnedOff();
-      this.setState({
-        popupContentBlockRemoteContent: undefined,
-        blockImagesInline: false,
-        blockImagesAccount: false,
-        blockImagesContact: false,
-        isLoadingBlockRemote: false
-      });
+      this.setState(
+        {
+          popupContentBlockRemoteContent: undefined,
+          blockImagesInline: false,
+          blockImagesAccount: false,
+          blockImagesContact: false,
+          isLoadingBlockRemote: false
+        },
+        () => {
+          this.setCollapseListener('add');
+        }
+      );
     } else {
       sendBlockRemoteContentError();
       this.setState({
