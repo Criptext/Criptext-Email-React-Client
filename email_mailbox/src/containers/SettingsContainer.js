@@ -172,6 +172,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const settings = await getUserSettings();
       const {
         devices,
+        blockRemoteContent,
         addresses,
         customerType,
         recoveryEmail,
@@ -209,6 +210,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
       return {
         aliases,
+        blockRemoteContent,
         customDomains,
         devices: formatDevicesData(devices),
         recoveryEmail,

@@ -62,6 +62,18 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.alias_status.success.deactivated
     },
+    blockRemoteTurnOff: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.block_remote_content.success.deactivated
+    },
+    blockRemoteTurnOn: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.block_remote_content.success.activated
+    },
+    contactIsTrusted: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.contact_is_trusted.success.description
+    },
     changePassword: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.alias_status.success.deactivated
@@ -123,6 +135,10 @@ const messagesContent = {
     }
   },
   error: {
+    blockRemoteTurnOff: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.block_remote_content.error
+    },
     changePassword: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.change_password.error.description

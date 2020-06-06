@@ -71,7 +71,7 @@ const deleteDatabase = () => {
   });
 };
 
-const CURRENT_VERSION = 2;
+const CURRENT_VERSION = 3;
 
 const Table = {
   ACCOUNT: 'account',
@@ -158,7 +158,8 @@ const initDatabaseEncrypted = async (
       autoBackupPath: Sequelize.STRING,
       isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
       isLoggedIn: { type: Sequelize.BOOLEAN, defaultValue: true },
-      customerType: { type: Sequelize.INTEGER, defaultValue: 0 }
+      customerType: { type: Sequelize.INTEGER, defaultValue: 0 },
+      blockRemoteContent: { type: Sequelize.BOOLEAN, defaultValue: true }
     },
     {
       sequelize,
@@ -564,12 +565,19 @@ const initDatabaseEncrypted = async (
   let migrationFiles = [];
   switch (localVersion.value) {
     case 1:
-      migrationFiles = ['20200422145912-customerType'];
+      migrationFiles = [
+        '20200422145912-customerType',
+        '20200512111423_addBlockAllColumn'
+      ];
+      break;
+    case 2:
+      migrationFiles = ['20200512111423_addBlockAllColumn'];
       break;
     default:
       migrationFiles = [
         '20200123161254-multipleAccounts',
-        '20200422145912-customerType'
+        '20200422145912-customerType',
+        '20200512111423_addBlockAllColumn.js'
       ];
       break;
   }

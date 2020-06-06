@@ -4,8 +4,10 @@ import FileWrapper from './FileWrapper';
 import MenuHOC from './MenuHOC';
 import PopupHOC from './PopupHOC';
 import DialogPopup from './DialogPopup';
+import BlockRemoteContentPopup from './BlockRemoteContentPopup';
 import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
+import EmailBlocked from './EmailBlocked';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import AvatarImage from './AvatarImage';
 import ButtonIcon from './ButtonIcon';
@@ -14,8 +16,10 @@ import string from '../lang';
 import './email.scss';
 
 const DeletePermanenltyPopup = PopupHOC(DialogPopup);
+const BlockRemotePopup = PopupHOC(BlockRemoteContentPopup);
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);
+const PopOverEmailBlocked = MenuHOC(EmailBlocked);
 const draftText = 'Draft';
 
 const Email = props => (
@@ -30,13 +34,35 @@ const Email = props => (
         theme={'dark'}
       />
     )}
+    {props.popupContentBlockRemoteContent && (
+      <BlockRemotePopup
+        popupPosition={{ left: '45%', top: '45%' }}
+        {...props.popupContentBlockRemoteContent}
+        isLoading={props.isLoadingBlockRemote}
+        onRightButtonClick={props.handlePopupConfirmBlock}
+        onLeftButtonClick={props.dismissPopup}
+        onTogglePopup={props.dismissPopup}
+        theme={'dark'}
+      />
+    )}
     <div
       className={`cptx-email-container ${defineEmailState(
         props.displayEmail,
         props.staticOpen
       )} ${defineEmailType(props.isUnsend, props.isDraft, props.isEmpty)}`}
     >
-      <div className="email-info" onClick={props.onToggleEmail}>
+      <div
+        className="email-info"
+        style={{
+          height:
+            props.blockImagesInline ||
+            props.blockImagesContact ||
+            props.blockImagesAccount
+              ? '95px'
+              : '65px'
+        }}
+        onClick={props.onToggleEmail}
+      >
         <div className="email-info-letter">
           <AvatarImage
             color={props.color}
@@ -71,11 +97,12 @@ const Email = props => (
             ? renderEmailInfoExpand(props)
             : renderEmailInfoCollapse(props.email.status, props.preview)}
         </div>
+        {renderEmailBlocked(props)}
       </div>
       <hr />
       <div className="email-body">
         <div disabled={props.hideView || props.isUnsend} className="email-text">
-          <div dangerouslySetInnerHTML={{ __html: props.content }} />
+          <div dangerouslySetInnerHTML={{ __html: theMail(props) }} />
         </div>
         {!!props.files.length &&
           isExpand(props.displayEmail, props.staticOpen) && (
@@ -117,6 +144,58 @@ const renderEmailInfoCollapse = (status, preview) => (
     <span className="email-preview-content">{preview}</span>
   </div>
 );
+
+const renderEmailBlocked = props => {
+  if (
+    props.blockImagesInline ||
+    props.blockImagesContact ||
+    props.blockImagesAccount
+  ) {
+    const width =
+      !props.blockImagesInline &&
+      (props.blockImagesContact || props.blockImagesAccount)
+        ? props.language === 'es'
+          ? '230px'
+          : '250px'
+        : props.language === 'es'
+          ? '320px'
+          : '285px';
+    return (
+      <div className="email-info-blocked">
+        <span>
+          <div className="image-blocked" />
+        </span>
+
+        {!props.blockImagesInline &&
+        (props.blockImagesContact || props.blockImagesAccount)
+          ? string.mailbox.blockRemote.text_2
+          : string.mailbox.blockRemote.text}
+        <span>
+          <button
+            className="email-info-button-show-images"
+            onClick={ev => props.onTogglePopOverEmailBlocked(ev)}
+          >
+            {!props.blockImagesInline &&
+            (props.blockImagesContact || props.blockImagesAccount)
+              ? string.mailbox.blockRemote.show_always
+              : string.mailbox.blockRemote.show_images}
+            <PopOverEmailBlocked
+              menuPosition={{ left: width, top: '90px' }}
+              isHidden={props.isHiddenPopOverEmailBlocked}
+              onToggleMenu={props.onTogglePopOverEmailBlocked}
+              onBlockImagesInline={props.handleBlockingEmail}
+              onBlockImagesAccount={props.handleClickBlockRemoteContent}
+              onBlockImagesContact={props.handleIsTrustedContact}
+              blockImagesInline={props.blockImagesInline}
+              blockImagesContact={props.blockImagesContact}
+              blockImagesAccount={props.blockImagesAccount}
+            />
+          </button>
+        </span>
+      </div>
+    );
+  }
+};
 
 const renderEmailInfoExpand = props => (
   <div className="email-info-content-line">
@@ -244,6 +323,48 @@ const renderIconSecure = (onMouseEnterTooltip, onMouseLeaveTooltip, id) => {
   );
 };
 
+const theMail = props => {
+  const { content, blockImagesInline } = props;
+  if (!blockImagesInline)
+    return `<div class="email-container">${content}</div>`;
+  return getDOM(content);
+};
+
+const getDOM = html => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(
+    `<div class="email-container">${html}</div>`,
+    'text/html'
+  );
+  const allImages = [...doc.getElementsByTagName('img')];
+  // eslint-disable-next-line prefer-const
+  for (let i = 0; i < allImages.length; i++) {
+    const img = allImages[i];
+    const originalHeight = img.height;
+    const originalWidth = img.width;
+    const el = doc.createElement('div');
+    el.innerHTML = `<div style='height: ${originalHeight}px; width: ${originalWidth}px; min-width: 20px; min-height: 20px; border: solid 1px #bfc3c8;'>
+                      <svg style='max-height: 20px; max-width: 20px;'  viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <title>Group 3</title>
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <g id="BRC-Desktop" transform="translate(-296.000000, -210.000000)" fill="#BFC3C8">
+                            <g id="Group" transform="translate(296.000000, 210.000000)">
+                              <g id="Group-3">
+                                <path d="M7.90386809,13.0000855 L2.56152307,13.0000855 C2.08180568,13.0000855 1.86804559,12.6544802 2.08429126,12.2280413 L5.06699009,6.34697814 C5.28323575,5.9205392 5.6950139,5.88177203 5.98665556,6.26119545 L8.98592494,10.1634829 C9.2775666,10.5429064 9.78711099,10.5750749 10.1251502,10.2352435 L10.858397,9.49536778 C11.1956077,9.15553636 11.6918956,9.19760287 11.9677952,9.58857397 L13.8676087,12.2907287 C14.1418513,12.6825246 13.9761458,13.0000855 13.4964284,13.0000855 L7.90386809,13.0000855 Z M12.9999145,5.0000855 C12.9999145,6.10399398 12.103823,7.0000855 10.9999145,7.0000855 C9.89505273,7.0000855 8.9999145,6.10399398 8.9999145,5.0000855 C8.9999145,3.89617702 9.89505273,3.0000855 10.9999145,3.0000855 C12.103823,3.0000855 12.9999145,3.89617702 12.9999145,5.0000855 Z M1.80972598,8.55e-05 C0.811496627,8.55e-05 -8.55e-05,0.810963882 -8.55e-05,1.81101944 L-8.55e-05,13.1916517 C-8.55e-05,14.1900405 0.811496627,15.0000855 1.80972598,15.0000855 L14.1909363,15.0000855 C15.1883324,15.0000855 15.9999145,14.1900405 15.9999145,13.1916517 L15.9999145,1.81101944 C15.9999145,0.810963882 15.1891656,8.55e-05 14.1909363,8.55e-05 L1.80972598,8.55e-05 Z" id="Fill-1"></path>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </div>`;
+    img.insertAdjacentElement('afterend', el);
+    img.remove();
+  }
+  return `<div class="email-container">${new XMLSerializer().serializeToString(
+    doc
+  )}</div>`;
+};
+
 const defineEmailStatus = status => {
   switch (status) {
     case EmailStatus.SENT:
@@ -314,6 +435,9 @@ renderEmailInfoExpand.propTypes = {
 
 Email.propTypes = {
   avatarUrl: PropTypes.string,
+  blockImagesInline: PropTypes.bool,
+  blockImagesContact: PropTypes.bool,
+  blockImagesAccount: PropTypes.bool,
   borderUrl: PropTypes.string,
   color: PropTypes.string,
   content: PropTypes.string,
@@ -327,6 +451,7 @@ Email.propTypes = {
   hideView: PropTypes.bool,
   isDraft: PropTypes.bool,
   isEmpty: PropTypes.bool,
+  isLoadingBlockRemote: PropTypes.bool,
   isUnsend: PropTypes.bool,
   letters: PropTypes.string,
   onForward: PropTypes.func,
@@ -336,8 +461,12 @@ Email.propTypes = {
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
   popupContent: PropTypes.object,
+  popupContentBlockRemoteContent: PropTypes.object,
+  handlePopupConfirmBlock: PropTypes.func,
   preview: PropTypes.string,
-  staticOpen: PropTypes.bool
+  staticOpen: PropTypes.bool,
+  isHiddenPopOverEmailBlocked: PropTypes.bool,
+  onTogglePopOverEmailBlocked: PropTypes.func
 };
 
 export default Email;

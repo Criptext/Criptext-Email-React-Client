@@ -183,6 +183,17 @@
   "mailbox": {
     "all": "todos",
     "bcc": "Bcc",
+    "blockRemote": {
+      "text": "Imágenes bloqueadas por tu seguridad",
+      "show_images": "Mostrar Imágenes",
+      "text_2": "Imágenes desplegadas",
+      "show_always": "Mostrar siempre"
+    },
+    "blocked": {
+      "once": "Esta vez",
+      "contact": "Siempre de este contacto",
+      "total": "Apagar bloqueo de imágenes"
+    },
     "cc": "Cc",
     "date": "Fecha",
     "delete": "Borrar",
@@ -254,12 +265,30 @@
     "previous_message": "Correo Anterior"
   },
   "messages": {
+    "alias_status": {
+      "success": {
+        "activated": "Aliases activados",
+        "deactivated": "Alias desactivados"
+      }
+    },
+    "block_remote_content": {
+      "success": {
+        "activated": "Las imágenes serán bloqueadas",
+        "deactivated": "Las imágenes no serán bloqueadas"
+      },
+      "error": "Algo salió mal. Prueba después."
+    },
     "change_password": {
       "success": {
         "description": "Se ha modificado su contraseña"
       },
       "error": {
         "description": "Error al cambiar la contraseña. La contraseña no ha sido modificada"
+      }
+    },
+    "contact_is_trusted": {
+      "success": {
+        "description": "Contacto marcado como confiable"
       }
     },
     "download_file": {
@@ -446,6 +475,12 @@
       "paragraphs": {
         "header": "Eliminando toda la información..."
       }
+    },
+    "block_remote_content": {
+      "title": "Turn Off Image Block ",
+      "message": "Your security is affected by deactivating this function. You can reactivate this function from the general menu.",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Save"
     },
     "password_changed": {
       "title": "Confirma tu nueva contraseña",

@@ -256,6 +256,10 @@ export const setTwoFactorAuth = async enable => {
   return await ipc.callMain('client-set-two-factor-auth', enable);
 };
 
+export const setBlockRemoteContent = async enable => {
+  return await ipc.callMain('client-set-block-remote-content', enable);
+};
+
 export const syncBegin = async () => {
   return await ipc.callMain('client-sync-begin');
 };
@@ -312,6 +316,14 @@ export const createAlias = async params => {
 
 export const createCustomDomain = async params => {
   return await ipc.callMain('db-create-custom-domain', params);
+};
+
+export const changeEmailBlockedAccount = async params => {
+  return await ipc.callMain('db-change-account-blocked', params);
+};
+
+export const changeEmailBlockedContact = async params => {
+  return await ipc.callMain('db-change-contact-blocked', params);
 };
 
 export const getAlias = async params => {
@@ -534,8 +546,12 @@ export const updateAlias = async params => {
   return await ipc.callMain('db-update-alias', params);
 };
 
-export const updateContactByEmail = async ({ email, name }) => {
-  return await ipc.callMain('db-update-contact-by-email', { email, name });
+export const updateContactByEmail = async ({ email, name, isTrusted }) => {
+  return await ipc.callMain('db-update-contact-by-email', {
+    email,
+    name,
+    isTrusted
+  });
 };
 
 export const updateContactSpamScore = async params => {

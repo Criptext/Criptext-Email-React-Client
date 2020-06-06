@@ -183,6 +183,17 @@
   "mailbox": {
     "all": "all",
     "bcc": "Bcc",
+    "blockRemote": {
+      "text": "Images blocked for your security",
+      "show_images": "Show images",
+      "text_2": "Images currently displayed",
+      "show_always": "Show always"
+    },
+    "blocked": {
+      "once": "Once",
+      "contact": "Always from this sender",
+      "total": "Turn off image blocking"
+    },
     "cc": "Cc",
     "date": "Date",
     "delete": "Delete",
@@ -256,9 +267,16 @@
   "messages": {
     "alias_status": {
       "success": {
-        "activated": "Alias activated ",
+        "activated": "Alias activated",
         "deactivated": "Alias deactivated"
       }
+    },
+    "block_remote_content": {
+      "success": {
+        "activated": "The images will be locked",
+        "deactivated": "The images will not be locked"
+      },
+      "error": "Something went wrong at blocking email. Try again later"
     },
     "change_password": {
       "success": {
@@ -266,6 +284,11 @@
       },
       "error": {
         "description": "Failed to change password. The password has not been modified"
+      }
+    },
+    "contact_is_trusted": {
+      "success": {
+        "description": "Contact marked as trusted"
       }
     },
     "download_file": {
@@ -452,6 +475,12 @@
       "paragraphs": {
         "header": "Removing all data..."
       }
+    },
+    "block_remote_content": {
+      "title": "Turn Off Image Block ",
+      "message": "Your security is affected by deactivating this function. You can reactivate this function from the general menu.",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Save"
     },
     "password_changed": {
       "title": "Confirm your new password",

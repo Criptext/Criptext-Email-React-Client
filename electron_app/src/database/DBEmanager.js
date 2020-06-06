@@ -77,6 +77,16 @@ const defineActiveAccountById = async (accountId, prevTrx) => {
   );
 };
 
+const updateContactEmailBlocked = data => {
+  const params = {
+    isTrusted: data.isTrusted
+  };
+  const whereParam = {
+    id: data.contactId
+  };
+  return Contact().update(params, { where: whereParam });
+};
+
 const getAllAccounts = () => {
   if (!getDB()) return [];
   return Account()
@@ -106,6 +116,7 @@ const updateAccount = ({
   jwt,
   refreshToken,
   name,
+  blockRemoteContent,
   customerType,
   privKey,
   pubKey,
@@ -128,6 +139,7 @@ const updateAccount = ({
     jwt,
     refreshToken,
     name,
+    blockRemoteContent,
     customerType,
     privKey,
     pubKey,
@@ -272,18 +284,19 @@ const getContactByEmails = ({ accountId, emails }, trx) => {
 
 const getContactByIds = (ids, trx) => {
   return Contact().findAll({
-    attributes: ['id', 'email', 'name'],
+    attributes: ['id', 'email', 'name', 'isTrusted'],
     where: { id: ids },
     raw: true,
     transaction: trx
   });
 };
 
-const updateContactByEmail = ({ email, name }, trx) => {
-  return Contact().update(
-    { name },
-    { where: { email: { [Op.eq]: email } }, transaction: trx }
-  );
+const updateContactByEmail = ({ email, name, isTrusted }, trx) => {
+  const updatedParam = name ? { name } : { isTrusted };
+  return Contact().update(updatedParam, {
+    where: { email: { [Op.eq]: email } },
+    transaction: trx
+  });
 };
 
 const updateContactScore = async (emailId, trx) => {
@@ -1865,6 +1878,7 @@ module.exports = {
   updateAccount,
   updateAlias,
   updateContactByEmail,
+  updateContactEmailBlocked,
   updateContactSpamScore,
   updateCustomDomain,
   updateEmail,

@@ -11,6 +11,7 @@ import {
 } from './electronInterface';
 import {
   changeAccountApp,
+  changeEmailBlockedAccount,
   checkForUpdates,
   cleanDatabase,
   cleanDataLogout,
@@ -493,6 +494,12 @@ export const handleEvent = ({
     }
     case SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED: {
       return handlePeerRecoveryEmailConfirmed(accountRecipientId);
+    }
+    case SocketCommand.PEER_SET_BLOCK_REMOTE_CONTENT: {
+      return handleBlockRemoteContentEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.PEER_SET_TRUSTED_EMAIL: {
+      return handlePeerSetTrustedEvent(incomingEvent);
     }
     case SocketCommand.NEW_ANNOUNCEMENT: {
       return handleNewAnnouncementEvent(incomingEvent);
@@ -1401,6 +1408,30 @@ const handleAddressCreatedEvent = async ({ rowid, params }, accountId) => {
   return { rowid };
 };
 
+const handlePeerSetTrustedEvent = async ({ rowid, params }) => {
+  const { email, trusted } = params;
+  const [contact] = await getContactByEmails({ emails: [email] });
+  if (!contact) return { rowid };
+  const response = await updateContactByEmail({ email, isTrusted: trusted });
+  if (!response) return { rowid: null };
+  const contactId = contact.id;
+  emitter.emit(Event.CHANGE_SET_TRUSTED_ACCOUNT, {
+    contactId,
+    isTrusted: trusted
+  });
+  return { rowid };
+};
+
+const handleBlockRemoteContentEvent = async ({ rowid, params }, accountId) => {
+  const { recipientId, block } = params;
+  await changeEmailBlockedAccount({
+    id: accountId,
+    recipientId,
+    blockRemoteContent: block ? 1 : 0
+  });
+  return { rowid };
+};
+
 const handleAddressStatusUpdateEvent = async ({ rowid, params }, accountId) => {
   const { addressId, activate } = params;
   const alias = {
@@ -1906,6 +1937,38 @@ export const sendTwoFactorAuthenticationTurnedOffMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendBlockRemoteContentTurnedOff = () => {
+  const messageData = {
+    ...Messages.success.blockRemoteTurnOff,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendContactIsTrusted = () => {
+  const messageData = {
+    ...Messages.success.contactIsTrusted,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendBlockRemoteContentTurnedOn = () => {
+  const messageData = {
+    ...Messages.success.blockRemoteTurnOn,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendBlockRemoteContentError = () => {
+  const messageData = {
+    ...Messages.error.blockRemoteTurnOff,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendAccountDeletedEvent = () => {
   emitter.emit(Event.ACCOUNT_DELETED);
 };
@@ -2075,6 +2138,7 @@ export const sendMailboxEvent = (eventName, eventData) => {
 export const Event = {
   ACCOUNT_DELETED: 'account-deleted',
   BIG_UPDATE_AVAILABLE: 'big-update-available',
+  CHANGE_SET_TRUSTED_ACCOUNT: 'change-set-trusted-account',
   DEVICE_REMOVED: 'device-removed',
   DISABLE_WINDOW: 'add-window-overlay',
   DISPLAY_MESSAGE: 'display-message',

@@ -59,10 +59,11 @@ class Thread extends Component {
                 data-tip
                 data-for="btnPrevNav"
                 onClick={
-                  !this.props.isFirstThread &&
-                  (() => {
-                    onSelectThread(this.props.previousThread);
-                  })
+                  !this.props.isFirstThread
+                    ? () => {
+                        onSelectThread(this.props.previousThread);
+                      }
+                    : undefined
                 }
               >
                 <i className="icon-arrow-right" />

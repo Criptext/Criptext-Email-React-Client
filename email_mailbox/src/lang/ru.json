@@ -182,6 +182,17 @@
   "mailbox": {
     "all": "все",
     "bcc": "Скрытая Копия",
+    "blockRemote": {
+      "text": "Images blocked for your security",
+      "show_images": "Show images",
+      "text_2": "Images currently displayed",
+      "show_always": "Show always"
+    },
+    "blocked": {
+      "once": "Once",
+      "contact": "Always from this sender",
+      "total": "Turn off image blocking"
+    },
     "cc": "Копия",
     "date": "Дата",
     "delete": "Удалить",
@@ -252,12 +263,30 @@
     "previous_message": "Previous Email"
   },
   "messages": {
+    "alias_status": {
+      "success": {
+        "activated": "Alias activated",
+        "deactivated": "Alias deactivated"
+      }
+    },
+    "block_remote_content": {
+      "success": {
+        "activated": "The images will be locked",
+        "deactivated": "The images will not be locked"
+      },
+      "error": "Something went wrong at blocking email"
+    },
     "change_password": {
       "success": {
         "description": "Пароль изменен"
       },
       "error": {
         "description": "Не удалось изменить пароль. Пароль не был изменен"
+      }
+    },
+    "contact_is_trusted": {
+      "success": {
+        "description": "Contact marked as trusted"
       }
     },
     "download_file": {
@@ -439,6 +468,12 @@
       "paragraphs": {
         "header": "Удаление всех данных..."
       }
+    },
+    "block_remote_content": {
+      "title": "Turn Off Image Block ",
+      "message": "Your security is affected by deactivating this function. You can reactivate this function from the general menu.",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Save"
     },
     "password_changed": {
       "title": "Confirm your new password",

@@ -6,6 +6,7 @@ Object {
     Object {
       "email": "userd@criptext.com",
       "id": 6,
+      "isTrusted": 0,
       "name": null,
     },
   ],
@@ -13,6 +14,7 @@ Object {
     Object {
       "email": "userc@criptext.com",
       "id": 5,
+      "isTrusted": 0,
       "name": null,
     },
   ],
@@ -20,6 +22,7 @@ Object {
     Object {
       "email": "user@criptext.com",
       "id": 1,
+      "isTrusted": 0,
       "name": "User me",
     },
   ],
@@ -27,11 +30,13 @@ Object {
     Object {
       "email": "usera@criptext.com",
       "id": 3,
+      "isTrusted": 0,
       "name": "User A",
     },
     Object {
       "email": "userb@criptext.com",
       "id": 4,
+      "isTrusted": 0,
       "name": null,
     },
   ],
@@ -306,6 +311,7 @@ Object {
     Object {
       "email": "user@criptext.com",
       "id": 1,
+      "isTrusted": 0,
       "name": "User me",
     },
   ],
@@ -313,6 +319,7 @@ Object {
     Object {
       "email": "userf@criptext.com",
       "id": 2,
+      "isTrusted": 0,
       "name": null,
     },
   ],

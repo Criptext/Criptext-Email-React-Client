@@ -48,6 +48,7 @@ const SettingAccount = props => (
       <div className="cptx-section-block-content">
         <ReadReceiptsBlock {...props} />
         <TwoFactorAuthenticationBlock {...props} />
+        <EmailBlockingBlock {...props} />
         <SecurityPin {...props} />
       </div>
       <div className="cptx-section-block-title">
@@ -210,7 +211,37 @@ const TwoFactorAuthenticationBlock = props => (
   </div>
 );
 
+const EmailBlockingBlock = props => (
+  <div id="settings-general-two-factor" className="cptx-section-item">
+    <span className="cptx-section-item-title">Block Images</span>
+    <span className="cptx-section-item-description">
+      Block images from unauthorized devices.
+    </span>
+    <div className="cptx-section-item-control">
+      {props.blockRemoteContentIsLoading ? (
+        <BlockRemoteContentLoadingLabel />
+      ) : (
+        <Switch
+          theme="two"
+          name="emailBlockingSwitch"
+          onChange={props.onChangeBlockRemoteContent}
+          checked={!!props.blockRemoteContentEnabled}
+        />
+      )}
+    </div>
+  </div>
+);
+
 const TwoFactorLoadingLabel = () => (
+  <div className="loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
+const BlockRemoteContentLoadingLabel = () => (
   <div className="loading-ring">
     <div />
     <div />
@@ -414,6 +445,12 @@ SettingAccount.propTypes = {
   setReplyToPopupParams: PropTypes.object,
   settingsPopupType: PropTypes.string,
   upgradeToPlusType: PropTypes.string
+};
+
+EmailBlockingBlock.propTypes = {
+  blockRemoteContentIsLoading: PropTypes.bool,
+  onChangeBlockRemoteContent: PropTypes.func,
+  blockRemoteContentEnabled: PropTypes.bool
 };
 
 export default SettingAccount;

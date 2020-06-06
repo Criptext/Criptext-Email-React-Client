@@ -211,7 +211,7 @@
     background-color: transparent;
     display: flex;
     flex-direction: row;
-    height: 65px;
+    flex-wrap: wrap;
 
     .email-info-letter{
       align-items: center;
@@ -236,6 +236,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
+      margin-top: 6px;
       width: calc(100% - 46px);
 
       .email-info-content-line{
@@ -246,7 +247,7 @@
         justify-content: space-between;
 
         &:last-child{
-          height: 26px;
+          height: 35px;
         }
 
         .email-info-content-from{
@@ -277,6 +278,47 @@
             text-align: right;
           }
         }
+      }
+    }
+
+    .email-info-blocked{
+      background-color: transparent;
+      margin-bottom: 15px;
+      font-family: NunitoSans;
+      font-size: 14px;
+      font-weight: 100;
+      line-height: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #4a4a4a;
+      margin-left: 46px;
+      display: flex;
+      align-items:center;
+
+      .image-blocked {
+        height: 15px;
+        width: 15px;
+        margin-right: 5px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        background-image: url(../#{$_PATH_TO_IMAGES}/image_blocked.svg);
+      }
+
+      svg {
+       height: 15px;
+       width: 15px;
+       margin-right: 5px;
+      }
+
+      button {
+        background-color: transparent;
+        color: #0091ff;
+        cursor: pointer;
+        font-family: NunitoSans;
+        font-size: 14px;
+        font-weight: 200;
       }
     }
   }
@@ -442,6 +484,10 @@
               }
             }
           }
+        }
+
+        .email-info-blocked {
+          color: #798091;
         }
       }
 

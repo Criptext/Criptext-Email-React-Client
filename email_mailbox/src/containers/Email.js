@@ -7,6 +7,8 @@ import {
   defineLargeTime,
   defineUnsentText
 } from './../utils/TimeUtils';
+import { getContactByIds } from './../utils/ipc';
+import { SocketCommand } from './../utils/const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { getTwoCapitalLetters, hasAnySubstring } from './../utils/StringUtils';
@@ -21,9 +23,13 @@ import {
   sendOpenEmailSource,
   downloadFileInFileSystem,
   checkFileDownloaded,
-  reportPhishing
+  reportPhishing,
+  changeEmailBlockedAccount,
+  changeEmailBlockedContact,
+  postPeerEvent
 } from './../utils/ipc';
 import {
+  modifyContactIsTrusted,
   removeEmails,
   unsendEmail,
   updateEmailLabels,
@@ -62,6 +68,46 @@ const definePreviewAndContent = (email, isCollapse, inlineImages) => {
         : emptyEmailText
       : addCollapseDiv(email.content || emptyEmailText, email.key, isCollapse)
   };
+};
+
+const handlePeerEventIsTrustedReply = async (
+  contacts,
+  contactIds,
+  dispatch
+) => {
+  const contactsWithoutIsTrusted = contacts.filter(
+    contact => contact.isTrusted === undefined
+  );
+  const contactsFromDb = contactsWithoutIsTrusted.length
+    ? await getContactByIds(contactIds)
+    : [];
+
+  const contactsToSend = [...contacts, ...contactsFromDb].filter(
+    contact => !contact.isTrusted
+  );
+  if (contactsToSend.length) {
+    await changeEmailBlockedContact({
+      contactId: contactsToSend.map(contact => contact.id),
+      isTrusted: true
+    });
+    await Promise.all(
+      contactsToSend.map(async contact => {
+        const contactEmail = contact.email;
+        const eventParams = {
+          cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+          params: {
+            email: contactEmail,
+            trusted: true
+          }
+        };
+        await postPeerEvent({ data: eventParams });
+      })
+    );
+
+    dispatch(
+      modifyContactIsTrusted(contactsToSend.map(contact => contact.id), true)
+    );
+  }
 };
 
 const makeMapStateToProps = () => {
@@ -105,6 +151,7 @@ const makeMapStateToProps = () => {
       avatarUrl,
       borderUrl,
       color,
+      blockRemoteContent: myAccount.activeAccount.blockRemoteContent,
       content,
       date: defineTimeByToday(date),
       dateLong: defineLargeTime(date),
@@ -196,13 +243,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: composerEvents.FORWARD
       });
     },
-    onMarkAsSpam: ev => {
+    onMarkAsSpam: async ev => {
       ev.stopPropagation();
       const params = {
         emails: [email.from[0].email],
         type: 'spam'
       };
       reportPhishing(params);
+
+      await changeEmailBlockedContact({
+        contactId: email.fromContactIds,
+        isTrusted: false
+      });
+      const emailText = email.from[0].email;
+      const eventParams = {
+        cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+        params: {
+          email: emailText,
+          trusted: false
+        }
+      };
+      await postPeerEvent({ data: eventParams });
+
       onMarkAsSpam();
     },
     onMarkUnread: ev => {
@@ -220,26 +282,41 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       sendPrintEmailEvent(email.id);
     },
-    onReplyEmail: ev => {
+    onReplyEmail: async ev => {
       ev.stopPropagation();
       const keyEmailToRespond = email.key;
+      await handlePeerEventIsTrustedReply(
+        email.from,
+        email.fromContactIds,
+        dispatch
+      );
       openFilledComposerWindow({
         keyEmailToRespond,
         type: composerEvents.REPLY
       });
     },
-    onReplyLast: () => {
+    onReplyLast: async () => {
       if (isLast) {
         const keyEmailToRespond = email.key;
+        await handlePeerEventIsTrustedReply(
+          email.from,
+          email.fromContactIds,
+          dispatch
+        );
         openFilledComposerWindow({
           keyEmailToRespond,
           type: composerEvents.REPLY
         });
       }
     },
-    onReplyAll: ev => {
+    onReplyAll: async ev => {
       ev.stopPropagation();
       const keyEmailToRespond = email.key;
+      await handlePeerEventIsTrustedReply(
+        email.from,
+        email.fromContactIds,
+        dispatch
+      );
       openFilledComposerWindow({
         keyEmailToRespond,
         type: composerEvents.REPLY_ALL
@@ -264,7 +341,45 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         sendMailboxEvent(Event.DISPLAY_MESSAGE, messageData);
         return;
       }
+
+      await changeEmailBlockedContact({
+        contactId: email.fromContactIds,
+        isTrusted: false
+      });
+      const emailText = email.from[0].email;
+      const eventParams = {
+        cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+        params: {
+          email: emailText,
+          trusted: false
+        }
+      };
+      await postPeerEvent({ data: eventParams });
+
       onMarkAsSpam();
+    },
+    onChangeEmailBlockingContact: async () => {
+      await changeEmailBlockedContact({
+        contactId: email.fromContactIds,
+        isTrusted: true
+      });
+      const emailText = email.from[0].email;
+      const eventParams = {
+        cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+        params: {
+          email: emailText,
+          trusted: true
+        }
+      };
+      await postPeerEvent({ data: eventParams });
+
+      dispatch(modifyContactIsTrusted([email.fromContactIds[0]], true));
+    },
+    onChangeEmailBlockedAccount: async () => {
+      await changeEmailBlockedAccount({
+        id: email.accountId,
+        blockRemoteContent: false
+      });
     },
     onUnsendEmail: () => {
       const contactIds = [...email.toIds, ...email.ccIds, ...email.bccIds];

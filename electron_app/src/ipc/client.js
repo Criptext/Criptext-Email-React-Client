@@ -210,6 +210,11 @@ ipc.answerRenderer('client-set-two-factor-auth', enable => {
   return clientManager.setTwoFactorAuth(data);
 });
 
+ipc.answerRenderer('client-set-block-remote-content', enable => {
+  const data = { enable, recipientId: myAccount.recipientId };
+  return clientManager.blockRemoteContent(data);
+});
+
 ipc.answerRenderer('client-sync-accept', randomId => {
   const data = { randomId, recipientId: myAccount.recipientId };
   return clientManager.syncAccept(data);
