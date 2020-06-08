@@ -213,9 +213,11 @@ const TwoFactorAuthenticationBlock = props => (
 
 const EmailBlockingBlock = props => (
   <div id="settings-general-two-factor" className="cptx-section-item">
-    <span className="cptx-section-item-title">Block Images</span>
+    <span className="cptx-section-item-title">
+      {string.settings.block_remote_content.title}
+    </span>
     <span className="cptx-section-item-description">
-      Block images from unauthorized devices.
+      {string.settings.block_remote_content.description}
     </span>
     <div className="cptx-section-item-control">
       {props.blockRemoteContentIsLoading ? (

@@ -5,7 +5,12 @@ import {
   removeLabelIdThread,
   sendOpenEvent
 } from '../actions';
-import { reportPhishing } from '../utils/ipc';
+import {
+  reportPhishing,
+  changeEmailBlockedContact,
+  postPeerEvent
+} from '../utils/ipc';
+import { SocketCommand } from './../utils/const';
 import { parseContactRow } from '../utils/EmailUtils';
 import { matchOwnEmail } from '../utils/ContactUtils';
 import { makeGetEmails } from './../selectors/emails';
@@ -72,24 +77,50 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onLoadEmails: emailIds => {
       dispatch(loadEmails({ emailIds }));
     },
-    onRemoveLabelIdThread: (thread, labelId) => {
+    onRemoveLabelIdThread: async (thread, labelId) => {
       const threadId = thread.threadId;
+      const notspamEmails =
+        labelId === LabelType.spam.id
+          ? thread.fromContactName
+              .map(fromAddress => {
+                return parseContactRow(fromAddress).email;
+              })
+              .filter(fromEmail => {
+                return !matchOwnEmail(myAccount.recipientId, fromEmail);
+              })
+          : undefined;
       if (labelId === LabelType.spam.id) {
-        const notspamEmails = thread.fromContactName
-          .map(fromAddress => {
-            return parseContactRow(fromAddress).email;
-          })
-          .filter(fromEmail => {
-            return !matchOwnEmail(myAccount.recipientId, fromEmail);
-          });
         const params = {
           emails: notspamEmails,
           type: 'notspam'
         };
+
+        await changeEmailBlockedContact({
+          email: notspamEmails,
+          isTrusted: true
+        });
+
+        await Promise.all(
+          notspamEmails.map(async hamEmail => {
+            const eventParams = {
+              cmd: SocketCommand.PEER_SET_TRUSTED_EMAIL,
+              params: {
+                email: hamEmail,
+                trusted: true
+              }
+            };
+            await postPeerEvent({ data: eventParams });
+          })
+        );
         reportPhishing(params);
       }
       dispatch(
-        removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
+        removeLabelIdThread(
+          ownProps.mailboxSelected.id,
+          threadId,
+          labelId,
+          notspamEmails
+        )
       );
     },
     onToggleStar: (thread, isStarred) => {

@@ -297,11 +297,14 @@ class SettingAccountWrapper extends Component {
         .isLoading;
       const stillReadReceiptsLoading = this.state.readReceipts.isLoading;
       const stillReplyToLoading = this.state.replyToParams.isLoading;
+      const stillBlockRemoteLoading = this.state.blockRemoteContentParams
+        .isLoading;
       if (
         stillTwoFactorAuthLoading ||
         stillRecoveryEmailLoading ||
         stillReadReceiptsLoading ||
-        stillReplyToLoading
+        stillReplyToLoading ||
+        stillBlockRemoteLoading
       ) {
         this.setState({
           twoFactorParams: {
@@ -318,6 +321,10 @@ class SettingAccountWrapper extends Component {
           },
           replyToParams: {
             ...this.state.replyToParams,
+            isLoading: false
+          },
+          blockRemoteContentParams: {
+            ...this.state.blockRemoteContentParams,
             isLoading: false
           }
         });

@@ -23,6 +23,7 @@ import {
   deleteEmailLabel,
   deleteEmailsByIds,
   deleteEmailsByThreadIdAndLabelId,
+  getContactByEmails,
   getEmailsIdsByThreadIds,
   getEmailsByThreadIdAndLabelId,
   getEmailsGroupByThreadByParams,
@@ -44,6 +45,7 @@ import { SocketCommand } from '../utils/const';
 import { filterTemporalThreadIds } from '../utils/EmailUtils';
 import { defineThreads } from '../utils/ThreadUtils';
 import { defineFiles } from '../utils/FileUtils';
+import { modifyContactIsTrusted } from './contacts';
 
 export const addThreads = (labelId, threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -167,7 +169,8 @@ export const addMoveLabelIdThreads = ({
   threadsParams,
   labelIdToAdd,
   labelIdToRemove,
-  currentLabelId
+  currentLabelId,
+  spamEmails
 }) => {
   return async dispatch => {
     try {
@@ -221,6 +224,12 @@ export const addMoveLabelIdThreads = ({
       }
       const emailLabels = formAddThreadLabelParams(emails, labelIdToAdd);
       await createEmailLabel({ emailLabels });
+      if (labelIdToAdd === LabelType.spam.id && spamEmails) {
+        const contacts = await getContactByEmails({ emails: spamEmails });
+        dispatch(
+          modifyContactIsTrusted(contacts.map(contact => contact.id), false)
+        );
+      }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
     }
@@ -265,7 +274,12 @@ export const moveThreads = (labelId, threadIds, labelIdToAdd) => ({
   labelIdToAdd
 });
 
-export const removeLabelIdThread = (currentLabelId, threadId, labelId) => {
+export const removeLabelIdThread = (
+  currentLabelId,
+  threadId,
+  labelId,
+  hamEmails
+) => {
   return async dispatch => {
     try {
       const [label] = await getLabelById(labelId);
@@ -289,6 +303,13 @@ export const removeLabelIdThread = (currentLabelId, threadId, labelId) => {
 
       const params = formRemoveThreadLabelParams(emails, labelId);
       await deleteEmailLabel(params);
+
+      if (labelId === LabelType.spam.id && hamEmails) {
+        const contacts = await getContactByEmails({ emails: hamEmails });
+        dispatch(
+          modifyContactIsTrusted(contacts.map(contact => contact.id), true)
+        );
+      }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
     }
@@ -321,7 +342,8 @@ export const removeLabelIdThreadDraft = (currentLabelId, uniqueId, labelId) => {
 export const removeLabelIdThreads = (
   currentLabelId,
   threadsParams,
-  labelIdToRemove
+  labelIdToRemove,
+  hamEmails
 ) => {
   return async dispatch => {
     try {
@@ -365,6 +387,13 @@ export const removeLabelIdThreads = (
           ? [LabelType.spam.id, LabelType.trash.id]
           : [labelIdToRemove];
       dispatch(removeEmailLabels(emails, labelsToRemove));
+
+      if (labelIdToRemove === LabelType.spam.id && hamEmails) {
+        const contacts = await getContactByEmails({ emails: hamEmails });
+        dispatch(
+          modifyContactIsTrusted(contacts.map(contact => contact.id), true)
+        );
+      }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
     }

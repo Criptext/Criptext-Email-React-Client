@@ -81,9 +81,10 @@ const updateContactEmailBlocked = data => {
   const params = {
     isTrusted: data.isTrusted
   };
-  const whereParam = {
-    id: data.contactId
-  };
+
+  const whereParam = data.contactId
+    ? { id: data.contactId }
+    : { email: data.email };
   return Contact().update(params, { where: whereParam });
 };
 
