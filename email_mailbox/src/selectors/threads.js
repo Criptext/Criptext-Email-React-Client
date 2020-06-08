@@ -4,7 +4,8 @@ import string from './../lang';
 
 const getThreadsByMailboxOrSuggestions = (state, props) => {
   const mailbox = state.get('threads').get(`${props.mailboxSelected.id}`);
-  if (!mailbox) return state.get('suggestions').get('threads');
+  if (!mailbox || props.mailboxSelected.fromSuggestions)
+    return state.get('suggestions').get('threads');
   return mailbox.get('list');
 };
 
@@ -16,7 +17,7 @@ const getThreadsByMailbox = (state, props) => {
 };
 
 const getThreadsIdentifier = (state, props) =>
-  props.itemsChecked || props.threadIdSelected;
+  props.itemsChecked || props.threadIdSelected || Set();
 
 const getUniqueIdsSelected = (state, props) =>
   props.threadsSelected.map(thread => thread.threadIdDB || thread.emailId);
@@ -48,7 +49,7 @@ const defineThreadsSelected = (threads, identifier) => {
 
 const defineOneThreadSelected = (threads, threadId) => {
   const thread = threads.find(thread => {
-    return thread.get('threadId') === threadId;
+    return thread.get('threadId') === threadId || thread.threadId === threadId;
   });
   return [
     {
