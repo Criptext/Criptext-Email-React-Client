@@ -792,6 +792,10 @@
     },
     "appearance": "вид",
     "billing": "Billing",
+    "block_remote_content": {
+      "title": "Block Images",
+      "description": "Disable images from unauthorized senders."
+    },
     "custom_domains": {
       "title": "Custom Domains",
       "description": "Send emails from a personal domain that you own.",

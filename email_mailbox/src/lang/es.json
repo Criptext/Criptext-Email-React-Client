@@ -477,10 +477,10 @@
       }
     },
     "block_remote_content": {
-      "title": "Turn Off Image Block ",
-      "message": "Your security is affected by deactivating this function. You can reactivate this function from the general menu.",
-      "leftButtonLabel": "Cancel",
-      "rightButtonLabel": "Save"
+      "title": "Apagar Bloqueo de Imágenes",
+      "message": "Tu seguridad puede verse comprometida al desactivar este bloqueo. Puedes volver a reactivarlo desde Configuración.",
+      "leftButtonLabel": "Cancelar",
+      "rightButtonLabel": "Guardar"
     },
     "password_changed": {
       "title": "Confirma tu nueva contraseña",
@@ -848,6 +848,10 @@
     },
     "appearance": "Apariencia",
     "billing": "Facturación",
+    "block_remote_content": {
+      "title": "Bloquear Imágenes",
+      "description": "Deshabilita imágenes de contactos no autorizados."
+    },
     "custom_domains": {
       "title": "Dominio Personal",
       "description": "Envía correos desde un dominio personal que posees.",
