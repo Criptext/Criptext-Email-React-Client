@@ -1,77 +1,83 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './snackbar.scss';
+import { SingleLoading, statusType } from './Loading';
+import AvatarImage from './AvatarImage';
+import string from '../lang';
 
-const Loading = () => (
-  <div className="loading-ring">
-    <div />
-    <div />
-    <div />
-    <div />
-  </div>
-);
+const backupString = string.backup;
 
 const Snackbar = props => (
   <div className="snackbar-wrapper">
-    <ProgressIndicator {...props} />
-    <div className="snackbar-message-contianer">
-      <div className="snackbar-message">
-        <span>{props.message}</span>
-      </div>
-      <div className="snackbar-account">
-        <span>{props.email}</span>
+    <div className="snackbar-title-container">
+      <h4>{backupString.title}</h4>
+      <div className="snackbar-title-hide" onClick={props.onDismissSnackbar}>
+        <span>{backupString.hide}</span>
       </div>
     </div>
-    {props.progress < 100 && (
-      <div className="snackbar-close" onClick={props.onDismissSnackbar}>
-        <i className="icon-exit" />
+    <div className="snackbar-info-container">
+      <AvatarIndicator {...props} />
+      <div className="snackbar-message-contianer">
+        <div className="snackbar-message">
+          <Loader {...props} />
+        </div>
+        <div className="snackbar-account">
+          <span>{props.email}</span>
+        </div>
       </div>
-    )}
+    </div>
   </div>
 );
 
-const ProgressIndicator = props => {
+const Loader = props => {
   switch (props.progress) {
     case -2:
-      return (
-        <div className="snackbar-loader-container">
-          <div className="snackbar-failure-progress">
-            <i className="icon-exit" />
-          </div>
-        </div>
-      );
+      return <SingleLoading percent={100} animationClass={statusType.STOP} />;
     case -1:
-      return (
-        <div className="snackbar-loader-container">
-          <Loading />
-        </div>
-      );
+      return <SingleLoading percent={0} animationClass={statusType.ACTIVE} />;
     case 100:
       return (
-        <div className="snackbar-loader-container">
-          <div className="snackbar-success-progress">
-            <i className="icon-check" />
-          </div>
-        </div>
+        <SingleLoading
+          percent={props.progress}
+          animationClass={statusType.COMPLETE}
+        />
       );
     default:
       return (
-        <div className="snackbar-loader-container">
-          <Loading />
-          <span>{props.progress}%</span>
-        </div>
+        <SingleLoading
+          percent={props.progress}
+          animationClass={statusType.ACTIVE}
+        />
       );
   }
 };
 
+const AvatarIndicator = props => {
+  return (
+    <div className="snackbar-loader-container">
+      <AvatarImage
+        showBorder={false}
+        name={props.name}
+        color={props.color}
+        avatarUrl={props.avatarUrl}
+      />
+    </div>
+  );
+};
+
 Snackbar.propTypes = {
   email: PropTypes.string,
-  message: PropTypes.string,
-  progress: PropTypes.number,
   onDismissSnackbar: PropTypes.func
 };
 
-ProgressIndicator.propTypes = {
+AvatarIndicator.propTypes = {
+  progress: PropTypes.number,
+  name: PropTypes.string,
+  color: PropTypes.string,
+  avatarUrl: PropTypes.string
+};
+
+Loader.propTypes = {
   progress: PropTypes.number
 };
 

@@ -19,6 +19,7 @@ const {
   defineUnitToAppend,
   backupDateFormat
 } = require('./../utils/TimeUtils');
+const { APP_DOMAIN } = require('../utils/const');
 const { updateAccount } = require('./../database');
 const myAccount = require('../Account');
 let autoBackupsTime = [];
@@ -40,12 +41,17 @@ ipc.answerRenderer('create-default-backup-folder', () =>
   createDefaultBackupFolder()
 );
 
-const handleProgressCallback = (progress, message, email, progressCallback) => {
+const handleProgressCallback = (
+  progress,
+  message,
+  userData,
+  progressCallback
+) => {
   if (!progressCallback) return;
   progressCallback({
     progress,
     message,
-    email
+    ...userData
   });
 };
 
@@ -65,7 +71,12 @@ const doExportBackupUnencrypted = async params => {
     handleProgressCallback(
       -1,
       'starting_backup',
-      `${recipientId}@${domain}`,
+      {
+        email: `${recipientId}@${domain || APP_DOMAIN}`,
+        username: recipientId,
+        domain: domain || APP_DOMAIN,
+        name: accountObj ? accountObj.name : myAccount.name
+      },
       progressCallback
     );
 
@@ -97,7 +108,6 @@ const doExportBackupUnencrypted = async params => {
     }
     return backupSize;
   } catch (error) {
-    console.error(error);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', null, { error });
     commitBackupStatus('local-backup-failed', null, null);

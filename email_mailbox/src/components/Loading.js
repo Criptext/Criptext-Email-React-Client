@@ -4,10 +4,11 @@ import string from './../lang';
 import './loading.scss';
 
 // const messages = string.loading.messages;
-const statusType = {
+export const statusType = {
   RUNNING: 'running-animation',
   STOP: 'stop-animation',
-  COMPLETE: 'complete-animation'
+  COMPLETE: 'complete-animation',
+  ACTIVE: 'active-animation'
 };
 
 const errorType = {
@@ -29,6 +30,21 @@ const Loading = props => (
         <div className="dialog-text">{dialogText(props)}</div>
         <br />
         <div className="dialog-button">{dialogButton(props)}</div>
+      </div>
+    </div>
+  </div>
+);
+
+export const SingleLoading = props => (
+  <div id={'loading-container'} className="dialog-container">
+    <div className="dialog-content">
+      <div className="dialog-content-body">
+        <div className="bar">
+          <div
+            className={`content ${props.animationClass}`}
+            style={{ width: props.percent + '%' }}
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -141,6 +157,11 @@ Loading.propTypes = {
   minutes: PropTypes.number,
   restart: PropTypes.func,
   decreaseStep: PropTypes.func
+};
+
+SingleLoading.propTypes = {
+  animationClass: PropTypes.string,
+  percent: PropTypes.number
 };
 
 export default Loading;

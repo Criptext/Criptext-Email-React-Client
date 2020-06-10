@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Panel from './Panel';
 import PropTypes from 'prop-types';
+import randomcolor from 'randomcolor';
 import {
   addEvent,
   removeEvent,
@@ -9,8 +10,12 @@ import {
   sendMailboxEvent
 } from '../utils/electronEventInterface';
 import { checkForUpdates, processPendingEvents } from '../utils/ipc';
-import { LabelType, getPendingRestoreStatus } from '../utils/electronInterface';
-import { SectionType } from '../utils/const';
+import {
+  LabelType,
+  getPendingRestoreStatus,
+  mySettings
+} from '../utils/electronInterface';
+import { SectionType, avatarBaseUrl } from '../utils/const';
 import {
   addLabels,
   setAvatarUpdatedTimestamp,
@@ -20,9 +25,6 @@ import {
 } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import { TAB } from './Settings';
-import string from '../lang';
-
-const backupString = string.backup;
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
@@ -545,24 +547,33 @@ class PanelWrapper extends Component {
 
   handleBackupProgress = data => {
     const currentSnackbar = this.state.backupSnackbar || {};
-    const newMessage = backupString[data.message] || currentSnackbar.message;
+    if (!currentSnackbar.color) {
+      currentSnackbar.color = randomcolor({
+        seed: data.name || data.email,
+        luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
+      });
+    }
+    if (data.username && data.domain) {
+      currentSnackbar.avatarUrl = `${avatarBaseUrl}${data.domain}/${
+        data.username
+      }`;
+    }
     this.setState({
       backupSnackbar: {
         ...currentSnackbar,
-        ...data,
-        message: newMessage
+        ...data
       }
     });
   };
 
   handleBackupFinish = () => {
-    const currentSnackbar = this.state.backupSnackbar || {};
+    if (!this.state.backupSnackbar) return;
+    const currentSnackbar = this.state.backupSnackbar;
     this.setState(
       {
         backupSnackbar: {
           ...currentSnackbar,
-          progress: 100,
-          message: backupString.success_backup
+          progress: 100
         }
       },
       () => {
@@ -572,13 +583,13 @@ class PanelWrapper extends Component {
   };
 
   handleBackupFailed = () => {
+    if (!this.state.backupSnackbar) return;
     const currentSnackbar = this.state.backupSnackbar || {};
     this.setState(
       {
         backupSnackbar: {
           ...currentSnackbar,
-          progress: -2,
-          message: backupString.failure_backup
+          progress: -2
         }
       },
       () => {
