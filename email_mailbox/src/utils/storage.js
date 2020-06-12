@@ -122,3 +122,13 @@ export const clearStorage = ({ deleteAll }) => {
     if (!match) localStorage.removeItem(item);
   }
 };
+
+/* Shown Auto Backup Popup
+-------------------------------------*/
+export const setShownEnableBackupPopup = email => {
+  localStorage.setItem(`shownEnableBackupPopup_${email}`, true);
+};
+
+export const getShownEnableBackupPopup = email => {
+  return localStorage.getItem(`shownEnableBackupPopup_${email}`) === 'true';
+};

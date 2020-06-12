@@ -49,9 +49,15 @@ const SettingsAccountBackup = props => (
             </span>
           </div>
           <div className="item-option-content">
-            <span className="cptx-section-item-description">
-              {props.lastDate} ({props.lastSize})
-            </span>
+            {props.lastDate && props.lastSize ? (
+              <span className="cptx-section-item-description">
+                {props.lastDate} ({props.lastSize})
+              </span>
+            ) : (
+              <span className="cptx-section-item-description">
+                {autoBackup.no_backup}
+              </span>
+            )}
             <button
               className="button-b"
               onClick={() => props.onClickBackupNow()}

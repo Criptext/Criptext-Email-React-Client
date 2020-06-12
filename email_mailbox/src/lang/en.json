@@ -275,6 +275,9 @@
         "deactivated": "Alias deactivated"
       }
     },
+    "backup_enabled": {
+      "description": "Backup Activated 📤"
+    },
     "block_remote_content": {
       "success": {
         "activated": "The images will be locked",
@@ -596,6 +599,24 @@
         "timeout": "Connection Timeout. Please Try Again"
       }
     },
+    "enable_backup": {
+      "once": {
+        "title": "Auto Backup",
+        "description": "Auto Backup ensures that your data is never lost.",
+        "buttons": {
+          "enable": "Turn On Auto Backup",
+          "cancel": "Not Now"
+        }
+      },
+      "last": {
+        "title": "Warning ⚠️",
+        "description": "Your emails are exclusively kept on your device, not Criptext servers. This means that if you delete the app or lose your device you will lose all your emails.",
+        "buttons": {
+          "enable": "Turn On Auto Backup",
+          "cancel": "I don’t want backups"
+        }
+      }
+    },
     "export_backup": {
       "title": "Export Backup File",
       "switchLabel": "Encrypt Backup",
@@ -867,6 +888,7 @@
       "auto": {
         "label": "Auto Backup",
         "description": "Note: Auto backups are not password protected",
+        "no_backup": "A Backup has not being created yet",
         "options": {
           "last_backup": "Last Backup",
           "backup_now": "Back up Now",

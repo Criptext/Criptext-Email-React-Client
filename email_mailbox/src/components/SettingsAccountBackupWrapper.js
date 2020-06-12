@@ -99,8 +99,12 @@ class SettingsAccountBackupWrapper extends Component {
   }
 
   render() {
-    const lastDate = formatLastBackupDate(myAccount.autoBackupLastDate);
-    const lastSize = convertToHumanSize(myAccount.autoBackupLastSize, true, 0);
+    const lastDate = myAccount.autoBackupLastDate
+      ? formatLastBackupDate(myAccount.autoBackupLastDate)
+      : null;
+    const lastSize = myAccount.autoBackupLastSize
+      ? convertToHumanSize(myAccount.autoBackupLastSize, true, 0)
+      : null;
     return (
       <SettingsAccountBackup
         {...this.props}

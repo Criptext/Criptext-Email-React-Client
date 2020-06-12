@@ -275,6 +275,9 @@
         "deactivated": "Alias desactivados"
       }
     },
+    "backup_enabled": {
+      "description": "Respaldo Activado 📤"
+    },
     "block_remote_content": {
       "success": {
         "activated": "Las imágenes serán bloqueadas",
@@ -596,6 +599,24 @@
         "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo"
       }
     },
+    "enable_backup": {
+      "once": {
+        "title": "Respaldo Automático",
+        "description": "Cuando activas el respaldo automático te aseguras de no perder tu información.",
+        "buttons": {
+          "enable": "Activar Respaldo Automático",
+          "cancel": "No por ahora"
+        }
+      },
+      "last": {
+        "title": "Cuidado ⚠️",
+        "description": "Tus correos solo existen en tu dispositivo, no en los servidores de Criptext. Esto quiere decir que si desinstalas tu app o pierdes tu dispositivo, perderás también todos tus correos.",
+        "buttons": {
+          "enable": "Activar Respaldo Automático",
+          "cancel": "Realmente no quiero respaldos"
+        }
+      }
+    },
     "export_backup": {
       "title": "Exportar Respaldo",
       "switchLabel": "Encriptar respaldo",
@@ -867,6 +888,7 @@
       "auto": {
         "label": "Auto Respaldo",
         "description": "Nota: Auto-respaldos no están protegidos con contraseña",
+        "no_backup": "No se ha creado un respaldo aún",
         "options": {
           "last_backup": "Último respaldo",
           "backup_now": "Respaldar ahora",
