@@ -1,0 +1,89 @@
+@import "./../styles/index.scss";
+
+.snackbar-wrapper {
+  position: absolute;
+  right: 30px;
+  bottom: 10px;
+  border-radius: 5px;
+  padding: 12px;
+  width: 240px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.snackbar-title-container {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  font-size: 14px;
+
+  h4 {
+    margin: 0;
+  }
+
+  .snackbar-title-hide {
+    margin: 0;
+    margin-right: 8px;
+    color: #65bdff;
+    cursor: pointer;
+  }
+}
+
+.snackbar-info-container {
+  width: 100%;
+  height: 40px;
+  display: flex;
+}
+
+.snackbar-loader-container {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.snackbar-message-contianer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  .snackbar-message { 
+    font-size: 13px;
+  }
+
+  .snackbar-account {
+    font-size: 12px;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 180px;
+  }
+
+  #loading-container {
+    .dialog-content {
+      width: 180px;
+    }
+  }
+}
+
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_SIDEBAR, $_COLOR_ICON_NAVITEM_SELECTED){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .snackbar-wrapper{
+      background: $_BACKGROUND_COLOR_SIDEBAR;
+      color: $_COLOR_ICON_NAVITEM_SELECTED;
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SIDEBAR_LIGHT, $_COLOR_ICON_NAVITEM_SELECTED_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SIDEBAR_DARK, $_COLOR_ICON_NAVITEM_SELECTED_DARK);

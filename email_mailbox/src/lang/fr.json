@@ -109,6 +109,10 @@
       }
     }
   },
+  "backup": {
+    "title": "Backing Up Account",
+    "hide": "Hide" 
+  },
   "crash": {
     "title": "Oops! On dirait que quelque chose s'est mal passé",
     "counter": {

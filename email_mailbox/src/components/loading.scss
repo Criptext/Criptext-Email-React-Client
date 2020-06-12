@@ -78,6 +78,12 @@
           animation: move 1s linear infinite;
         }
 
+        .active-animation {
+          width: 0%;
+          background-color: #0091ff;
+          animation: fadeDown 1s linear;
+        }
+
         .stop-animation {
           width: 0%;
           background-color: red;

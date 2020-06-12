@@ -109,6 +109,10 @@
       }
     }
   },
+  "backup": {
+    "title": "Respaldando Cuenta",
+    "hide": "Ocultar" 
+  },
   "crash": {
     "title": "¡Ups! Parece que algo falló",
     "counter": {
