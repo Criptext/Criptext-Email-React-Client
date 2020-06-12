@@ -31,6 +31,7 @@ import { updateSettings } from '../utils/ipc';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 import { loadThreadsAndEmails } from '../actions/threads';
 import { defineParamsToLoadThread } from '../utils/ThreadUtils';
+import { labels } from '../utils/systemLabels';
 
 const mapStateToProps = state => {
   const isLoadAppCompleted = !!state.get('labels').size;
@@ -45,7 +46,12 @@ const mapStateToProps = state => {
       .get('list').size;
     return { ...result, [id]: size, isLoadAppCompleted };
   }, {});
-  return result;
+  const inboxThreads = state.get('threads').get(`${labels.inbox.id}`);
+  const inboxCount = inboxThreads ? inboxThreads.get('allIds').size : 0;
+  return {
+    ...result,
+    inboxCount
+  };
 };
 
 const defineContactType = labelId => {

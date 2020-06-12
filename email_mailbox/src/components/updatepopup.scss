@@ -1,3 +1,6 @@
+
+@import "./../styles/index.scss";
+
 .update-popup {
 
   .popup-title {
@@ -49,4 +52,27 @@
     }
   }
 
+}
+
+.enable-auto-backup {
+  .popup-title {
+    margin: 20px;
+    white-space: nowrap;
+  }
+
+  .popup-confirm-button {
+    margin-bottom: 20px;
+  }
+
+  .popup-backup-img {
+    background-image: url(../#{$_PATH_TO_IMAGES}/backup-popup.svg);
+    height: 122px;
+    width: 175px;
+    margin-left: 26px;
+    margin-top: 15px;
+  }
+
+  .popup-cancel-button {
+    text-decoration: underline;
+  }
 }

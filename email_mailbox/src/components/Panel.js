@@ -12,6 +12,7 @@ import DeviceRemovedPopup from './DeviceRemovedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import RestoreBackupPopupWrapper from './RestoreBackupPopupWrapper';
 import SuspendedAccountPopup from './SuspendedAccountPopup';
+import EnableBackupPopup from './EnableBackupPopup';
 import UpdatePopup from './UpdatePopup';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import { mySettings } from '../utils/electronInterface';
@@ -120,6 +121,18 @@ const renderMailboxPopup = ({ data, type, isHidden, ...props }) => {
         <DeviceRemovedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
+        />
+      );
+    }
+    case MAILBOX_POPUP_TYPES.ENABLE_BACKUP: {
+      const EnableBackupPop = PopupHOC(EnableBackupPopup);
+      return (
+        <EnableBackupPop
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          isClosable={false}
+          theme={'dark'}
+          {...data}
         />
       );
     }

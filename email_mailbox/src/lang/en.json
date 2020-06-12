@@ -275,6 +275,9 @@
         "deactivated": "Alias deactivated"
       }
     },
+    "backup_enabled": {
+      "description": "Backup Activated 📤"
+    },
     "block_remote_content": {
       "success": {
         "activated": "The images will be locked",
@@ -594,6 +597,24 @@
         "nodomain": "Domain not found",
         "unknown": "Uknown Error ({0}), please try again",
         "timeout": "Connection Timeout. Please Try Again"
+      }
+    },
+    "enable_backup": {
+      "once": {
+        "title": "Activate iCloud Backup",
+        "description": "Activate backups to guarantee that you never lose your data",
+        "buttons": {
+          "enable": "Turn On Auto Backup",
+          "cancel": "Not Now"
+        }
+      },
+      "last": {
+        "title": "Warning ⚠️",
+        "description": "Your emails are exclusively kept on your device, not Criptext servers. This means that if you delete the app or lose your device you will lose all your emails.",
+        "buttons": {
+          "enable": "Activate Auto Backup",
+          "cancel": "I don’t want backups"
+        }
       }
     },
     "export_backup": {

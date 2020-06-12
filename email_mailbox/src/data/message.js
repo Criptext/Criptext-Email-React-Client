@@ -62,6 +62,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.alias_status.success.deactivated
     },
+    backupEnabled: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.backup_enabled.description
+    },
     blockRemoteTurnOff: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.block_remote_content.success.deactivated

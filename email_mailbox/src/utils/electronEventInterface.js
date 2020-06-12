@@ -1715,6 +1715,14 @@ export const sendAliasSuccessStatusMessage = active => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendBackupEnabledMessage = () => {
+  const messageData = {
+    ...Messages.success.backupEnabled,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendCustomDomainDeletedMessage = () => {
   const messageData = {
     ...Messages.success.customDomainDeleted,

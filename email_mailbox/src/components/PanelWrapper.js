@@ -7,13 +7,23 @@ import {
   removeEvent,
   Event,
   checkUserGuideSteps,
-  sendMailboxEvent
+  sendMailboxEvent,
+  sendBackupEnabledMessage
 } from '../utils/electronEventInterface';
-import { checkForUpdates, processPendingEvents } from '../utils/ipc';
+import {
+  checkForUpdates,
+  processPendingEvents,
+  createDefaultBackupFolder,
+  getDefaultBackupFolder,
+  updateAccount,
+  initAutoBackupMonitor
+} from '../utils/ipc';
 import {
   LabelType,
   getPendingRestoreStatus,
-  mySettings
+  mySettings,
+  myAccount,
+  showSaveFileDialog
 } from '../utils/electronInterface';
 import { SectionType, avatarBaseUrl } from '../utils/const';
 import {
@@ -25,6 +35,11 @@ import {
 } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import { TAB } from './Settings';
+import { getAutoBackupDates, defineBackupFileName } from '../utils/TimeUtils';
+import {
+  setShownEnableBackupPopup,
+  getShownEnableBackupPopup
+} from '../utils/storage';
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
@@ -32,6 +47,7 @@ const MAILBOX_POPUP_TYPES = {
   CREATING_BACKUP_FILE: 'creating-backup-file',
   CHANGE_ACCOUNT: 'change-account',
   DEVICE_REMOVED: 'device-removed',
+  ENABLE_BACKUP: 'enable-backup',
   ONLY_BACKDROP: 'only-backdrop',
   PASSWORD_CHANGED: 'password-changed',
   RESTORE_BACKUP: 'restore-backup',
@@ -117,6 +133,15 @@ class PanelWrapper extends Component {
       this.state.mailboxPopupType === MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT
     ) {
       this.handleCloseMailboxPopup();
+    }
+
+    if (
+      this.state.mailboxPopupType !== MAILBOX_POPUP_TYPES.ENABLE_BACKUP &&
+      this.props.inboxCount > 10 &&
+      !myAccount.autoBackupEnable &&
+      !getShownEnableBackupPopup(myAccount.email)
+    ) {
+      this.handleShowEnableBackupPopup();
     }
   }
 
@@ -220,6 +245,70 @@ class PanelWrapper extends Component {
         });
       }, RESTORE_BACKUP_POPUP_DELAY);
     }
+  };
+
+  handleShowEnableBackupPopup = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.ENABLE_BACKUP,
+      mailboxPopupData: {
+        step: 1,
+        onEnableBackup: this.handleEnableBackup,
+        onNoBackup: this.handleNoBackup
+      }
+    });
+  };
+
+  handleEnableBackup = async () => {
+    let backupPath = myAccount.autoBackupPath;
+    if (!backupPath) {
+      await createDefaultBackupFolder();
+      backupPath = await getDefaultBackupFolder();
+      const fileName = defineBackupFileName('db');
+      showSaveFileDialog(`${backupPath}/${fileName}`, selectedPath => {
+        const lastSepIndex =
+          selectedPath.lastIndexOf('/') > -1
+            ? selectedPath.lastIndexOf('/')
+            : selectedPath.lastIndexOf(`\\`);
+        const folderPath = selectedPath.substr(0, lastSepIndex);
+        this.handleEnableAccountBackup(folderPath);
+      });
+    } else {
+      this.handleEnableAccountBackup(backupPath);
+    }
+  };
+
+  handleEnableAccountBackup = async backupPath => {
+    const frequency = 'daily';
+    const timeUnit = 'days';
+    const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
+
+    await updateAccount({
+      autoBackupEnable: true,
+      autoBackupFrequency: frequency,
+      autoBackupLastDate: nowDate,
+      autoBackupNextDate: nextDate,
+      autoBackupPath: backupPath
+    });
+    initAutoBackupMonitor();
+    setShownEnableBackupPopup(myAccount.email);
+    sendBackupEnabledMessage();
+    this.handleCloseMailboxPopup();
+  };
+
+  handleNoBackup = () => {
+    const data = this.state.mailboxPopupData;
+    if (data.step !== 1) {
+      setShownEnableBackupPopup(myAccount.email);
+      this.handleCloseMailboxPopup();
+      return;
+    }
+    this.setState({
+      mailboxPopupData: {
+        ...data,
+        step: 2
+      }
+    });
   };
 
   handleCloseMailboxPopup = () => {
@@ -736,6 +825,7 @@ class PanelWrapper extends Component {
 
 PanelWrapper.propTypes = {
   isLoadAppCompleted: PropTypes.bool,
+  inboxCount: PropTypes.number,
   onAccountsChanged: PropTypes.func,
   onAddDataApp: PropTypes.func,
   onAddLabels: PropTypes.func,
