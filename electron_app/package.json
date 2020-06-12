@@ -1,6 +1,6 @@
 {
   "name": "criptext",
-  "version": "0.29.0",
+  "version": "0.29.1",
   "author": {
     "name": "Criptext Inc",
     "email": "support@criptext.com",
@@ -178,7 +178,9 @@
     "sqlite3": "^4.1.0",
     "umzug": "^2.2.0",
     "unused-filename": "^2.1.0",
-    "websocket": "^1.0.28"
+    "websocket": "^1.0.28",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.4.2"
   },
   "jest": {
     "verbose": true,

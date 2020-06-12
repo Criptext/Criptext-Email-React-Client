@@ -651,3 +651,7 @@ export const disableAutoBackup = async accountId => {
 export const reportContentUnencrypted = async error => {
   return await ipc.callMain('nucleups-report-content-unencrypted', error);
 };
+
+export const reportUncaughtError = async error => {
+  return await ipc.callMain('nucleups-report-uncaught-error', error);
+};

@@ -7,6 +7,7 @@ const http = require('http');
 const ps = require('ps-node');
 const globalManager = require('./globalManager');
 const { encryptTextSimple } = require('./filescript/helpers');
+const logger = require('./logger');
 
 const ALICE_PROJECT_NAME = 'criptext-encryption-service';
 
@@ -127,13 +128,13 @@ const handShake = ({ alicePath, dbpath, myPort, logspath, onAppOpened }) => {
         'Service Error',
         `Unable to initialize encryption service. ${data}`
       );
-      console.log(`-----alice-----\nError:\n${data}\n -----end-----`);
+      logger.error(`-----alice-----\nError:\n${data}\n -----end-----`);
       if (onAppOpened) app.quit();
     });
     alice.stdout.setEncoding('utf8');
     alice.stdout.on('data', async data => {
       if (!passwordRegex.test(data)) {
-        console.log(`-----alice-----\n${data}\n -----end-----`);
+        logger.debug(`-----alice-----\n${data}\n -----end-----`);
         return;
       }
       token = data.replace(passwordRegex, '').replace(/\r?\n|\r/g, '');
@@ -145,9 +146,9 @@ const handShake = ({ alicePath, dbpath, myPort, logspath, onAppOpened }) => {
       }
     });
     alice.on('exit', (code, signal) => {
-      console.log(`alice exited with code ${code} and signal ${signal}`);
+      logger.error(`alice exited with code ${code} and signal ${signal}`);
+      closeAlice();
       if (signal !== 'SIGTERM' && signal !== 'SIGABRT') {
-        closeAlice();
         reject();
         return;
       }
@@ -155,7 +156,7 @@ const handShake = ({ alicePath, dbpath, myPort, logspath, onAppOpened }) => {
     });
 
     alice.on('close', code => {
-      console.log(`alice closed with code ${code}`);
+      logger.info(`alice closed with code ${code}`);
       closeAlice();
       reject();
     });
@@ -208,12 +209,12 @@ const isReachable = () => {
       return;
     }
     const req = http.request(options, res => {
-      console.log(`statusCode: ${res.statusCode}`);
+      logger.info(`statusCode: ${res.statusCode}`);
       resolve(res.statusCode === 200);
     });
 
     req.on('error', error => {
-      console.log(error);
+      logger.error(error);
       resolve(false);
     });
     try {
@@ -221,7 +222,7 @@ const isReachable = () => {
       req.write(JSON.stringify(data));
       req.end();
     } catch (ex) {
-      console.log(ex);
+      logger.error(ex);
       resolve(false);
     }
   });
@@ -252,11 +253,10 @@ const cleanAliceRemenants = () => {
   return new Promise(resolve => {
     ps.lookup({ command: ALICE_PROJECT_NAME }, async (err, list) => {
       if (err) {
-        console.log(err);
+        logger.error(err);
         resolve();
         return;
       }
-      console.log(list);
       await Promise.all(
         list.map(p => {
           return killPs(p.pid);

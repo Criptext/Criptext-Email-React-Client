@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { reloadWindow, mySettings } from '../utils/electronInterface';
 import './mainerrorboundary.scss';
 import string from './../lang';
+import { reportUncaughtError } from '../utils/ipc';
 
 const { crash } = string;
 
@@ -25,6 +26,7 @@ const HighOrderBoundarie = AppComponent =>
         },
         this.updateCounter
       );
+      reportUncaughtError(error.stack);
     }
 
     render() {
