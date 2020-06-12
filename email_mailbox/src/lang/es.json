@@ -601,19 +601,19 @@
     },
     "enable_backup": {
       "once": {
-        "title": "Respaldar en tu dispositivo",
-        "description": "Activa respaldos para garantizar que nunca pierdas tus datos",
+        "title": "Respaldo Automático",
+        "description": "Cuando activas el respaldo automático te aseguras de no perder tu información.",
         "buttons": {
-          "enable": "Usar Respaldo Automático",
-          "cancel": "No Ahora"
+          "enable": "Activar Respaldo Automático",
+          "cancel": "No por ahora"
         }
       },
       "last": {
         "title": "Cuidado ⚠️",
-        "description": "Tus correos se guardan exclusivamente en tu dispositivo, no en los Servidores de Criptext. Esto significa que si borras el App o pierdes tu dispositivo perderás tus correos.",
+        "description": "Tus correos solo existen en tu dispositivo, no en los servidores de Criptext. Esto quiere decir que si desinstalas tu app o pierdes tu dispositivo, perderás también todos tus correos.",
         "buttons": {
-          "enable": "Activar Respaldo Local",
-          "cancel": "No deseo respaldar"
+          "enable": "Activar Respaldo Automático",
+          "cancel": "Realmente no quiero respaldos"
         }
       }
     },
@@ -888,6 +888,7 @@
       "auto": {
         "label": "Auto Respaldo",
         "description": "Nota: Auto-respaldos no están protegidos con contraseña",
+        "no_backup": "No se ha creado un respaldo aún",
         "options": {
           "last_backup": "Último respaldo",
           "backup_now": "Respaldar ahora",

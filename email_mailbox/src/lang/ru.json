@@ -594,8 +594,8 @@
     },
     "enable_backup": {
       "once": {
-        "title": "Activate iCloud Backup",
-        "description": "Activate backups to guarantee that you never lose your data",
+        "title": "Auto Backup",
+        "description": "Auto Backup ensures that your data is never lost.",
         "buttons": {
           "enable": "Turn On Auto Backup",
           "cancel": "Not Now"
@@ -605,7 +605,7 @@
         "title": "Warning ⚠️",
         "description": "Your emails are exclusively kept on your device, not Criptext servers. This means that if you delete the app or lose your device you will lose all your emails.",
         "buttons": {
-          "enable": "Activate Auto Backup",
+          "enable": "Turn On Auto Backup",
           "cancel": "I don’t want backups"
         }
       }
@@ -832,6 +832,7 @@
       "auto": {
         "label": "Автоматическое резервное копирование",
         "description": "Примечание: автоматическое резервное копирование не защищено паролем",
+        "no_backup": "A Backup has not being created yet",
         "options": {
           "last_backup": "Последнее резервное копирование",
           "backup_now": "Резервное копирование сейчас",

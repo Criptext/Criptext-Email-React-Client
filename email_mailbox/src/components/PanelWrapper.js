@@ -22,8 +22,7 @@ import {
   LabelType,
   getPendingRestoreStatus,
   mySettings,
-  myAccount,
-  showSaveFileDialog
+  myAccount
 } from '../utils/electronInterface';
 import { SectionType, avatarBaseUrl } from '../utils/const';
 import {
@@ -35,7 +34,7 @@ import {
 } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import { TAB } from './Settings';
-import { getAutoBackupDates, defineBackupFileName } from '../utils/TimeUtils';
+import { getAutoBackupDates } from '../utils/TimeUtils';
 import {
   setShownEnableBackupPopup,
   getShownEnableBackupPopup
@@ -137,7 +136,7 @@ class PanelWrapper extends Component {
 
     if (
       this.state.mailboxPopupType !== MAILBOX_POPUP_TYPES.ENABLE_BACKUP &&
-      this.props.inboxCount > 10 &&
+      this.props.inboxCount >= 10 &&
       !myAccount.autoBackupEnable &&
       !getShownEnableBackupPopup(myAccount.email)
     ) {
@@ -264,29 +263,18 @@ class PanelWrapper extends Component {
     if (!backupPath) {
       await createDefaultBackupFolder();
       backupPath = await getDefaultBackupFolder();
-      const fileName = defineBackupFileName('db');
-      showSaveFileDialog(`${backupPath}/${fileName}`, selectedPath => {
-        const lastSepIndex =
-          selectedPath.lastIndexOf('/') > -1
-            ? selectedPath.lastIndexOf('/')
-            : selectedPath.lastIndexOf(`\\`);
-        const folderPath = selectedPath.substr(0, lastSepIndex);
-        this.handleEnableAccountBackup(folderPath);
-      });
-    } else {
-      this.handleEnableAccountBackup(backupPath);
     }
+    this.handleEnableAccountBackup(backupPath);
   };
 
   handleEnableAccountBackup = async backupPath => {
     const frequency = 'daily';
     const timeUnit = 'days';
-    const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
+    const { nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
 
     await updateAccount({
       autoBackupEnable: true,
       autoBackupFrequency: frequency,
-      autoBackupLastDate: nowDate,
       autoBackupNextDate: nextDate,
       autoBackupPath: backupPath
     });
