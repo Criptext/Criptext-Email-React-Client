@@ -1,4 +1,4 @@
-{"fileVersion":"6","recipientId":"test","domain":"criptext.com"}
+{"fileVersion":"6","recipientId":"test","domain":"criptext.com","signature":"","hasCriptextFooter":true,"language":"en","darkTheme":true,"showPreview":true}
 {"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice","isTrusted":false,"spamScore":0}}
 {"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob","isTrusted":false,"spamScore":0}}
 {"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie","isTrusted":false,"spamScore":0}}

@@ -2,6 +2,17 @@
 const DBManager = require('../database');
 const systemLabels = require('./../systemLabels');
 
+jest.mock('../windows/mailbox', () => ({
+  getShowPreview: () => {
+    return Promise.resolve(true);
+  },
+  setShowPreview: () => {
+    return Promise.resolve();
+  }
+}));
+
+jest.setTimeout(7000);
+
 let accountId;
 let emailIdToDelete;
 

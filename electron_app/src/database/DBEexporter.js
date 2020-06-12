@@ -25,7 +25,10 @@ const {
   Signedprekeyrecord,
   getDB,
   Table,
-  deleteAccountNotSignalRelatedData
+  deleteAccountNotSignalRelatedData,
+  getSettings,
+  updateSettings,
+  updateAccount
 } = require('./DBEmanager');
 const myAccount = require('./../Account');
 const systemLabels = require('./../systemLabels');
@@ -37,6 +40,7 @@ const {
   replaceEmailsWithCopy,
   saveEmailBody
 } = require('./../utils/FileUtils');
+const { getShowPreview, setShowPreview } = require('../windows/mailbox');
 
 const CIPHER_ALGORITHM = 'aes-128-cbc';
 const STREAM_SIZE = 512 * 1024;
@@ -844,10 +848,28 @@ const exportEncryptDatabaseToFile = async ({
     ? accountObj.recipientId.split('@')
     : myAccount.recipientId.split('@');
   const accountId = accountObj ? accountObj.id : myAccount.id;
+  const signature =
+    accountObj && accountObj.signature !== undefined
+      ? accountObj.signature
+      : myAccount.signature;
+
+  const hasCriptextFooter =
+    accountObj && accountObj.signFooter !== undefined
+      ? accountObj.signFooter
+      : myAccount.signFooter;
+  const showPreview = await getShowPreview();
+
+  const { language, theme } = await getSettings();
+
   const fileInformation = JSON.stringify({
     fileVersion: LINK_DEVICES_FILE_VERSION,
     recipientId: recipientId,
-    domain: domain || APP_DOMAIN
+    domain: domain || APP_DOMAIN,
+    signature: signature,
+    hasCriptextFooter: hasCriptextFooter,
+    language: language,
+    darkTheme: theme === 'dark',
+    showPreview: showPreview
   });
 
   exportProgress += 100 / PROGRESS_TOTAL_STEPS;
@@ -947,6 +969,10 @@ const importDatabaseFromFile = async ({
   let signedprekeyrecords = [];
   let aliases = [];
   let customDomains = [];
+  // eslint-disable-next-line prefer-const
+  let accountObject = {};
+  // eslint-disable-next-line prefer-const
+  let settingsObject = {};
 
   const sequelize = getDB();
 
@@ -959,12 +985,19 @@ const importDatabaseFromFile = async ({
     }
 
     if (isStrict) {
-      getCustomLinesByStream(filepath, 1, (err, lines) => {
+      getCustomLinesByStream(filepath, 1, async (err, lines) => {
         if (err) throw new Error('Failed to read file information');
         const fileInformation = lines[0];
-        const { fileVersion, recipientId, domain } = JSON.parse(
-          fileInformation
-        );
+        const {
+          fileVersion,
+          recipientId,
+          domain,
+          signature,
+          hasCriptextFooter,
+          language,
+          darkTheme,
+          showPreview
+        } = JSON.parse(fileInformation);
 
         if (recipientId && domain) {
           const fileOwner = `${recipientId}@${domain}`;
@@ -975,6 +1008,32 @@ const importDatabaseFromFile = async ({
           const version = Number(fileVersion);
           const currentVersion = Number(LINK_DEVICES_FILE_VERSION);
           if (version !== currentVersion) return;
+        }
+
+        if (signature !== undefined) {
+          accountObject.signature = signature;
+        }
+
+        if (hasCriptextFooter !== undefined) {
+          accountObject.signFooter = hasCriptextFooter;
+        }
+
+        if (language) {
+          settingsObject.language = language;
+        }
+
+        if (darkTheme !== undefined) {
+          settingsObject.theme = darkTheme ? 'dark' : 'light';
+        }
+
+        if (showPreview !== undefined) {
+          await setShowPreview(showPreview);
+        }
+        if (Object.keys(settingsObject).length !== 0) {
+          await updateSettings(settingsObject, trx);
+        }
+        if (Object.keys(accountObj).length !== 0) {
+          await updateAccount(accountObj, trx);
         }
       });
 
