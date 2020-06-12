@@ -17,23 +17,29 @@ const UpdatePopup = props => {
       <div className="popup-subtitle">
         <p>{props.title}</p>
       </div>
-      <div className="popup-paragraph">
+      <div
+        className={`popup-paragraph ${
+          props.showUpdateNow ? '' : 'popup-bottom-margin'
+        }`}
+      >
         <p>{props.body}</p>
       </div>
-      <div className="popup-buttons">
-        <button
-          className="button-a popup-confirm-button"
-          onClick={props.onUpdateNow}
-        >
-          <span>{buttons.update}</span>
-        </button>
-        <button
-          className="button-a popup-cancel-button"
-          onClick={props.onTogglePopup}
-        >
-          <span>{buttons.later}</span>
-        </button>
-      </div>
+      {props.showUpdateNow && (
+        <div className="popup-buttons">
+          <button
+            className="button-a popup-confirm-button"
+            onClick={props.onUpdateNow}
+          >
+            <span>{buttons.update}</span>
+          </button>
+          <button
+            className="button-a popup-cancel-button"
+            onClick={props.onTogglePopup}
+          >
+            <span>{buttons.later}</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -43,7 +49,8 @@ UpdatePopup.propTypes = {
   largeImageUrl: PropTypes.string,
   title: PropTypes.string,
   onTogglePopup: PropTypes.func,
-  onUpdateNow: PropTypes.func
+  onUpdateNow: PropTypes.func,
+  showUpdateNow: PropTypes.bool
 };
 
 export default UpdatePopup;

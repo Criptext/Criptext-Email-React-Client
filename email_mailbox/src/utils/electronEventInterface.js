@@ -94,6 +94,8 @@ import {
 } from './FetchUtils';
 import string from './../lang';
 import { processPendingEvents } from './ipc';
+import { version as appVersion } from '../../package.json';
+import semver from 'semver';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -1332,13 +1334,11 @@ const handlePeerRecoveryEmailConfirmed = accountRecipientId => {
 };
 
 const handleNewAnnouncementEvent = async ({ rowid, params }) => {
-  const { code } = params;
+  const { code, version, operator } = params;
   const updateAnnouncement = await getNews({ code });
   if (!updateAnnouncement) return { rowid };
   if (updateAnnouncement.largeImageUrl) {
-    emitter.emit(Event.BIG_UPDATE_AVAILABLE, {
-      ...updateAnnouncement
-    });
+    handleNewAnnouncement(updateAnnouncement, version, parseInt(operator));
     return { rowid };
   }
   const messageData = {
@@ -1348,6 +1348,42 @@ const handleNewAnnouncementEvent = async ({ rowid, params }) => {
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
   return { rowid };
+};
+
+const handleNewAnnouncement = (announcement, version, operator) => {
+  const OPERATOR = {
+    LESS_THAN: 1,
+    LESS_EQUAL: 2,
+    EQUAL: 3,
+    GREATER_EQUAL: 4,
+    GREATER_THAN: 5
+  };
+  let shouldShowAnnouncement = true;
+  switch (operator) {
+    case OPERATOR.LESS_THAN:
+      shouldShowAnnouncement = semver.lt(appVersion, version);
+      break;
+    case OPERATOR.LESS_EQUAL:
+      shouldShowAnnouncement = semver.lte(appVersion, version);
+      break;
+    case OPERATOR.EQUAL:
+      shouldShowAnnouncement = semver.eq(appVersion, version);
+      break;
+    case OPERATOR.GREATER_EQUAL:
+      shouldShowAnnouncement = semver.gte(appVersion, version);
+      break;
+    case OPERATOR.GREATER_THAN:
+      shouldShowAnnouncement = semver.gt(appVersion, version);
+      break;
+    default:
+      break;
+  }
+  if (!shouldShowAnnouncement) return;
+
+  emitter.emit(Event.BIG_UPDATE_AVAILABLE, {
+    ...announcement,
+    showUpdateNow: semver.gt(version, appVersion)
+  });
 };
 
 const handleNewUpdateAvailable = async ({ rowid }) => {
