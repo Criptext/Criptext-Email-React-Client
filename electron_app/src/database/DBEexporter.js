@@ -596,8 +596,7 @@ const exportLabelTable = async accountId => {
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
-const exportEmailTable = async accountId => {
-  const username = myAccount.email;
+const exportEmailTable = async (accountId, email) => {
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -629,14 +628,14 @@ const exportEmailTable = async accountId => {
 
           const body =
             (await getEmailBody({
-              username,
+              username: email,
               metadataKey: newRow.key,
               password: globalManager.databaseKey.get()
             })) ||
             newRow.content ||
             '';
           const headers = await getEmailHeaders({
-            username,
+            username: email,
             metadataKey: newRow.key,
             password: globalManager.databaseKey.get()
           });
@@ -847,6 +846,7 @@ const exportEncryptDatabaseToFile = async ({
   const [recipientId, domain] = accountObj
     ? accountObj.recipientId.split('@')
     : myAccount.recipientId.split('@');
+  const accountEmail = `${recipientId}@${domain || APP_DOMAIN}`;
   const accountId = accountObj ? accountObj.id : myAccount.id;
   const signature =
     accountObj && accountObj.signature !== undefined
@@ -876,7 +876,7 @@ const exportEncryptDatabaseToFile = async ({
   handleProgressCallback(
     exportProgress,
     'saving_account',
-    `${recipientId}@${domain || APP_DOMAIN}`,
+    accountEmail,
     progressCallback
   );
 
@@ -926,13 +926,13 @@ const exportEncryptDatabaseToFile = async ({
       progressCallback
     );
 
-    const result = await exportTable.export(accountId);
+    const result = await exportTable.export(accountId, accountEmail);
 
     exportProgress += 100 / PROGRESS_TOTAL_STEPS;
     handleProgressCallback(
       exportProgress,
       `saving_${exportTable.suffix}`,
-      `${recipientId}@${domain || APP_DOMAIN}`,
+      accountEmail,
       progressCallback
     );
 
@@ -943,7 +943,7 @@ const exportEncryptDatabaseToFile = async ({
   handleProgressCallback(
     exportProgress,
     'almost_done',
-    `${recipientId}@${domain || APP_DOMAIN}`,
+    accountEmail,
     progressCallback
   );
 };

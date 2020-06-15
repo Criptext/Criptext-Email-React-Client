@@ -396,7 +396,7 @@ class SettingsAccountBackupWrapper extends Component {
   updateAutoBackupParams = async backupSize => {
     const { selectedFrequency, backupPath } = this.state;
     const timeUnit = defineUnitToAppend(selectedFrequency);
-    const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
+    const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, 'hours');
     const autoBackupPath = removeFilenameFromPath(backupPath);
     await updateAccount({
       autoBackupEnable: true,

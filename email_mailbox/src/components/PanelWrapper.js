@@ -270,7 +270,7 @@ class PanelWrapper extends Component {
   handleEnableAccountBackup = async backupPath => {
     const frequency = 'daily';
     const timeUnit = 'days';
-    const { nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
+    const { nextDate } = getAutoBackupDates(Date.now(), 1, 'hours');
 
     await updateAccount({
       autoBackupEnable: true,
