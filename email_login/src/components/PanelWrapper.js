@@ -10,6 +10,7 @@ import UpgradeToPlusPopup from './UpgradeToPlusPopup';
 import PopupHOC from './PopupHOC';
 import ForgotPasswordPopup from './ForgotPasswordPopup';
 import DialogPopup, { DialogTypes } from './DialogPopup';
+import PropTypes from 'prop-types';
 import { ButtonState } from './Button';
 import {
   createTemporalAccount,
@@ -112,13 +113,13 @@ const commitNewUser = validInputData => {
 };
 
 class PanelWrapper extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       buttonSignInState: ButtonState.DISABLED,
       contactURL: 'https://criptext.atlassian.net/servicedesk/customer/portals',
-      currentStep: mode.SIGNIN,
-      lastStep: [mode.SIGNIN],
+      currentStep: this.props.mode,
+      lastStep: [this.props.mode],
       values: {
         usernameOrEmailAddress: '',
         password: ''
@@ -279,6 +280,7 @@ class PanelWrapper extends Component {
           <SignUpWrapper
             checkAvailableUsername={checkAvailableUsername}
             onFormReady={this.onFormReady}
+            signupError={this.props.signupError}
             onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
           />
         );
@@ -1085,5 +1087,8 @@ class PanelWrapper extends Component {
     checkForUpdates(true);
   };
 }
-
+PanelWrapper.propTypes = {
+  mode: PropTypes.string,
+  signupError: PropTypes.object
+};
 export default PanelWrapper;

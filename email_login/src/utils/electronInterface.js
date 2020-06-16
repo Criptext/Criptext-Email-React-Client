@@ -24,6 +24,10 @@ export const getTemporalAccount = () => {
   return globalManager.temporalAccount.get();
 };
 
+export const getLoginInformation = () => {
+  return globalManager.loginData.get();
+};
+
 export const deleteTemporalAccount = () => {
   return globalManager.temporalAccount.delete();
 };
@@ -62,6 +66,10 @@ export const confirmWaitingApprovalLogin = callback => {
     const response = responseIndex === RESPONSES.KEEP.index;
     callback(response);
   });
+};
+
+export const setLoginInformation = params => {
+  return globalManager.loginData.set(params);
 };
 
 export const { DEFAULT_PIN } = remote.require('./src/utils/const');
