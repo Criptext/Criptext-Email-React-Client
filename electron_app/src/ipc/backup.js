@@ -70,7 +70,8 @@ const doExportBackupUnencrypted = async params => {
       : myAccount.recipientId.split('@');
 
     logger.info(
-      `Unencrypted Backup Started For Account: ${recipientId}@${domain}`
+      `Unencrypted Backup Started For Account: ${recipientId}@${domain ||
+        APP_DOMAIN}`
     );
 
     handleProgressCallback(
@@ -242,7 +243,7 @@ const initAutoBackupMonitor = () => {
 
   if (!currentAutobackup) checkNextBackup();
 
-  logger.debug(`Backups Started : ${JSON.stringify(autoBackupsTime)}`);
+  logger.debug(`Backups : ${JSON.stringify(autoBackupsTime)}`);
 };
 
 const checkNextBackup = () => {
@@ -255,7 +256,7 @@ const checkNextBackup = () => {
   });
 
   logger.debug(
-    `Next Account : ${autoBackupsTime[0].accountId} : $ ${
+    `Next Backup : ${autoBackupsTime[0].accountId} : $ ${
       autoBackupsTime[0].username
     } in ${autoBackupsTime[0].triggerTimer} miliseconds`
   );
@@ -301,7 +302,7 @@ const initAutoBackup = async accountId => {
     const today = moment(Date.now());
     const nextDate = moment(autoBackupNextDate);
     do {
-      nextDate.add(1, 'hours');
+      nextDate.add(1, timeUnit);
     } while (nextDate.isBefore(today));
     await updateAccount({
       id: accountId,
@@ -309,7 +310,7 @@ const initAutoBackup = async accountId => {
       autoBackupLastSize: backupSize,
       autoBackupNextDate: nextDate.format(backupDateFormat)
     });
-    logger.debug(`Backups Finished : ${accountId}`);
+    logger.debug(`Backup Finished : ${accountId}`);
     const timeDiff = nextDate.diff(today);
     autoBackupsTime.push({
       username: account.recipientId,

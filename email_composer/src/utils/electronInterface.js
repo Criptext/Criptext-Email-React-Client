@@ -38,7 +38,6 @@ export const sendEventToMailbox = (name, params) => {
 webFrame.setSpellCheckProvider(mySettings.language, {
   spellCheck(words, callback) {
     const checker = new spellChecker.Spellchecker();
-    checker.setSpellcheckerType(spellChecker.ALWAYS_USE_HUNSPELL);
     const misspelled = words.filter(x => {
       return checker.isMisspelled(x);
     });

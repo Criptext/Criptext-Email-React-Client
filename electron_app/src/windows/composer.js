@@ -91,7 +91,6 @@ const createComposerWindow = () => {
     showCopyImageAddress: false,
     prepend: (defaultActions, browserWindow) => {
       const checker = new spellChecker.Spellchecker();
-      checker.setSpellcheckerType(spellChecker.ALWAYS_USE_HUNSPELL);
 
       let options = [];
       if (defaultActions.misspelledWord) {

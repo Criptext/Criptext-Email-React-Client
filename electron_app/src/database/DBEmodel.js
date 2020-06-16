@@ -10,6 +10,7 @@ const Model = Sequelize.Model;
 const Op = Sequelize.Op;
 const { parseDate, formatDate } = require('./../utils/TimeUtils');
 const { DEFAULT_PIN } = require('./../utils/const');
+const logger = require('../logger');
 
 let sequelize;
 
@@ -609,7 +610,7 @@ const initDatabaseEncrypted = async (
       }
     );
   } catch (ex) {
-    console.error(ex);
+    logger.error(ex);
   }
 };
 
