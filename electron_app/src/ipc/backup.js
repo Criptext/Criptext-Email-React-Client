@@ -22,6 +22,7 @@ const {
 const { APP_DOMAIN } = require('../utils/const');
 const { updateAccount } = require('./../database');
 const myAccount = require('../Account');
+const logger = require('../logger');
 let autoBackupsTime = [];
 let currentAutobackup = null;
 let nextBackupTimer = null;
@@ -67,6 +68,11 @@ const doExportBackupUnencrypted = async params => {
     const [recipientId, domain] = accountObj
       ? accountObj.recipientId.split('@')
       : myAccount.recipientId.split('@');
+
+    logger.info(
+      `Unencrypted Backup Started For Account: ${recipientId}@${domain ||
+        APP_DOMAIN}`
+    );
 
     handleProgressCallback(
       -1,
@@ -133,6 +139,7 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
+    logger.info(`Encrypted Backup Started for Path: ${backupPath}`);
     const backupSize = await exportBackupEncrypted({
       backupPath,
       password
@@ -222,7 +229,7 @@ const initAutoBackupMonitor = () => {
       !autoBackupNextDate ||
       account.id === currentAutobackup
     )
-      return;
+      continue;
 
     const now = moment();
     const pendingDate = moment(autoBackupNextDate);
@@ -235,6 +242,8 @@ const initAutoBackupMonitor = () => {
   }
 
   if (!currentAutobackup) checkNextBackup();
+
+  logger.debug(`Backups : ${JSON.stringify(autoBackupsTime)}`);
 };
 
 const checkNextBackup = () => {
@@ -246,6 +255,11 @@ const checkNextBackup = () => {
     return 0;
   });
 
+  logger.debug(
+    `Next Backup : ${autoBackupsTime[0].accountId} : $ ${
+      autoBackupsTime[0].username
+    } in ${autoBackupsTime[0].triggerTimer} miliseconds`
+  );
   if (nextBackupTimer) clearTimeout(nextBackupTimer);
   nextBackupTimer = setTimeout(() => {
     initAutoBackup(autoBackupsTime[0].accountId);
@@ -253,17 +267,17 @@ const checkNextBackup = () => {
 };
 
 const initAutoBackup = async accountId => {
+  currentAutobackup = accountId;
   autoBackupsTime = autoBackupsTime.filter(timer => {
     return timer.accountId !== accountId;
   });
-  currentAutobackup = accountId;
 
   const account = myAccount.loggedAccounts.find(acc => acc.id === accountId);
   if (!account) {
     backupDone();
     return;
   }
-
+  logger.info(`Backup Started For Account: ${account.recipientId}`);
   const {
     autoBackupEnable,
     autoBackupPath,
@@ -278,6 +292,7 @@ const initAutoBackup = async accountId => {
   try {
     const backupFileName = defineBackupFileName('db');
     const backupSize = await doExportBackupUnencrypted({
+      accountObj: account,
       backupPath: `${autoBackupPath}/${backupFileName}`,
       progressCallback: data => {
         send('backup-progress', data);
@@ -295,19 +310,20 @@ const initAutoBackup = async accountId => {
       autoBackupLastSize: backupSize,
       autoBackupNextDate: nextDate.format(backupDateFormat)
     });
+    logger.debug(`Backup Finished : ${accountId}`);
     const timeDiff = nextDate.diff(today);
     autoBackupsTime.push({
       username: account.recipientId,
-      accountId,
+      id: accountId,
       triggerTimer: timeDiff <= 0 ? 1 : timeDiff
     });
 
     backupDone();
   } catch (backupErr) {
-    log(
+    logger.error(
       `Failed to do scheduled backup for account ${account.recipientId} : ${
         account.name
-      }`
+      } => ${backupErr}`
     );
     backupFail();
   }
@@ -316,7 +332,7 @@ const initAutoBackup = async accountId => {
 const backupDone = () => {
   currentAutobackup = null;
   nextBackupTimer = null;
-  checkNextBackup();
+  initAutoBackupMonitor();
 };
 
 const backupFail = () => {
@@ -340,14 +356,8 @@ ipc.answerRenderer('disable-auto-backup', accountId => {
     return timer.accountId !== accountId;
   });
 
-  if (!currentAutobackup) checkNextBackup();
+  if (!currentAutobackup) initAutoBackupMonitor();
 });
-
-const log = message => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[AutoBackup]: ${message}`);
-  }
-};
 
 process.on('exit', () => {
   clearTimeout(nextBackupTimer);
