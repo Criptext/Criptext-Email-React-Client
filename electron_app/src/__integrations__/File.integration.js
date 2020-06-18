@@ -1,6 +1,15 @@
 /* eslint-env node, jest */
 const DBManager = require('../database');
 
+jest.mock('../windows/mailbox', () => ({
+  getShowPreview: () => {
+    return Promise.resolve(true);
+  },
+  setShowPreview: () => {
+    return Promise.resolve();
+  }
+}));
+
 let accountId;
 
 const account = {

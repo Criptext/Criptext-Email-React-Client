@@ -2,6 +2,15 @@
 const DBManager = require('../database');
 const systemLabels = require('../systemLabels');
 
+jest.mock('../windows/mailbox', () => ({
+  getShowPreview: () => {
+    return Promise.resolve(true);
+  },
+  setShowPreview: () => {
+    return Promise.resolve();
+  }
+}));
+
 let accountId;
 
 const account = {

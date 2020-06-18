@@ -85,7 +85,11 @@ import {
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
-import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
+import {
+  getShowEmailPreviewStatus,
+  getUserGuideStepStatus,
+  setShowEmailPreviewStatus
+} from './storage';
 import {
   fetchAcknowledgeEvents,
   fetchEvents,
@@ -1567,6 +1571,14 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 ipc.answerMain('get-events', async () => {
   await restartConnection();
   sendLoadEventsEvent({});
+});
+
+ipc.answerMain('get-show-preview', () => {
+  return getShowEmailPreviewStatus();
+});
+
+ipc.answerMain('set-show-preview', showPreview => {
+  return setShowEmailPreviewStatus(showPreview);
 });
 
 ipcRenderer.on('refresh-window-logged-as', (ev, { accountId, recipientId }) => {

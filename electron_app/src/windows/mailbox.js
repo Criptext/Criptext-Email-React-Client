@@ -142,6 +142,14 @@ const close = () => {
   mailboxWindow = undefined;
 };
 
+const getShowPreview = async () => {
+  return await ipc.callRenderer(mailboxWindow, 'get-show-preview');
+};
+
+const setShowPreview = async showPreview => {
+  return await ipc.callRenderer(mailboxWindow, 'set-show-preview', showPreview);
+};
+
 const toggleMaximize = () => {
   if (mailboxWindow !== undefined) {
     if (mailboxWindow.isMaximized()) {
@@ -192,8 +200,10 @@ function getWindow() {
 module.exports = {
   close,
   hide,
+  getShowPreview,
   getWindow,
   send,
+  setShowPreview,
   show,
   isVisibleAndFocused,
   toggleMaximize,

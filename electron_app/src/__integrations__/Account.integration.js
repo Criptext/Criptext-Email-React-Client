@@ -2,6 +2,14 @@
 
 const DBManager = require('../database');
 jest.mock('./../Account.js');
+jest.mock('../windows/mailbox', () => ({
+  getShowPreview: () => {
+    return Promise.resolve(true);
+  },
+  setShowPreview: () => {
+    return Promise.resolve();
+  }
+}));
 
 const account = {
   recipientId: 'user',

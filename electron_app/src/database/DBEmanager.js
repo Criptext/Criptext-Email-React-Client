@@ -112,30 +112,33 @@ const getAccountByParams = params => {
     .map(account => account.toJSON());
 };
 
-const updateAccount = ({
-  id,
-  deviceId,
-  jwt,
-  refreshToken,
-  name,
-  blockRemoteContent,
-  customerType,
-  privKey,
-  pubKey,
-  recipientId,
-  registrationId,
-  signature,
-  signatureEnabled,
-  signFooter,
-  isLoggedIn,
-  isActive,
-  autoBackupEnable,
-  autoBackupFrequency,
-  autoBackupLastDate,
-  autoBackupLastSize,
-  autoBackupNextDate,
-  autoBackupPath
-}) => {
+const updateAccount = (
+  {
+    id,
+    deviceId,
+    jwt,
+    refreshToken,
+    name,
+    blockRemoteContent,
+    customerType,
+    privKey,
+    pubKey,
+    recipientId,
+    registrationId,
+    signature,
+    signatureEnabled,
+    signFooter,
+    isLoggedIn,
+    isActive,
+    autoBackupEnable,
+    autoBackupFrequency,
+    autoBackupLastDate,
+    autoBackupLastSize,
+    autoBackupNextDate,
+    autoBackupPath
+  },
+  trx
+) => {
   const params = noNulls({
     deviceId,
     jwt,
@@ -163,7 +166,8 @@ const updateAccount = ({
   const whereParam = id ? { id } : { recipientId };
   myAccount.update({ ...params, ...whereParam });
   return Account().update(params, {
-    where: whereParam
+    where: whereParam,
+    transaction: trx
   });
 };
 
@@ -1382,7 +1386,7 @@ const getSettings = () => {
     });
 };
 
-const updateSettings = async ({ language, opened, theme }) => {
+const updateSettings = async ({ language, opened, theme }, trx) => {
   const params = noNulls({
     language,
     opened,
@@ -1391,7 +1395,11 @@ const updateSettings = async ({ language, opened, theme }) => {
   if (Object.keys(params).length < 1) {
     return Promise.resolve([1]);
   }
-  const result = await Settings().update(params, { where: {} });
+  const result = await Settings().update(
+    params,
+    { where: {} },
+    { transaction: trx }
+  );
   mySettings.update(params);
   if (params.language) setLanguage(params.language);
   return result;

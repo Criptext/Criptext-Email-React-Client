@@ -24,6 +24,15 @@ const myAccount = require('../Account');
 const PARSED_SAMPLE_FILEPATH = `${__dirname}/parsed_sample_file.txt`;
 const TEMP_DIRECTORY = '/tmp/criptext-tests';
 
+jest.mock('../windows/mailbox', () => ({
+  getShowPreview: () => {
+    return Promise.resolve(true);
+  },
+  setShowPreview: () => {
+    return Promise.resolve();
+  }
+}));
+
 let accountId;
 let username;
 const account = {
@@ -105,9 +114,18 @@ const email = {
     }
   ]
 };
+const settings = {
+  language: 'en',
+  opened: false,
+  theme: 'dark'
+};
 
 const insertAccount = async () => {
   return await DBManager.createAccount(account);
+};
+
+const insertSettings = async () => {
+  return await DBManager.createSettings(settings);
 };
 
 const insertContacts = async params => {
@@ -167,6 +185,7 @@ beforeAll(async () => {
   });
   globalManager.databaseKey.set(dbKey);
   const [account] = await insertAccount();
+  await insertSettings();
   myAccount.initialize([account.dataValues]);
   accountId = account.dataValues.id;
   username = myAccount.email;
@@ -321,11 +340,21 @@ describe('Import Database: ', () => {
     };
     const same =
       emailChecked1.id === emailChecked2.id && emailChecked1.id === rawEmail.id;
+
+    const { language, theme } = await DBManager.getSettings();
+
+    const [account] = await DBManager.getAccount();
+    const { signature, signFooter } = account;
+
     expect(same).toBe(true);
     expect(emailResult).toMatchObject(expect.objectContaining(email.email));
     expect(fileResult).toMatchObject(email.files[0]);
     expect(firstContact).toMatchObject(contacts[0]);
     expect(secondContact).toMatchObject(contacts[1]);
     expect(thirdContact).toMatchObject(contacts[2]);
+    expect(language).toBe('en');
+    expect(theme).toBe('dark');
+    expect(signature).toBe('');
+    expect(signFooter).toBe(true);
   });
 });
