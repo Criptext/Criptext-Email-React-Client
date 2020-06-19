@@ -291,6 +291,11 @@ class SettingAccountWrapper extends Component {
   }
 
   componentDidMount() {
+    if (this.props.openRecoveryEmail) {
+      this.handleClickChangeRecoveryEmail();
+      this.props.cleanOpenRecoveryEmail();
+    }
+
     setTimeout(() => {
       const stillTwoFactorAuthLoading = this.state.twoFactorParams.isLoading;
       const stillRecoveryEmailLoading = this.state.recoveryEmailParams
@@ -1350,6 +1355,10 @@ class SettingAccountWrapper extends Component {
       Event.RECOVERY_EMAIL_CONFIRMED,
       this.recoveryEmailConfirmedListenerCallback
     );
+    addEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
+      this.handleEventOpenPopupRecoveryEmail
+    );
   };
 
   removeEventHandlers = () => {
@@ -1361,6 +1370,15 @@ class SettingAccountWrapper extends Component {
       Event.RECOVERY_EMAIL_CONFIRMED,
       this.recoveryEmailConfirmedListenerCallback
     );
+    removeEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
+      this.handleEventOpenPopupRecoveryEmail
+    );
+  };
+
+  handleEventOpenPopupRecoveryEmail = () => {
+    this.handleClickChangeRecoveryEmail();
+    this.props.cleanOpenRecoveryEmail();
   };
 
   recoveryEmailChangedListenerCallback = recoveryEmail => {
@@ -1384,6 +1402,7 @@ class SettingAccountWrapper extends Component {
 
 SettingAccountWrapper.propTypes = {
   aliasesByDomain: PropTypes.object,
+  cleanOpenRecoveryEmail: PropTypes.func,
   devices: PropTypes.array,
   domains: PropTypes.array,
   isHiddenSettingsPopup: PropTypes.bool,
@@ -1398,6 +1417,7 @@ SettingAccountWrapper.propTypes = {
   onRemoveCustomDomain: PropTypes.func,
   onSetReadReceiptsTracking: PropTypes.func,
   onUpdateAccount: PropTypes.func,
+  openRecoveryEmail: PropTypes.bool,
   readReceiptsEnabled: PropTypes.bool,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,

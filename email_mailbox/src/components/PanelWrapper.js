@@ -81,7 +81,8 @@ class PanelWrapper extends Component {
             to: '',
             subject: '',
             hasAttachments: false
-          }
+          },
+          openRecoveryEmail: undefined
         }
       }
     };
@@ -186,12 +187,17 @@ class PanelWrapper extends Component {
       case SectionType.SETTINGS:
         {
           const tabSelected = params && params.tab ? params.tab : TAB.ACCOUNT;
+          const openRecoveryEmail =
+            params && params.openRecoveryEmail !== undefined
+              ? params.openRecoveryEmail
+              : false;
           const sectionSelected = {
             type,
             params: {
               mailboxSelected: null,
               threadIdSelected: null,
-              tabSelected
+              tabSelected,
+              openRecoveryEmail
             }
           };
           this.setState({ sectionSelected }, () => {
@@ -351,6 +357,10 @@ class PanelWrapper extends Component {
     addEvent(Event.STORE_LOAD, this.storeLoadListenerCallback);
     addEvent(Event.UPDATE_LOADING_SYNC, this.updateLoadingSync);
     addEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
+      this.redirectToPopupRecoveryEmail
+    );
+    addEvent(
       Event.UPDATE_THREAD_EMAILS,
       this.updateThreadEmailsListenerCallback
     );
@@ -393,6 +403,10 @@ class PanelWrapper extends Component {
     removeEvent(Event.STOP_LOAD_SYNC, this.stopLoadSyncListenerCallback);
     removeEvent(Event.STORE_LOAD, this.storeLoadListenerCallback);
     removeEvent(Event.UPDATE_LOADING_SYNC, this.updateLoadingSync);
+    removeEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
+      this.redirectToPopupRecoveryEmail
+    );
     removeEvent(
       Event.UPDATE_THREAD_EMAILS,
       this.updateThreadEmailsListenerCallback
@@ -451,6 +465,13 @@ class PanelWrapper extends Component {
 
   loadAppListenerCallback = ({ mailbox, accountId, recipientId, threadId }) => {
     this.handleUpdateApp({ mailbox, accountId, recipientId, threadId });
+  };
+
+  redirectToPopupRecoveryEmail = () => {
+    this.handleClickSection(SectionType.SETTINGS, {
+      tab: TAB.ACCOUNT,
+      openRecoveryEmail: true
+    });
   };
 
   refreshThreadsListenerCallback = eventParams => {

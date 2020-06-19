@@ -391,6 +391,11 @@
         "description": "Die Einstellung der E-Mail 'Antwort an' konnte nicht vorgenommen werden. Sie wurde nicht geändert."
       }
     },
+    "send_recovery_email": {
+      "success": {
+        "description": "Confirmation email sent to your recovery email"
+      }
+    },
     "trash": {
       "description": "Nachrichten, die länger als 30 Tage im Papierkorb waren, werden automatisch gelöscht",
       "action": "Leerer Papierkorb"

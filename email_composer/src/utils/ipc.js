@@ -42,6 +42,10 @@ export const restartAlice = async () => {
 
 /* Criptext Client
 ----------------------------- */
+export const canSend = async () => {
+  return await ipc.callMain('client-can-send');
+};
+
 export const checkExpiredSession = async params => {
   return await ipc.callMain('client-check-expired-session', params);
 };
@@ -56,6 +60,10 @@ export const getUserSettings = async recipientId => {
 
 export const isCriptextDomain = async params => {
   return await ipc.callMain('client-is-criptext-domain', params);
+};
+
+export const resendConfirmationEmail = async () => {
+  return await ipc.callMain('client-resend-confirmation-email');
 };
 
 export const postEmail = async params => {

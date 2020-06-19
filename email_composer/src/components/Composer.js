@@ -7,7 +7,11 @@ import BodyWrapper from './BodyWrapper';
 import NonCriptextPopupWrapper from './NonCriptextPopupWrapper';
 import { Status } from './Control';
 import { mySettings } from '../utils/electronInterface';
+import PopupHOC from './PopupHOC';
+import NotVerifiedRecoveryEmailPopup from '../components/NotVerifiedRecoveryEmailPopup';
 import './composer.scss';
+
+const NotverifiedrecoveryemailPopup = PopupHOC(NotVerifiedRecoveryEmailPopup);
 
 const Composer = props => (
   <div className="wrapper" data-theme={mySettings.theme || 'light'}>
@@ -64,6 +68,14 @@ const Composer = props => (
         }
       />
     )}
+    {props.displayNotVerifiedRecoveryEmailPopup && (
+      <NotverifiedrecoveryemailPopup
+        popupPosition={{ left: '45%', top: '45%' }}
+        onConfirmVerifyRecoveryEmail={props.handleConfirmVerifyRecoveryEmail}
+        onTogglePopup={props.onTogglePopupNotVerifiedRecoveryEmail}
+        theme={'dark'}
+      />
+    )}
     {(props.status === Status.WAITING ||
       props.status === Status.INITIALIZING ||
       props.isLinkingDevices) && <div className="composer-disable" />}
@@ -79,6 +91,7 @@ Composer.propTypes = {
   ccEmails: PropTypes.array,
   disableSendButtonOnInvalidEmail: PropTypes.func,
   displayNonCriptextPopup: PropTypes.bool,
+  displayNotVerifiedRecoveryEmailPopup: PropTypes.bool,
   files: PropTypes.array,
   getAccount: PropTypes.func,
   getBccEmails: PropTypes.func,
@@ -86,6 +99,7 @@ Composer.propTypes = {
   getHtmlBody: PropTypes.func,
   getTextSubject: PropTypes.func,
   getToEmails: PropTypes.func,
+  handleConfirmVerifyRecoveryEmail: PropTypes.func,
   handlePauseUploadFile: PropTypes.func,
   handleResumeUploadFile: PropTypes.func,
   htmlBody: PropTypes.string,
@@ -103,6 +117,7 @@ Composer.propTypes = {
   onClickSendMessage: PropTypes.func,
   onDragOver: PropTypes.func,
   onSetNonCriptextRecipientsPassword: PropTypes.func,
+  onTogglePopupNotVerifiedRecoveryEmail: PropTypes.func,
   onToggleRecipient: PropTypes.func,
   status: PropTypes.number,
   tagBlured: PropTypes.func,

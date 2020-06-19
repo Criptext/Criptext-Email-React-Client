@@ -15,6 +15,11 @@ ipc.answerRenderer('client-can-login', ({ username, domain }) =>
   clientManager.canLogin({ username, domain })
 );
 
+ipc.answerRenderer('client-can-send', () => {
+  const data = { recipientId: myAccount.recipientId };
+  return clientManager.canSend(data);
+});
+
 ipc.answerRenderer('client-change-password', params => {
   const data = { ...params, recipientId: myAccount.recipientId };
   return clientManager.changePassword(data);

@@ -200,6 +200,15 @@ const canLogin = async ({ username, domain }) => {
   return await client.canLogin({ username, domain });
 };
 
+const canSend = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
+  const res = await client.canSend();
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, canSend, params);
+};
+
 const changeRecoveryEmail = async params => {
   const { recipientId } = params;
   const client = await createClient({ recipientId });
@@ -754,6 +763,7 @@ module.exports = {
   activateAddress,
   acknowledgeEvents,
   canLogin,
+  canSend,
   blockRemoteContent,
   changePassword,
   changeRecoveryEmail,

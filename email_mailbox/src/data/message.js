@@ -125,6 +125,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.reset_password_send_link.success.description
     },
+    sendRecoveryEmail: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.send_recovery_email.success.description
+    },
     twoFactorAuthTurnOff: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.two_factor_auth_turn_off.description

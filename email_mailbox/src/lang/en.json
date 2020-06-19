@@ -398,6 +398,11 @@
         "description": "Failed to set 'Reply To' email. It has not been modified"
       }
     },
+    "send_recovery_email": {
+      "success": {
+        "description": "Confirmation email sent to your recovery email"
+      }
+    },
     "trash": {
       "description": "Messages that have been in Trash more than 30 days will be automatically deleted",
       "action": "Empty Trash"

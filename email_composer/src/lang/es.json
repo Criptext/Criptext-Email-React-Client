@@ -41,6 +41,15 @@
         "send": "Enviar",
         "cancel": "Cancelar"
       }
+    },
+    "notVerifiedRecoveryEmail": {
+      "title": "No tan rápido 🤨",
+      "description": "Necesitas verificar tu correo de verificación antes de poder enviar correos.",
+      "description_2": "Esto es para que puedas acceder a tu cuenta en caso que a pierdas.",
+      "buttons": {
+        "send": "Verificar correo de veriicación",
+        "cancel": "Cancelar"
+      }
     }
   },
   "errors": {

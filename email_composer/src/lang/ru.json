@@ -41,6 +41,15 @@
         "send": "Отправить",
         "cancel": "Отмена"
       }
+    },
+    "notVerifiedRecoveryEmail": {
+      "title": "Not so fast 🤨",
+      "description": "You need to verify a Recovery Email  before being able to send emails.",
+      "description_2": "This is only so you can regain access to your account if you ever forget your password.",
+      "buttons": {
+        "send": "Verify Recovery Email",
+        "cancel": "Cancel"
+      }
     }
   },
   "errors": {

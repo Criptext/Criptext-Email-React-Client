@@ -11,10 +11,12 @@ import {
   setMyAccount
 } from './../utils/electronInterface';
 import {
+  canSend,
   closeComposerWindow,
   createEmail,
   getAlias,
   isCriptextDomain,
+  resendConfirmationEmail,
   saveDraftChangesComposerWindow,
   throwError,
   checkExpiredSession
@@ -76,6 +78,7 @@ class ComposerWrapper extends Component {
       bccEmails: [],
       ccEmails: [],
       displayNonCriptextPopup: false,
+      displayNotVerifiedRecoveryEmailPopup: false,
       files: [],
       htmlBody: '',
       isCollapsedMoreRecipient: true,
@@ -89,7 +92,8 @@ class ComposerWrapper extends Component {
       toEmails: [],
       isLinkingDevices: false,
       totalFilesSize: 0,
-      allowChangeFrom: true
+      allowChangeFrom: true,
+      recoveryEmail: undefined
     };
 
     addEvent(Event.DISABLE_WINDOW, () => {
@@ -117,6 +121,9 @@ class ComposerWrapper extends Component {
           this.handleDisableSendButtonOnInvalidEmail
         }
         displayNonCriptextPopup={this.state.displayNonCriptextPopup}
+        displayNotVerifiedRecoveryEmailPopup={
+          this.state.displayNotVerifiedRecoveryEmailPopup
+        }
         files={this.state.files}
         getAccount={this.hangleGetAccount}
         getBccEmails={this.handleGetBccEmail}
@@ -124,6 +131,7 @@ class ComposerWrapper extends Component {
         getTextSubject={this.handleGetSubject}
         getToEmails={this.handleGetToEmail}
         getHtmlBody={this.handleGetHtmlBody}
+        handleConfirmVerifyRecoveryEmail={this.handleConfirmVerifyRecoveryEmail}
         htmlBody={this.state.htmlBody}
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         isDragActive={this.state.isDragActive}
@@ -139,6 +147,9 @@ class ComposerWrapper extends Component {
         onDrop={this.handleDrop}
         onPauseUploadFile={this.handlePauseUploadFile}
         onResumeUploadFile={this.handleResumeUploadFile}
+        onTogglePopupNotVerifiedRecoveryEmail={
+          this.handleTogglePopupNotVerifiedRecoveryEmail
+        }
         onToggleRecipient={this.handleToggleRecipient}
         status={this.state.status}
         onSetNonCriptextRecipientsPassword={
@@ -377,6 +388,30 @@ class ComposerWrapper extends Component {
   handleClickDiscardDraft = () => {
     const threadId = this.state.threadId;
     closeComposerWindow({ threadId, discard: true });
+  };
+
+  handleConfirmVerifyRecoveryEmail = async () => {
+    const recoveryEmail = this.state.recoveryEmail;
+    if (recoveryEmail === '') {
+      this.saveTemporalDraft();
+      sendEventToMailbox('open-recovery-email-mailbox', undefined);
+      this.setState({
+        displayNotVerifiedRecoveryEmailPopup: false
+      });
+      closeComposerWindow({ threadId: this.state.threadId });
+      return;
+    }
+    this.setState({
+      displayNotVerifiedRecoveryEmailPopup: false
+    });
+    await resendConfirmationEmail();
+    sendEventToMailbox('send-recovery-email', undefined);
+  };
+
+  handleTogglePopupNotVerifiedRecoveryEmail = () => {
+    this.setState({
+      displayNotVerifiedRecoveryEmailPopup: false
+    });
   };
 
   handleDisableSendButtonOnInvalidEmail = () => {
@@ -718,7 +753,7 @@ class ComposerWrapper extends Component {
     });
   };
 
-  handleSendMessage = () => {
+  handleSendMessage = async () => {
     const hasPendingAttachments = this.state.files.filter(file =>
       PENDING_ATTACHMENTS_MODES.includes(file.mode)
     );
@@ -736,14 +771,24 @@ class ComposerWrapper extends Component {
         throwError(string.errors.tooManyRecipients);
       });
     } else {
-      const isEmailSecure = !hasNonCriptextRecipients;
-      this.sendMessage(isEmailSecure);
+      this.setState({ status: Status.WAITING });
+      const { status, body } = await canSend();
+
+      if (status === 405) {
+        const recoveryEmail = body.data.recovery;
+        this.setState({
+          displayNotVerifiedRecoveryEmailPopup: true,
+          recoveryEmail,
+          status: Status.ENABLED
+        });
+      } else {
+        const isEmailSecure = !hasNonCriptextRecipients;
+        this.sendMessage(isEmailSecure);
+      }
     }
   };
 
   sendMessage = async secure => {
-    this.setState({ status: Status.WAITING });
-
     const data = {
       alias: this.state.accountSelected.alias,
       bccEmails: this.state.bccEmails,

@@ -391,7 +391,12 @@
         "description": "Не удалось установить адрес электронной почты для ответа. Не был изменен"
       }
     },
-    "trash": {
+    "send_recovery_email": {
+      "success": {
+        "description": "Confirmation email sent to your recovery email"
+      }
+    },
+    "trash": { 
       "description": "Сообщения, которые находились в корзине более 30 дней, будут автоматически удалены",
       "action": "Очистить корзину"
     },

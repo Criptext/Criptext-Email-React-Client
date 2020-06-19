@@ -398,6 +398,11 @@
         "description": "Error al establecer correo de respuesta. No fue modificado."
       }
     },
+    "send_recovery_email": {
+      "success": {
+        "description": "Correo de confirmación enaviado a su correo de recuperación"
+      }
+    },
     "trash": {
       "description": "Correos que estén en la papelera más de 30 días serán eliminados automáticamente",
       "action": "Vaciar Papelera"
