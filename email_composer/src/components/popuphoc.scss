@@ -60,15 +60,20 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_POPUP, $_BORDER_COLOR_POPUP){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_POPUP, $_BORDER_COLOR_POPUP, $_COLOR_TEXT_POPUP_TITLE, $_COLOR_TEXT_POPUP_PARAGRAPH){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .popup-container{
       background-color: $_BACKGROUND_COLOR_POPUP;
       border-color: $_BORDER_COLOR_POPUP;
+      color: $_COLOR_TEXT_POPUP_PARAGRAPH;
+
+      h1 {
+        color: $_COLOR_TEXT_POPUP_TITLE
+      }
     }
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_POPUP_LIGHT, $_BORDER_COLOR_POPUP_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_POPUP_DARK, $_BORDER_COLOR_POPUP_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_POPUP_LIGHT, $_BORDER_COLOR_POPUP_LIGHT, $_COLOR_TEXT_POPUP_TITLE_LIGHT, $_COLOR_TEXT_POPUP_PARAGRAPH_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_POPUP_DARK, $_BORDER_COLOR_POPUP_DARK, $_COLOR_TEXT_POPUP_TITLE_DARK, $_COLOR_TEXT_POPUP_PARAGRAPH_DARK);
