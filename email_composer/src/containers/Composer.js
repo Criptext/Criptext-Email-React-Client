@@ -13,6 +13,7 @@ import {
 import {
   canSend,
   closeComposerWindow,
+  closeWindowWithDraft,
   createEmail,
   getAlias,
   isCriptextDomain,
@@ -392,13 +393,13 @@ class ComposerWrapper extends Component {
 
   handleConfirmVerifyRecoveryEmail = async () => {
     const recoveryEmail = this.state.recoveryEmail;
-    if (recoveryEmail === '') {
+    if (recoveryEmail !== '') {
       this.saveTemporalDraft();
       sendEventToMailbox('open-recovery-email-mailbox', undefined);
       this.setState({
         displayNotVerifiedRecoveryEmailPopup: false
       });
-      closeComposerWindow({ threadId: this.state.threadId });
+      closeWindowWithDraft();
       return;
     }
     this.setState({

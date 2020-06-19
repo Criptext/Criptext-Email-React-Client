@@ -20,6 +20,10 @@ export const closeComposerWindow = ({
   });
 };
 
+export const closeWindowWithDraft = () => {
+  ipc.callMain('close-with-draft', composerId);
+};
+
 export const openFilledComposerWindow = data => {
   ipc.callMain('open-filled-composer', data);
 };
