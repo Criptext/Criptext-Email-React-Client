@@ -539,6 +539,7 @@
       },
       "errors": {
         "wrong_password": "Wrong password",
+        "password_must_exist": "Password must be enter",
         "invalid_email": "Invalid email",
         "criptext_email_not_confirmed": "This address has no verified recovery email.",
         "email_max_reached": "This address has already been used {0} times.",

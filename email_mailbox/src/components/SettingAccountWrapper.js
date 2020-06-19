@@ -1274,9 +1274,6 @@ class SettingAccountWrapper extends Component {
           inputName = 'recoveryEmailInput';
         }
       }
-
-      errorMessage = 'This is the current recovery email';
-      inputName = 'recoveryEmailInput';
     }
     const changeRecoveryEmailPopupParams = {
       ...this.state.changeRecoveryEmailPopupParams,

@@ -546,6 +546,7 @@
       },
       "errors": {
         "wrong_password": "Contraseña incorrecta",
+        "password_must_exist": "La contraseña debe ser ingresada",
         "invalid_email": "Dirección de correo inválida",
         "criptext_email_not_confirmed": "Esta dirección de correo no esta confirmada",
         "email_max_reached": "Esta dirección de correo ya ha sido usada {0} veces.",

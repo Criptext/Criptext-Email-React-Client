@@ -393,7 +393,7 @@ class ComposerWrapper extends Component {
 
   handleConfirmVerifyRecoveryEmail = async () => {
     const recoveryEmail = this.state.recoveryEmail;
-    if (recoveryEmail !== '') {
+    if (recoveryEmail === '') {
       this.saveTemporalDraft();
       sendEventToMailbox('open-recovery-email-mailbox', undefined);
       this.setState({
