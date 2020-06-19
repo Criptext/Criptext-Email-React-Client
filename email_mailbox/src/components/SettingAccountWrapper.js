@@ -1211,14 +1211,14 @@ class SettingAccountWrapper extends Component {
           .value
       )
     };
-    const REPEATED_RECOVERY_EMAIL = 405;
+    const RECOVERY_EMAIL_INVALID = 405;
     const WRONG_PASSWORD_STATUS = 400;
     const INVALID_EMAIL_STATUS = 422;
     const SUCCESS_STATUS = 200;
     let errorMessage = '';
     let inputName = '';
 
-    const { status } = await changeRecoveryEmail(params);
+    const { status, body } = await changeRecoveryEmail(params);
     if (status === SUCCESS_STATUS) {
       return this.setState(
         {
@@ -1237,14 +1237,44 @@ class SettingAccountWrapper extends Component {
       );
     }
     if (status === WRONG_PASSWORD_STATUS) {
-      errorMessage = 'Wrong password';
+      errorMessage = string.popups.change_recovery_email.errors.wrong_password;
       inputName = 'recoveryEmailPasswordInput';
     }
     if (status === INVALID_EMAIL_STATUS) {
-      errorMessage = 'Invalid email';
+      errorMessage = string.popups.change_recovery_email.errors.invalid_email;
       inputName = 'recoveryEmailInput';
     }
-    if (status === REPEATED_RECOVERY_EMAIL) {
+    if (status === RECOVERY_EMAIL_INVALID) {
+      const { error, data } = body;
+      switch (error) {
+        case 1: {
+          errorMessage =
+            string.popups.change_recovery_email.errors
+              .criptext_email_not_confirmed;
+          inputName = 'recoveryEmailInput';
+          break;
+        }
+        case 2: {
+          errorMessage = string.formatString(
+            string.popups.change_recovery_email.errors.email_max_reached,
+            data.max
+          );
+          inputName = 'recoveryEmailInput';
+          break;
+        }
+        case 3: {
+          errorMessage =
+            string.popups.change_recovery_email.errors.temporal_email;
+          inputName = 'recoveryEmailInput';
+          break;
+        }
+        default: {
+          errorMessage =
+            string.popups.change_recovery_email.errors.current_email;
+          inputName = 'recoveryEmailInput';
+        }
+      }
+
       errorMessage = 'This is the current recovery email';
       inputName = 'recoveryEmailInput';
     }

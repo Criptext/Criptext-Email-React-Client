@@ -121,7 +121,7 @@
       "description": "This address has no verified recovery email."
     },
     "email_max_reached": {
-      "description": "This address has already been used 3 times."
+      "description": "This address has already been used {0} times."
     },
     "temporal_email": {
       "description": "Black-listed email provider."

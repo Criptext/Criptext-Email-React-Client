@@ -544,6 +544,14 @@
           "button": "¿Olvidaste tu contraseña?"
         }
       },
+      "errors": {
+        "wrong_password": "Contraseña incorrecta",
+        "invalid_email": "Dirección de correo inválida",
+        "criptext_email_not_confirmed": "Esta dirección de correo no esta confirmada",
+        "email_max_reached": "Esta dirección de correo ya ha sido usada {0} veces.",
+        "temporal_email": "El proveedor de correo usado esta prohibido.",
+        "current_email": "Esta es su actual dirección de correo"
+      },
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Cambiar"
     },

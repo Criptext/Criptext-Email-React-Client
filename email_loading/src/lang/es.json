@@ -121,7 +121,7 @@
       "description": "Esta dirección de correo no esta confirmada."
     },
     "email_max_reached": {
-      "description": "Esta dirección de correo ya ha sido usada 3 veces."
+      "description": "Esta dirección de correo ya ha sido usada {0} veces."
     },
     "temporal_email": {
       "description": "El proveedor de correo usado esta prohibido."

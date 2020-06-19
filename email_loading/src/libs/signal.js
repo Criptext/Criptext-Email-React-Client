@@ -59,7 +59,7 @@ const createAccount = async ({
     deviceId: 1,
     deviceType
   });
-  const { status, body, headers, error } = await postUser({
+  const { status, body, headers } = await postUser({
     recipientId,
     password,
     name,
@@ -74,6 +74,7 @@ const createAccount = async ({
     closeCreatingKeysLoadingWindow();
     return;
   } else if (status === 405) {
+    const { error, data } = body;
     switch (error) {
       case 1: {
         openLoginWindow({
@@ -89,7 +90,10 @@ const createAccount = async ({
         openLoginWindow({
           code: postUserCodeError.EMAIL_MAX_REACHED,
           data: {
-            description: string.errors.email_max_reached
+            description: string.formatString(
+              string.errors.email_max_reached,
+              data.max
+            )
           }
         });
         closeCreatingKeysLoadingWindow();
