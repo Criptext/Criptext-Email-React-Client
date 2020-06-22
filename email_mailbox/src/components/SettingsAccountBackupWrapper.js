@@ -303,7 +303,10 @@ class SettingsAccountBackupWrapper extends Component {
       exportBackupEncrypted({
         backupPath,
         password,
-        notificationParams: export_backup
+        notificationParams: export_backup,
+        accountObj: {
+          email: myAccount.email
+        }
       });
     }
   };
@@ -320,66 +323,46 @@ class SettingsAccountBackupWrapper extends Component {
   };
 
   initMailboxBackupListeners = () => {
-    addEvent(
-      Event.LOCAL_BACKUP_ENABLE_EVENTS,
-      this.localBackupEnableEventsCallback
-    );
-    addEvent(
-      Event.LOCAL_BACKUP_EXPORT_FINISHED,
-      this.localBackupExportFinishedCallback
-    );
-    addEvent(
-      Event.LOCAL_BACKUP_ENCRYPT_FINISHED,
-      this.localBackupEncryptFinishedCallback
-    );
+    addEvent(Event.LOCAL_BACKUP_STARTED, this.localBackupStartedCallback);
+    addEvent(Event.BACKUP_PROGRESS, this.localBackupProgressCallback);
     addEvent(Event.LOCAL_BACKUP_SUCCESS, this.localBackupSuccessCallback);
   };
 
   removeEventHandlers = () => {
-    removeEvent(
-      Event.LOCAL_BACKUP_ENABLE_EVENTS,
-      this.localBackupEnableEventsCallback
-    );
-    removeEvent(
-      Event.LOCAL_BACKUP_EXPORT_FINISHED,
-      this.localBackupExportFinishedCallback
-    );
-    removeEvent(
-      Event.LOCAL_BACKUP_ENCRYPT_FINISHED,
-      this.localBackupEncryptFinishedCallback
-    );
+    removeEvent(Event.LOCAL_BACKUP_STARTED, this.localBackupStartedCallback);
+    removeEvent(Event.BACKUP_PROGRESS, this.localBackupProgressCallback);
     removeEvent(Event.LOCAL_BACKUP_SUCCESS, this.localBackupSuccessCallback);
   };
 
-  localBackupEnableEventsCallback = () => {
+  localBackupStartedCallback = account => {
+    if (account.email !== myAccount.email) return;
     const isExportUnencrypted =
       this.state.exportType === EXPORT_TYPES.UNENCRYPT;
     const backupPercent = isExportUnencrypted ? 40 : 30;
     this.setState({ backupPercent });
   };
 
-  localBackupExportFinishedCallback = ({ backupSize, isAutoBackup }) => {
-    const isExportUnencrypted =
-      this.state.exportType === EXPORT_TYPES.UNENCRYPT;
-    const backupPercent = isExportUnencrypted ? 70 : 60;
-    this.setState({ backupPercent }, () => {
-      if (!isAutoBackup) {
-        return;
-      }
-      this.updateAutoBackupParams(backupSize);
-    });
+  localBackupProgressCallback = data => {
+    if (data.email !== myAccount.email) return;
+    this.setState({ backupPercent: data.progress });
   };
 
-  localBackupEncryptFinishedCallback = () => {
-    this.setState({ backupPercent: 80 });
-  };
-
-  localBackupSuccessCallback = () => {
+  localBackupSuccessCallback = ({
+    backupSize,
+    isAutoBackup,
+    accountData,
+    backupInBackground
+  }) => {
+    if (accountData.email !== myAccount.email) return;
     this.setState({ backupPercent: 99.9 }, () => {
       setTimeout(() => {
         const backupPercent = 100;
         const progressMessage = backup_mailbox_success;
         this.setState({ backupPercent, progressMessage }, () => {
+          if (isAutoBackup && !backupInBackground) {
+            this.updateAutoBackupParams(backupSize);
+          }
+
           this.props.onClearMailboxBackupParams();
           this.removeEventHandlers();
           if (this.state.backupType === 'auto') {

@@ -85,6 +85,7 @@ class PanelWrapper extends Component {
         }
       }
     };
+    this.dismissSnackbarTimer = null;
     this.initEventHandlers();
     processPendingEvents({});
   }
@@ -381,6 +382,7 @@ class PanelWrapper extends Component {
     addEvent(Event.OPEN_PLUS, this.handleOpenPlus);
     addEvent(Event.RESTORE_BACKUP_INIT, this.restoreBackupInitListenerCallback);
     addEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
+    addEvent(Event.LOCAL_BACKUP_STARTED, this.handleBackupStarted);
     addEvent(Event.LOCAL_BACKUP_SUCCESS, this.handleBackupFinish);
     addEvent(Event.LOCAL_BACKUP_FAILED, this.handleBackupFailed);
   };
@@ -426,6 +428,7 @@ class PanelWrapper extends Component {
     );
     removeEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
     removeEvent(Event.OPEN_PLUS, this.handleOpenPlus);
+    removeEvent(Event.LOCAL_BACKUP_STARTED, this.handleBackupStarted);
     removeEvent(Event.LOCAL_BACKUP_SUCCESS, this.handleBackupFinish);
     removeEvent(Event.LOCAL_BACKUP_FAILED, this.handleBackupFailed);
   };
@@ -623,22 +626,30 @@ class PanelWrapper extends Component {
   };
 
   handleBackupProgress = data => {
-    const currentSnackbar = this.state.backupSnackbar || {};
-    if (!currentSnackbar.color) {
-      currentSnackbar.color = randomcolor({
-        seed: data.name || data.email,
-        luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
-      });
-    }
-    if (data.username && data.domain) {
-      currentSnackbar.avatarUrl = `${avatarBaseUrl}${data.domain}/${
-        data.username
-      }`;
-    }
+    const currentSnackbar = this.state.backupSnackbar;
+    if (!currentSnackbar) return;
     this.setState({
       backupSnackbar: {
         ...currentSnackbar,
         ...data
+      }
+    });
+  };
+
+  handleBackupStarted = data => {
+    if (!data.backupInBackground) return;
+    if (this.dismissSnackbarTimer) clearTimeout(this.dismissSnackbarTimer);
+    const color = randomcolor({
+      seed: data.name || data.email,
+      luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
+    });
+    const avatarUrl = `${avatarBaseUrl}${data.domain}/${data.username}`;
+    this.setState({
+      backupSnackbar: {
+        color,
+        avatarUrl,
+        ...data,
+        progress: 0
       }
     });
   };
@@ -654,7 +665,7 @@ class PanelWrapper extends Component {
         }
       },
       () => {
-        setTimeout(this.handleBackupCleanUp, 2000);
+        this.dismissSnackbarTimer = setTimeout(this.handleBackupCleanUp, 2000);
       }
     );
   };
@@ -666,11 +677,11 @@ class PanelWrapper extends Component {
       {
         backupSnackbar: {
           ...currentSnackbar,
-          progress: -2
+          progress: -1
         }
       },
       () => {
-        setTimeout(this.handleBackupCleanUp, 2000);
+        this.dismissSnackbarTimer = setTimeout(this.handleBackupCleanUp, 2000);
       }
     );
   };

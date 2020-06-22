@@ -31,10 +31,8 @@ const Snackbar = props => (
 
 const Loader = props => {
   switch (props.progress) {
-    case -2:
-      return <SingleLoading percent={100} animationClass={statusType.STOP} />;
     case -1:
-      return <SingleLoading percent={0} animationClass={statusType.ACTIVE} />;
+      return <SingleLoading percent={100} animationClass={statusType.STOP} />;
     case 100:
       return (
         <SingleLoading

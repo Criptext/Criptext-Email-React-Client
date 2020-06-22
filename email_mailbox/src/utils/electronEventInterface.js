@@ -2157,8 +2157,16 @@ ipcRenderer.on('local-backup-encrypt-finished', () => {
   emitter.emit(Event.LOCAL_BACKUP_ENCRYPT_FINISHED);
 });
 
-ipcRenderer.on('local-backup-success', () => {
-  emitter.emit(Event.LOCAL_BACKUP_SUCCESS);
+ipcRenderer.on('local-backup-started', (ev, params) => {
+  emitter.emit(Event.LOCAL_BACKUP_STARTED, params);
+});
+
+ipcRenderer.on('local-backup-success', (ev, params) => {
+  emitter.emit(Event.LOCAL_BACKUP_SUCCESS, params);
+});
+
+ipcRenderer.on('local-backup-failed', (ev, params) => {
+  emitter.emit(Event.LOCAL_BACKUP_FAILED, params);
 });
 
 ipcRenderer.on('open-plus', () => {
@@ -2215,6 +2223,7 @@ export const Event = {
   LOCAL_BACKUP_ENABLE_EVENTS: 'local-backup-enable-events',
   LOCAL_BACKUP_EXPORT_FINISHED: 'local-backup-export-finished',
   LOCAL_BACKUP_ENCRYPT_FINISHED: 'local-backup-encrypt-finished',
+  LOCAL_BACKUP_STARTED: 'local-backup-started',
   LOCAL_BACKUP_SUCCESS: 'local-backup-success',
   LOCAL_BACKUP_FAILED: 'local-backup-failed',
   OPEN_PLUS: 'open-plus',

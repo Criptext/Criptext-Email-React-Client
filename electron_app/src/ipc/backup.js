@@ -42,53 +42,36 @@ ipc.answerRenderer('create-default-backup-folder', () =>
   createDefaultBackupFolder()
 );
 
-const handleProgressCallback = (
-  progress,
-  message,
-  userData,
-  progressCallback
-) => {
-  if (!progressCallback) return;
-  progressCallback({
-    progress,
-    message,
-    ...userData
-  });
-};
-
 const doExportBackupUnencrypted = async params => {
   const {
     backupPath,
     notificationParams,
     isAutoBackup = true,
+    backupInBackground = false,
     accountObj,
     progressCallback
   } = params;
-  try {
-    const [recipientId, domain] = accountObj
-      ? accountObj.recipientId.split('@')
-      : myAccount.recipientId.split('@');
 
+  const [recipientId, domain] = accountObj
+    ? accountObj.recipientId.split('@')
+    : myAccount.recipientId.split('@');
+  const accountData = {
+    isAutoBackup,
+    backupInBackground,
+    email: `${recipientId}@${domain || APP_DOMAIN}`,
+    username: recipientId,
+    domain: domain || APP_DOMAIN,
+    name: accountObj ? accountObj.name : myAccount.name
+  };
+
+  try {
     logger.info(
       `Unencrypted Backup Started For Account: ${recipientId}@${domain ||
         APP_DOMAIN}`
     );
 
-    handleProgressCallback(
-      -1,
-      'starting_backup',
-      {
-        email: `${recipientId}@${domain || APP_DOMAIN}`,
-        username: recipientId,
-        domain: domain || APP_DOMAIN,
-        name: accountObj ? accountObj.name : myAccount.name
-      },
-      progressCallback
-    );
-
-    commitBackupStatus('local-backup-disable-events', 1);
+    commitBackupStatus('local-backup-started', 1, accountData);
     prepareBackupFiles();
-    commitBackupStatus('local-backup-enable-events', 2);
 
     const backupSize = await exportBackupUnencrypted({
       backupPath,
@@ -96,12 +79,12 @@ const doExportBackupUnencrypted = async params => {
       progressCallback
     });
 
-    commitBackupStatus('local-backup-export-finished', 3, {
+    commitBackupStatus('local-backup-success', null, {
+      accountData,
       backupSize,
-      isAutoBackup
+      isAutoBackup,
+      backupInBackground
     });
-
-    commitBackupStatus('local-backup-success', null);
     if (notificationParams) {
       showNotification({
         title: notificationParams.success.title,
@@ -114,9 +97,7 @@ const doExportBackupUnencrypted = async params => {
     }
     return backupSize;
   } catch (error) {
-    globalManager.windowsEvents.enable();
-    commitBackupStatus('local-backup-enable-events', null, { error });
-    commitBackupStatus('local-backup-failed', null, null);
+    commitBackupStatus('local-backup-failed', null, { error, accountData });
     if (notificationParams) {
       showNotification({
         title: notificationParams.error.title,
@@ -128,29 +109,35 @@ const doExportBackupUnencrypted = async params => {
   }
 };
 
-ipc.answerRenderer('export-backup-unencrypted', doExportBackupUnencrypted);
+ipc.answerRenderer('export-backup-unencrypted', params => {
+  const progressCallback = data => {
+    send('backup-progress', data);
+  };
+  return doExportBackupUnencrypted({
+    ...params,
+    progressCallback
+  });
+});
 
 ipc.answerRenderer('export-backup-encrypted', async params => {
-  const { backupPath, password, notificationParams } = params;
+  const { backupPath, password, notificationParams, accountObj } = params;
   try {
-    globalManager.windowsEvents.disable();
-    commitBackupStatus('local-backup-disable-events', 1);
+    commitBackupStatus('local-backup-started', 1, accountObj);
     prepareBackupFiles();
-    await simulatePause(2000);
-    globalManager.windowsEvents.enable();
-    commitBackupStatus('local-backup-enable-events', 2);
+
     logger.info(`Encrypted Backup Started for Path: ${backupPath}`);
     const backupSize = await exportBackupEncrypted({
       backupPath,
       password
     });
-    commitBackupStatus('local-backup-export-finished', 3, {
+
+    commitBackupStatus('local-backup-success', null, {
+      accountData: accountObj,
       backupSize,
-      isAutoBackup: false
+      isAutoBackup: false,
+      backupInBackground: false
     });
-    await simulatePause(2000);
-    commitBackupStatus('local-backup-success', null);
-    await simulatePause(2000);
+
     if (notificationParams) {
       showNotification({
         title: notificationParams.success.title,
@@ -163,8 +150,10 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
     }
     return backupSize;
   } catch (error) {
-    globalManager.windowsEvents.enable();
-    commitBackupStatus('local-backup-enable-events', null, { error });
+    commitBackupStatus('local-backup-failed', null, {
+      error,
+      accountData: accountObj
+    });
     if (notificationParams) {
       showNotification({
         title: notificationParams.error.title,
@@ -294,6 +283,8 @@ const initAutoBackup = async accountId => {
     const backupSize = await doExportBackupUnencrypted({
       accountObj: account,
       backupPath: `${autoBackupPath}/${backupFileName}`,
+      backupInBackground: true,
+      isAutoBackup: true,
       progressCallback: data => {
         send('backup-progress', data);
       }
