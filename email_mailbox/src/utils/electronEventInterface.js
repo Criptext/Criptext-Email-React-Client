@@ -41,6 +41,7 @@ import {
   logoutApp,
   openFilledComposerWindow,
   reportContentUnencrypted,
+  reportContentUnencryptedBob,
   restartConnection,
   sendEndLinkDevicesEvent,
   sendEndSyncDevicesEvent,
@@ -604,7 +605,8 @@ const formEmailIfNotExists = async params => {
     threadId,
     isSpam,
     recipients,
-    guestEncryption
+    guestEncryption,
+    external
   } = params;
 
   const labelIds = [];
@@ -652,7 +654,11 @@ const formEmailIfNotExists = async params => {
       };
     }
     body = 'Content unencrypted';
-    reportContentUnencrypted(e.stack);
+    if (external) {
+      reportContentUnencryptedBob(e.stack);
+    } else {
+      reportContentUnencrypted(e.stack);
+    }
   }
 
   if (!fileKeys && fileKey) {
@@ -856,7 +862,8 @@ const handleNewMessageEvent = async (
         threadId,
         isSpam,
         recipients,
-        guestEncryption
+        guestEncryption,
+        external
       })
     : await formEmailIfExists({
         accountId,

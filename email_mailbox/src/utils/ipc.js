@@ -652,6 +652,10 @@ export const reportContentUnencrypted = async error => {
   return await ipc.callMain('nucleups-report-content-unencrypted', error);
 };
 
+export const reportContentUnencryptedBob = async error => {
+  return await ipc.callMain('nucleups-report-content-unencrypted-bob', error);
+};
+
 export const reportUncaughtError = async error => {
   return await ipc.callMain('nucleups-report-uncaught-error', error);
 };
