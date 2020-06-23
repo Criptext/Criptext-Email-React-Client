@@ -5,6 +5,7 @@ import {
 } from './../utils/electronInterface';
 import {
   cleanDatabase,
+  closeCreatingKeysLoadingWindow,
   createContact,
   createSettings,
   getAccountByParams,
@@ -13,6 +14,7 @@ import {
   postKeyBundle,
   postUser,
   updateAccount,
+  openLoginWindow,
   getSettings,
   getSystemLanguage,
   getContactByEmails,
@@ -29,6 +31,15 @@ import { CustomError } from './../utils/CustomError';
 import { appDomain } from './../utils/const';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from './../lang';
+
+const postUserCodeError = {
+  ALREADY_EXISTS: 'ALREADY_EXISTS',
+  TOO_MANY_REQUESTS: 'TOO_MANY_REQUESTS',
+  USER_FAILED: 'USER_FAILED',
+  CRIPTEXT_EMAIL_NOT_CONFIRMED: 'CRIPTEXT_EMAIL_NOT_CONFIRMED',
+  EMAIL_MAX_REACHED: 'EMAIL_MAX_REACHED',
+  TEMPORAL_EMAIL: 'TEMPORAL_EMAIL'
+};
 
 const createAccount = async ({
   recipientId,
@@ -56,19 +67,74 @@ const createAccount = async ({
     keybundle
   });
   if (status === 400) {
-    throw CustomError(string.errors.alreadyExists);
+    openLoginWindow({
+      code: postUserCodeError.ALREADY_EXISTS,
+      data: string.errors.alreadyExists
+    });
+    closeCreatingKeysLoadingWindow();
+    return;
+  } else if (status === 405) {
+    const { error, data } = body;
+    switch (error) {
+      case 1: {
+        openLoginWindow({
+          code: postUserCodeError.CRIPTEXT_EMAIL_NOT_CONFIRMED,
+          data: {
+            description: string.errors.criptext_email_not_confirmed
+          }
+        });
+        closeCreatingKeysLoadingWindow();
+        return;
+      }
+      case 2: {
+        openLoginWindow({
+          code: postUserCodeError.EMAIL_MAX_REACHED,
+          data: {
+            description: string.formatString(
+              string.errors.email_max_reached,
+              data.max
+            )
+          }
+        });
+        closeCreatingKeysLoadingWindow();
+        return;
+      }
+      case 3: {
+        openLoginWindow({
+          code: postUserCodeError.TEMPORAL_EMAIL,
+          data: {
+            description: string.errors.temporal_email
+          }
+        });
+        closeCreatingKeysLoadingWindow();
+        return;
+      }
+      default: {
+        openLoginWindow();
+        closeCreatingKeysLoadingWindow();
+        return;
+      }
+    }
   } else if (status === 429) {
     const seconds = headers['retry-after'];
     const tooManyRequestErrorMessage = { ...string.errors.tooManyRequests };
     tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
       seconds
     );
-    throw CustomError(tooManyRequestErrorMessage);
-  } else if (status !== 200) {
-    throw CustomError({
-      name: string.errors.createUserFailed.name,
-      description: string.errors.createUserFailed.description + status
+    openLoginWindow({
+      code: postUserCodeError.TOO_MANY_REQUESTS,
+      data: tooManyRequestErrorMessage
     });
+    return;
+  } else if (status !== 200) {
+    openLoginWindow({
+      code: postUserCodeError.USER_FAILED,
+      data: {
+        name: string.errors.createUserFailed.name,
+        description: string.errors.createUserFailed.description + status
+      }
+    });
+    return;
   }
   const { token, refreshToken } = body;
   try {

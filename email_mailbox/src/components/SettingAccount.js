@@ -94,6 +94,7 @@ const SettingAccount = props => (
       onConfirmDeleteAlias={props.onConfirmDeleteAlias}
       onConfirmDeleteCustomDomain={props.onConfirmDeleteCustomDomain}
       onShowSettingsPopup={props.onShowSettingsPopup}
+      recoveryEmailConfirmed={props.recoveryEmailConfirmed}
       deleteAliasParams={props.deleteAliasParams}
       deleteCustomDomainsParams={props.deleteCustomDomainsParams}
       setReplyToPopupParams={props.setReplyToPopupParams}
@@ -444,6 +445,7 @@ SettingAccount.propTypes = {
   onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
+  recoveryEmailConfirmed: PropTypes.bool,
   setReplyToPopupParams: PropTypes.object,
   settingsPopupType: PropTypes.string,
   upgradeToPlusType: PropTypes.string

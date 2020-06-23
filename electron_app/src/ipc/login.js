@@ -1,5 +1,6 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const loginWindow = require('../windows/login');
+const globalManager = require('../globalManager');
 const { checkForUpdates } = require('./../updater');
 const { openUpgradeToPlusWindow } = require('../windows/upgradePlus');
 
@@ -11,7 +12,8 @@ ipc.answerRenderer('minimize-login', () => {
   loginWindow.minimize();
 });
 
-ipc.answerRenderer('open-login', () => {
+ipc.answerRenderer('open-login', params => {
+  if (params) globalManager.loginData.set(params);
   loginWindow.show();
 });
 

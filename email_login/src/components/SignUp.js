@@ -45,10 +45,21 @@ const Form = props => (
             <span>{string.signUp.buttons.createAccount}</span>
           </button>
         </div>
+        {errorGeneral(props)}
       </form>
     </div>
   </div>
 );
+
+const errorGeneral = props => {
+  if (props.signupError) {
+    const { data } = props.signupError;
+    if (!data) return '';
+    const { description } = data;
+    if (!description) return '';
+    return <div className="general-error">{description}</div>;
+  }
+};
 
 Form.propTypes = {
   onClickSignUp: PropTypes.func,

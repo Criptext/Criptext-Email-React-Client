@@ -11,7 +11,6 @@ const submitWithoutRecoveryEmailQ =
 const onFormReady = data => {
   if (data.recoveryEmail === '' && !window.confirm(submitWithoutRecoveryEmailQ))
     return;
-
   runReCaptcha().then(recaptchaToken => {
     // eslint-disable-next-line no-console
     console.log('validated: ', { ...data, recaptchaToken });

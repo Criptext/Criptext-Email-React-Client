@@ -116,6 +116,15 @@
     "uploadData": {
       "name": "Error al sincronizar",
       "description": "Ha ocurrido un error al sincronizar los dispositivos.\nCódigo: "
+    },
+    "criptext_email_not_confirmed": {
+      "description": "Esta dirección de correo no esta confirmada."
+    },
+    "email_max_reached": {
+      "description": "Esta dirección de correo ya ha sido usada {0} veces."
+    },
+    "temporal_email": {
+      "description": "El proveedor de correo usado esta prohibido."
     }
   }
 }

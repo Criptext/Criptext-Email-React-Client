@@ -6,6 +6,7 @@ global.composerData = {};
 global.emailToEdit = {};
 global.isMAS = INSTALLER_TYPE === allInstallerTypes.mac.store;
 global.loadingData = {};
+global.loginData = {};
 global.pinData = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
@@ -58,6 +59,15 @@ const setLoadingData = data => {
 };
 const getLoadingData = () => {
   return global.loadingData;
+};
+
+/*  Login
+----------------------------- */
+const setLoginData = data => {
+  global.loginData = data;
+};
+const getLoginData = () => {
+  return global.loginData;
 };
 
 /*  Pin
@@ -171,6 +181,10 @@ module.exports = {
   loadingData: {
     get: getLoadingData,
     set: setLoadingData
+  },
+  loginData: {
+    get: getLoginData,
+    set: setLoginData
   },
   pinData: {
     get: getPinData,

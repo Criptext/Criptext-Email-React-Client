@@ -23,6 +23,7 @@ class SignUpWrapper extends Component {
         onClickSignUp={this.handleClickSignUp}
         errors={this.state.errors}
         disabled={model.shouldDisableSubmitButton(this.state)}
+        signupError={this.props.signupError}
         isShowingPassword={this.state.isShowingPassword}
         onToggleShowPassword={this.onToggleShowPassword}
       />
@@ -96,7 +97,8 @@ class SignUpWrapper extends Component {
 
 SignUpWrapper.propTypes = {
   checkAvailableUsername: PropTypes.func.isRequired,
-  onFormReady: PropTypes.func
+  onFormReady: PropTypes.func,
+  signupError: PropTypes.object
 };
 
 export default SignUpWrapper;
