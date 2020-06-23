@@ -14,10 +14,6 @@ ipc.answerRenderer(
   }
 );
 
-ipc.answerRenderer('close-with-draft', composerId => {
-  composerWindowManager.closeWithDraft(composerId);
-});
-
 ipc.answerRenderer('open-empty-composer', () => {
   composerWindowManager.openNewComposer();
 });

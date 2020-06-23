@@ -50,6 +50,12 @@
         "send": "Verify Recovery Email",
         "cancel": "Cancel"
       }
+    },
+    "recoveryEmailSentPopup": {
+      "description": "Confirmation email sent to your recovery email",
+      "buttons": {
+        "ok": "Ok"
+      }
     }
   },
   "errors": {

@@ -9,9 +9,11 @@ import { Status } from './Control';
 import { mySettings } from '../utils/electronInterface';
 import PopupHOC from './PopupHOC';
 import NotVerifiedRecoveryEmailPopup from '../components/NotVerifiedRecoveryEmailPopup';
+import RecoveryEmailSentPopup from '../components/RecoveryEmailSentPopup';
 import './composer.scss';
 
 const NotverifiedrecoveryemailPopup = PopupHOC(NotVerifiedRecoveryEmailPopup);
+const Recoveryemailsentpopup = PopupHOC(RecoveryEmailSentPopup);
 
 const Composer = props => (
   <div className="wrapper" data-theme={mySettings.theme || 'light'}>
@@ -76,6 +78,13 @@ const Composer = props => (
         theme={'dark'}
       />
     )}
+    {props.displayRecoveryEmailSentPopup && (
+      <Recoveryemailsentpopup
+        popupPosition={{ left: '45%', top: '45%' }}
+        onTogglePopup={props.onToggleRecoveryEmailSentPopup}
+        theme={'dark'}
+      />
+    )}
     {(props.status === Status.WAITING ||
       props.status === Status.INITIALIZING ||
       props.isLinkingDevices) && <div className="composer-disable" />}
@@ -92,6 +101,7 @@ Composer.propTypes = {
   disableSendButtonOnInvalidEmail: PropTypes.func,
   displayNonCriptextPopup: PropTypes.bool,
   displayNotVerifiedRecoveryEmailPopup: PropTypes.bool,
+  displayRecoveryEmailSentPopup: PropTypes.bool,
   files: PropTypes.array,
   getAccount: PropTypes.func,
   getBccEmails: PropTypes.func,
@@ -119,6 +129,7 @@ Composer.propTypes = {
   onSetNonCriptextRecipientsPassword: PropTypes.func,
   onTogglePopupNotVerifiedRecoveryEmail: PropTypes.func,
   onToggleRecipient: PropTypes.func,
+  onToggleRecoveryEmailSentPopup: PropTypes.func,
   status: PropTypes.number,
   tagBlured: PropTypes.func,
   tagChanged: PropTypes.func,

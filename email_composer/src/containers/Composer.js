@@ -13,7 +13,6 @@ import {
 import {
   canSend,
   closeComposerWindow,
-  closeWindowWithDraft,
   createEmail,
   getAlias,
   isCriptextDomain,
@@ -125,6 +124,7 @@ class ComposerWrapper extends Component {
         displayNotVerifiedRecoveryEmailPopup={
           this.state.displayNotVerifiedRecoveryEmailPopup
         }
+        displayRecoveryEmailSentPopup={this.state.displayRecoveryEmailSentPopup}
         files={this.state.files}
         getAccount={this.hangleGetAccount}
         getBccEmails={this.handleGetBccEmail}
@@ -152,6 +152,7 @@ class ComposerWrapper extends Component {
           this.handleTogglePopupNotVerifiedRecoveryEmail
         }
         onToggleRecipient={this.handleToggleRecipient}
+        onToggleRecoveryEmailSentPopup={this.handleToggleRecoveryEmailSentPopup}
         status={this.state.status}
         onSetNonCriptextRecipientsPassword={
           this.handleSetNonCriptextRecipientsPassword
@@ -393,25 +394,36 @@ class ComposerWrapper extends Component {
 
   handleConfirmVerifyRecoveryEmail = async () => {
     const recoveryEmail = this.state.recoveryEmail;
+    this.saveTemporalDraft();
     if (recoveryEmail === '') {
-      this.saveTemporalDraft();
-      sendEventToMailbox('open-recovery-email-mailbox', undefined);
+      const params = {
+        recipientId: myAccount.recipientId,
+        accountId: myAccount.id
+      };
       this.setState({
         displayNotVerifiedRecoveryEmailPopup: false
       });
-      closeWindowWithDraft();
+      sendEventToMailbox('open-recovery-email-mailbox', params);
       return;
     }
     this.setState({
       displayNotVerifiedRecoveryEmailPopup: false
     });
-    await resendConfirmationEmail();
-    sendEventToMailbox('send-recovery-email', undefined);
+    this.setState({
+      displayRecoveryEmailSentPopup: true
+    });
+    await resendConfirmationEmail({ recipientId: myAccount.recipientId });
   };
 
   handleTogglePopupNotVerifiedRecoveryEmail = () => {
     this.setState({
       displayNotVerifiedRecoveryEmailPopup: false
+    });
+  };
+
+  handleToggleRecoveryEmailSentPopup = () => {
+    this.setState({
+      displayRecoveryEmailSentPopup: false
     });
   };
 
@@ -773,7 +785,9 @@ class ComposerWrapper extends Component {
       });
     } else {
       this.setState({ status: Status.WAITING });
-      const { status, body } = await canSend();
+      const { status, body } = await canSend({
+        recipientId: myAccount.recipientId.split('@')[0]
+      });
 
       if (status === 405) {
         const recoveryEmail = body.data.recovery;

@@ -44,11 +44,17 @@
     },
     "notVerifiedRecoveryEmail": {
       "title": "No tan rápido 🤨",
-      "description": "Necesitas verificar tu correo de verificación antes de poder enviar correos.",
-      "description_2": "Esto es para que puedas acceder a tu cuenta en caso que a pierdas.",
+      "description": "Necesitas verificar tu correo de recuperación antes de poder enviar correos.",
+      "description_2": "Esto es para que puedas acceder a tu cuenta en caso de que la pierdas.",
       "buttons": {
         "send": "Verificar correo de veriicación",
         "cancel": "Cancelar"
+      }
+    },
+    "recoveryEmailSentPopup": {
+      "description": "Correo de confirmación enviado a su correo de recuperación",
+      "buttons": {
+        "ok": "Ok"
       }
     }
   },

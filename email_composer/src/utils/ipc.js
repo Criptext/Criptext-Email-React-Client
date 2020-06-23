@@ -20,10 +20,6 @@ export const closeComposerWindow = ({
   });
 };
 
-export const closeWindowWithDraft = () => {
-  ipc.callMain('close-with-draft', composerId);
-};
-
 export const openFilledComposerWindow = data => {
   ipc.callMain('open-filled-composer', data);
 };
@@ -46,8 +42,8 @@ export const restartAlice = async () => {
 
 /* Criptext Client
 ----------------------------- */
-export const canSend = async () => {
-  return await ipc.callMain('client-can-send');
+export const canSend = async params => {
+  return await ipc.callMain('client-can-send', params);
 };
 
 export const checkExpiredSession = async params => {
@@ -66,8 +62,8 @@ export const isCriptextDomain = async params => {
   return await ipc.callMain('client-is-criptext-domain', params);
 };
 
-export const resendConfirmationEmail = async () => {
-  return await ipc.callMain('client-resend-confirmation-email');
+export const resendConfirmationEmail = async params => {
+  return await ipc.callMain('client-resend-confirmation-email', params);
 };
 
 export const postEmail = async params => {

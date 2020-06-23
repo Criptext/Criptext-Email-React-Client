@@ -15,6 +15,7 @@ import {
   processPendingEvents,
   createDefaultBackupFolder,
   getDefaultBackupFolder,
+  focusMailbox,
   updateAccount,
   initAutoBackupMonitor
 } from '../utils/ipc';
@@ -313,7 +314,12 @@ class PanelWrapper extends Component {
     });
   };
 
-  handleUpdateApp = async ({ accountId, recipientId, threadId }) => {
+  handleUpdateApp = async ({
+    accountId,
+    recipientId,
+    threadId,
+    openRecoveryEmailPopup
+  }) => {
     this.setState({
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT
@@ -346,6 +352,13 @@ class PanelWrapper extends Component {
       this.handleClickSection(threadType, openThreadParams);
       this.props.onNotificationClicked({ threadId });
     }
+    if (openRecoveryEmailPopup) {
+      this.handleClickSection(SectionType.SETTINGS, {
+        tab: TAB.ACCOUNT,
+        openRecoveryEmail: true
+      });
+      focusMailbox();
+    }
   };
 
   initEventHandlers = () => {
@@ -359,6 +372,10 @@ class PanelWrapper extends Component {
     addEvent(
       Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
       this.redirectToPopupRecoveryEmail
+    );
+    addEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL_CHANGE_ACCOUNT,
+      this.redirectToPopupRecoveryEmailAccount
     );
     addEvent(
       Event.UPDATE_THREAD_EMAILS,
@@ -406,6 +423,10 @@ class PanelWrapper extends Component {
     removeEvent(
       Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
       this.redirectToPopupRecoveryEmail
+    );
+    removeEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL_CHANGE_ACCOUNT,
+      this.redirectToPopupRecoveryEmailAccount
     );
     removeEvent(
       Event.UPDATE_THREAD_EMAILS,
@@ -471,6 +492,17 @@ class PanelWrapper extends Component {
     this.handleClickSection(SectionType.SETTINGS, {
       tab: TAB.ACCOUNT,
       openRecoveryEmail: true
+    });
+  };
+
+  redirectToPopupRecoveryEmailAccount = ({
+    composerAccountId,
+    composerRecipientId
+  }) => {
+    this.handleUpdateApp({
+      accountId: composerAccountId,
+      recipientId: composerRecipientId,
+      openRecoveryEmailPopup: true
     });
   };
 

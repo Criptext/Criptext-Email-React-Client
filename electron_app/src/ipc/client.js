@@ -15,8 +15,10 @@ ipc.answerRenderer('client-can-login', ({ username, domain }) =>
   clientManager.canLogin({ username, domain })
 );
 
-ipc.answerRenderer('client-can-send', () => {
-  const data = { recipientId: myAccount.recipientId };
+ipc.answerRenderer('client-can-send', params => {
+  const recipientId =
+    params && params.recipientId ? params.recipientId : myAccount.recipientId;
+  const data = { recipientId };
   return clientManager.canSend(data);
 });
 
@@ -183,8 +185,10 @@ ipc.answerRenderer('client-report-phishing', params => {
   return clientManager.reportPhishing(data);
 });
 
-ipc.answerRenderer('client-resend-confirmation-email', () => {
-  return clientManager.resendConfirmationEmail(myAccount.recipientId);
+ipc.answerRenderer('client-resend-confirmation-email', params => {
+  const recipientId =
+    params && params.recipientId ? params.recipientId : myAccount.recipientId;
+  return clientManager.resendConfirmationEmail(recipientId);
 });
 
 ipc.answerRenderer('client-reset-password', params =>

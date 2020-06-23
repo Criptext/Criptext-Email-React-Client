@@ -400,7 +400,7 @@
     },
     "send_recovery_email": {
       "success": {
-        "description": "Correo de confirmación enaviado a su correo de recuperación"
+        "description": "Correo de confirmación enviado a su correo de recuperación"
       }
     },
     "trash": {

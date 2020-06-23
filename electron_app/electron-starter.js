@@ -105,8 +105,8 @@ async function initApp() {
     composerWindowManager.sendEventToMailbox('send-recovery-email', undefined)
   })
 
-  ipcMain.on('open-recovery-email-mailbox', () => {
-    composerWindowManager.sendEventToMailbox('open-recovery-email-mailbox', undefined)
+  ipcMain.on('open-recovery-email-mailbox', (ev,params) => {
+    composerWindowManager.sendEventToMailbox('open-recovery-email-mailbox', params)
   })
 
   // Socket

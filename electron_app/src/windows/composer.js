@@ -143,28 +143,6 @@ const editDraft = async emailToEdit => {
   });
 };
 
-const closeWithDraft = async composerId => {
-  const window = BrowserWindow.fromId(composerId);
-  try {
-    if (globalManager.forcequit.get() && window.saved) return;
-    if (
-      globalManager.forcequit.get() ||
-      (!window.saved && !isDraftEmpty(window.id))
-    ) {
-      const dataDraft = globalManager.composerData.get(window.id);
-      await saveDraftToDatabase(window.id, dataDraft);
-      window.saved = true;
-      globalManager.composerData.delete(window.id);
-      sendEventToMailbox('save-draft-success');
-      window.close();
-    } else {
-      globalManager.composerData.delete(window.id);
-    }
-  } catch (error) {
-    sendEventToMailbox('save-draft-failed');
-  }
-};
-
 const destroy = async ({
   composerId,
   discard,
@@ -283,7 +261,6 @@ const saveDraftToDatabase = async (composerId, data) => {
 
 module.exports = {
   destroy,
-  closeWithDraft,
   editDraft,
   saveDraftChanges,
   sendEventToMailbox,

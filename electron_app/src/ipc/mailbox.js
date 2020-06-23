@@ -38,6 +38,10 @@ ipc.answerRenderer('maximize-mailbox', () => {
   mailboxWindow.toggleMaximize();
 });
 
+ipc.answerRenderer('focus-mailbox', () => {
+  mailboxWindow.focus();
+});
+
 ipc.answerRenderer('minimize-mailbox', () => {
   mailboxWindow.minimize();
 });

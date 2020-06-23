@@ -28,6 +28,7 @@ import {
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   deleteLabelById,
+  focusMailbox,
   getAlias,
   getCustomDomainByParams,
   getEmailByKey,
@@ -1668,8 +1669,20 @@ ipcRenderer.on('send-recovery-email', () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 });
 
-ipcRenderer.on('open-recovery-email-mailbox', () => {
-  emitter.emit(Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL);
+ipcRenderer.on('open-recovery-email-mailbox', (ev, params) => {
+  const {
+    recipientId: composerRecipientId,
+    accountId: composerAccountId
+  } = params;
+  if (composerRecipientId === myAccount.recipientId) {
+    emitter.emit(Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL);
+    focusMailbox();
+  } else {
+    emitter.emit(Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL_CHANGE_ACCOUNT, {
+      composerAccountId,
+      composerRecipientId
+    });
+  }
 });
 
 ipcRenderer.on('update-thread-emails', (ev, data) => {
@@ -2236,6 +2249,8 @@ export const Event = {
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
   REDIRECT_TO_OPEN_RECOVERY_EMAIL: 'redirect-to-open-recovery-email',
+  REDIRECT_TO_OPEN_RECOVERY_EMAIL_CHANGE_ACCOUNT:
+    'redirect-to-open-recovery-email-change-account',
   REFRESH_MAILBOX_SYNC: 'refresh-mailbox-sync',
   REFRESH_THREADS: 'refresh-threads',
   RESTORE_BACKUP_INIT: 'restore-backup-init',
