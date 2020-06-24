@@ -40,8 +40,8 @@ class AliasesWrapper extends Component {
   }
 
   async componentDidMount() {
-    const domainsRaw = await getCustomDomainByParams({});
-    const domains = domainsRaw.map(domain => domain.dataValues.name);
+    const domainsRaw = await getCustomDomainByParams({ validated: true });
+    const domains = domainsRaw.map(domain => domain.name);
     this.setState({
       domains: [appDomain, ...domains]
     });

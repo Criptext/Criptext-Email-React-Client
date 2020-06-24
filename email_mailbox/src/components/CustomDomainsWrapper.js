@@ -9,8 +9,10 @@ import {
   createCustomDomain,
   updateCustomDomain
 } from '../utils/ipc';
+import { domainRegex } from '../utils/RegexUtils';
 
 const errors = {
+  INVALID_FORMAT: string.address.add.step1.errors.invalidFormat,
   NOT_DOMAIN_AVAILABLE: string.address.add.step1.errors.usedDomain,
   UNKNOWN_DOMAIN_AVAILABLE: string.address.add.step1.errors.unknownError,
   FAILED_MX_RECORDS: string.address.add.step2_2.errors.notMXRecords,
@@ -68,7 +70,7 @@ class CustomDomainsWrapper extends Component {
 
   handleInputDomain = ev => {
     this.setState({
-      domain: ev.target.value
+      domain: ev.target.value.toLowerCase().trim()
     });
   };
 
@@ -87,8 +89,17 @@ class CustomDomainsWrapper extends Component {
   };
 
   handleDomainExistRequirement = async () => {
-    this.setState({ loadingDomain: true });
+    this.setState({ loadingDomain: true, existError: false });
     const domain = this.state.domain;
+    const isValidDomain = domainRegex.test(domain);
+    if (!isValidDomain) {
+      this.setState({
+        loadingDomain: false,
+        existError: true,
+        errorMessage: errors.INVALID_FORMAT
+      });
+      return;
+    }
     const response = await isDomainAvailable(domain);
     if (!response) {
       this.setState({

@@ -16,7 +16,9 @@ import {
   updateAccount,
   updateAlias,
   createAlias,
-  createCustomDomain
+  createCustomDomain,
+  updateCustomDomain,
+  logError
 } from './../utils/ipc';
 import { appDomain, SectionType } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
@@ -53,17 +55,17 @@ const formatDevicesData = devices => {
 const checkAddressesAndDomains = async addresses => {
   if (!addresses) return;
 
-  const aliasinDb = await getAlias({});
-  const customDomainsinDb = await getCustomDomain({});
+  const aliasinDb = await getAlias({ accountId: myAccount.id });
+  const customDomainsinDb = await getCustomDomain({ accountId: myAccount.id });
 
-  const aliasesInApi = addresses
+  let aliasesInApi = addresses
     .map(address => {
       const domainName = address.domain.name;
       return address.aliases.map(alias => {
         return {
           name: alias.name,
-          rowid: alias.addressId,
-          active: alias.status,
+          rowId: alias.addressId,
+          active: alias.status ? true : false,
           domain: domainName
         };
       });
@@ -72,77 +74,71 @@ const checkAddressesAndDomains = async addresses => {
   const domainsInApi = addresses
     .map(address => address.domain)
     .filter(domain => domain.name !== appDomain);
+  const domainsToCreate = [];
+  const domainsToUpdate = [];
+  const myApiDomains = new Set();
+  for (const apiDomain of domainsInApi) {
+    myApiDomains.add(apiDomain.name);
 
-  if (domainsInApi.length !== customDomainsinDb.length) {
-    if (domainsInApi.length > customDomainsinDb.length) {
-      await Promise.all(
-        domainsInApi.map(async domain => {
-          const customDomainsinDbExist = customDomainsinDb.find(
-            domainInDb => domain.name === domainInDb.name
-          );
-          if (!customDomainsinDbExist) {
-            const params = {
-              name: domain.name,
-              validated: domain.confirmed === 1
-            };
-            await createCustomDomain(params);
-          }
-        })
-      );
-    } else if (customDomainsinDb.length > domainsInApi.length) {
-      const customDomainsToDelete = customDomainsinDb
-        .filter(domain => {
-          const domainsInApiExist = domainsInApi.map(
-            domainInApi => domainInApi.name === domain.name
-          );
-          return !domainsInApiExist;
-        })
-        .map(domain => domain.name);
-      await deleteCustomDomains(customDomainsToDelete.filter(e => e));
+    const localDomain = customDomainsinDb.find(
+      domain => apiDomain.name === domain.name
+    );
+    if (!localDomain) {
+      domainsToCreate.push({
+        ...apiDomain,
+        accountId: myAccount.accountId
+      });
+    } else if (localDomain.validated !== apiDomain.confirmed) {
+      domainsToUpdate.push({
+        name: localDomain.name,
+        validated: apiDomain.confirmed,
+        accountId: myAccount.id
+      });
     }
   }
+  const domainsToDelete = customDomainsinDb
+    .filter(domain => !myApiDomains.has(domain.name))
+    .map(domain => domain.name);
 
-  if (aliasesInApi.length !== aliasinDb.length) {
-    if (aliasesInApi.length > aliasinDb.length) {
-      await Promise.all(
-        aliasesInApi.map(async aliasInApi => {
-          const aliasInDbExist = aliasinDb.find(
-            aliasInDB => aliasInDB.rowid === aliasInApi.rowid
-          );
-          if (!aliasInDbExist) {
-            const alias = {
-              rowId: aliasInApi.rowid,
-              name: aliasInApi.name,
-              domain:
-                aliasInApi.domain === appDomain ? null : aliasInApi.domain,
-              active: aliasInApi.active === 1
-            };
-            await createAlias(alias);
-          } else if (
-            aliasInDbExist &&
-            // eslint-disable-next-line eqeqeq
-            aliasInDbExist.active != aliasInApi.active
-          ) {
-            // make an update
-            await updateAlias({
-              rowId: aliasInDbExist.rowId,
-              active: !aliasInDbExist.active
-            });
-          }
-        })
-      );
-    } else if (aliasinDb.length > aliasesInApi.length) {
-      const aliasToDelete = aliasinDb
-        .filter(aliasInDB => {
-          const aliasInApiExist = aliasesInApi.find(
-            aliasInApi => aliasInApi.rowid === aliasInDB.rowId
-          );
-          return !aliasInApiExist;
-        })
-        .map(alias => alias.rowId);
-      await deleteAliases({ rowIds: aliasToDelete.filter(e => e) });
+  const aliasesToUpdate = [];
+  const aliasesToDelete = [];
+  for (const localAlias of aliasinDb) {
+    if (localAlias.domain !== appDomain && myApiDomains.has(localAlias.domain))
+      return;
+    const apiAlias = aliasesInApi.find(
+      alias => localAlias.rowId === alias.rowId
+    );
+    if (!apiAlias) {
+      aliasesToDelete.push(localAlias.rowId);
+    } else if (localAlias.active !== apiAlias.active) {
+      aliasesToUpdate.push({
+        rowId: localAlias.rowId,
+        active: apiAlias.active,
+        accountId: myAccount.id
+      });
     }
+    aliasesInApi = aliasesInApi.filter(
+      alias => alias.rowId !== localAlias.rowId
+    );
   }
+  const aliasesToCreate = aliasesInApi.map(alias => ({
+    ...alias,
+    domain: alias.domain === appDomain ? null : alias.domain,
+    accountId: myAccount.id
+  }));
+
+  await Promise.all(
+    [
+      domainsToCreate.map(createCustomDomain),
+      domainsToUpdate.map(updateCustomDomain),
+      domainsToDelete.length > 0 ? deleteCustomDomains(domainsToDelete) : [],
+      aliasesToCreate.map(createAlias),
+      aliasesToUpdate.map(updateAlias),
+      aliasesToDelete.length > 0
+        ? deleteAliases({ rowIds: aliasesToDelete, accountId: myAccount.id })
+        : []
+    ].flat()
+  );
 };
 
 const deleteDeviceData = async (onUpdateApp, onClickSection) => {
@@ -190,7 +186,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch(reloadAccounts());
       }
 
-      await checkAddressesAndDomains(addresses); //syncro
+      try {
+        await checkAddressesAndDomains(addresses);
+      } catch (ex) {
+        logError(ex.stack);
+      }
 
       const aliases = addresses.reduce((result, domainWithAliases) => {
         const myAliases = domainWithAliases.aliases.map(alias => {
