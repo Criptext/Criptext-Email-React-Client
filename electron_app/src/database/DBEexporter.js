@@ -712,6 +712,8 @@ const exportEmailLabelTable = async accountId => {
         WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
         AND ${Table.EMAIL}.accountId = ${accountId}
         AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
+        AND ${Table.EMAIL_LABEL}.emailId IS NOT NULL
+        AND ${Table.EMAIL_LABEL}.labelId IS NOT NULL
         GROUP BY ${Table.EMAIL_LABEL}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
         { type: getDB().QueryTypes.SELECT }

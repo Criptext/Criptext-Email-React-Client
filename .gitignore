@@ -19,6 +19,7 @@ recovery.key
 umzug.json
 migration.json
 criptext-*.log
+criptext-*.log*
 *-audit.json
 
 # production
