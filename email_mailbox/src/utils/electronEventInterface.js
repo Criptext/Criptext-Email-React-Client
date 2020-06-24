@@ -28,6 +28,7 @@ import {
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   deleteLabelById,
+  focusMailbox,
   getAlias,
   getCustomDomainByParams,
   getEmailByKey,
@@ -1667,6 +1668,30 @@ ipcRenderer.on('failed-to-send', () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 });
 
+ipcRenderer.on('send-recovery-email', () => {
+  const messageData = {
+    ...Messages.success.sendRecoveryEmail,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
+ipcRenderer.on('open-recovery-email-mailbox', (ev, params) => {
+  const {
+    recipientId: composerRecipientId,
+    accountId: composerAccountId
+  } = params;
+  if (composerRecipientId === myAccount.recipientId) {
+    emitter.emit(Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL);
+    focusMailbox();
+  } else {
+    emitter.emit(Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL_CHANGE_ACCOUNT, {
+      composerAccountId,
+      composerRecipientId
+    });
+  }
+});
+
 ipcRenderer.on('update-thread-emails', (ev, data) => {
   const { threadId, newEmailId, oldEmailId } = data;
   emitter.emit(Event.UPDATE_THREAD_EMAILS, {
@@ -2239,6 +2264,9 @@ export const Event = {
   REACTIVATED_ACCOUNT: 'reactivated-account',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
+  REDIRECT_TO_OPEN_RECOVERY_EMAIL: 'redirect-to-open-recovery-email',
+  REDIRECT_TO_OPEN_RECOVERY_EMAIL_CHANGE_ACCOUNT:
+    'redirect-to-open-recovery-email-change-account',
   REFRESH_MAILBOX_SYNC: 'refresh-mailbox-sync',
   REFRESH_THREADS: 'refresh-threads',
   RESTORE_BACKUP_INIT: 'restore-backup-init',

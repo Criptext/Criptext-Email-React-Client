@@ -129,6 +129,12 @@ const show = async ({ firstOpenApp = false }) => {
   }
 };
 
+const focus = () => {
+  if (mailboxWindow && mailboxWindow.focus) {
+    mailboxWindow.focus();
+  }
+};
+
 const hide = () => {
   if (mailboxWindow && mailboxWindow.hide) {
     mailboxWindow.hide();
@@ -200,6 +206,7 @@ function getWindow() {
 module.exports = {
   close,
   hide,
+  focus,
   getShowPreview,
   getWindow,
   send,

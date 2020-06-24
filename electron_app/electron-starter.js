@@ -101,6 +101,14 @@ async function initApp() {
     composerWindowManager.sendEventToMailbox('failed-to-send', undefined);
   });
 
+  ipcMain.on('send-recovery-email', () => {
+    composerWindowManager.sendEventToMailbox('send-recovery-email', undefined)
+  })
+
+  ipcMain.on('open-recovery-email-mailbox', (ev,params) => {
+    composerWindowManager.sendEventToMailbox('open-recovery-email-mailbox', params)
+  })
+
   // Socket
   socketClient.setMessageListener(async data => {
     const { cmd, recipientId, domain } = data;

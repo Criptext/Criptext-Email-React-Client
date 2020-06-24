@@ -116,6 +116,15 @@
     "uploadData": {
       "name": "Ошибка устройства связи",
       "description": "Не удалось загрузить данные.\nКод:"
+    },
+    "criptext_email_not_confirmed": {
+      "description": "This address has no verified recovery email."
+    },
+    "email_max_reached": {
+      "description": "This address has already been used {0} times."
+    },
+    "temporal_email": {
+      "description": "Black-listed email provider."
     }
   }
 }

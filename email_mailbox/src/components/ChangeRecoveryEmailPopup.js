@@ -31,30 +31,7 @@ const ChangeRecoveryEmailPopup = props => {
           hasError={props.recoveryEmailPopupInputEmail.hasError}
           errorMessage={props.recoveryEmailPopupInputEmail.errorMessage}
         />
-        <div className="popup-paragraph">
-          <p>{passwordText}</p>
-        </div>
-        <ChangePasswordPopupInput
-          name={props.recoveryEmailPopupInputPassword.name}
-          type={props.recoveryEmailPopupInputPassword.type}
-          value={props.recoveryEmailPopupInputPassword.value}
-          icon={props.recoveryEmailPopupInputPassword.icon}
-          placeholder={
-            string.popups.change_recovery_email.input.password.placeholder
-          }
-          onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
-          onChangeType={props.onClickChangeRecoveryEmailInputType}
-          hasError={props.recoveryEmailPopupInputPassword.hasError}
-          errorMessage={props.recoveryEmailPopupInputPassword.errorMessage}
-        />
-        <div className="forgot-password-link">
-          <button
-            className="button button-b"
-            onClick={props.onClickForgotPasswordLink}
-          >
-            {string.popups.change_recovery_email.input.password.button}
-          </button>
-        </div>
+        {renderPasswordIfRecoveryEmailIsConfirmed(props)}
       </div>
       <div className="popup-paragraph change-recovery-email-note">
         <p>
@@ -97,6 +74,39 @@ const ChangePasswordPopupInput = ({
     />
   </div>
 );
+
+const renderPasswordIfRecoveryEmailIsConfirmed = props => {
+  if (props.recoveryEmailConfirmed) {
+    return (
+      <div>
+        <div className="popup-paragraph">
+          <p>{passwordText}</p>
+        </div>
+        <ChangePasswordPopupInput
+          name={props.recoveryEmailPopupInputPassword.name}
+          type={props.recoveryEmailPopupInputPassword.type}
+          value={props.recoveryEmailPopupInputPassword.value}
+          icon={props.recoveryEmailPopupInputPassword.icon}
+          placeholder={
+            string.popups.change_recovery_email.input.password.placeholder
+          }
+          onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
+          onChangeType={props.onClickChangeRecoveryEmailInputType}
+          hasError={props.recoveryEmailPopupInputPassword.hasError}
+          errorMessage={props.recoveryEmailPopupInputPassword.errorMessage}
+        />
+        <div className="forgot-password-link">
+          <button
+            className="button button-b"
+            onClick={props.onClickForgotPasswordLink}
+          >
+            {string.popups.change_recovery_email.input.password.button}
+          </button>
+        </div>
+      </div>
+    );
+  }
+};
 
 const InputErrorMessage = ({ hasError, errorMessage, value }) => {
   const shouldRenderMessage =

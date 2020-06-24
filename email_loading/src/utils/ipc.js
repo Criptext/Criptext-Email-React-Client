@@ -14,6 +14,10 @@ export const swapMailboxAccount = params => {
   ipc.callMain('swap-account', params);
 };
 
+export const openLoginWindow = params => {
+  ipc.callMain('open-login', params);
+};
+
 export const openPinWindow = params => {
   ipc.callMain('open-pin', params);
 };

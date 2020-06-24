@@ -291,6 +291,11 @@ class SettingAccountWrapper extends Component {
   }
 
   componentDidMount() {
+    if (this.props.openRecoveryEmail) {
+      this.handleClickChangeRecoveryEmail();
+      this.props.cleanOpenRecoveryEmail();
+    }
+
     setTimeout(() => {
       const stillTwoFactorAuthLoading = this.state.twoFactorParams.isLoading;
       const stillRecoveryEmailLoading = this.state.recoveryEmailParams
@@ -1206,14 +1211,14 @@ class SettingAccountWrapper extends Component {
           .value
       )
     };
-    const REPEATED_RECOVERY_EMAIL = 405;
+    const RECOVERY_EMAIL_INVALID = 405;
     const WRONG_PASSWORD_STATUS = 400;
     const INVALID_EMAIL_STATUS = 422;
     const SUCCESS_STATUS = 200;
     let errorMessage = '';
     let inputName = '';
 
-    const { status } = await changeRecoveryEmail(params);
+    const { status, body } = await changeRecoveryEmail(params);
     if (status === SUCCESS_STATUS) {
       return this.setState(
         {
@@ -1232,16 +1237,43 @@ class SettingAccountWrapper extends Component {
       );
     }
     if (status === WRONG_PASSWORD_STATUS) {
-      errorMessage = 'Wrong password';
+      errorMessage = string.popups.change_recovery_email.errors.wrong_password;
       inputName = 'recoveryEmailPasswordInput';
     }
     if (status === INVALID_EMAIL_STATUS) {
-      errorMessage = 'Invalid email';
+      errorMessage = string.popups.change_recovery_email.errors.invalid_email;
       inputName = 'recoveryEmailInput';
     }
-    if (status === REPEATED_RECOVERY_EMAIL) {
-      errorMessage = 'This is the current recovery email';
-      inputName = 'recoveryEmailInput';
+    if (status === RECOVERY_EMAIL_INVALID) {
+      const { error, data } = body;
+      switch (error) {
+        case 1: {
+          errorMessage =
+            string.popups.change_recovery_email.errors
+              .criptext_email_not_confirmed;
+          inputName = 'recoveryEmailInput';
+          break;
+        }
+        case 2: {
+          errorMessage = string.formatString(
+            string.popups.change_recovery_email.errors.email_max_reached,
+            data.max
+          );
+          inputName = 'recoveryEmailInput';
+          break;
+        }
+        case 3: {
+          errorMessage =
+            string.popups.change_recovery_email.errors.temporal_email;
+          inputName = 'recoveryEmailInput';
+          break;
+        }
+        default: {
+          errorMessage =
+            string.popups.change_recovery_email.errors.current_email;
+          inputName = 'recoveryEmailInput';
+        }
+      }
     }
     const changeRecoveryEmailPopupParams = {
       ...this.state.changeRecoveryEmailPopupParams,
@@ -1350,6 +1382,10 @@ class SettingAccountWrapper extends Component {
       Event.RECOVERY_EMAIL_CONFIRMED,
       this.recoveryEmailConfirmedListenerCallback
     );
+    addEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
+      this.handleEventOpenPopupRecoveryEmail
+    );
   };
 
   removeEventHandlers = () => {
@@ -1361,6 +1397,15 @@ class SettingAccountWrapper extends Component {
       Event.RECOVERY_EMAIL_CONFIRMED,
       this.recoveryEmailConfirmedListenerCallback
     );
+    removeEvent(
+      Event.REDIRECT_TO_OPEN_RECOVERY_EMAIL,
+      this.handleEventOpenPopupRecoveryEmail
+    );
+  };
+
+  handleEventOpenPopupRecoveryEmail = () => {
+    this.handleClickChangeRecoveryEmail();
+    this.props.cleanOpenRecoveryEmail();
   };
 
   recoveryEmailChangedListenerCallback = recoveryEmail => {
@@ -1384,6 +1429,7 @@ class SettingAccountWrapper extends Component {
 
 SettingAccountWrapper.propTypes = {
   aliasesByDomain: PropTypes.object,
+  cleanOpenRecoveryEmail: PropTypes.func,
   devices: PropTypes.array,
   domains: PropTypes.array,
   isHiddenSettingsPopup: PropTypes.bool,
@@ -1398,6 +1444,7 @@ SettingAccountWrapper.propTypes = {
   onRemoveCustomDomain: PropTypes.func,
   onSetReadReceiptsTracking: PropTypes.func,
   onUpdateAccount: PropTypes.func,
+  openRecoveryEmail: PropTypes.bool,
   readReceiptsEnabled: PropTypes.bool,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,

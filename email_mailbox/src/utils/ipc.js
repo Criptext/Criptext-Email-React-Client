@@ -18,6 +18,10 @@ export const closeMailboxWindow = () => {
   ipc.callMain('close-mailbox');
 };
 
+export const focusMailbox = () => {
+  ipc.callMain('focus-mailbox');
+};
+
 export const generateLabelUUID = async () => {
   return await ipc.callMain('generate-label-uuid');
 };
