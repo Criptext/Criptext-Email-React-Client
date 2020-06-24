@@ -47,7 +47,7 @@
       "description": "Necesitas verificar tu correo de recuperación antes de poder enviar correos.",
       "description_2": "Esto es para que puedas acceder a tu cuenta en caso de que la pierdas.",
       "buttons": {
-        "send": "Verificar correo de veriicación",
+        "send": "Verificar Correo",
         "cancel": "Cancelar"
       }
     },
