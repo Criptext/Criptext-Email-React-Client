@@ -72,7 +72,7 @@ const Composer = props => (
     )}
     {props.displayNotVerifiedRecoveryEmailPopup && (
       <NotverifiedrecoveryemailPopup
-        popupPosition={{ left: '45%', top: '45%' }}
+        popupPosition={{ left: '50%', top: '50%' }}
         onConfirmVerifyRecoveryEmail={props.handleConfirmVerifyRecoveryEmail}
         onTogglePopup={props.onTogglePopupNotVerifiedRecoveryEmail}
         theme={'dark'}
@@ -80,7 +80,7 @@ const Composer = props => (
     )}
     {props.displayRecoveryEmailSentPopup && (
       <Recoveryemailsentpopup
-        popupPosition={{ left: '45%', top: '45%' }}
+        popupPosition={{ left: '50%', top: '50%' }}
         onTogglePopup={props.onToggleRecoveryEmailSentPopup}
         theme={'dark'}
       />
