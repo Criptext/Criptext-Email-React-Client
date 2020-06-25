@@ -104,7 +104,7 @@ const checkAddressesAndDomains = async addresses => {
   const aliasesToDelete = [];
   for (const localAlias of aliasinDb) {
     if (localAlias.domain !== appDomain && myApiDomains.has(localAlias.domain))
-      return;
+      continue;
     const apiAlias = aliasesInApi.find(
       alias => localAlias.rowId === alias.rowId
     );
