@@ -1478,15 +1478,29 @@ const updateCustomDomain = ({ id, name, validated, accountId }) => {
 };
 
 const getCustomDomainByParams = params => {
-  return CustomDomain().findAll({ where: params });
+  return CustomDomain()
+    .findAll({ where: params })
+    .then(domains => {
+      return domains.map(domain => domain.toJSON());
+    });
 };
 
 const deleteCustomDomainByName = ({ name, accountId }) => {
-  return CustomDomain().destroy({
-    where: {
-      name,
-      accountId
-    }
+  return getDB().transaction(async trx => {
+    await CustomDomain().destroy({
+      where: {
+        name,
+        accountId
+      },
+      transaction: trx
+    });
+    await Alias().destroy({
+      where: {
+        domain: name,
+        accountId
+      },
+      transaction: trx
+    });
   });
 };
 
@@ -1494,7 +1508,7 @@ const deleteCustomDomains = params => {
   const { domain, domains, accountId } = params;
   const theDomains = domain ? domain : domains;
   const whereParam = { name: theDomains, accountId };
-  return CustomDomain().destroy({ where: whereParam });
+  return deleteCustomDomainByName(whereParam);
 };
 
 /* Functions

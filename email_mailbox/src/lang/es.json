@@ -23,6 +23,7 @@
         "title": "Configuremos tu dominio",
         "text": "Ingresa el dominio personal que quisieras agregar.",
         "errors": {
+          "invalidFormat": "Dominio inválido. Nota: NO agregue 'http' o 'www' al escribir su dominio.",
           "usedDomain": "Este dominio ya está en uso",
           "unknownError": "Error de servidor. Prueba despúes."
         }

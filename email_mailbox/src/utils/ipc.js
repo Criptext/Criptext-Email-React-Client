@@ -1,5 +1,11 @@
 import ipc from '@criptext/electron-better-ipc/renderer';
 
+/* Logger Call
+----------------------------- */
+export const logError = stack => {
+  ipc.callMain('log-error', stack);
+};
+
 /*  Windows call
 ----------------------------- */
 export const changeAccountApp = async accountId => {

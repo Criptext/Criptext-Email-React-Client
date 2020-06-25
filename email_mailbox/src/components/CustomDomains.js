@@ -60,6 +60,7 @@ const Step1 = props => {
           type="text"
           onChange={e => props.onChangeInputDomain(e)}
           className={props.existError ? 'input-error' : ''}
+          value={props.domain}
         />
         {inputError(props)}
       </div>
@@ -292,6 +293,7 @@ CustomDomains.propTypes = {
 };
 
 Step1.propTypes = {
+  domain: PropTypes.string,
   onChangeInputDomain: PropTypes.func,
   existError: PropTypes.bool
 };

@@ -23,6 +23,7 @@
         "title": "Let's set up your domain",
         "text": "Enter the custom domain you wish to add.",
         "errors": {
+          "invalidFormat": "This is not a valid domain. Note: do NOT add 'http' or 'www' when entering your domain.",
           "usedDomain": "This domain is already in use",
           "unknownError": "Server error. Try again later."
         }

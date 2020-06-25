@@ -3,3 +3,4 @@ export const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)
 export const HTMLTagsRegex = /<[^>]*>?/g;
 export const mimeTypeImageRegex = /image\/([a-z][-+])*/;
 export const usernameRegex = /(?=^([a-z0-9]([._-]{0,2}[a-z0-9])+)$)(?:^.{3,16}$)$/;
+export const domainRegex = /(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
