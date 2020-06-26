@@ -1512,6 +1512,7 @@ const handleDomainCreatedEvent = async ({ rowid, params }, accountId) => {
 
   const domain = {
     name: customDomain,
+    validated: false,
     accountId
   };
   await createCustomDomain(domain);
