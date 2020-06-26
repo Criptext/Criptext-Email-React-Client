@@ -79,42 +79,45 @@ const createAccount = async ({
       case 1: {
         openLoginWindow({
           code: postUserCodeError.CRIPTEXT_EMAIL_NOT_CONFIRMED,
-          data: {
-            description: string.errors.criptext_email_not_confirmed
-          }
+          data: string.errors.criptext_email_not_confirmed
         });
         closeCreatingKeysLoadingWindow();
-        return;
+        break;
       }
       case 2: {
         openLoginWindow({
           code: postUserCodeError.EMAIL_MAX_REACHED,
           data: {
             description: string.formatString(
-              string.errors.email_max_reached,
+              string.errors.email_max_reached.description,
               data.max
             )
           }
         });
         closeCreatingKeysLoadingWindow();
-        return;
+        break;
       }
       case 3: {
         openLoginWindow({
           code: postUserCodeError.TEMPORAL_EMAIL,
+          data: string.errors.temporal_email
+        });
+        closeCreatingKeysLoadingWindow();
+        break;
+      }
+      default: {
+        openLoginWindow({
+          code: postUserCodeError.USER_FAILED,
           data: {
-            description: string.errors.temporal_email
+            name: string.errors.createUserFailed.name,
+            description: string.errors.createUserFailed.description + status
           }
         });
         closeCreatingKeysLoadingWindow();
-        return;
-      }
-      default: {
-        openLoginWindow();
-        closeCreatingKeysLoadingWindow();
-        return;
+        break;
       }
     }
+    return;
   } else if (status === 429) {
     const seconds = headers['retry-after'];
     const tooManyRequestErrorMessage = { ...string.errors.tooManyRequests };
@@ -125,6 +128,7 @@ const createAccount = async ({
       code: postUserCodeError.TOO_MANY_REQUESTS,
       data: tooManyRequestErrorMessage
     });
+    closeCreatingKeysLoadingWindow();
     return;
   } else if (status !== 200) {
     openLoginWindow({
@@ -134,6 +138,7 @@ const createAccount = async ({
         description: string.errors.createUserFailed.description + status
       }
     });
+    closeCreatingKeysLoadingWindow();
     return;
   }
   const { token, refreshToken } = body;
