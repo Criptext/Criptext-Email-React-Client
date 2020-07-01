@@ -18,7 +18,7 @@ import {
 } from './../utils/EncryptionUtils';
 import string from './../lang';
 import { appDomain } from '../utils/const';
-import { createSession, encryptEmail } from '../utils/ApiUtils';
+import { createSession, encryptEmailGroup } from '../utils/ApiUtils';
 import { myAccount } from '../utils/electronInterface';
 
 const KeyHelper = libsignal.KeyHelper;
@@ -78,7 +78,7 @@ const keysToArrayBuffer = keys => {
   };
 };
 
-const createEmails = async (
+const createEmailsGroup = async (
   body,
   preview,
   recipients,
@@ -137,32 +137,38 @@ const createEmails = async (
         criptextEmailsByRecipientId[recipientId] = initObj;
       }
 
-      for (const deviceId of devices) {
-        const fileKeys = files
-          ? files.reduce((result, file) => {
-              if (!file.key || !file.iv) {
-                return result;
-              }
-              return [...result, `${file.key}:${file.iv}`];
-            }, [])
-          : null;
-        const res = await aliceRequestWrapper(() => {
-          return encryptEmail({
-            accountRecipientId: myAccount.recipientId,
-            body,
-            preview,
-            fileKeys,
-            recipientId: origin ? origin.recipientId : recipientId,
-            deviceId
-          });
+      const fileKeys = files
+        ? files.reduce((result, file) => {
+            if (!file.key || !file.iv) {
+              return result;
+            }
+            return [...result, `${file.key}:${file.iv}`];
+          }, [])
+        : null;
+
+      const res = await aliceRequestWrapper(() => {
+        return encryptEmailGroup({
+          accountRecipientId: myAccount.recipientId,
+          body,
+          preview,
+          fileKeys,
+          recipientId: origin ? origin.recipientId : recipientId,
+          deviceIds: devices
         });
+      });
+
+      const resObj = await res.json();
+      for (const deviceIdString of Object.keys(resObj)) {
+        const deviceId = parseInt(deviceIdString);
+
         const {
           bodyEncrypted,
           previewEncrypted,
           bodyMessageType,
           previewMessageType,
           fileKeysEncrypted
-        } = await res.json();
+        } = resObj[deviceIdString];
+
         const fileKey =
           fileKeysEncrypted && fileKeysEncrypted.length > 0
             ? fileKeysEncrypted[0]
@@ -315,7 +321,7 @@ const encryptPostEmail = async ({
     );
     return index <= -1;
   });
-  const criptextEmails = await createEmails(
+  const criptextEmails = await createEmailsGroup(
     body,
     preview,
     newRecipients,

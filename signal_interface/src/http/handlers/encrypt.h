@@ -9,3 +9,4 @@
 
 int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char* password);
 int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, char *password);
+int postEncryptEmailGroup(struct mg_connection *conn, void *cbdata, char *dbPath, char *password);

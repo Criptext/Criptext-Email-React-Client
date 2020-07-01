@@ -25,6 +25,10 @@ int encryptEmail(struct mg_connection *conn, void *cbdata){
   return postEncryptEmail(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
+int encryptEmailGroup(struct mg_connection *conn, void *cbdata){
+  return postEncryptEmailGroup(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
+}
+
 int sessionCreate(struct mg_connection *conn, void *cbdata){
   return processKeyBundle(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
@@ -83,6 +87,7 @@ void http_init(char *dbPath, char *port, char* token){
   mg_set_request_handler(ctx, "/decrypt/key", decryptKey, 0);
   mg_set_request_handler(ctx, "/encrypt/key", encryptKey, 0);
   mg_set_request_handler(ctx, "/encrypt/email", encryptEmail, 0);
+  mg_set_request_handler(ctx, "/encrypt/email/group", encryptEmailGroup, 0);
   mg_set_request_handler(ctx, "/account", accountCreate, 0);
   mg_set_request_handler(ctx, "/keybundle", keyBundleCreate, 0);
   mg_set_request_handler(ctx, "/prekey", preKeysCreate, 0);
