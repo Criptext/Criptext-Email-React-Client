@@ -21,7 +21,9 @@ import {
   syncDeny,
   sendEndLinkDevicesEvent,
   throwError,
-  uploadDatabaseFile
+  uploadDatabaseFile,
+  logErrorAndReport,
+  logLocal
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
@@ -143,7 +145,9 @@ class SyncMailboxWrapper extends Component {
   exportDatabase = async () => {
     try {
       await stopSocket();
+      logLocal('Sync Mailbox - Export Database');
       await exportDatabase();
+      logLocal('Sync Mailbox - Encrypt Database');
       const { key } = await encryptDatabaseFile();
       await startSocket();
       this.setState(
@@ -160,6 +164,7 @@ class SyncMailboxWrapper extends Component {
         }
       );
     } catch (e) {
+      logErrorAndReport(e.stack);
       if (e.code === 'ECONNREFUSED') {
         throwError(string.errors.unableToConnect);
       } else {
@@ -173,8 +178,10 @@ class SyncMailboxWrapper extends Component {
   };
 
   uploadFile = async (randomId, deviceId, key) => {
+    logLocal('Sync Mailbox - Upload File');
     const { statusCode } = await uploadDatabaseFile(randomId);
     if (statusCode === 200) {
+      logLocal('Sync Mailbox - Encrypt Key');
       const keyEncrypted = await signal.encryptKeyForNewDevice({
         recipientId: myAccount.recipientId,
         deviceId,
@@ -188,6 +195,7 @@ class SyncMailboxWrapper extends Component {
         },
         async () => {
           this.incrementPercentage();
+          logLocal('Sync Mailbox - Post Data');
           await postDataReady({
             deviceId,
             key: keyEncrypted
@@ -216,6 +224,7 @@ class SyncMailboxWrapper extends Component {
         name,
         description: `${description} ${statusCode}`
       });
+      logErrorAndReport(`${description} ${statusCode}`);
       this.linkingDevicesThrowError();
     }
   };

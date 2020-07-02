@@ -8,7 +8,9 @@ import {
   openMailboxWindow,
   openPinWindow,
   swapMailboxAccount,
-  throwError
+  throwError,
+  logLocal,
+  logErrorAndReport
 } from './../utils/ipc';
 import string from './../lang';
 import { appDomain } from '../utils/const';
@@ -58,6 +60,7 @@ class LoadingWrapper extends Component {
     const percent = this.state.percent + 1;
     if (percent === 2) {
       if (this.props.loadingType === loadingTypes.SIGNUP) {
+        logLocal('SIGN PASSWORD - Create new account');
         this.createNewAccount();
       } else if (
         this.props.loadingType === loadingTypes.SIGNIN ||
@@ -70,6 +73,7 @@ class LoadingWrapper extends Component {
           isRecipientApp = true;
           [username] = recipientId.split('@');
         }
+        logLocal('SIGN PASSWORD - Update existing account');
         this.createAccountWithNewDevice({
           recipientId: username,
           deviceId,
@@ -107,6 +111,7 @@ class LoadingWrapper extends Component {
         failed: false
       });
     } catch (e) {
+      logErrorAndReport(e.stack);
       if (e.code === 'ECONNREFUSED') {
         throwError(string.errors.unableToConnect);
       } else {
@@ -142,6 +147,7 @@ class LoadingWrapper extends Component {
         failed: false
       });
     } catch (e) {
+      logErrorAndReport(e.stack);
       if (e.code === 'ECONNREFUSED') {
         throwError(string.errors.unableToConnect);
       } else {

@@ -21,7 +21,7 @@ const mapStateToProps = state => {
   return {
     items: getSystemLabels(state),
     labels: getVisibleLabels(state),
-    canUpgrade: canUpgrade(activeAccount.customerType)
+    canUpgrade: activeAccount ? canUpgrade(activeAccount.customerType) : false
   };
 };
 

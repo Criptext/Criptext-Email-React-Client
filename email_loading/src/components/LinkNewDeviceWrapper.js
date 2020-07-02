@@ -19,7 +19,9 @@ import {
   openMailboxWindow,
   openPinWindow,
   throwError,
-  swapMailboxAccount
+  swapMailboxAccount,
+  logErrorAndReport,
+  logLocal
 } from './../utils/ipc';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
@@ -135,6 +137,7 @@ class LinkNewDeviceWrapper extends Component {
       },
       async () => {
         try {
+          logLocal('Link New Device - Create Account and Generating Keys');
           this.incrementPercentage();
           const keybundle = await signal.generateAccountAndKeys(params);
           if (!keybundle) {
@@ -144,6 +147,7 @@ class LinkNewDeviceWrapper extends Component {
           }
           this.uploadKeys(keybundle);
         } catch (e) {
+          logErrorAndReport(e.stack);
           this.linkingDevicesThrowError();
         }
       }
@@ -161,9 +165,11 @@ class LinkNewDeviceWrapper extends Component {
       async () => {
         this.incrementPercentage();
         try {
+          logLocal('Link New Device - Uploading Keys');
           const accountData = await signal.uploadKeys(keybundle);
           if (!accountData) {
             await cleanKeys(getRecipientIdFromRemoteData());
+            logLocal('Link New Device - Unable to Upload Keys');
             this.linkingDevicesThrowError();
             return;
           }
@@ -174,6 +180,7 @@ class LinkNewDeviceWrapper extends Component {
             deviceId: remoteData.deviceId,
             customerType: remoteData.customerType || 0
           };
+          logLocal('Link New Device - Update Account in DB');
           const response = await signal.createAccountToDB(newAccountData);
           this.setState(
             {
@@ -187,6 +194,7 @@ class LinkNewDeviceWrapper extends Component {
             }
           );
         } catch (e) {
+          logErrorAndReport(e.stack);
           if (e.code === 'ECONNREFUSED') {
             throwError(string.errors.unableToConnect);
           } else {
@@ -261,6 +269,7 @@ class LinkNewDeviceWrapper extends Component {
         retryData: { authorizerId, address, key }
       },
       async () => {
+        logLocal('Link New Device - Downloading Mailbox');
         this.incrementPercentage();
         const response = await downloadBackupFile(address);
         if (response.statusCode !== 200) {
@@ -282,6 +291,7 @@ class LinkNewDeviceWrapper extends Component {
         retryData: { authorizerId, key }
       },
       async () => {
+        logLocal('Link New Device - Decrypting Signal Key');
         this.incrementPercentage();
         const MESSAGE_PRE_KEY = 3;
         try {
@@ -293,6 +303,7 @@ class LinkNewDeviceWrapper extends Component {
           });
           this.processMailbox(authorizerId, decryptedKey);
         } catch (ex) {
+          logErrorAndReport(ex.stack);
           this.linkingDevicesThrowError();
         }
       }
@@ -310,7 +321,9 @@ class LinkNewDeviceWrapper extends Component {
       },
       async () => {
         this.incrementPercentage();
+        logLocal('Link New Device - Decrypting Key');
         await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
+        logLocal('Link New Device - Importing Database');
         await importDatabase({
           withoutBodiesEncryption: this.props.shouldResetPIN,
           accountObj: this.state.newAccount
@@ -332,7 +345,8 @@ class LinkNewDeviceWrapper extends Component {
               }
             );
           })
-          .catch(() => {
+          .catch(e => {
+            logErrorAndReport(e.stack);
             this.linkingDevicesThrowError();
           });
       }

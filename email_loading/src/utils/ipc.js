@@ -1,5 +1,16 @@
 import ipc from '@criptext/electron-better-ipc/renderer';
 
+/* Logger Call
+----------------------------- */
+export const logErrorAndReport = stack => {
+  ipc.callMain('nucleups-report-uncaught-error', stack);
+  ipc.callMain('log-error', stack);
+};
+
+export const logLocal = stack => {
+  ipc.callMain('log-info', stack);
+};
+
 export const closeCreatingKeysLoadingWindow = () => {
   ipc.callMain('close-create-keys-loading');
 };
@@ -202,4 +213,11 @@ export const encryptDatabaseFile = async () => {
 
 export const uploadDatabaseFile = async randomId => {
   return await ipc.callMain('data-transfer-upload', randomId);
+};
+
+/* Nucleus
+----------------------------- */
+
+export const reportUncaughtError = async error => {
+  return await ipc.callMain('nucleups-report-uncaught-error', error);
 };
