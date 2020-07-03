@@ -196,17 +196,14 @@ class ComposerWrapper extends Component {
     const allAlias = await getAlias({
       accountId: accounts.map(acc => acc.id)
     });
-    const aliasAccounts = allAlias
-      .map(alias => {
-        const acc = accounts.find(acc => acc.id === alias.accountId);
-        return {
-          ...acc,
-          alias: `${alias.name}@${alias.domain || appDomain}`,
-          fromAddressId: alias.rowId,
-          isAliasActive: alias.active
-        };
-      })
-      .filter(alias => alias.isAliasActive);
+    const aliasAccounts = allAlias.map(alias => {
+      const acc = accounts.find(acc => acc.id === alias.accountId);
+      return {
+        ...acc,
+        alias: `${alias.name}@${alias.domain || appDomain}`,
+        fromAddressId: alias.rowId
+      };
+    });
     state = { ...state, accounts: [...accounts, ...aliasAccounts] };
     if (fromAddress) {
       const accountSelected = aliasAccounts.find(

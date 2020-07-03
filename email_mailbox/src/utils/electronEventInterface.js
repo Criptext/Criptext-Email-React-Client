@@ -845,7 +845,16 @@ const handleNewMessageEvent = async (
     bcc: bcc || bccArray,
     from
   });
-  const isToMe = checkEmailIsTo(recipients, accountRecipientId);
+  const aliases = await getAlias({
+    accountId
+  });
+  const aliasesRecipients = aliases.map(
+    alias => (alias.domain ? `${alias.name}@${alias.domain}` : alias.name)
+  );
+  const isToMe =
+    [accountRecipientId, ...aliasesRecipients].findIndex(recipientId =>
+      checkEmailIsTo(recipients, recipientId)
+    ) > -1;
   const { error, notificationPreview, emailThreadId, labelIds } = !prevEmail
     ? await formEmailIfNotExists({
         accountId,
