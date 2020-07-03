@@ -61,7 +61,9 @@ import {
   updateUnreadEmailByThreadIds,
   updatePushToken,
   updateDeviceType,
-  initAutoBackupMonitor
+  initAutoBackupMonitor,
+  updateAccountDefaultAddress,
+  createOrUpdateContact
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -541,6 +543,12 @@ export const handleEvent = ({
     }
     case SocketCommand.CUSTOM_DOMAIN_DELETED: {
       return handleDomainDeletedEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.DEFAULT_ADDRESS: {
+      return handleDefaultAddressEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.ADDRESS_NAME_UPDATE: {
+      return handleAddressNameUpdateEvent(incomingEvent, accountId);
     }
     default: {
       return { rowid: null };
@@ -1526,6 +1534,33 @@ const handleDomainDeletedEvent = async ({ rowid, params }, accountId) => {
     accountId
   };
   await deleteCustomDomainByName(domain);
+  return { rowid };
+};
+
+const handleDefaultAddressEvent = async ({ rowid, params }, accountId) => {
+  const { addressId = null } = params;
+  await updateAccountDefaultAddress({
+    defaultAddressId: addressId,
+    accountId
+  });
+  return { rowid };
+};
+
+const handleAddressNameUpdateEvent = async ({ rowid, params }, accountId) => {
+  const { addressId, fullname } = params;
+
+  const [existingAlias] = await getAlias({
+    rowId: addressId,
+    accountId
+  });
+  if (!existingAlias) return { rowid };
+
+  await createOrUpdateContact({
+    email: `${existingAlias.name}@${existingAlias.domain || appDomain}`,
+    name: fullname,
+    isTrusted: true
+  });
+
   return { rowid };
 };
 

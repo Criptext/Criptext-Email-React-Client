@@ -171,6 +171,19 @@ const updateAccount = (
   });
 };
 
+const updateAccountDefaultAddressId = ({ accountId, defaultAddressId }) => {
+  const whereParam = { id: accountId };
+  myAccount.update({ defaultAddressId, ...whereParam });
+  return Account().update(
+    {
+      defaultAddressId
+    },
+    {
+      where: whereParam
+    }
+  );
+};
+
 /* Contact
 ----------------------------- */
 const createContact = ({ contacts, accountId }, prevTrx) => {
@@ -303,6 +316,21 @@ const updateContactByEmail = ({ email, name, isTrusted }, trx) => {
     where: { email: { [Op.eq]: email } },
     transaction: trx
   });
+};
+
+const createOrUpdateContact = async params => {
+  const contact = await Contact().findOne({
+    where: {
+      email: params.email
+    }
+  });
+  if (contact) {
+    await contact.update({
+      name: params.name
+    });
+  } else {
+    await Contact().create(params);
+  }
 };
 
 const updateContactScore = async (emailId, trx) => {
@@ -1835,6 +1863,7 @@ module.exports = {
   createAlias,
   createContact,
   createContactsIfOrNotStore,
+  createOrUpdateContact,
   createCustomDomain,
   createEmail,
   createEmailLabel,
@@ -1902,6 +1931,7 @@ module.exports = {
   rawCheckPin,
   resetKeyDatabase,
   updateAccount,
+  updateAccountDefaultAddressId,
   updateAlias,
   updateContactByEmail,
   updateContactEmailBlocked,

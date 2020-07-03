@@ -825,6 +825,12 @@
     "account": "учетная запись",
     "action": "Действие",
     "addresses": "Addresses",
+    "address_manager": {
+      "title": "Address Manager",
+      "subtitle": "YOUR DOMAINS AND ALIASES",
+      "description": "Add domains and personalized addresses",
+      "manage": "Manage"
+    },
     "aliases": {
       "title": "Aliases",
       "description": "Create a secondary address for your existing inbox.",

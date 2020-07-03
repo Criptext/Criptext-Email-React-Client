@@ -10,12 +10,11 @@ import SettingBlockManualSync from './SettingBlockManualSync';
 import SettingBlockProfile from '../containers/SettingBlockProfile';
 import SettingsAccountBackupWrapper from './SettingsAccountBackupWrapper';
 import SettingsAccountRestoreBackupc from './SettingsAccountRestoreBackup';
-import AliasesBlock from './SettingAliasBlock';
-import CustomDomainsBlock from './SettingCustomDomainsBlock';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import './settingaccount.scss';
 import './signatureeditor.scss';
+import AddressManagerBlock from './AddressManagerBlock';
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   string.settings.two_factor_not_available_text;
@@ -38,8 +37,7 @@ const SettingAccount = props => (
       )}
       {!props.isEnterprise && (
         <div className="cptx-section-block-content">
-          <CustomDomainsBlock {...props} />
-          <AliasesBlock {...props} />
+          <AddressManagerBlock {...props} />
         </div>
       )}
       <div className="cptx-section-block-title">

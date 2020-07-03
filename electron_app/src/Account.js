@@ -14,7 +14,8 @@ const accountProperties = [
   'autoBackupLastSize',
   'autoBackupNextDate',
   'autoBackupPath',
-  'blockRemoteContent'
+  'blockRemoteContent',
+  'defaultAddressId'
 ];
 
 class Account {
@@ -88,6 +89,9 @@ class Account {
   }
   get blockRemoteContent() {
     return this.activeAccount.blockRemoteContent;
+  }
+  get defaultAddressId() {
+    return this.activeAccount.defaultAddressId;
   }
 
   get email() {

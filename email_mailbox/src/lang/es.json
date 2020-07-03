@@ -881,6 +881,12 @@
     "account": "Cuenta",
     "action": "Acción",
     "addresses": "Direcciones",
+    "address_manager": {
+      "title": "Administrador de Direcciones",
+      "subtitle": "Tus Dominios y Aliases",
+      "description": "Agrega dominios y personaliza correos",
+      "manage": "Administrar"
+    },
     "aliases": {
       "title": "Aliases",
       "description": "Crea direcciones de correo secundarias para tu buzón existente.",

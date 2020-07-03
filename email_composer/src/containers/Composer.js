@@ -216,6 +216,15 @@ class ComposerWrapper extends Component {
         setMyAccount(accountSelected.recipientId);
         state = { ...state, accountSelected };
       }
+    } else {
+      const accountSelected = aliasAccounts.find(
+        aliasAcc =>
+          aliasAcc.fromAddressId === this.state.accountSelected.defaultAddressId
+      );
+      if (accountSelected) {
+        setMyAccount(accountSelected.recipientId);
+        state = { ...state, accountSelected };
+      }
     }
     this.setState(state);
   }
