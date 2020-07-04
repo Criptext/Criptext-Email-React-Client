@@ -50,3 +50,37 @@ export const encryptEmail = async ({
   };
   return await fetch(requestUrl, options);
 };
+
+export const encryptEmailGroup = async ({
+  accountRecipientId,
+  deviceIds,
+  recipientId,
+  body,
+  preview,
+  fileKeys
+}) => {
+  const { salt, iv, key } = generateKeyAndIv(getAlicePassword());
+  const plainContent = JSON.stringify({
+    accountRecipientId,
+    deviceIds,
+    recipientId,
+    body,
+    preview,
+    fileKeys
+  });
+  const content = await AesEncrypt(
+    plainContent,
+    base64ToWordArray(key),
+    base64ToWordArray(iv)
+  );
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/encrypt/email/group`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      salt,
+      iv,
+      content
+    })
+  };
+  return await fetch(requestUrl, options);
+};
