@@ -16,17 +16,20 @@ import {
 import { updateAlias, activateAddress, getCustomDomain } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 import string from './../lang';
+import AddressManager from './AddressManager';
 
 const { sidebar, settings } = string;
 
 const Setting = SettingsHOC(Settings);
 const Domains = SettingsHOC(CustomDomainsWrapper);
 const Alias = SettingsHOC(AliasesWrapper);
+const Manager = SettingsHOC(AddressManager);
 
 const PANEL = {
   SETTINGS: 'settings',
   DOMAIN: 'custom-domains',
-  ALIAS: 'alias'
+  ALIAS: 'alias',
+  MANAGER: 'address-manager'
 };
 
 class SettingsContainer extends Component {
@@ -76,6 +79,14 @@ class SettingsContainer extends Component {
             ]}
             onChangePanel={this.handleChangePanel}
             onAddAlias={this.handleAddAlias}
+          />
+        );
+      case PANEL.MANAGER:
+        return (
+          <Manager
+            isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
+            titlePath={[sidebar.settings, settings.addresses]}
+            onChangePanel={this.handleChangePanel}
           />
         );
       default:

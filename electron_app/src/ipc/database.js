@@ -20,6 +20,10 @@ ipc.answerRenderer('db-create-contact', params => {
   return dbManager.createContact(data);
 });
 
+ipc.answerRenderer('db-create-update-contact', params => {
+  return dbManager.createOrUpdateContact(params);
+});
+
 ipc.answerRenderer('db-create-custom-domain', params => {
   const data = params.accountId
     ? params
@@ -333,6 +337,11 @@ ipc.answerRenderer('db-update-account', params => {
   const data =
     params.recipientId || params.id ? params : { ...params, id: myAccount.id };
   return dbManager.updateAccount(data);
+});
+
+ipc.answerRenderer('db-update-account-default-address', params => {
+  const data = params.id ? params : { ...params, id: myAccount.id };
+  return dbManager.updateAccountDefaultAddressId(data);
 });
 
 ipc.answerRenderer('db-update-alias', params => {

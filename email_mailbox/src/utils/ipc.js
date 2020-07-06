@@ -348,6 +348,10 @@ export const getCustomDomain = async params => {
   return await ipc.callMain('db-get-custom-domains-by-params', params);
 };
 
+export const createOrUpdateContact = async params => {
+  return await ipc.callMain('db-create-update-contact', params);
+};
+
 export const createEmail = async params => {
   return await ipc.callMain('db-create-email', params);
 };
@@ -550,6 +554,10 @@ export const unsendEmail = async params => {
 
 export const updateAccount = async params => {
   return await ipc.callMain('db-update-account', params);
+};
+
+export const updateAccountDefaultAddress = async params => {
+  return await ipc.callMain('db-update-account-default-address', params);
 };
 
 export const updateAlias = async params => {

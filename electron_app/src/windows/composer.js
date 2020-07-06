@@ -1,12 +1,12 @@
 const path = require('path');
 const { BrowserWindow } = require('electron');
 const { composerUrl } = require('./../window_routing');
-const dbManager = require('./../database');
 const globalManager = require('./../globalManager');
 const { EVENTS, callEvent } = require('./events');
 const fileUtils = require('../utils/FileUtils');
 const { API_TRACKING_EVENT } = require('../utils/const');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
+const logger = require('../logger');
 const spellChecker = require('spellchecker');
 
 const lang = require('./../lang');
@@ -80,6 +80,7 @@ const createComposerWindow = () => {
         globalManager.composerData.delete(window.id);
       }
     } catch (error) {
+      logger.error(error.stack);
       sendEventToMailbox('save-draft-failed');
     }
   });
@@ -151,6 +152,7 @@ const destroy = async ({
   hasExternalPassphrase,
   accountId
 }) => {
+  const dbManager = require('./../database');
   const composer = BrowserWindow.fromId(composerId);
   const emailToEdit = globalManager.emailToEdit.get(composer.id);
   let event = 'composer-email-sent';
@@ -205,6 +207,7 @@ const sendEventToMailbox = (eventName, data) => {
 const saveDraftToDatabase = async (composerId, data) => {
   const { accountId, accountEmail: username, isEmpty } = data;
   if (isEmpty) return;
+  const dbManager = require('./../database/index');
   const filteredRecipients = {
     from: data.recipients.from,
     to: filterInvalidEmailAddresses(data.recipients.to),

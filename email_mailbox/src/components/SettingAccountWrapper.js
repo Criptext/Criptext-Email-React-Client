@@ -545,20 +545,12 @@ class SettingAccountWrapper extends Component {
   };
 
   handleChangePanel = (...args) => {
-    const hasShownPopup =
-      args[0] === 'alias'
-        ? getShownAliasPlusPopup()
-        : getShownCustomDomainsPlusPopup();
-    if (canUpgrade(myAccount.customerType) && !hasShownPopup) {
+    if (canUpgrade(myAccount.customerType) && !getShownAliasPlusPopup()) {
       this.resumeCallback = () => {
         this.handleChangePanel(...args);
       };
-      this.showUpgradeToPlusPopup(args[0]);
-      if (args[0] === 'alias') {
-        setShownAliasPlusPopup(true);
-      } else {
-        setShownCustomDomainsPlusPopup(true);
-      }
+      this.showUpgradeToPlusPopup('alias');
+      setShownAliasPlusPopup(true);
       return;
     }
     this.props.onChangePanel(...args);

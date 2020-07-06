@@ -1,0 +1,72 @@
+@import "./../styles/index.scss";
+
+.settings-address-manager-header {
+  width: 100%;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  padding-left: 27px;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.cptx-address-manager {
+  height: calc(100% - 41px);
+  position: relative;
+  overflow-y: auto;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+  }
+
+  .cptx-address-manager-loader {
+    position: absolute;
+    width: 20px;
+    height: 30px;
+    left: calc(50% - 10px);
+    top: calc(50% - 50px);
+  }
+
+  .cptx-address-manager-visible {
+    visibility: visible;
+  }
+
+  .cptx-address-manager-invisible {
+    visibility: hidden;
+  }
+}
+
+/* THEME
+  ----------------------------- */
+  @mixin themable(
+  $_THEME,
+  $_COLOR_TEXT_MAIN_TITLE,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE,
+  $_COLOR_TEXT_SETTINGS_CONTENT,
+  $_BORDER_COLOR_POPUP_INPUT
+) {
+  [data-theme^="#{$_THEME}"],
+  [data-theme] [data-theme^="#{$_THEME}"] {
+    .settings-address-manager-header {
+      background-color: $_BACKGROUND_COLOR_SETTINGS_TITLE;
+      color: $_COLOR_TEXT_SETTINGS_CONTENT;
+    }
+  }
+}
+  
+@include themable(
+  $_THEME_LIGHT,
+  $_COLOR_TEXT_MAIN_TITLE_LIGHT,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_LIGHT,
+  $_COLOR_TEXT_SETTINGS_CONTENT_LIGHT,
+  $_BORDER_COLOR_POPUP_INPUT_LIGHT
+);
+@include themable(
+  $_THEME_DARK,
+  $_COLOR_TEXT_MAIN_TITLE_DARK,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_DARK,
+  $_COLOR_TEXT_SETTINGS_CONTENT_DARK,
+  $_BORDER_COLOR_POPUP_INPUT_DARK
+);

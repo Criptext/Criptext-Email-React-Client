@@ -824,6 +824,12 @@
     "about": "über",
     "account": "Konto",
     "action": "Aktion",
+    "address_manager": {
+      "title": "Address Manager",
+      "subtitle": "YOUR DOMAINS AND ALIASES",
+      "description": "Add domains and personalized addresses",
+      "manage": "Manage"
+    },
     "addresses": "Addresses",
     "aliases": {
       "title": "Aliases",

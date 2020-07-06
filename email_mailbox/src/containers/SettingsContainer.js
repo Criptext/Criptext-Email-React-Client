@@ -18,7 +18,8 @@ import {
   createAlias,
   createCustomDomain,
   updateCustomDomain,
-  logError
+  logError,
+  updateAccountDefaultAddress
 } from './../utils/ipc';
 import { appDomain, SectionType } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
@@ -57,11 +58,15 @@ const checkAddressesAndDomains = async addresses => {
 
   const aliasinDb = await getAlias({ accountId: myAccount.id });
   const customDomainsinDb = await getCustomDomain({ accountId: myAccount.id });
+  let defaultAddressId = null;
 
   let aliasesInApi = addresses
     .map(address => {
       const domainName = address.domain.name;
       return address.aliases.map(alias => {
+        if (alias.default) {
+          defaultAddressId = alias.addressId;
+        }
         return {
           name: alias.name,
           rowId: alias.addressId,
@@ -127,6 +132,12 @@ const checkAddressesAndDomains = async addresses => {
     accountId: myAccount.id
   }));
 
+  if (myAccount.defaultAddressId !== defaultAddressId) {
+    await updateAccountDefaultAddress({
+      defaultAddressId,
+      accountId: myAccount.id
+    });
+  }
   await Promise.all(
     [
       domainsToCreate.map(createCustomDomain),

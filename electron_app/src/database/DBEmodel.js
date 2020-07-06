@@ -72,7 +72,7 @@ const deleteDatabase = () => {
   });
 };
 
-const CURRENT_VERSION = 3;
+const CURRENT_VERSION = 4;
 
 const Table = {
   ACCOUNT: 'account',
@@ -160,7 +160,8 @@ const initDatabaseEncrypted = async (
       isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
       isLoggedIn: { type: Sequelize.BOOLEAN, defaultValue: true },
       customerType: { type: Sequelize.INTEGER, defaultValue: 0 },
-      blockRemoteContent: { type: Sequelize.BOOLEAN, defaultValue: true }
+      blockRemoteContent: { type: Sequelize.BOOLEAN, defaultValue: true },
+      defaultAddressId: { type: Sequelize.INTEGER, allowNull: true }
     },
     {
       sequelize,
@@ -568,17 +569,25 @@ const initDatabaseEncrypted = async (
     case 1:
       migrationFiles = [
         '20200422145912-customerType',
-        '20200512111423_addBlockAllColumn'
+        '20200512111423_addBlockAllColumn',
+        '20200701180920_addDefaultAddressId'
       ];
       break;
     case 2:
-      migrationFiles = ['20200512111423_addBlockAllColumn'];
+      migrationFiles = [
+        '20200512111423_addBlockAllColumn',
+        '20200701180920_addDefaultAddressId'
+      ];
+      break;
+    case 3:
+      migrationFiles = ['20200701180920_addDefaultAddressId'];
       break;
     default:
       migrationFiles = [
         '20200123161254-multipleAccounts',
         '20200422145912-customerType',
-        '20200512111423_addBlockAllColumn.js'
+        '20200512111423_addBlockAllColumn.js',
+        '20200701180920_addDefaultAddressId'
       ];
       break;
   }
