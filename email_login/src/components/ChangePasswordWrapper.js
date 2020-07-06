@@ -115,7 +115,7 @@ class ChangePasswordWrapper extends Component {
     const { status, body, text } = res;
     switch (status) {
       case LOGIN_FIRST_STATUS.SUCCESS: {
-        const { token, deviceId, name } = body;
+        const { token, deviceId, name, addresses } = body;
         const recipientId = this.props.emailAddress;
         const hasPIN = hasPin();
         if (!hasPIN)
@@ -132,7 +132,8 @@ class ChangePasswordWrapper extends Component {
             recipientId,
             deviceId,
             name,
-            token
+            token,
+            addresses
           }
         });
         closeLoginWindow({ forceClose: true });

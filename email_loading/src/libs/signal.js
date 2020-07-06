@@ -6,14 +6,23 @@ import {
 import {
   cleanDatabase,
   closeCreatingKeysLoadingWindow,
+  createAlias,
   createContact,
+  createCustomDomain,
   createSettings,
+  deleteAliases,
+  deleteCustomDomains,
   getAccountByParams,
+  getAlias,
   getComputerName,
+  getCustomDomain,
   getKeyBundle,
   postKeyBundle,
   postUser,
   updateAccount,
+  updateAccountDefaultAddress,
+  updateAlias,
+  updateCustomDomain,
   openLoginWindow,
   getSettings,
   getSystemLanguage,
@@ -47,7 +56,8 @@ const createAccount = async ({
   name,
   deviceType,
   recoveryEmail,
-  customerType
+  customerType,
+  addresses
 }) => {
   const [activeAccount] = await getAccountByParams({
     isActive: true
@@ -158,17 +168,19 @@ const createAccount = async ({
   const loggedAccounts = await getAccountByParams({
     isLoggedIn: true
   });
+  const newAccount = loggedAccounts.find(
+    account => account.recipientId === recipientId
+  );
   myAccount.initialize(loggedAccounts);
   if (!myAccount.id) {
     throw CustomError(string.errors.saveLocal);
   }
   await createOwnContact(name, myAccount.email, myAccount.id);
+  await checkAddressesAndDomains(newAccount, addresses);
   return activeAccount
     ? {
         recipientId,
-        accountId: loggedAccounts.find(
-          account => account.recipientId === recipientId
-        ).id
+        accountId: newAccount.id
       }
     : true;
 };
@@ -222,7 +234,8 @@ const createAccountWithNewDevice = async ({
   deviceId,
   name,
   deviceType,
-  customerType
+  customerType,
+  addresses
 }) => {
   const [activeAccount] = await getAccountByParams({
     isActive: true
@@ -257,19 +270,21 @@ const createAccountWithNewDevice = async ({
   const loggedAccounts = await getAccountByParams({
     isLoggedIn: true
   });
+  const newAccount = loggedAccounts.find(
+    account => account.recipientId === recipientId
+  );
   myAccount.initialize(loggedAccounts);
   if (!myAccount.id) {
     throw CustomError(string.errors.saveLocal);
   }
   const email = myAccount.email;
   await createOwnContact(name, email, myAccount.id);
+  await checkAddressesAndDomains(newAccount, addresses);
   await setDefaultSettings();
   return activeAccount
     ? {
         recipientId,
-        accountId: loggedAccounts.find(
-          account => account.recipientId === recipientId
-        ).id
+        accountId: newAccount.id
       }
     : true;
 };
@@ -310,7 +325,8 @@ const createAccountToDB = async ({
   refreshToken,
   deviceId,
   recipientId,
-  customerType
+  customerType,
+  addresses
 }) => {
   const [activeAccount] = await getAccountByParams({
     isActive: true
@@ -332,12 +348,13 @@ const createAccountToDB = async ({
   const loggedAccounts = await getAccountByParams({
     isLoggedIn: true
   });
+  const newAccount = loggedAccounts.find(
+    account => account.recipientId === recipientId
+  );
   myAccount.initialize(loggedAccounts);
   await createOwnContact(name, myAccount.email);
+  await checkAddressesAndDomains(newAccount, addresses);
   if (activeAccount) {
-    const newAccount = loggedAccounts.find(
-      account => account.recipientId === recipientId
-    );
     return {
       accountId: newAccount.id,
       id: newAccount.id,
@@ -434,6 +451,106 @@ const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {
 
   const encryptedKey = await encryptRes.text();
   return encryptedKey;
+};
+
+const checkAddressesAndDomains = async (myAccount, addresses) => {
+  if (!myAccount || !addresses || addresses.length <= 0) return;
+
+  const aliasinDb = await getAlias({ accountId: myAccount.id });
+  const customDomainsinDb = await getCustomDomain({ accountId: myAccount.id });
+  let defaultAddressId = null;
+
+  let aliasesInApi = addresses
+    .map(address => {
+      const domainName = address.domain.name;
+      return address.aliases.map(alias => {
+        if (alias.default) {
+          defaultAddressId = alias.addressId;
+        }
+        return {
+          name: alias.name,
+          rowId: alias.addressId,
+          active: alias.status ? true : false,
+          domain: domainName
+        };
+      });
+    })
+    .flat();
+  const domainsInApi = addresses
+    .map(address => address.domain)
+    .filter(domain => domain.name !== appDomain);
+  const domainsToCreate = [];
+  const domainsToUpdate = [];
+  const myApiDomains = new Set();
+  for (const apiDomain of domainsInApi) {
+    myApiDomains.add(apiDomain.name);
+
+    const localDomain = customDomainsinDb.find(
+      domain => apiDomain.name === domain.name
+    );
+    if (!localDomain) {
+      domainsToCreate.push({
+        ...apiDomain,
+        accountId: myAccount.accountId
+      });
+    } else if (localDomain.validated !== apiDomain.confirmed) {
+      domainsToUpdate.push({
+        name: localDomain.name,
+        validated: apiDomain.confirmed,
+        accountId: myAccount.id
+      });
+    }
+  }
+  const domainsToDelete = customDomainsinDb
+    .filter(domain => !myApiDomains.has(domain.name))
+    .map(domain => domain.name);
+
+  const aliasesToUpdate = [];
+  const aliasesToDelete = [];
+  for (const localAlias of aliasinDb) {
+    if (localAlias.domain !== appDomain && myApiDomains.has(localAlias.domain))
+      continue;
+    const apiAlias = aliasesInApi.find(
+      alias => localAlias.rowId === alias.rowId
+    );
+    if (!apiAlias) {
+      aliasesToDelete.push(localAlias.rowId);
+    } else if (localAlias.active !== apiAlias.active) {
+      aliasesToUpdate.push({
+        rowId: localAlias.rowId,
+        active: apiAlias.active,
+        accountId: myAccount.id
+      });
+    }
+    aliasesInApi = aliasesInApi.filter(
+      alias => alias.rowId !== localAlias.rowId
+    );
+  }
+  const aliasesToCreate = aliasesInApi.map(alias => ({
+    ...alias,
+    domain: alias.domain === appDomain ? null : alias.domain,
+    accountId: myAccount.id
+  }));
+
+  if (myAccount.defaultAddressId !== defaultAddressId) {
+    await updateAccountDefaultAddress({
+      defaultAddressId,
+      accountId: myAccount.id
+    });
+  }
+
+  await Promise.all(
+    [
+      domainsToCreate.map(createCustomDomain),
+      domainsToUpdate.map(updateCustomDomain),
+      domainsToDelete.length > 0 ? deleteCustomDomains(domainsToDelete) : [],
+      aliasesToCreate.map(createAlias),
+      aliasesToUpdate.map(updateAlias),
+      aliasesToDelete.length > 0
+        ? deleteAliases({ rowIds: aliasesToDelete, accountId: myAccount.id })
+        : []
+    ].flat()
+  );
 };
 
 const aliceRequestWrapper = async func => {
