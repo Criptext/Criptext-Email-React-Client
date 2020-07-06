@@ -18,6 +18,7 @@ require('./src/ipc/composer.js');
 require('./src/ipc/pin.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
+require('./src/ipc/logger');
 require('./src/ipc/mailbox.js');
 require('./src/ipc/database.js');
 require('./src/ipc/manager.js');

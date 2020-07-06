@@ -21,7 +21,9 @@ import {
   postDataReady,
   throwError,
   sendEndLinkDevicesEvent,
-  uploadDatabaseFile
+  uploadDatabaseFile,
+  logLocal,
+  logErrorAndReport
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
@@ -124,6 +126,7 @@ class LinkOldDeviceWrapper extends Component {
   };
 
   initLinkOldDevice = () => {
+    logLocal('Link Old Device - Init Link');
     this.setState(
       {
         message: messages.encryptingMailbox,
@@ -152,8 +155,11 @@ class LinkOldDeviceWrapper extends Component {
   exportDatabase = async () => {
     try {
       await stopSocket();
+      logLocal('Link Old Device - Export Database');
       await exportDatabase();
+      logLocal('Link Old Device - Encrypt Database');
       const { key } = await encryptDatabaseFile();
+      logLocal('Link Old Device - File Ready');
       await startSocket();
       const { session, deviceId } = this.state.remoteData;
       const { randomId } = session;
@@ -171,6 +177,7 @@ class LinkOldDeviceWrapper extends Component {
         }
       );
     } catch (e) {
+      logErrorAndReport(e.stack);
       if (e.code === 'ECONNREFUSED') {
         throwError(string.errors.unableToConnect);
       } else {
@@ -184,11 +191,14 @@ class LinkOldDeviceWrapper extends Component {
   };
 
   uploadFile = async (randomId, deviceId, key) => {
+    logLocal('Link Old Device - Upload File');
     const { statusCode } = await uploadDatabaseFile(randomId);
     if (statusCode !== 200) {
+      logLocal(`Link Old Device - Unable to Upload File ${statusCode}`);
       this.linkingDevicesThrowError();
       return;
     }
+    logLocal('Link Old Device - Encrypt Key');
     const keyEncrypted = await signal.encryptKeyForNewDevice({
       recipientId: myAccount.recipientId,
       deviceId,
@@ -203,6 +213,7 @@ class LinkOldDeviceWrapper extends Component {
       },
       async () => {
         this.incrementPercentage();
+        logLocal('Link Old Device - Post Data');
         await postDataReady({
           deviceId,
           key: keyEncrypted

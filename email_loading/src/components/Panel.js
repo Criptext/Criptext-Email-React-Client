@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import LoadingWrapper from './LoadingWrapper';
 import LinkNewDeviceWrapper from './LinkNewDeviceWrapper';
 import LinkOldDeviceWrapper from './LinkOldDeviceWrapper';
@@ -8,6 +8,7 @@ import {
   mySettings,
   shouldResetPIN
 } from '../utils/electronInterface';
+import { reportUncaughtError } from '../utils/ipc';
 
 const loadingTypes = {
   SIGNUP: 'signup',
@@ -21,11 +22,28 @@ const loadingTypes = {
   INCOMPATIBLE_VERSIONS: 'incompatible-versions'
 };
 
-const Panel = () => (
-  <div className="wrapper" data-theme={mySettings.theme || 'light'}>
-    {renderDialog()}
-  </div>
-);
+class Panel extends Component {
+  render() {
+    return (
+      <div className="wrapper" data-theme={mySettings.theme || 'light'}>
+        {renderDialog()}
+      </div>
+    );
+  }
+
+  componentDidCatch(error, info) {
+    const errorInfo = info.componentStack;
+    this.setState(
+      {
+        hasError: true,
+        errorTitle: error,
+        errorInfo
+      },
+      this.updateCounter
+    );
+    reportUncaughtError(error.stack);
+  }
+}
 
 const renderDialog = () => {
   switch (loadingType) {
