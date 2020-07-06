@@ -24,9 +24,9 @@ class EmailWrapper extends Component {
       buttonUnsendStatus: ButtonUnsendStatus.NORMAL,
       buttonReplyStatus: ButtonStatus.NORMAL,
       displayEmail: false,
-      blockImagesInline: false,
-      blockImagesContact: false,
-      blockImagesAccount: false,
+      blockImagesInline: true,
+      blockImagesContact: true,
+      blockImagesAccount: true,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
       isHiddenPopOverEmailBlocked: true,
@@ -230,17 +230,12 @@ class EmailWrapper extends Component {
         hasImages,
         isFromMe
       });
-      this.setState(
-        {
-          displayEmail: !displayEmail,
-          blockImagesInline: blockingInline,
-          blockImagesContact,
-          blockImagesAccount
-        },
-        () => {
-          this.setCollapseListener('add');
-        }
-      );
+      this.setState({
+        displayEmail: !displayEmail,
+        blockImagesInline: blockingInline,
+        blockImagesContact,
+        blockImagesAccount
+      });
     }
   };
 
