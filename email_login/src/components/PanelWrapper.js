@@ -414,7 +414,7 @@ class PanelWrapper extends Component {
     }
   };
 
-  handleCodeSuccess = ({ deviceId, name, customerType }) => {
+  handleCodeSuccess = async ({ deviceId, name, customerType }) => {
     const [
       username,
       domain = appDomain
@@ -425,8 +425,17 @@ class PanelWrapper extends Component {
         : this.state.values.usernameOrEmailAddress;
     socketClient.disconnect();
     this.stopCountdown();
+    const hasPIN = hasPin();
+    if (!hasPIN)
+      await sendPin({
+        pin: DEFAULT_PIN,
+        shouldSave: false,
+        shouldExport: false,
+        shouldOnlySetPIN: true
+      });
     openCreateKeysLoadingWindow({
       loadingType: 'signin',
+      shouldResetPIN: !hasPIN,
       remoteData: {
         recipientId,
         deviceId,
