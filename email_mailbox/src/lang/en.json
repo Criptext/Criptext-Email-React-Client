@@ -276,6 +276,9 @@
         "deactivated": "Alias deactivated"
       }
     },
+    "auth": {
+      "error": "Unable to proccess your request. Try again later"
+    },
     "backup_enabled": {
       "description": "Backup Activated 📤"
     },

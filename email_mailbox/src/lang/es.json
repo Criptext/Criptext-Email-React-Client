@@ -276,6 +276,9 @@
         "deactivated": "Alias desactivados"
       }
     },
+    "auth": {
+      "error": "No fue posible procesar el requerimiento. Intentelo más tarde"
+    },
     "backup_enabled": {
       "description": "Respaldo Activado 📤"
     },

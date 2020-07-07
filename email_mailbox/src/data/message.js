@@ -143,6 +143,10 @@ const messagesContent = {
     }
   },
   error: {
+    auth: {
+      priority: messagePriorities.HIGH,
+      description: string.messages.auth.error
+    },
     blockRemoteTurnOff: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.block_remote_content.error
