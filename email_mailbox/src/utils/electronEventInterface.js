@@ -1753,6 +1753,17 @@ ipcRenderer.on('device-removed', (ev, accountRecipientId) => {
   sendDeviceRemovedEvent(false);
 });
 
+ipcRenderer.on('refresh-token-failure', (ev, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return;
+  }
+  const messageData = {
+    ...Messages.error.auth,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
 ipcRenderer.on('password-changed', (ev, accountRecipientId) => {
   if (accountRecipientId !== myAccount.recipientId) {
     return;

@@ -91,6 +91,7 @@ const checkExpiredSession = async (
   const NEW_SESSION_SUCCESS_STATUS = 200;
   const UPDATE_USER_TOKENS = 201;
   const EXPIRED_SESSION_STATUS = 401;
+  const REMOVED_DEVICE_STATUS = 419;
   const CHANGED_PASSWORD_STATUS = 403;
   const SUSPENDED_ACCOUNT_REQ_STATUS = 451;
 
@@ -137,8 +138,13 @@ const checkExpiredSession = async (
         }
       }
 
-      if (newSessionStatus === EXPIRED_SESSION_STATUS) {
+      if (newSessionStatus === REMOVED_DEVICE_STATUS) {
         mailboxWindow.send('device-removed', recipientId);
+        return { status: newSessionStatus };
+      }
+
+      if (newSessionStatus === EXPIRED_SESSION_STATUS) {
+        mailboxWindow.send('refresh-token-failure', recipientId);
         return { status: newSessionStatus };
       }
 
