@@ -185,7 +185,7 @@ class SignInPasswordWrapper extends Component {
             shouldExport: false,
             shouldOnlySetPIN: true
           });
-        const { deviceId, name, customerType } = body;
+        const { deviceId, name, customerType, addresses } = body;
         openCreateKeysLoadingWindow({
           loadingType: 'signin',
           shouldResetPIN: !hasPIN,
@@ -193,7 +193,8 @@ class SignInPasswordWrapper extends Component {
             recipientId,
             deviceId,
             name,
-            customerType: customerType || 0
+            customerType: customerType || 0,
+            addresses
           }
         });
         closeLoginWindow({ forceClose: true });

@@ -80,7 +80,8 @@ class LoadingWrapper extends Component {
           name,
           deviceType,
           isRecipientApp,
-          customerType: remoteData.customerType || 0
+          customerType: remoteData.customerType || 0,
+          addresses: remoteData.addresses
         });
       }
     }
@@ -99,7 +100,8 @@ class LoadingWrapper extends Component {
       password: remoteData.password,
       name: remoteData.name,
       deviceType: remoteData.deviceType,
-      customerType: remoteData.customerType || 0
+      customerType: remoteData.customerType || 0,
+      addresses: remoteData.addresses
     };
     if (remoteData.recoveryEmail !== '') {
       userCredentials['recoveryEmail'] = remoteData.recoveryEmail;

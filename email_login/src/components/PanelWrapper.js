@@ -414,7 +414,7 @@ class PanelWrapper extends Component {
     }
   };
 
-  handleCodeSuccess = async ({ deviceId, name, customerType }) => {
+  handleCodeSuccess = async ({ deviceId, name, customerType, addresses }) => {
     const [
       username,
       domain = appDomain
@@ -440,7 +440,8 @@ class PanelWrapper extends Component {
         recipientId,
         deviceId,
         name,
-        customerType
+        customerType,
+        addresses
       }
     });
     closeLoginWindow({ forceClose: true });
@@ -1063,7 +1064,7 @@ class PanelWrapper extends Component {
         ? username
         : this.state.values.usernameOrEmailAddress;
     if (status === 200) {
-      const { deviceId, name, customerType } = body;
+      const { deviceId, name, customerType, addresses } = body;
       const hasPIN = hasPin();
       if (!hasPIN)
         await sendPin({
@@ -1079,7 +1080,8 @@ class PanelWrapper extends Component {
           recipientId,
           deviceId,
           name,
-          customerType
+          customerType,
+          addresses
         }
       });
       closeLoginWindow({ forceClose: true });

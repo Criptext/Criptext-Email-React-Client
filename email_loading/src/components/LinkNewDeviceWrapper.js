@@ -178,7 +178,8 @@ class LinkNewDeviceWrapper extends Component {
             ...accountData,
             recipientId: getRecipientIdFromRemoteData(),
             deviceId: remoteData.deviceId,
-            customerType: remoteData.customerType || 0
+            customerType: remoteData.customerType || 0,
+            addresses: remoteData.addresses
           };
           logLocal('Link New Device - Update Account in DB');
           const response = await signal.createAccountToDB(newAccountData);

@@ -105,6 +105,14 @@ export const cleanKeys = async recipientId => {
   return await ipc.callMain('db-clean-keys', recipientId);
 };
 
+export const createAlias = async params => {
+  return await ipc.callMain('db-create-alias', params);
+};
+
+export const createCustomDomain = async params => {
+  return await ipc.callMain('db-create-custom-domain', params);
+};
+
 export const createContact = async params => {
   return await ipc.callMain('db-create-contact', params);
 };
@@ -141,6 +149,14 @@ export const createTables = async () => {
   return await ipc.callMain('db-create-tables');
 };
 
+export const deleteAliases = async params => {
+  return await ipc.callMain('db-delete-alias', params);
+};
+
+export const deleteCustomDomains = async domains => {
+  return await ipc.callMain('db-delete-custom-domains', { domains });
+};
+
 export const deletePreKeyPair = async params => {
   return await ipc.callMain('db-delete-prekey-pair', params);
 };
@@ -155,6 +171,14 @@ export const getAccount = async () => {
 
 export const getAccountByParams = async params => {
   return await ipc.callMain('db-get-account-by-params', params);
+};
+
+export const getAlias = async params => {
+  return await ipc.callMain('db-get-alias-by-params', params);
+};
+
+export const getCustomDomain = async params => {
+  return await ipc.callMain('db-get-custom-domains-by-params', params);
 };
 
 export const getContactByEmails = async params => {
@@ -179,6 +203,18 @@ export const getSignedPreKey = async params => {
 
 export const updateAccount = async params => {
   return await ipc.callMain('db-update-account', params);
+};
+
+export const updateAccountDefaultAddress = async params => {
+  return await ipc.callMain('db-update-account-default-address', params);
+};
+
+export const updateAlias = async params => {
+  return await ipc.callMain('db-update-alias', params);
+};
+
+export const updateCustomDomain = async params => {
+  return await ipc.callMain('db-update-custom-domains', params);
 };
 
 export const updateIdentityKeyRecord = async params => {
