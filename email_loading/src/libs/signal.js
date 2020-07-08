@@ -508,8 +508,12 @@ const checkAddressesAndDomains = async (myAccount, addresses) => {
   const aliasesToUpdate = [];
   const aliasesToDelete = [];
   for (const localAlias of aliasinDb) {
-    if (localAlias.domain !== appDomain && myApiDomains.has(localAlias.domain))
+    if (localAlias.domain !== null && !myApiDomains.has(localAlias.domain)) {
+      aliasesInApi = aliasesInApi.filter(
+        alias => alias.rowId !== localAlias.rowId
+      );
       continue;
+    }
     const apiAlias = aliasesInApi.find(
       alias => localAlias.rowId === alias.rowId
     );
@@ -538,7 +542,6 @@ const checkAddressesAndDomains = async (myAccount, addresses) => {
       accountId: myAccount.id
     });
   }
-
   await Promise.all(
     [
       domainsToCreate.map(createCustomDomain),
