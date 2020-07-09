@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
+const archiver = require('archiver');
+const unzipper = require('unzipper');
 const { app } = require('electron');
 const myAccount = require('./Account');
 const { databasePath } = require('./database/DBEmodel');
@@ -24,6 +26,14 @@ const TempBackupDirectory = path.join(databasePath, '..', TempBackupFolderName);
 const ExportUnencryptedFilename = path.join(
   TempBackupDirectory,
   'unencrypt.exp'
+);
+const ExportUnencryptedFilename1 = path.join(
+  TempBackupDirectory,
+  'lite.db'
+);
+const ExportUnencryptedFilename2 = path.join(
+  TempBackupDirectory,
+  'complete.db'
 );
 const ExportZippedFilename = path.join(TempBackupDirectory, 'zipped.exp');
 const ExportEncryptedFilename = path.join(TempBackupDirectory, 'encrypted.exp');
@@ -95,6 +105,33 @@ const createDefaultBackupFolder = () => {
 
 /*  Methods
 ----------------------------- */
+const zipFilesInDir = ({ inputPath, outputFile}) => {
+  return new Promise( (resolve, reject) => {
+    const arch = archiver('zip', {
+      zlib: { level: 9 }
+    })
+    const output = fs.createWriteStream(outputFile);
+    arch.pipe(output);
+    arch.on('finish', data => {
+      console.log('finish : ', data, inputPath);
+      resolve(data);
+    });
+    arch.on('error', data => {
+      console.log('error : ', data);
+      reject(data);
+    });
+    arch.on('close', data => {
+      console.log('close : ', data);
+      reject(data);
+    });
+    arch.on('drain', data => {
+      console.log('drain : ', data);
+      reject(data);
+    });
+    arch.directory(inputPath, '/')
+    arch.finalize();
+  })
+}
 
 const zipStreamFile = ({ inputFile, outputFile }) => {
   return new Promise((resolve, reject) => {
@@ -108,6 +145,12 @@ const zipStreamFile = ({ inputFile, outputFile }) => {
       .on('finish', resolve);
   });
 };
+
+const unzipFileInDir = ({ inputFile, outputPath }) => {
+  return new Promise( (resolve, reject) => {
+    fs.createReadStream(inputFile).pipe(unzipper.Extract({path: outputPath})).on('close', resolve).on('error', reject);
+  })
+}
 
 const unzipStreamFile = ({ inputFile, outputFile }) => {
   return new Promise((resolve, reject) => {
@@ -150,27 +193,34 @@ const exportBackupUnencrypted = async ({
   try {
     try {
       await exportEncryptDatabaseToFile({
-        outputPath: ExportUnencryptedFilename,
+        outputPath: ExportUnencryptedFilename1,
+        outputPath2: ExportUnencryptedFilename2,
         accountObj,
         progressCallback
       });
     } catch (dbErr) {
+      console.log('EPAAAAA : ', dbErr);
       throw new Error('Failed to export database');
     }
+    console.log('DONESISIMO');
     // Compress backup file
     try {
-      await zipStreamFile({
-        inputFile: ExportUnencryptedFilename,
-        outputFile: ExportZippedFilename
-      });
+      await zipFilesInDir({
+        inputPath: TempBackupDirectory,
+        outputFile: backupPath
+      })
     } catch (zipErr) {
+      console.log('HEEEPAAA : ', zipErr);
       throw new Error('Failed to compress backup file');
     }
+
+    console.log('DONESISIMO X2');
     // Move to destination
     try {
       cleanPreviousBackupFilesInFolder(path.join(backupPath, '..'));
-      await store(backupPath, fs.readFileSync(ExportZippedFilename));
+      //await store(backupPath, fs.readFileSync(ExportZippedFilename));
     } catch (fileErr) {
+      console.log('nOOOOO: ', fileErr);
       throw new Error('Failed to move backup file');
     }
     return getFileSizeInBytes(backupPath);
@@ -223,31 +273,62 @@ const exportBackupEncrypted = async ({ backupPath, password, accountObj }) => {
 /*  Restore Backup 
 ----------------------------- */
 const restoreUnencryptedBackup = async ({ filePath }) => {
+  const start1 = Date.now();
   try {
     // Unzip file
     try {
-      await unzipStreamFile({
+      await unzipFileInDir({
         inputFile: filePath,
-        outputFile: RestoreUnzippedFilename
+        outputPath: TempBackupDirectory
       });
     } catch (unzipError) {
       throw new Error('Failed to unzip backup file');
     }
+
+    const litePath = path.join(TempBackupDirectory, 'lite.db');
+
     // Import to database
     try {
       await importDatabaseFromFile({
-        filepath: RestoreUnzippedFilename,
+        filepath: litePath,
         isStrict: true
       });
     } catch (importError) {
+      console.log('ERROR 0 : ', importError)
       throw new Error('Failed to import into database');
     }
   } catch (restoreBackupError) {
     throw restoreBackupError;
   } finally {
+    //removeTempBackupDirectoryRecursive(TempBackupDirectory);
+  }
+
+  setTimeout( () => {
+    importSecondPart();
+  }, 2000);
+
+  const end1 = Date.now();
+  console.log('TIME FOR WHOLE FIRST PART : ', end1 - start1);
+};
+
+const importSecondPart = async () => {
+  const start2 = Date.now();
+  const completePath = path.join(TempBackupDirectory, 'complete.db');
+  console.log('INIT SECOND IMPORT ', completePath);
+  try {
+    await importDatabaseFromFile({
+      filepath: completePath,
+      isStrict: false
+    });
+  } catch (ex) {
+    console.log('ERROR : ', ex);
+  } finally {
     removeTempBackupDirectoryRecursive(TempBackupDirectory);
   }
-};
+  console.log('FINISH SECOND IMPORT');
+  const end2 = Date.now();
+  console.log('TIME FOR WHOLE FIRST PART : ', end2 - start2);
+}
 
 const restoreEncryptedBackup = async ({ filePath, password }) => {
   try {

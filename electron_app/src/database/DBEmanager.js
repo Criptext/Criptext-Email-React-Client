@@ -677,6 +677,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   if (params.plain === false)
     return getEmailsGroupByThreadByParamsToSearch(params);
   const sequelize = getDB();
+  console.log(params);
   const {
     accountId,
     contactTypes = ['from'],
@@ -730,7 +731,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   }
 
   const emailContactOrQuery = contactTypes[1]
-    ? `OR ${Table.EMAIL_CONTACT}.type = "${contactTypes[1]}"`
+    ? `OR ${Table.EMAIL_CONTACT}.type IN (${contactTypes.map( type => `"${type}"`).join(",")})`
     : null;
 
   const textQuery = plain
@@ -815,12 +816,21 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     }),
     {}
   );
+  
+  const fullData = {
+    contactIds: Object.keys(contactsObj)
+      .map(key => contactsObj[key].recipientContactIds.split(','))
+      .flat(),
+    labelIds: threads.map(thread => thread.labels.split(',')).flat()
+  };
+  
   return threads.map(thread => {
     return {
       ...thread,
       fileTokens: filesObj[thread.threadId].fileTokens,
       fromContactName: contactsObj[thread.threadId].fromContactName,
-      recipientContactIds: contactsObj[thread.threadId].recipientContactIds
+      recipientContactIds: contactsObj[thread.threadId].recipientContactIds,
+      fullData
     };
   });
 };
@@ -883,7 +893,7 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   }
 
   const emailContactOrQuery = contactTypes[1]
-    ? `OR ${Table.EMAIL_CONTACT}.type = "${contactTypes[1]}"`
+    ? `OR ${Table.EMAIL_CONTACT}.type IN (${contactTypes.map( type => `"${type}"`).join(",")})`
     : null;
 
   const textQuery = plain

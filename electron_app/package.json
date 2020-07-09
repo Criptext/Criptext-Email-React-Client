@@ -156,6 +156,7 @@
     "@criptext/electron-push-receiver": "^2.1.3",
     "@criptext/news-api-client": "^1.0.1",
     "@journeyapps/sqlcipher": "^4.0.0",
+    "archiver": "^4.0.1",
     "dotenv": "^6.2.0",
     "electron-context-menu": "^0.10.1",
     "electron-dl": "^1.12.0",
@@ -178,6 +179,7 @@
     "sqlite3": "^4.1.0",
     "umzug": "^2.2.0",
     "unused-filename": "^2.1.0",
+    "unzipper": "^0.10.11",
     "websocket": "^1.0.28",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.4.2"

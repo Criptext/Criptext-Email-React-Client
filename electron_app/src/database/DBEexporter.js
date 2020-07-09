@@ -26,9 +26,11 @@ const {
   getDB,
   Table,
   deleteAccountNotSignalRelatedData,
+  getEmailsGroupByThreadByParams,
   getSettings,
   updateSettings,
-  updateAccount
+  updateAccount,
+  Op
 } = require('./DBEmanager');
 const myAccount = require('./../Account');
 const systemLabels = require('./../systemLabels');
@@ -548,7 +550,8 @@ const closeDatabaseConnection = async dbConnection => {
 
 /* Encrypted Database
 ----------------------------- */
-const exportContactTable = async accountId => {
+const exportContactTable = async ({ accountId, contactIds, notIn = false }) => {
+  console.log('export contacts : ', contactIds);
   let contactRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -562,6 +565,11 @@ const exportContactTable = async accountId => {
           where: { accountId }
         }
       ],
+      where: {
+        id: {
+          [notIn ? Op.notIn : Op.in] : contactIds
+        }
+      },
       offset,
       limit: SELECT_ALL_BATCH
     });
@@ -575,14 +583,17 @@ const exportContactTable = async accountId => {
   return formatTableRowsToString(Table.CONTACT, contactRows);
 };
 
-const exportLabelTable = async accountId => {
+const exportLabelTable = async ({ accountId, labelIds, notIn = false }) => {
+  console.log('export labels : ', labelIds);
   let labelRows = [];
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
     const result = await Label().findAll({
       attributes: ['id', 'text', 'color', 'type', 'visible', 'uuid'],
-      where: { type: 'custom', accountId },
+      where: { type: 'custom', accountId, id: {
+        [notIn ? Op.notIn : Op.in] : labelIds
+      } },
       offset,
       limit: SELECT_ALL_BATCH
     });
@@ -596,7 +607,24 @@ const exportLabelTable = async accountId => {
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
-const exportEmailTable = async (accountId, email) => {
+const exportEmailIds = async accountId => {
+  const threads = await getEmailsGroupByThreadByParams({
+    clear: true,
+    accountId,
+    labelId: 1,
+    limit: 30,
+    rejectedLabelIds: [2, 7],
+    contactTypes: ['from', 'cc', 'bcc', 'to']
+  });
+  const fullData = threads[0].fullData;
+  return {
+    emailIds: threads.map(thread => thread.emailIds.split(',')).flat(),
+    labelIds: fullData.labelIds,
+    contactIds: fullData.contactIds
+  };
+};
+
+const exportEmailTable = async ({ accountId, email, emailIds, notIn = false }) => {
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -609,11 +637,15 @@ const exportEmailTable = async (accountId, email) => {
           `${Table.EMAIL}.id`,
           accountId
         )}
+      AND ${Table.EMAIL}.id ${notIn ? 'NOT' : ''} IN (:emailIds)
       GROUP BY ${Table.EMAIL}.id
       LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
         {
           model: Email(),
-          mapToModel: true
+          mapToModel: true,
+          replacements: {
+            emailIds
+          }
         }
       )
       .then(async rows => {
@@ -662,7 +694,7 @@ const exportEmailTable = async (accountId, email) => {
   return formatTableRowsToString(Table.EMAIL, emailRows);
 };
 
-const exportEmailContactTable = async accountId => {
+const exportEmailContactTable = async ({ accountId, emailIds, notIn = false }) => {
   let emailContactRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -677,9 +709,15 @@ const exportEmailContactTable = async accountId => {
           `${Table.EMAIL_CONTACT}.emailId`,
           accountId
         )}
+        AND ${Table.EMAIL_CONTACT}.emailId ${notIn ? 'NOT' : ''} IN (:emailIds)
         GROUP BY ${Table.EMAIL_CONTACT}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
-        { type: getDB().QueryTypes.SELECT }
+        {
+          type: getDB().QueryTypes.SELECT,
+          replacements: {
+            emailIds
+          }
+        }
       )
       .then(rows => {
         return rows.map(row => {
@@ -699,7 +737,7 @@ const exportEmailContactTable = async accountId => {
   return formatTableRowsToString('email_contact', emailContactRows);
 };
 
-const exportEmailLabelTable = async accountId => {
+const exportEmailLabelTable = async ({ accountId, emailIds, notIn = false }) => {
   let emailLabelRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -714,9 +752,15 @@ const exportEmailLabelTable = async accountId => {
         AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
         AND ${Table.EMAIL_LABEL}.emailId IS NOT NULL
         AND ${Table.EMAIL_LABEL}.labelId IS NOT NULL
+        AND ${Table.EMAIL_LABEL}.emailId ${notIn ? 'NOT' : ''} IN (:emailIds)
         GROUP BY ${Table.EMAIL_LABEL}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
-        { type: getDB().QueryTypes.SELECT }
+        {
+          type: getDB().QueryTypes.SELECT,
+          replacements: {
+            emailIds
+          }
+        }
       )
       .then(rows => {
         return rows.map(row => {
@@ -736,7 +780,7 @@ const exportEmailLabelTable = async accountId => {
   return formatTableRowsToString('email_label', emailLabelRows);
 };
 
-const exportFileTable = async accountId => {
+const exportFileTable = async ({ accountId, emailIds, notIn = false }) => {
   let fileRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -749,9 +793,15 @@ const exportFileTable = async accountId => {
           `${Table.FILE}.emailId`,
           accountId
         )}
+        AND ${Table.FILE}.emailId ${notIn ? 'NOT' : ''} IN (:emailIds)
         GROUP BY ${Table.FILE}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
-        { type: getDB().QueryTypes.SELECT }
+        {
+          type: getDB().QueryTypes.SELECT,
+          replacements: {
+            emailIds
+          }
+        }
       )
       .then(rows => {
         return rows.map(row => {
@@ -838,11 +888,12 @@ const handleProgressCallback = (progress, message, email, progressCallback) => {
 
 const exportEncryptDatabaseToFile = async ({
   outputPath,
+  outputPath2,
   accountObj,
   progressCallback
 }) => {
   const filepath = outputPath;
-  const PROGRESS_TOTAL_STEPS = 19;
+  const PROGRESS_TOTAL_STEPS = 38;
   let exportProgress = 0;
 
   const [recipientId, domain] = accountObj
@@ -884,37 +935,47 @@ const exportEncryptDatabaseToFile = async ({
 
   await saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
 
+  const { emailIds, contactIds, labelIds } = await exportEmailIds(accountId);
+
   const exportTables = [
     {
       export: exportContactTable,
+      params: { accountId, contactIds },
       suffix: 'contacts'
     },
     {
       export: exportLabelTable,
+      params: { accountId, labelIds },
       suffix: 'labels'
     },
     {
       export: exportEmailTable,
+      params: { accountId, emailIds, email: accountEmail },
       suffix: 'emails'
     },
     {
       export: exportEmailContactTable,
+      params: { accountId, emailIds },
       suffix: 'email_contacts'
     },
     {
       export: exportEmailLabelTable,
+      params: { accountId, emailIds },
       suffix: 'email_labels'
     },
     {
       export: exportFileTable,
+      params: { accountId, emailIds },
       suffix: 'files'
     },
     {
       export: exportAliasTable,
+      params: { accountId },
       suffix: 'aliases'
     },
     {
       export: exportCustomDomainsTable,
+      params: { accountId },
       suffix: 'domains'
     }
   ];
@@ -928,7 +989,7 @@ const exportEncryptDatabaseToFile = async ({
       progressCallback
     );
 
-    const result = await exportTable.export(accountId, accountEmail);
+    const result = await exportTable.export(exportTable.params);
 
     exportProgress += 100 / PROGRESS_TOTAL_STEPS;
     handleProgressCallback(
@@ -941,6 +1002,64 @@ const exportEncryptDatabaseToFile = async ({
     await saveToFile({ data: result, filepath, mode: 'a' });
   }
 
+  await saveToFile({ data: fileInformation, filepath: outputPath2, mode: 'w' }, true);
+
+  const exportTables2 = [
+    {
+      export: exportContactTable,
+      params: { accountId, contactIds: [], notIn: true},
+      suffix: 'contacts'
+    },
+    {
+      export: exportLabelTable,
+      params: { accountId, labelIds: [], notIn: true },
+      suffix: 'labels'
+    },
+    {
+      export: exportEmailTable,
+      params: { accountId, emailIds, email: accountEmail, notIn: true },
+      suffix: 'emails'
+    },
+    {
+      export: exportEmailContactTable,
+      params: { accountId, emailIds, notIn: true },
+      suffix: 'email_contacts'
+    },
+    {
+      export: exportEmailLabelTable,
+      params: { accountId, emailIds, notIn: true },
+      suffix: 'email_labels'
+    },
+    {
+      export: exportFileTable,
+      params: { accountId, emailIds, notIn: true },
+      suffix: 'files'
+    }
+  ];
+
+  for (const exportTable of exportTables2) {
+    exportProgress += 100 / PROGRESS_TOTAL_STEPS;
+    handleProgressCallback(
+      exportProgress,
+      `exporting_${exportTable.suffix}`,
+      `${recipientId}@${domain || APP_DOMAIN}`,
+      progressCallback
+    );
+
+    const result = await exportTable.export(exportTable.params);
+
+    exportProgress += 100 / PROGRESS_TOTAL_STEPS;
+    handleProgressCallback(
+      exportProgress,
+      `saving_${exportTable.suffix}`,
+      accountEmail,
+      progressCallback
+    );
+
+    await saveToFile({ data: result, filepath: outputPath2, mode: 'a' });
+  }
+
+  console.log(outputPath, outputPath2);
   exportProgress = 99;
   handleProgressCallback(
     exportProgress,
@@ -985,6 +1104,8 @@ const importDatabaseFromFile = async ({
       userEmail = myAccount.email;
       accountId = myAccount.id;
     }
+
+    console.log('GONNA RESTORE : ', accountId);
 
     if (isStrict) {
       getCustomLinesByStream(filepath, 1, async (err, lines) => {
@@ -1032,14 +1153,17 @@ const importDatabaseFromFile = async ({
           await setShowPreview(showPreview);
         }
         if (Object.keys(settingsObject).length !== 0) {
-          await updateSettings(settingsObject, trx);
+          console.log('GONNA UPDATE SETTINGS');
+          //await updateSettings(settingsObject, trx);
         }
         if (Object.keys(accountObj).length !== 0) {
-          await updateAccount(accountObj, trx);
+          console.log('GONNA UPDATE ACCOUNT');
+          //await updateAccount(accountObj, trx);
         }
       });
 
       if (accountId) {
+        console.log('GONNA DELETE : ', accountId);
         await deleteAccountNotSignalRelatedData(accountId, trx);
       }
     }
@@ -1074,6 +1198,7 @@ const importDatabaseFromFile = async ({
           try {
             lineReader.pause();
             if (lastTableRow !== table || insertRows) {
+              console.log('INSERT ROWS : ', lastTableRow);
               switch (lastTableRow) {
                 case Table.CONTACT: {
                   const idsMap = await insertContacts(
@@ -1191,7 +1316,7 @@ const importDatabaseFromFile = async ({
                   break;
               }
             }
-
+            
             switch (table) {
               case Table.ACCOUNT: {
                 const account = await Account()
