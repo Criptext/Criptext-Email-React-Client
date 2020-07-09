@@ -1106,7 +1106,7 @@ const importDatabaseFromFile = async ({
     }
 
     console.log('GONNA RESTORE : ', accountId);
-
+    const start = Date.now();
     if (isStrict) {
       getCustomLinesByStream(filepath, 1, async (err, lines) => {
         if (err) throw new Error('Failed to read file information');
@@ -1167,6 +1167,8 @@ const importDatabaseFromFile = async ({
         await deleteAccountNotSignalRelatedData(accountId, trx);
       }
     }
+    const end = Date.now();
+    console.log('TIME TIME : ', end - start);
 
     let labelIdsMap = {
       1: 1,
@@ -1198,7 +1200,6 @@ const importDatabaseFromFile = async ({
           try {
             lineReader.pause();
             if (lastTableRow !== table || insertRows) {
-              console.log('INSERT ROWS : ', lastTableRow);
               switch (lastTableRow) {
                 case Table.CONTACT: {
                   const idsMap = await insertContacts(
@@ -1615,27 +1616,25 @@ const insertRemainingEmailLabelsRows = async (rows, Table, trx) => {
   }
 };
 
-const storeEmailBodies = (emailRows, userEmail, withoutEncryption) => {
+const storeEmailBodies = async (emailRows, userEmail, withoutEncryption) => {
   if (!userEmail) return;
   const pin = withoutEncryption ? undefined : globalManager.databaseKey.get();
   const isCopy = !withoutEncryption;
-  return Promise.all(
-    emailRows.map(email => {
-      const body = email.content;
-      const headers = email.headers;
-      email.content = '';
-      delete email.headers;
-      delete email.content;
-      return saveEmailBody({
-        body,
-        headers,
-        username: userEmail,
-        metadataKey: email.key,
-        password: pin,
-        isCopy
-      });
-    })
-  );
+  for (const email of emailRows) {
+    const body = email.content;
+    const headers = email.headers;
+    email.content = '';
+    delete email.headers;
+    delete email.content;
+    await saveEmailBody({
+      body,
+      headers,
+      username: userEmail,
+      metadataKey: email.key,
+      password: pin,
+      isCopy
+    }); 
+  }
 };
 
 /* Utils

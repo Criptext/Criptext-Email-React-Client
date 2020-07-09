@@ -1596,50 +1596,14 @@ const deleteAccountNotSignalRelatedData = async (accountId, trx) => {
     where: { accountId: accountId },
     transaction: trx
   });
-  while (accountId) {
-    const emails = await Email().findAll({
-      attributes: ['id'],
-      where: {
-        accountId: accountId
-      },
-      limit: 500,
-      transaction: trx
-    });
-    if (emails.length === 0) {
-      break;
-    }
-    const emailIds = emails.map(email => email.dataValues.id);
-    await EmailContact().destroy({
-      where: {
-        emailId: emailIds
-      },
-      transaction: trx
-    });
-    await EmailLabel().destroy({
-      where: {
-        emailId: emailIds
-      },
-      transaction: trx
-    });
-    await File().destroy({
-      where: {
-        emailId: emailIds
-      },
-      transaction: trx
-    });
-    await Feeditem().destroy({
-      where: {
-        emailId: emailIds
-      },
-      transaction: trx
-    });
-    await Email().destroy({
-      where: {
-        id: emailIds
-      },
-      transaction: trx
-    });
-  }
+
+  await Email().destroy({
+    where: {
+      accountId
+    },
+    transaction: trx
+  });
+
   await Label().destroy({
     where: {
       accountId: accountId,
@@ -1665,6 +1629,15 @@ const deleteAccountNotSignalRelatedData = async (accountId, trx) => {
     },
     transaction: trx
   });
+  const remaining = await Email().findAll({
+    attributes: ['id'],
+    where: {
+      accountId: accountId
+    },
+    limit: 10,
+    transaction: trx
+  });
+  console.log(remaining);
 };
 
 const cleanDataLogout = async ({ recipientId }) => {
