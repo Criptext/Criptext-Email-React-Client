@@ -41,6 +41,7 @@ import {
   getLabelByUuid,
   logoutApp,
   openFilledComposerWindow,
+  reencryptEmail,
   reportContentUnencrypted,
   reportContentUnencryptedBob,
   restartConnection,
@@ -63,7 +64,8 @@ import {
   updateDeviceType,
   initAutoBackupMonitor,
   updateAccountDefaultAddress,
-  createOrUpdateContact
+  createOrUpdateContact,
+  reportUncaughtError
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -131,6 +133,8 @@ let profileHasChanged = false;
 
 let newEmailNotificationList = [];
 let deleteDataIntervalId = null;
+
+const FATAL_ERROR = 1;
 
 const stopGettingEvents = () => {
   isGettingEvents = false;
@@ -615,7 +619,8 @@ const formEmailIfNotExists = async params => {
     isSpam,
     recipients,
     guestEncryption,
-    external
+    external,
+    rowid
   } = params;
 
   const labelIds = [];
@@ -624,11 +629,7 @@ const formEmailIfNotExists = async params => {
     myFileKeys;
 
   try {
-    const {
-      decryptedBody,
-      decryptedHeaders,
-      decryptedFileKeys
-    } = await signal.decryptEmail({
+    const decryptResult = await signal.decryptEmail({
       accountRecipientId,
       optionalToken,
       bodyKey: metadataKey,
@@ -637,37 +638,57 @@ const formEmailIfNotExists = async params => {
       messageType,
       fileKeys: fileKeys || (fileKey ? [fileKey] : null)
     });
-    body = cleanEmailBody(decryptedBody);
-    headers = decryptedHeaders;
-    myFileKeys = decryptedFileKeys
-      ? decryptedFileKeys.map(fileKey => {
-          const fileKeySplit = fileKey.split(':');
-          return {
-            key: fileKeySplit[0],
-            iv: fileKeySplit[1]
-          };
-        })
-      : null;
-  } catch (e) {
-    if (
-      e.message === signal.ALICE_ERROR ||
-      e.message === signal.CONTENT_NOT_AVAILABLE ||
-      e instanceof TypeError
-    ) {
-      return {
-        error: 1
-      };
-    } else if (e.message === signal.DUPLICATE_MESSAGE) {
-      return {
-        error: 2
-      };
-    }
-    body = 'Content unencrypted';
-    if (external) {
-      reportContentUnencryptedBob(e.stack);
+    if (decryptResult.signalError) {
+      if (external) {
+        reportContentUnencryptedBob(decryptResult.signalError);
+
+        const reencryptRes = await reencryptEmail({
+          metadataKey,
+          eventid: rowid,
+          recipientId: accountRecipientId
+        });
+        if (!reencryptRes) return { error: FATAL_ERROR };
+
+        switch (reencryptRes.status) {
+          case 200:
+            return {
+              error: FATAL_ERROR
+            };
+          case 429:
+            break;
+          default:
+            return {
+              error: FATAL_ERROR
+            };
+        }
+        body = 'Content unencrypted';
+      } else {
+        reportContentUnencrypted(decryptResult.signalError);
+        body = 'Content unencrypted';
+      }
     } else {
-      reportContentUnencrypted(e.stack);
+      const {
+        decryptedBody,
+        decryptedHeaders,
+        decryptedFileKeys
+      } = decryptResult;
+      body = cleanEmailBody(decryptedBody);
+      headers = decryptedHeaders;
+      myFileKeys = decryptedFileKeys
+        ? decryptedFileKeys.map(fileKey => {
+            const fileKeySplit = fileKey.split(':');
+            return {
+              key: fileKeySplit[0],
+              iv: fileKeySplit[1]
+            };
+          })
+        : null;
     }
+  } catch (e) {
+    reportUncaughtError(e.stack);
+    return {
+      error: FATAL_ERROR
+    };
   }
 
   if (!fileKeys && fileKey) {
@@ -881,7 +902,8 @@ const handleNewMessageEvent = async (
         isSpam,
         recipients,
         guestEncryption,
-        external
+        external,
+        rowid
       })
     : await formEmailIfExists({
         accountId,
@@ -894,7 +916,7 @@ const handleNewMessageEvent = async (
 
   if (error) {
     return {
-      rowid: error === 1 ? null : rowid
+      rowid: error === FATAL_ERROR ? null : rowid
     };
   }
 

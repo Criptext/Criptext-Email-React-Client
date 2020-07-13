@@ -162,6 +162,13 @@ ipc.answerRenderer('client-post-peer-event', params => {
   return clientManager.postPeerEvent(data);
 });
 
+ipc.answerRenderer('client-reencrypt-email', params => {
+  const data = params.recipientId
+    ? params
+    : { ...params, recipientId: myAccount.recipientId };
+  return clientManager.reencryptEmail(data);
+});
+
 ipc.answerRenderer('client-register-domain', domain => {
   const data = { domain, recipientId: myAccount.recipientId };
   return clientManager.registerDomain(data);

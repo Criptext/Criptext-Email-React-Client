@@ -62,9 +62,13 @@ const decryptEmail = async ({
     throw new Error(ALICE_ERROR);
   } else if (res.status === 500) {
     const aliceError = await res.text();
-    throw new Error(`${CONTENT_UNENCRYPTED} - ${aliceError}`);
+    return {
+      signalError: new Error(`${CONTENT_UNENCRYPTED} - ${aliceError}`)
+    };
   } else if (res.status === 409) {
-    throw new Error(DUPLICATE_MESSAGE);
+    return {
+      signalError: new Error(DUPLICATE_MESSAGE)
+    };
   } else if (res.status !== 200) {
     throw new Error(ALICE_ERROR);
   }
