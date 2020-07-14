@@ -10,7 +10,7 @@ import {
   resultString
 } from './AESUtils';
 
-const API_CLIENT_VERSION = '8.0.0';
+const API_CLIENT_VERSION = '11.0.0';
 const apiBaseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_DEV_API_URL
