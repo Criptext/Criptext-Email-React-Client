@@ -38,7 +38,11 @@ const decryptEmail = async ({
     throw new Error(CONTENT_NOT_AVAILABLE);
   }
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
-    return { decryptedBody: body.body };
+    return {
+      decryptedBody: body.body,
+      decryptedHeaders: body.headers,
+      decryptedFileKeys: fileKeys
+    };
   }
   const res = await aliceRequestWrapper(() => {
     return fetchDecryptBody({
