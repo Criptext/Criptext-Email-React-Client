@@ -1,13 +1,13 @@
 const path = require('path');
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, Menu, MenuItem } = require('electron');
 const { composerUrl } = require('./../window_routing');
 const globalManager = require('./../globalManager');
 const { EVENTS, callEvent } = require('./events');
 const fileUtils = require('../utils/FileUtils');
 const { API_TRACKING_EVENT } = require('../utils/const');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
+const { isMacOS } = require('./windowUtils');
 const logger = require('../logger');
-const spellChecker = require('spellchecker');
 
 const lang = require('./../lang');
 const { windowTitle } = lang.strings.windows.composer;
@@ -51,7 +51,8 @@ const createComposerWindow = () => {
     minWidth: composerSize.minWidth,
     minHeight: composerSize.minHeight,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      spellcheck: true
     }
   });
   globalManager.composerData.set(window.id, {});
@@ -85,33 +86,52 @@ const createComposerWindow = () => {
     }
   });
 
-  require('electron-context-menu')({
-    window,
-    showSaveImageAs: false,
-    showInspectElement: false,
-    showCopyImageAddress: false,
-    prepend: (defaultActions, browserWindow) => {
-      const checker = new spellChecker.Spellchecker();
-
-      let options = [];
-      if (defaultActions.misspelledWord) {
-        options = options.concat(
-          checker
-            .getCorrectionsForMisspelling(defaultActions.misspelledWord)
-            .map(word => {
-              return {
-                label: word,
-                click: () => {
-                  browserWindow.webContents.insertText(word);
-                }
-              };
-            })
-            .slice(0, 5)
-        );
-      }
-      return options;
+  if (!isMacOS) {
+    const mySession = window.session || window.webContents.session;
+    if (mySession && mySession.setSpellCheckerLanguage) {
+      mySession.setSpellCheckerLanguage(['es', 'en', 'fr', 'de', 'ru']);
+      logger.info(mySession.availableSpellCheckerLanguages);
     }
+  }
+  window.webContents.on('context-menu', (event, params) => {
+    const { editFlags, mediaType } = params;
+    const menu = new Menu();
+
+    menu.append(
+      new MenuItem({
+        label: 'cut',
+        enabled: editFlags.canCut,
+        click: () => window.webContents.cut()
+      })
+    );
+    menu.append(
+      new MenuItem({
+        label: 'copy',
+        enabled: editFlags.canCopy,
+        click: () => window.webContents.copy()
+      })
+    );
+    menu.append(
+      new MenuItem({
+        label: 'paste',
+        enabled: editFlags.canPaste && mediaType === 'none',
+        click: () => window.webContents.paste()
+      })
+    );
+    if (params.dictionarySuggestions.length > 0)
+      menu.append(new MenuItem({ type: 'separator' }));
+    for (const suggestion of params.dictionarySuggestions.slice(0, 5)) {
+      menu.append(
+        new MenuItem({
+          label: suggestion,
+          click: () => window.webContents.replaceMisspelling(suggestion)
+        })
+      );
+    }
+
+    menu.popup();
   });
+
   return window;
 };
 

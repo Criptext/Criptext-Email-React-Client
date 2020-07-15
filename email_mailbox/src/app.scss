@@ -551,6 +551,10 @@ h2{
   width: 100%;
 }
 
+.wrapper-in-height{
+  height: calc(100% - 31px);
+}
+
 .wrapper-left{
   display: flex;
   flex-direction: row;

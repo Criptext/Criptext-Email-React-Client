@@ -145,8 +145,8 @@
   },
   "devDependencies": {
     "@criptext/criptext-js-tools": "^0.5.2",
-    "electron": "6.1.4",
-    "electron-builder": "21.2.0",
+    "electron": "8.0.0",
+    "electron-builder": "22.4.0",
     "electron-notarize": "^0.1.1"
   },
   "dependencies": {
@@ -163,7 +163,7 @@
     "electron-updater": "^4.0.0",
     "electron-window-state": "^4.1.1",
     "getos": "^3.1.1",
-    "keytar": "^5.0.0",
+    "keytar": "5.2.0",
     "knex": "0.17.6",
     "line-by-line": "^0.1.6",
     "moment": "^2.24.0",
@@ -174,7 +174,6 @@
     "rimraf": "^2.6.3",
     "rmdir-recursive": "^0.0.1",
     "sequelize": "^5.21.2",
-    "spellchecker": "^3.7.0",
     "sqlite3": "^4.1.0",
     "umzug": "^2.2.0",
     "unused-filename": "^2.1.0",
