@@ -150,6 +150,7 @@ class SettingAccountWrapper extends Component {
       },
       changeRecoveryEmailPopupParams: {
         isDisabledSubmitButton: true,
+        recoveryEmailConfirmed: props.recoveryEmailConfirmed,
         recoveryEmailInput: {
           name: 'recoveryEmailInput',
           type: 'text',
@@ -470,6 +471,8 @@ class SettingAccountWrapper extends Component {
         newState = {
           changeRecoveryEmailPopupParams: {
             isDisabledSubmitButton: true,
+            recoveryEmailConfirmed: this.state.recoveryEmailParams
+              .recoveryEmailConfirmed,
             recoveryEmailInput: {
               name: 'recoveryEmailInput',
               type: 'text',
@@ -1405,6 +1408,10 @@ class SettingAccountWrapper extends Component {
       recoveryEmailParams: {
         recoveryEmail: recoveryEmail,
         recoveryEmailConfirmed: false
+      },
+      changeRecoveryEmailPopupParams: {
+        ...this.state.changeRecoveryEmailPopupParams,
+        recoveryEmailConfirmed: false
       }
     });
   };
@@ -1413,6 +1420,10 @@ class SettingAccountWrapper extends Component {
     this.setState({
       recoveryEmailParams: {
         ...this.state.recoveryEmailParams,
+        recoveryEmailConfirmed: true
+      },
+      changeRecoveryEmailPopupParams: {
+        ...this.state.changeRecoveryEmailPopupParams,
         recoveryEmailConfirmed: true
       }
     });
