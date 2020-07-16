@@ -640,8 +640,6 @@ const formEmailIfNotExists = async params => {
     });
     if (decryptResult.signalError) {
       if (external) {
-        reportContentUnencryptedBob(decryptResult.signalError);
-
         const reencryptRes = await reencryptEmail({
           metadataKey,
           eventid: rowid,
@@ -655,6 +653,7 @@ const formEmailIfNotExists = async params => {
               error: FATAL_ERROR
             };
           case 429:
+            reportContentUnencryptedBob(decryptResult.signalError);
             break;
           default:
             return {
