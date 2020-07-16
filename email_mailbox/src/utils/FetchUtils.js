@@ -57,7 +57,7 @@ const formEvents = events => {
       const data = {
         cmd: event.cmd,
         params: JSON.parse(event.params),
-        rowid: event.rowid
+        rowid: event.docid || event.rowid
       };
       eventsParsed.push(data);
     } catch (e) {}
