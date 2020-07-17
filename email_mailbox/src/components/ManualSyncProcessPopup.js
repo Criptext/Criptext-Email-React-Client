@@ -50,13 +50,12 @@ const SYNC_DENIED_STATUS = 493;
 const SYNC_APPROVED_STATUS = 200;
 const DATA_READY_STATUS = 200;
 
-const defaultOldDeviceName = myAccount.recipientId.includes('@')
-  ? myAccount.recipientId
-  : `${myAccount.recipientId}@${appDomain}`;
-
 class ManualSyncProcessPopup extends Component {
   constructor(props) {
     super(props);
+    const defaultOldDeviceName = myAccount.recipientId.includes('@')
+      ? myAccount.recipientId
+      : `${myAccount.recipientId}@${appDomain}`;
     this.state = {
       mode: manualSyncModes.WAITING,
       message: messages.waitingForMailbox,
