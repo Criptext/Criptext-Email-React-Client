@@ -538,6 +538,14 @@ const postUser = async params => {
   return await client.postUser(params);
 };
 
+const reencryptEmail = async ({ recipientId, metadataKey, eventid }) => {
+  const client = await createClient({ recipientId });
+  const res = await client.reencryptEmail({ metadataKey, eventid });
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, resendConfirmationEmail, recipientId);
+};
+
 const registerDomain = async ({ domain, recipientId }) => {
   const client = await createClient({ recipientId });
   const res = await client.registerDomain(domain);
@@ -805,6 +813,7 @@ module.exports = {
   postPeerEvent,
   pushPeerEvents,
   postUser,
+  reencryptEmail,
   registerDomain,
   removeAvatar,
   removeDevice,

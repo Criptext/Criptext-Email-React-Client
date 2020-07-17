@@ -226,6 +226,10 @@ export const postPeerEvent = async params => {
   return await ipc.callMain('client-post-peer-event', params);
 };
 
+export const reencryptEmail = async params => {
+  return await ipc.callMain('client-reencrypt-email', params);
+};
+
 export const registerDomain = async domain => {
   return await ipc.callMain('client-register-domain', domain);
 };

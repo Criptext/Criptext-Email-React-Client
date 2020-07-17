@@ -103,6 +103,9 @@ const SettingsPopup = props => {
           recoveryEmailPopupInputPassword={
             props.changeRecoveryEmailPopupParams.recoveryEmailPasswordInput
           }
+          recoveryEmailConfirmed={
+            props.changeRecoveryEmailPopupParams.recoveryEmailConfirmed
+          }
           theme={'dark'}
         />
       );
