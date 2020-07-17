@@ -88,8 +88,8 @@ const createComposerWindow = () => {
 
   if (!isMacOS) {
     const mySession = window.session || window.webContents.session;
-    if (mySession && mySession.setSpellCheckerLanguage) {
-      mySession.setSpellCheckerLanguage(['es', 'en', 'fr', 'de', 'ru']);
+    if (mySession && mySession.setSpellCheckerLanguages) {
+      mySession.setSpellCheckerLanguages(['es', 'en', 'fr', 'de', 'ru']);
       logger.info(mySession.availableSpellCheckerLanguages);
     }
   }
@@ -97,29 +97,6 @@ const createComposerWindow = () => {
     const { editFlags, mediaType } = params;
     const menu = new Menu();
 
-    menu.append(
-      new MenuItem({
-        label: 'cut',
-        enabled: editFlags.canCut,
-        click: () => window.webContents.cut()
-      })
-    );
-    menu.append(
-      new MenuItem({
-        label: 'copy',
-        enabled: editFlags.canCopy,
-        click: () => window.webContents.copy()
-      })
-    );
-    menu.append(
-      new MenuItem({
-        label: 'paste',
-        enabled: editFlags.canPaste && mediaType === 'none',
-        click: () => window.webContents.paste()
-      })
-    );
-    if (params.dictionarySuggestions.length > 0)
-      menu.append(new MenuItem({ type: 'separator' }));
     for (const suggestion of params.dictionarySuggestions.slice(0, 5)) {
       menu.append(
         new MenuItem({
@@ -128,6 +105,31 @@ const createComposerWindow = () => {
         })
       );
     }
+
+    if (params.dictionarySuggestions.length > 0)
+      menu.append(new MenuItem({ type: 'separator' }));
+
+    menu.append(
+      new MenuItem({
+        label: 'Cut',
+        enabled: editFlags.canCut,
+        click: () => window.webContents.cut()
+      })
+    );
+    menu.append(
+      new MenuItem({
+        label: 'Copy',
+        enabled: editFlags.canCopy,
+        click: () => window.webContents.copy()
+      })
+    );
+    menu.append(
+      new MenuItem({
+        label: 'Paste',
+        enabled: editFlags.canPaste && mediaType === 'none',
+        click: () => window.webContents.paste()
+      })
+    );
 
     menu.popup();
   });

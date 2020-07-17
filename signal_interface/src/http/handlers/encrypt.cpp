@@ -31,11 +31,10 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char*
     return 422;
   }
 
-  cJSON *deviceId, *recipientId, *keyData, *key;
+  cJSON *deviceId, *recipientId, *key;
   deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
   recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
-  keyData = cJSON_GetObjectItemCaseSensitive(obj, "key");
-  key = cJSON_GetObjectItemCaseSensitive(keyData, "data");
+  key = cJSON_GetObjectItemCaseSensitive(obj, "key");
 
   if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId)) {
     spdlog::error("[{0}] Missing Params", endpointId, bufferData);
