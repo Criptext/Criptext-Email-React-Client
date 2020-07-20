@@ -59,8 +59,8 @@ export const reloadWindow = () => {
   getCurrentWindow().reload();
 };
 
-export const showSaveFileDialog = (fileName, callback) => {
-  dialog.showSaveDialog(null, { defaultPath: fileName }, callback);
+export const showSaveFileDialog = fileName => {
+  return dialog.showSaveDialog(null, { defaultPath: fileName });
 };
 
 /*  News Client

@@ -18,6 +18,7 @@ import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import { mySettings } from '../utils/electronInterface';
 import UserGuide from './UserGuide';
 import Snackbar from './Snackbar';
+import { isWindows } from '../utils/OSUtils';
 import './panel.scss';
 
 const Panel = props => (
@@ -186,7 +187,8 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
   const navigationClass = isOpenActivityPanel
     ? ' navigation-feed-expand'
     : ' navigation-feed-collapse';
-  return sidebarClass.concat(navigationClass);
+  const heightClass = isWindows() ? ' wrapper-in-height' : '';
+  return sidebarClass.concat(navigationClass).concat(heightClass);
 };
 
 renderMailboxPopup.propTypes = {

@@ -171,21 +171,21 @@ class SettingsAccountBackupWrapper extends Component {
       async () => {
         const extension = password ? 'enc' : 'db';
         const backupPath = await defineBackupFullpath(extension);
-        showSaveFileDialog(backupPath, selectedPath => {
-          if (!selectedPath) {
-            this.props.onClearMailboxBackupParams();
-            return this.clearProgressParams();
+        const res = await showSaveFileDialog(backupPath);
+        const selectedPath = res.filePath;
+        if (!selectedPath) {
+          this.props.onClearMailboxBackupParams();
+          return this.clearProgressParams();
+        }
+        this.setState(
+          {
+            backupPath: selectedPath,
+            password
+          },
+          () => {
+            this.initMailboxBackup(false);
           }
-          this.setState(
-            {
-              backupPath: selectedPath,
-              password
-            },
-            () => {
-              this.initMailboxBackup(false);
-            }
-          );
-        });
+        );
       }
     );
   };
@@ -202,13 +202,13 @@ class SettingsAccountBackupWrapper extends Component {
       async () => {
         const backupPath =
           dialogFolderPath || (await defineBackupFullpath('db'));
-        showSaveFileDialog(backupPath, selectedPath => {
-          if (!selectedPath) {
-            this.props.onClearMailboxBackupParams();
-            return this.clearProgressParams();
-          }
-          this.setState({ backupPath: selectedPath }, this.initMailboxBackup);
-        });
+        const res = await showSaveFileDialog(backupPath);
+        const selectedPath = res.filePath;
+        if (!selectedPath) {
+          this.props.onClearMailboxBackupParams();
+          return this.clearProgressParams();
+        }
+        this.setState({ backupPath: selectedPath }, this.initMailboxBackup);
       }
     );
   };
