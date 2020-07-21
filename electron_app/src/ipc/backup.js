@@ -20,7 +20,8 @@ const {
   backupDateFormat
 } = require('./../utils/TimeUtils');
 const { APP_DOMAIN } = require('../utils/const');
-const { updateAccount } = require('./../database');
+const { updateAccount, databasePath } = require('./../database');
+const { runBackup } = require('../backup/index');
 const myAccount = require('../Account');
 const logger = require('../logger');
 let autoBackupsTime = [];
@@ -63,6 +64,10 @@ const doExportBackupUnencrypted = async params => {
     domain: domain || APP_DOMAIN,
     name: accountObj ? accountObj.name : myAccount.name
   };
+
+  await runBackup(databasePath);
+
+  return
 
   try {
     logger.info(

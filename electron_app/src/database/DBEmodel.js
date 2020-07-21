@@ -118,23 +118,23 @@ class Version extends Model {}
 
 const getDB = () => sequelize;
 
-const setConfiguration = key => {
+const setConfiguration = (key, path, dialectPath) => {
   sequelize = new Sequelize(null, null, key, {
     dialect: 'sqlite',
-    dialectModulePath: '@journeyapps/sqlcipher',
-    storage: myDBEncryptPath(),
+    dialectModulePath: dialectPath || '@journeyapps/sqlcipher',
+    storage: path || myDBEncryptPath(),
     logging: false,
     transactionType: 'IMMEDIATE'
   });
 };
 
 const initDatabaseEncrypted = async (
-  { key, shouldReset },
+  { key, shouldReset, path, sync = true, dialectPath },
   migrationStartCallback
 ) => {
   if (shouldReset) sequelize = undefined;
   if (sequelize) return;
-  await setConfiguration(key);
+  await setConfiguration(key, path, dialectPath);
 
   Account.init(
     {
@@ -546,6 +546,8 @@ const initDatabaseEncrypted = async (
     foreignKey: 'accountId',
     onDelete: 'CASCADE'
   });
+
+  if (!sync) return;
 
   await sequelize.sync({});
 
