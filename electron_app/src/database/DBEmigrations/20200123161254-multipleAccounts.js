@@ -458,7 +458,10 @@ module.exports = {
 
       await transaction.commit();
     } catch (ex) {
-      logger.error(ex);
+      logger.error({
+        message: 'Migration Multiple Accounts',
+        error: ex
+      });
       await transaction.rollback();
       throw new Error(ex.toString());
     }
