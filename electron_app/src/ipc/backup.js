@@ -179,6 +179,8 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
   }
 });
 
+const MAX_32BIT_INT = 2147483647;
+
 const initAutoBackupMonitor = () => {
   autoBackupsTime = [];
   for (const account of myAccount.loggedAccounts) {
@@ -194,6 +196,12 @@ const initAutoBackupMonitor = () => {
     const now = moment();
     const pendingDate = moment(autoBackupNextDate);
     const timeDiff = pendingDate.diff(now);
+
+    if (timeDiff >= MAX_32BIT_INT) {
+      logger.debug(`Backups : Account ${account.recipientId} overflows timer`);
+      continue;
+    }
+
     autoBackupsTime.push({
       username: account.recipientId,
       accountId: account.id,
@@ -274,11 +282,13 @@ const initAutoBackup = async accountId => {
     });
     logger.debug(`Backup Finished : ${accountId}`);
     const timeDiff = nextDate.diff(today);
-    autoBackupsTime.push({
-      username: account.recipientId,
-      id: accountId,
-      triggerTimer: timeDiff <= 0 ? 1 : timeDiff
-    });
+    if (timeDiff < MAX_32BIT_INT) {
+      autoBackupsTime.push({
+        username: account.recipientId,
+        id: accountId,
+        triggerTimer: timeDiff <= 0 ? 1 : timeDiff
+      });
+    }
 
     backupDone();
   } catch (backupErr) {
