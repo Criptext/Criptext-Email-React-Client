@@ -1,33 +1,46 @@
 const { spawn } = require('child_process');
-const { Worker } = require('worker_threads');
 const path = require('path');
 
 const exporterPath = path.join(__dirname, 'exporter.js');
 
-const runBackup = dbPath => {
-  return new Promise( (resolve, reject) => {
-    const worker = new Worker(exporterPath, { 
-      workerData: {
-        dbPath
+const runBackup = (
+  { dbPath, outputPath, key, recipientId, password },
+  progressCallback
+) => {
+  console.log('START BACKUP : ', recipientId);
+  return new Promise((resolve, reject) => {
+    let backupSize = 0;
+    const worker = spawn(
+      'node',
+      [exporterPath, dbPath, outputPath, recipientId],
+      {
+        stdio: ['inherit', 'inherit', 'inherit', 'ipc']
       }
+    );
+
+    worker.on('message', data => {
+      console.log(`message: ${JSON.stringify(data)}`);
+      if (data.step === 'progress') progressCallback(data);
+      if (data.step === 'end') backupSize = data.backupSize;
     });
 
-    worker.on('exit', (code) => {
-      console.log(`child process exited with code ${code}`);
-      reject();
-    });
-
-    worker.on('error', (code) => {
+    worker.on('error', code => {
       console.log(`child process exited with error ${code}`);
-      reject();
+      reject(code);
     });
 
-    worker.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
-      resolve();
+    worker.on('close', code => {
+      console.log(`child process closed with code ${code}`);
+      resolve(backupSize);
     });
-  })
-}
+
+    worker.send({
+      step: 'init',
+      key,
+      password
+    });
+  });
+};
 
 module.exports = {
   runBackup

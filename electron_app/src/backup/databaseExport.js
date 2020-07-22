@@ -1,7 +1,4 @@
 const fs = require('fs');
-const zlib = require('zlib');
-const crypto = require('crypto');
-const globalManager = {};
 const moment = require('moment');
 const {
   AccountContact,
@@ -12,18 +9,11 @@ const {
   Label,
   getDB,
   Table,
-  getSettings,
+  getSettings
 } = require('../database/DBEmanager');
 const systemLabels = require('./../systemLabels');
-/*const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('../utils/const');
-const {
-  getEmailBody,
-  getEmailHeaders
-} = require('../utils/FileUtils');
-const { getShowPreview } = require('../windows/mailbox');*/
-
-const CIPHER_ALGORITHM = 'aes-128-cbc';
-const STREAM_SIZE = 512 * 1024;
+const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('../utils/const');
+const { getEmailBody, getEmailHeaders } = require('../utils/FileUtils');
 
 const excludedEmailStatus = [1, 4];
 const excludedLabels = [systemLabels.draft.id];
@@ -86,7 +76,7 @@ const exportLabelTable = async accountId => {
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
-const exportEmailTable = async (accountId, email) => {
+const exportEmailTable = async (accountId, email, databaseKey) => {
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -120,14 +110,14 @@ const exportEmailTable = async (accountId, email) => {
             (await getEmailBody({
               username: email,
               metadataKey: newRow.key,
-              password: globalManager.databaseKey.get()
+              password: databaseKey
             })) ||
             newRow.content ||
             '';
           const headers = await getEmailHeaders({
             username: email,
             metadataKey: newRow.key,
-            password: globalManager.databaseKey.get()
+            password: databaseKey
           });
 
           const key = parseInt(newRow.key);
@@ -320,6 +310,7 @@ const exportCustomDomainsTable = async accountId => {
 const handleProgressCallback = (progress, message, email, progressCallback) => {
   if (!progressCallback) return;
   progressCallback({
+    step: 'progress',
     progress: parseInt(progress),
     message,
     email
@@ -329,29 +320,20 @@ const handleProgressCallback = (progress, message, email, progressCallback) => {
 const exportEncryptDatabaseToFile = async ({
   outputPath,
   accountObj,
-  progressCallback
+  progressCallback,
+  databaseKey
 }) => {
-  console.log('DB : ', getDB());
-  return;
   const filepath = outputPath;
   const PROGRESS_TOTAL_STEPS = 19;
   let exportProgress = 0;
 
-  const [recipientId, domain] = accountObj
-    ? accountObj.recipientId.split('@')
-    : myAccount.recipientId.split('@');
-  const accountEmail = `${recipientId}@${domain || APP_DOMAIN}`;
-  const accountId = accountObj ? accountObj.id : myAccount.id;
-  const signature =
-    accountObj && accountObj.signature !== undefined
-      ? accountObj.signature
-      : myAccount.signature;
+  const recipientId = accountObj.recipientId;
+  const domain = accountObj.domain;
+  const accountEmail = accountObj.email;
+  const accountId = accountObj.id;
+  const signature = '';
 
-  const hasCriptextFooter =
-    accountObj && accountObj.signFooter !== undefined
-      ? accountObj.signFooter
-      : myAccount.signFooter;
-  const showPreview = await getShowPreview();
+  const hasCriptextFooter = false;
 
   const { language, theme } = await getSettings();
 
@@ -363,7 +345,7 @@ const exportEncryptDatabaseToFile = async ({
     hasCriptextFooter: hasCriptextFooter,
     language: language,
     darkTheme: theme === 'dark',
-    showPreview: showPreview
+    showPreview: false
   });
 
   exportProgress += 100 / PROGRESS_TOTAL_STEPS;
@@ -416,11 +398,15 @@ const exportEncryptDatabaseToFile = async ({
     handleProgressCallback(
       exportProgress,
       `exporting_${exportTable.suffix}`,
-      `${recipientId}@${domain || APP_DOMAIN}`,
+      accountEmail,
       progressCallback
     );
 
-    const result = await exportTable.export(accountId, accountEmail);
+    const result = await exportTable.export(
+      accountId,
+      accountEmail,
+      databaseKey
+    );
 
     exportProgress += 100 / PROGRESS_TOTAL_STEPS;
     handleProgressCallback(
@@ -440,24 +426,6 @@ const exportEncryptDatabaseToFile = async ({
     accountEmail,
     progressCallback
   );
-};
-
-const encryptStreamFile = ({ inputFile, outputFile, key, iv, salt }) => {
-  return new Promise((resolve, reject) => {
-    const reader = fs.createReadStream(inputFile, {
-      highWaterMark: STREAM_SIZE
-    });
-    const writer = fs.createWriteStream(outputFile);
-    if (salt) writer.write(salt);
-    writer.write(iv);
-
-    reader
-      .pipe(zlib.createGzip())
-      .pipe(crypto.createCipheriv(CIPHER_ALGORITHM, key, iv))
-      .pipe(writer)
-      .on('error', reject)
-      .on('finish', resolve);
-  });
 };
 
 const formatTableRowsToString = (tableName, rowsObject) => {
@@ -488,7 +456,6 @@ const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
 };
 
 module.exports = {
-  encryptStreamFile,
   exportContactTable,
   exportEmailTable,
   exportEmailContactTable,

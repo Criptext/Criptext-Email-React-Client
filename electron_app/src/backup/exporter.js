@@ -1,100 +1,121 @@
-const fs = require('fs');
 const path = require('path');
-const { initDatabaseEncrypted, getDB } = require('../database/DBEmodel');
-const { workerData, parentPort } = require('worker_threads')
-const { exportEncryptDatabaseToFile } = require('./DBEexporter');
+const {
+  copyDatabase,
+  getFileSizeInBytes,
+  getTempDirectory,
+  removeTempBackupDirectoryRecursive,
+  checkTempBackupDirectory
+} = require('./FileUtils');
+const {
+  zipStreamFile,
+  encryptStreamFile,
+  generateKeyAndIvFromPassword
+} = require('./Compress');
+const { initDatabaseEncrypted, Account } = require('../database/DBEmodel');
+const { exportEncryptDatabaseToFile } = require('./databaseExport');
+const { APP_DOMAIN } = require('../utils/const');
 
-const getTempDirectory = nodeEnv => {
-  const folderName = 'BackupTempData'
-  const currentDirToReplace =
-    process.platform === 'win32' ? '\\src\\database' : '/src/database';
-  switch (nodeEnv) {
-    case 'development': {
-      return path.join(
-        __dirname,
-        `../../${folderName}`
-      );
-    }
-    default: {
-      const userDataPath = app.getPath('userData');
-      return path
-        .join(userDataPath, folderName)
-        .replace('/app.asar', '')
-        .replace(currentDirToReplace, '');
-    }
-  }
-};
+const startTimeout = setTimeout(() => {
+  start();
+}, 5000);
 
-const removeTempBackupDirectoryRecursive = pathToDelete => {
-  if (fs.existsSync(pathToDelete)) {
-    fs.readdirSync(pathToDelete).forEach(file => {
-      const currentPath = path.join(pathToDelete, file);
-      if (fs.lstatSync(currentPath).isDirectory()) {
-        removeTempBackupDirectoryRecursive(currentPath);
-      } else {
-        fs.unlinkSync(currentPath);
-      }
-    });
-    fs.rmdirSync(pathToDelete);
-  }
-};
-
-const checkTempBackupDirectory = () => {
-  const tempBackupDirectory = getTempDirectory(process.env.NODE_ENV);
-  try {
-    if (fs.existsSync(tempBackupDirectory)) {
-      removeTempBackupDirectoryRecursive(tempBackupDirectory);
-    }
-    console.log(tempBackupDirectory);
-    fs.mkdirSync(tempBackupDirectory);
-  } catch (e) {
-    throw new Error('Unable to create temp folder');
-  }
-};
-
-const copyDatabase = dbPath => {
-  const tempBackupDirectory = getTempDirectory(process.env.NODE_ENV);
-
-  const dbshm = `${dbPath}-shm`;
-  const dbwal = `${dbPath}-wal`;
-
-  if (!fs.existsSync(dbPath)) {
-    throw new Error('No Database Found');
-  }
-
-  fs.copyFileSync(dbPath, path.join(tempBackupDirectory, 'CriptextEncrypt.db'));
-
-  if (fs.existsSync(dbshm)) {
-    fs.copyFileSync(dbshm, path.join(tempBackupDirectory, 'CriptextEncrypt.db-shm'));
-  }
-  if (fs.existsSync(dbwal)) {
-    fs.copyFileSync(dbwal, path.join(tempBackupDirectory, 'CriptextEncrypt.db-wal'));
-  }
-}
+let key;
+let password;
 
 const start = async () => {
-  try {
-    const tempBackupDirectory = getTempDirectory(process.env.NODE_ENV);
+  var args = process.argv.slice(2);
+  const dbPath = args[0];
+  const backupPath = args[1];
+  const recipientId = args[2];
 
-    initDatabaseEncrypted({
-      key: '2004',
-      path: path.join(tempBackupDirectory, 'CriptextEncrypt.db'),
-      sync: false
-    })
-  } catch (ex) {
-    console.log(ex);
+  if (!key) {
+    throw new Error(`Database key was never received`);
   }
-  
-  console.log(workerData, getDB());
+
+  const tempBackupDirectory = getTempDirectory(process.env.NODE_ENV);
+  const outputPath = path.join(tempBackupDirectory, 'unencrypt.exp');
 
   checkTempBackupDirectory();
-  copyDatabase(workerData.dbPath);
+  copyDatabase(dbPath);
+
+  let account;
+  try {
+    await initDatabaseEncrypted({
+      key: key,
+      path: path.join(tempBackupDirectory, 'CriptextEncrypt.db'),
+      sync: false
+    });
+    account = await Account().findOne({
+      where: {
+        recipientId
+      }
+    });
+  } catch (ex) {
+    removeTempBackupDirectoryRecursive(tempBackupDirectory);
+    throw new Error(`Error connecting to db ${ex}`);
+  }
 
   try {
-    await exportEncryptDatabaseToFile({});
+    const [reId, domain = APP_DOMAIN] = recipientId.split('@');
+    const accountObj = {
+      email: `${reId}@${domain}`,
+      username: reId,
+      domain: domain,
+      name: account.name,
+      id: account.id
+    };
+
+    await exportEncryptDatabaseToFile({
+      outputPath,
+      accountObj,
+      progressCallback: handleProgress,
+      databaseKey: key
+    });
   } catch (ex) {
-    console.log(ex);
+    removeTempBackupDirectoryRecursive(tempBackupDirectory);
+    throw new Error(`Error creating backup ${ex}`);
   }
+
+  try {
+    if (password) {
+      const { key, iv, salt } = generateKeyAndIvFromPassword(password);
+      await encryptStreamFile({
+        inputFile: outputPath,
+        outputFile: backupPath,
+        key,
+        iv,
+        salt
+      });
+    } else {
+      await zipStreamFile({
+        inputFile: outputPath,
+        outputFile: backupPath
+      });
+    }
+  } catch (zipErr) {
+    removeTempBackupDirectoryRecursive(tempBackupDirectory);
+    throw new Error(`Failed to compress backup file ${zipErr}`);
+  }
+
+  const backupSize = getFileSizeInBytes(backupPath);
+  process.send({
+    step: 'end',
+    backupSize
+  });
+  removeTempBackupDirectoryRecursive(tempBackupDirectory);
+  process.exit(0);
 };
 
-start();
+const handleProgress = progress => {
+  process.send(progress);
+};
+
+process.on('message', data => {
+  if (data.step !== 'init') return;
+
+  key = data.key;
+  password = data.password;
+
+  clearTimeout(startTimeout);
+  start();
+});
