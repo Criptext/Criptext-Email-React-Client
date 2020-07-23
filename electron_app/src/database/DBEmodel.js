@@ -559,6 +559,10 @@ const initDatabaseEncrypted = async (
     }
   });
 
+  logger.info(
+    `Database Current Version : ${JSON.stringify(localVersion.toJSON())}`
+  );
+
   const emailDef = await Email.describe();
   if (emailDef.accountId && localVersion.value === CURRENT_VERSION) return;
 
@@ -592,6 +596,8 @@ const initDatabaseEncrypted = async (
       break;
   }
 
+  logger.info(`Migrations to perform : ${migrationFiles.toString()}`);
+
   try {
     const migrationPath = path.join(__dirname, '/DBEmigrations');
     const migrator = new umzug({
@@ -619,7 +625,10 @@ const initDatabaseEncrypted = async (
       }
     );
   } catch (ex) {
-    logger.error(ex);
+    logger.error({
+      message: 'Migrating Database',
+      error: ex
+    });
   }
 };
 

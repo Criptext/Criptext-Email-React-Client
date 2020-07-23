@@ -1,5 +1,6 @@
 'use strict';
 const { Table, Email } = require('../DBEmodel');
+const logger = require('../../logger');
 
 const migrateBlockRemoteContent = async (
   queryInterface,
@@ -79,7 +80,10 @@ module.exports = {
       await addUniqueIndexes(queryInterface, transaction);
       await transaction.commit();
     } catch (ex) {
-      console.error(ex);
+      logger.error({
+        message: 'Migration Block All Column',
+        error: ex
+      });
       await transaction.rollback();
       throw new Error(ex.toString());
     }

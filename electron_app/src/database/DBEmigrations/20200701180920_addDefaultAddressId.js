@@ -1,5 +1,6 @@
 'use strict';
 const { Table } = require('../DBEmodel');
+const logger = require('../../logger');
 
 const migrateAccount = async (queryInterface, Sequelize, transaction) => {
   const accountDef = await queryInterface.describeTable(Table.ACCOUNT, {
@@ -24,7 +25,10 @@ module.exports = {
       await migrateAccount(queryInterface, Sequelize, transaction);
       await transaction.commit();
     } catch (ex) {
-      console.error(ex);
+      logger.error({
+        message: 'Migration Default Address',
+        error: ex
+      });
       await transaction.rollback();
       throw new Error(ex.toString());
     }
