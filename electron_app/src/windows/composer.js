@@ -89,10 +89,15 @@ const createComposerWindow = () => {
   if (!isMacOS) {
     const mySession = window.session || window.webContents.session;
     if (mySession && mySession.setSpellCheckerLanguages) {
-      mySession.setSpellCheckerLanguages(['es', 'en', 'fr', 'de', 'ru']);
+      try {
+        mySession.setSpellCheckerLanguages(['es', 'en-US', 'fr', 'de', 'ru']);
+      } catch (ex) {
+        logger.error(ex);
+      }
       logger.info(mySession.availableSpellCheckerLanguages);
     }
   }
+
   window.webContents.on('context-menu', (event, params) => {
     const { editFlags, mediaType } = params;
     const menu = new Menu();
