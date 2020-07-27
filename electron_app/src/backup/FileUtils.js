@@ -1,24 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { app } = require('electron');
-
-const getTempDirectory = nodeEnv => {
-  const folderName = 'BackupTempData';
-  const currentDirToReplace =
-    process.platform === 'win32' ? '\\src\\database' : '/src/database';
-  switch (nodeEnv) {
-    case 'development': {
-      return path.join(__dirname, `../../${folderName}`);
-    }
-    default: {
-      const userDataPath = app.getPath('userData');
-      return path
-        .join(userDataPath, folderName)
-        .replace('/app.asar', '')
-        .replace(currentDirToReplace, '');
-    }
-  }
-};
 
 const removeTempBackupDirectoryRecursive = pathToDelete => {
   if (fs.existsSync(pathToDelete)) {
@@ -34,8 +15,7 @@ const removeTempBackupDirectoryRecursive = pathToDelete => {
   }
 };
 
-const checkTempBackupDirectory = () => {
-  const tempBackupDirectory = getTempDirectory(process.env.NODE_ENV);
+const checkTempBackupDirectory = tempBackupDirectory => {
   try {
     if (fs.existsSync(tempBackupDirectory)) {
       removeTempBackupDirectoryRecursive(tempBackupDirectory);
@@ -55,9 +35,7 @@ const getFileSizeInBytes = filename => {
   }
 };
 
-const copyDatabase = dbPath => {
-  const tempBackupDirectory = getTempDirectory(process.env.NODE_ENV);
-
+const copyDatabase = (dbPath, tempBackupDirectory) => {
   const dbshm = `${dbPath}-shm`;
   const dbwal = `${dbPath}-wal`;
 
@@ -85,6 +63,5 @@ module.exports = {
   getFileSizeInBytes,
   checkTempBackupDirectory,
   removeTempBackupDirectoryRecursive,
-  getTempDirectory,
   copyDatabase
 };

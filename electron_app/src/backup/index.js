@@ -1,18 +1,37 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const { app } = require('electron');
 
 const exporterPath = path.join(__dirname, 'exporter.js');
+
+const getTempDirectory = nodeEnv => {
+  const folderName = 'BackupTempData';
+  const currentDirToReplace =
+    process.platform === 'win32' ? '\\src\\database' : '/src/database';
+  switch (nodeEnv) {
+    case 'development': {
+      return path.join(__dirname, `../../${folderName}`);
+    }
+    default: {
+      const userDataPath = app.getPath('userData');
+      return path
+        .join(userDataPath, folderName)
+        .replace('/app.asar', '')
+        .replace(currentDirToReplace, '');
+    }
+  }
+};
 
 const runBackup = (
   { dbPath, outputPath, key, recipientId, password },
   progressCallback
 ) => {
-  console.log('START BACKUP : ', recipientId);
+  const tempDir = getTempDirectory();
   return new Promise((resolve, reject) => {
     let backupSize = 0;
     const worker = spawn(
       'node',
-      [exporterPath, dbPath, outputPath, recipientId],
+      [exporterPath, dbPath, outputPath, recipientId, tempDir],
       {
         stdio: ['inherit', 'inherit', 'inherit', 'ipc']
       }

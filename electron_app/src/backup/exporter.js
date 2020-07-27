@@ -2,7 +2,6 @@ const path = require('path');
 const {
   copyDatabase,
   getFileSizeInBytes,
-  getTempDirectory,
   removeTempBackupDirectoryRecursive,
   checkTempBackupDirectory
 } = require('./FileUtils');
@@ -27,16 +26,16 @@ const start = async () => {
   const dbPath = args[0];
   const backupPath = args[1];
   const recipientId = args[2];
+  const tempBackupDirectory = args[3];
 
   if (!key) {
     throw new Error(`Database key was never received`);
   }
 
-  const tempBackupDirectory = getTempDirectory(process.env.NODE_ENV);
   const outputPath = path.join(tempBackupDirectory, 'unencrypt.exp');
 
-  checkTempBackupDirectory();
-  copyDatabase(dbPath);
+  checkTempBackupDirectory(tempBackupDirectory);
+  copyDatabase(dbPath, tempBackupDirectory);
 
   let account;
   try {
