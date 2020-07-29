@@ -4,7 +4,7 @@
   display: flex;
   height: 30px;
   border-radius: 7px 7px 0px 0px;
-  background-color: #00c4ff;
+  background-color: white;
   padding: 0px 4px;
   -webkit-app-region: drag;
 
@@ -31,18 +31,20 @@
 
     .close,
     .minimize {
+      cursor: pointer;
       border-radius: 50%;
       width: 15px;
       height: 15px;
       margin: 0px 4px;
-      background-color: rgba(255, 255, 255, 0.6);
+      background-color: #cececd;
       -webkit-app-region: no-drag;
     }
 
     &:hover {
       .close,
       .minimize {
-        background-color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        background-color: #cececd;
         > i {
           opacity: 1;
         }

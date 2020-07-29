@@ -56,6 +56,10 @@ export const checkAvailableUsername = async username => {
   return await ipc.callMain('client-check-available-username', username);
 };
 
+export const checkAvailableRecoveryEmail = async params => {
+  return await ipc.callMain('client-check-recovery-email', params)
+}
+
 export const deleteDeviceToken = async params => {
   return await ipc.callMain('client-delete-device-token', params);
 };

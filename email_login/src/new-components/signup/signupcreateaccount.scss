@@ -1,0 +1,70 @@
+.signup-create-account-wrapper {
+  margin: 64px 42px 50px 42px;
+
+  .back-button {
+    position: fixed;
+    top: 56px;
+    left: 31px;
+    font-size: 24px;
+    height: 26px;
+    color: #0091ff;
+    cursor: pointer;
+  }
+
+  .header-container {
+    h2 {
+      font-size: 21px;
+      font-weight: bold;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      height: 40px;
+      color: #505050;
+      margin-top: 10px;
+    }
+  }
+
+  .form-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 43px;
+
+    i {
+      color: #9aa1ab;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  }
+
+  button {
+    margin-top: 102px;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: flex-start;
+
+    &:nth-child(2) {
+      margin-top: 28px;
+    }
+
+    &:nth-child(3) {
+      margin-top: 8px;
+    }
+
+    .checkmark-label {
+      color: #505050;
+      font-size: 13px;
+      margin-left: 8px;
+      
+      a {
+        color: #0091ff;
+        text-decoration: none;
+      }
+    }
+  }
+}

@@ -36,6 +36,10 @@ ipc.answerRenderer('client-check-available-username', params =>
   clientManager.checkAvailableUsername(params)
 );
 
+ipc.answerRenderer('client-check-recovery-email', params => 
+  clientManager.checkAvailableRecoveryEmail(params)
+);
+
 ipc.answerRenderer(
   'client-check-expired-session',
   ({ response, initialRequest, requestParams }) =>

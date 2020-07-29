@@ -1,0 +1,22 @@
+.custom-button {
+  width: 266px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 20px;
+
+  &.criptext-button {
+    background: #0091ff;
+    color: white;
+  }
+
+  &.clear-button {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    color: #4a4a4a;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}

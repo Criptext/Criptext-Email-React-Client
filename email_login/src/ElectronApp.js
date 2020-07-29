@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TitleBar from './components/titleBar';
-import PanelWrapper from './components/PanelWrapper';
+import PanelWrapper from './new-components/PanelWrapper';
 import './electronapp.scss';
 import {
   getLoginInformation,

@@ -251,6 +251,17 @@ const checkAvailableUsername = async username => {
   return await client.checkAvailableUsername(username);
 };
 
+const checkAvailableRecoveryEmail = async ({email, username}) => {
+  const client = await createClient({
+    recipientId: username,
+    optionalToken: '@'
+  });
+  return await client.checkRecoveryEmail({
+    email,
+    username
+  });
+};
+
 const deleteAddress = async ({ addressId, recipientId }) => {
   const client = await createClient({ recipientId });
   const res = await client.deleteAddress(addressId);
@@ -792,6 +803,7 @@ module.exports = {
   changePassword,
   changeRecoveryEmail,
   checkAvailableUsername,
+  checkAvailableRecoveryEmail,
   checkExpiredSession,
   deleteAddress,
   deleteDeviceToken,
