@@ -35,7 +35,6 @@ const { setLanguage } = require('../lang');
 const systemLabels = require('../systemLabels');
 const myAccount = require('../Account');
 const mySettings = require('../Settings');
-const logger = require('../logger');
 
 const EMAIL_CONTACT_TYPE_FROM = 'from';
 
@@ -483,6 +482,7 @@ const deleteEmailByKeys = async ({ accountId, keys }) => {
         });
       })
       .catch(ex => {
+        const logger = require('../logger');
         logger.error(ex);
       });
   });

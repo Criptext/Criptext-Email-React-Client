@@ -2,6 +2,9 @@ const { fork } = require('child_process');
 const path = require('path');
 const { app } = require('electron');
 const logger = require('../logger');
+const { databasePath } = require('../database/DBEmodel');
+const { getUserEmailsPath } = require('../utils/FileUtils');
+const { APP_DOMAIN } = require('../utils/const');
 
 const exporterPath = require.resolve('./exporter.js');
 
@@ -27,6 +30,9 @@ const runBackup = (
   { dbPath, outputPath, key, recipientId, password },
   progressCallback
 ) => {
+  const email = recipientId.includes('@')
+    ? recipientId
+    : `${recipientId}@${APP_DOMAIN}`;
   const tempDir = getTempDirectory();
   logger.info(
     `Starting Backup Process : ${exporterPath} - ${tempDir} - ${dbPath} - ${outputPath}`
@@ -37,6 +43,11 @@ const runBackup = (
       exporterPath,
       [dbPath, outputPath, recipientId, tempDir],
       {
+        env: {
+          NODE_ENV: 'script',
+          DBPATH: databasePath,
+          FSPATH: getUserEmailsPath(process.env, email)
+        },
         stdio: ['inherit', 'inherit', 'inherit', 'ipc']
       }
     );

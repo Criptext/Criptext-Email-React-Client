@@ -9,17 +9,18 @@ const Model = Sequelize.Model;
 const Op = Sequelize.Op;
 const { parseDate, formatDate } = require('./../utils/TimeUtils');
 const { DEFAULT_PIN } = require('./../utils/const');
-const logger = require('../logger');
 
 let sequelize;
 
 const getDbEncryptPath = node_env => {
-  const { app } = require('electron');
   const currentDirToReplace =
     process.platform === 'win32' ? '\\src\\database' : '/src/database';
   switch (node_env) {
     case 'test': {
       return './src/__integrations__/test.db';
+    }
+    case 'script': {
+      return process.env.DBPATH;
     }
     case 'development': {
       return path
@@ -28,6 +29,7 @@ const getDbEncryptPath = node_env => {
         .replace(currentDirToReplace, '');
     }
     default: {
+      const { app } = require('electron');
       const userDataPath = app.getPath('userData');
       return path
         .join(userDataPath, '/CriptextEncrypt.db')
@@ -38,7 +40,6 @@ const getDbEncryptPath = node_env => {
 };
 
 const getUmzugPath = node_env => {
-  const { app } = require('electron');
   const currentDirToReplace =
     process.platform === 'win32' ? '\\src\\database' : '/src/database';
   switch (node_env) {
@@ -52,6 +53,7 @@ const getUmzugPath = node_env => {
         .replace(currentDirToReplace, '');
     }
     default: {
+      const { app } = require('electron');
       const userDataPath = app.getPath('userData');
       return path
         .join(userDataPath, '/migration.json')
@@ -549,6 +551,8 @@ const initDatabaseEncrypted = async (
   });
 
   if (!sync) return;
+
+  const logger = require('../logger');
 
   await sequelize.sync({});
 

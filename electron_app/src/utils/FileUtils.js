@@ -4,7 +4,6 @@ const rmdirRecursive = require('rmdir-recursive');
 const path = require('path');
 const rimraf = require('rimraf');
 const { encryptText, decryptText } = require('../filescript/helpers');
-const { app } = require('electron');
 const { removeLast } = require('./stringUtils');
 const { APP_DOMAIN } = require('./const');
 
@@ -20,6 +19,9 @@ const getUserEmailsPath = (node_env, user, isCopy) => {
       createPathRecursive(emailsPath);
       return emailsPath;
     }
+    case 'script': {
+      return process.env.FSPATH;
+    }
     case 'development': {
       const emailsPath = path
         .join(
@@ -34,6 +36,7 @@ const getUserEmailsPath = (node_env, user, isCopy) => {
       return emailsPath;
     }
     default: {
+      const { app } = require('electron');
       const userDataPath = app.getPath('userData');
       const emailsPath = path.join(
         userDataPath,
