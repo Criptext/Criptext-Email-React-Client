@@ -1,13 +1,14 @@
-const { spawn } = require('child_process');
+const { fork } = require('child_process');
 const path = require('path');
 const { app } = require('electron');
+const logger = require('../logger');
 
-const exporterPath = path.join(__dirname, 'exporter.js');
+const exporterPath = require.resolve('./exporter.js');
 
 const getTempDirectory = nodeEnv => {
   const folderName = 'BackupTempData';
   const currentDirToReplace =
-    process.platform === 'win32' ? '\\src\\database' : '/src/database';
+    process.platform === 'win32' ? '\\src\\backup' : '/src/backup';
   switch (nodeEnv) {
     case 'development': {
       return path.join(__dirname, `../../${folderName}`);
@@ -27,29 +28,36 @@ const runBackup = (
   progressCallback
 ) => {
   const tempDir = getTempDirectory();
+  logger.info(
+    `Starting Backup Process : ${exporterPath} - ${tempDir} - ${dbPath} - ${outputPath}`
+  );
   return new Promise((resolve, reject) => {
     let backupSize = 0;
-    const worker = spawn(
-      'node',
-      [exporterPath, dbPath, outputPath, recipientId, tempDir],
+    const worker = fork(
+      exporterPath,
+      [dbPath, outputPath, recipientId, tempDir],
       {
         stdio: ['inherit', 'inherit', 'inherit', 'ipc']
       }
     );
 
     worker.on('message', data => {
-      console.log(`message: ${JSON.stringify(data)}`);
+      logger.info(`Backup Message : ${JSON.stringify(data)}`);
       if (data.step === 'progress') progressCallback(data);
       if (data.step === 'end') backupSize = data.backupSize;
     });
 
     worker.on('error', code => {
-      console.log(`child process exited with error ${code}`);
+      logger.error(`child process exited with error ${code}`);
       reject(code);
     });
 
     worker.on('close', code => {
       console.log(`child process closed with code ${code}`);
+      if (code !== 0 || backupSize === 0) {
+        reject(code);
+        return;
+      }
       resolve(backupSize);
     });
 

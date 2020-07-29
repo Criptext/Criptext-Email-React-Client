@@ -2,7 +2,6 @@
 require('dotenv').config();
 
 const Sequelize = require('sequelize');
-const { app } = require('electron');
 const path = require('path');
 const rimraf = require('rimraf');
 const umzug = require('umzug');
@@ -15,6 +14,7 @@ const logger = require('../logger');
 let sequelize;
 
 const getDbEncryptPath = node_env => {
+  const { app } = require('electron');
   const currentDirToReplace =
     process.platform === 'win32' ? '\\src\\database' : '/src/database';
   switch (node_env) {
@@ -38,6 +38,7 @@ const getDbEncryptPath = node_env => {
 };
 
 const getUmzugPath = node_env => {
+  const { app } = require('electron');
   const currentDirToReplace =
     process.platform === 'win32' ? '\\src\\database' : '/src/database';
   switch (node_env) {
