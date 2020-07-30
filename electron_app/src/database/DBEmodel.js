@@ -121,10 +121,10 @@ class Version extends Model {}
 
 const getDB = () => sequelize;
 
-const setConfiguration = (key, path, dialectPath) => {
+const setConfiguration = (key, path) => {
   sequelize = new Sequelize(null, null, key, {
     dialect: 'sqlite',
-    dialectModulePath: dialectPath || '@journeyapps/sqlcipher',
+    dialectModulePath: '@journeyapps/sqlcipher',
     storage: path || myDBEncryptPath(),
     logging: false,
     transactionType: 'IMMEDIATE'
@@ -132,12 +132,12 @@ const setConfiguration = (key, path, dialectPath) => {
 };
 
 const initDatabaseEncrypted = async (
-  { key, shouldReset, path, sync = true, dialectPath },
+  { key, shouldReset, dbpath, sync = true },
   migrationStartCallback
 ) => {
   if (shouldReset) sequelize = undefined;
   if (sequelize) return;
-  await setConfiguration(key, path, dialectPath);
+  await setConfiguration(key, dbpath);
 
   Account.init(
     {
@@ -607,10 +607,11 @@ const initDatabaseEncrypted = async (
 
   try {
     const migrationPath = path.join(__dirname, '/DBEmigrations');
+    const umzugPath = getUmzugPath(process.env.NODE_ENV);
     const migrator = new umzug({
       storage: 'json',
       storageOptions: {
-        path: getUmzugPath(process.env.NODE_ENV)
+        path: umzugPath
       },
       logging: false,
       upName: 'up',
@@ -634,7 +635,7 @@ const initDatabaseEncrypted = async (
   } catch (ex) {
     logger.error({
       message: 'Migrating Database',
-      error: ex
+      error: ex.toString()
     });
   }
 };
