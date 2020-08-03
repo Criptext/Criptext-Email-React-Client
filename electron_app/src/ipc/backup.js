@@ -5,8 +5,6 @@ const {
   createDefaultBackupFolder,
   getDefaultBackupFolder,
   prepareBackupFiles,
-  exportBackupUnencrypted,
-  exportBackupEncrypted,
   restoreUnencryptedBackup,
   restoreEncryptedBackup
 } = require('./../BackupManager');
@@ -20,7 +18,8 @@ const {
   backupDateFormat
 } = require('./../utils/TimeUtils');
 const { APP_DOMAIN } = require('../utils/const');
-const { updateAccount } = require('./../database');
+const { updateAccount, databasePath } = require('./../database');
+const { runBackup } = require('../backup/index');
 const myAccount = require('../Account');
 const logger = require('../logger');
 let autoBackupsTime = [];
@@ -42,42 +41,46 @@ ipc.answerRenderer('create-default-backup-folder', () =>
   createDefaultBackupFolder()
 );
 
-const doExportBackupUnencrypted = async params => {
+const doExportBackup = async params => {
   const {
     backupPath,
     notificationParams,
     isAutoBackup = true,
     backupInBackground = false,
     accountObj,
-    progressCallback
+    progressCallback,
+    password = undefined
   } = params;
 
-  const [recipientId, domain] = accountObj
+  const [recipientId, domain = APP_DOMAIN] = accountObj
     ? accountObj.recipientId.split('@')
     : myAccount.recipientId.split('@');
   const accountData = {
     isAutoBackup,
     backupInBackground,
-    email: `${recipientId}@${domain || APP_DOMAIN}`,
+    email: `${recipientId}@${domain}`,
     username: recipientId,
-    domain: domain || APP_DOMAIN,
+    domain: domain,
     name: accountObj ? accountObj.name : myAccount.name
   };
 
   try {
-    logger.info(
-      `Unencrypted Backup Started For Account: ${recipientId}@${domain ||
-        APP_DOMAIN}`
-    );
+    logger.info(`Unencrypted Backup Started For Account: ${accountData.email}`);
 
     commitBackupStatus('local-backup-started', 1, accountData);
-    prepareBackupFiles();
 
-    const backupSize = await exportBackupUnencrypted({
-      backupPath,
-      accountObj,
+    const backupSize = await runBackup(
+      {
+        dbPath: databasePath,
+        outputPath: backupPath,
+        key: globalManager.databaseKey.get(),
+        recipientId: accountObj
+          ? accountObj.recipientId
+          : myAccount.recipientId,
+        password
+      },
       progressCallback
-    });
+    );
 
     commitBackupStatus('local-backup-success', null, {
       accountData,
@@ -85,6 +88,7 @@ const doExportBackupUnencrypted = async params => {
       isAutoBackup,
       backupInBackground
     });
+
     if (notificationParams) {
       showNotification({
         title: notificationParams.success.title,
@@ -97,6 +101,7 @@ const doExportBackupUnencrypted = async params => {
     }
     return backupSize;
   } catch (error) {
+    logger.error(error.stack);
     commitBackupStatus('local-backup-failed', null, { error, accountData });
     if (notificationParams) {
       showNotification({
@@ -113,56 +118,22 @@ ipc.answerRenderer('export-backup-unencrypted', params => {
   const progressCallback = data => {
     send('backup-progress', data);
   };
-  return doExportBackupUnencrypted({
+  return doExportBackup({
     ...params,
     progressCallback
   });
 });
 
-ipc.answerRenderer('export-backup-encrypted', async params => {
-  const { backupPath, password, notificationParams, accountObj } = params;
-  try {
-    commitBackupStatus('local-backup-started', 1, accountObj);
-    prepareBackupFiles();
-
-    logger.info(`Encrypted Backup Started for Path: ${backupPath}`);
-    const backupSize = await exportBackupEncrypted({
-      backupPath,
-      password
-    });
-
-    commitBackupStatus('local-backup-success', null, {
-      accountData: accountObj,
-      backupSize,
-      isAutoBackup: false,
-      backupInBackground: false
-    });
-
-    if (notificationParams) {
-      showNotification({
-        title: notificationParams.success.title,
-        message: notificationParams.success.message,
-        clickHandler: function() {
-          shell.showItemInFolder(backupPath);
-        },
-        forceToShow: true
-      });
-    }
-    return backupSize;
-  } catch (error) {
-    commitBackupStatus('local-backup-failed', null, {
-      error,
-      accountData: accountObj
-    });
-    if (notificationParams) {
-      showNotification({
-        title: notificationParams.error.title,
-        message: notificationParams.error.message,
-        forceToShow: true
-      });
-    }
-    return 0;
-  }
+ipc.answerRenderer('export-backup-encrypted', params => {
+  const progressCallback = data => {
+    send('backup-progress', data);
+  };
+  return doExportBackup({
+    ...params,
+    isAutoBackup: false,
+    backupInBackground: false,
+    progressCallback
+  });
 });
 
 ipc.answerRenderer('get-default-backup-folder', () => getDefaultBackupFolder());
@@ -208,6 +179,8 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
   }
 });
 
+const MAX_32BIT_INT = 2147483647;
+
 const initAutoBackupMonitor = () => {
   autoBackupsTime = [];
   for (const account of myAccount.loggedAccounts) {
@@ -223,6 +196,12 @@ const initAutoBackupMonitor = () => {
     const now = moment();
     const pendingDate = moment(autoBackupNextDate);
     const timeDiff = pendingDate.diff(now);
+
+    if (timeDiff >= MAX_32BIT_INT) {
+      logger.debug(`Backups : Account ${account.recipientId} overflows timer`);
+      continue;
+    }
+
     autoBackupsTime.push({
       username: account.recipientId,
       accountId: account.id,
@@ -280,7 +259,7 @@ const initAutoBackup = async accountId => {
 
   try {
     const backupFileName = defineBackupFileName('db');
-    const backupSize = await doExportBackupUnencrypted({
+    const backupSize = await doExportBackup({
       accountObj: account,
       backupPath: `${autoBackupPath}/${backupFileName}`,
       backupInBackground: true,
@@ -303,11 +282,13 @@ const initAutoBackup = async accountId => {
     });
     logger.debug(`Backup Finished : ${accountId}`);
     const timeDiff = nextDate.diff(today);
-    autoBackupsTime.push({
-      username: account.recipientId,
-      id: accountId,
-      triggerTimer: timeDiff <= 0 ? 1 : timeDiff
-    });
+    if (timeDiff < MAX_32BIT_INT) {
+      autoBackupsTime.push({
+        username: account.recipientId,
+        id: accountId,
+        triggerTimer: timeDiff <= 0 ? 1 : timeDiff
+      });
+    }
 
     backupDone();
   } catch (backupErr) {
@@ -355,7 +336,3 @@ process.on('exit', () => {
   currentAutobackup = null;
   autoBackupsTime = [];
 });
-
-module.exports = {
-  doExportBackupUnencrypted
-};

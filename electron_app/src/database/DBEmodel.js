@@ -2,7 +2,6 @@
 require('dotenv').config();
 
 const Sequelize = require('sequelize');
-const { app } = require('electron');
 const path = require('path');
 const rimraf = require('rimraf');
 const umzug = require('umzug');
@@ -10,7 +9,6 @@ const Model = Sequelize.Model;
 const Op = Sequelize.Op;
 const { parseDate, formatDate } = require('./../utils/TimeUtils');
 const { DEFAULT_PIN } = require('./../utils/const');
-const logger = require('../logger');
 
 let sequelize;
 
@@ -21,6 +19,9 @@ const getDbEncryptPath = node_env => {
     case 'test': {
       return './src/__integrations__/test.db';
     }
+    case 'script': {
+      return process.env.DBPATH;
+    }
     case 'development': {
       return path
         .join(__dirname, '/CriptextEncrypt.db')
@@ -28,6 +29,7 @@ const getDbEncryptPath = node_env => {
         .replace(currentDirToReplace, '');
     }
     default: {
+      const { app } = require('electron');
       const userDataPath = app.getPath('userData');
       return path
         .join(userDataPath, '/CriptextEncrypt.db')
@@ -51,6 +53,7 @@ const getUmzugPath = node_env => {
         .replace(currentDirToReplace, '');
     }
     default: {
+      const { app } = require('electron');
       const userDataPath = app.getPath('userData');
       return path
         .join(userDataPath, '/migration.json')
@@ -118,23 +121,23 @@ class Version extends Model {}
 
 const getDB = () => sequelize;
 
-const setConfiguration = key => {
+const setConfiguration = (key, path, dialectPath) => {
   sequelize = new Sequelize(null, null, key, {
     dialect: 'sqlite',
-    dialectModulePath: '@journeyapps/sqlcipher',
-    storage: myDBEncryptPath(),
+    dialectModulePath: dialectPath || '@journeyapps/sqlcipher',
+    storage: path || myDBEncryptPath(),
     logging: false,
     transactionType: 'IMMEDIATE'
   });
 };
 
 const initDatabaseEncrypted = async (
-  { key, shouldReset },
+  { key, shouldReset, path, sync = true, dialectPath },
   migrationStartCallback
 ) => {
   if (shouldReset) sequelize = undefined;
   if (sequelize) return;
-  await setConfiguration(key);
+  await setConfiguration(key, path, dialectPath);
 
   Account.init(
     {
@@ -546,6 +549,10 @@ const initDatabaseEncrypted = async (
     foreignKey: 'accountId',
     onDelete: 'CASCADE'
   });
+
+  if (!sync) return;
+
+  const logger = require('../logger');
 
   await sequelize.sync({});
 

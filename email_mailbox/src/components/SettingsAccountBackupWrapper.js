@@ -305,7 +305,8 @@ class SettingsAccountBackupWrapper extends Component {
         password,
         notificationParams: export_backup,
         accountObj: {
-          email: myAccount.email
+          recipientId: myAccount.recipientId,
+          name: myAccount.name
         }
       });
     }
