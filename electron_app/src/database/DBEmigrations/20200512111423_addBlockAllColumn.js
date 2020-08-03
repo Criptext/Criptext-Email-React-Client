@@ -48,7 +48,28 @@ const handleDuplicatedMessageIds = async (queryInterface, transaction) => {
   });
   await Email().destroy({
     where: {
-      id: idsToDelete
+      id: [].concat.apply([], idsToDelete)
+    },
+    transaction
+  });
+};
+
+const handleDuplicatedKeys = async (queryInterface, transaction) => {
+  const query = `SELECT key, messageId, COUNT(*), GROUP_CONCAT(id) as 'ids' FROM ${
+    Table.EMAIL
+  } GROUP BY key HAVING COUNT(*) > 1 `;
+  const [results] = await queryInterface.sequelize.query(query, {
+    transaction
+  });
+  const idsToDelete = [];
+  results.forEach(row => {
+    const ids = row.ids.split(',');
+    ids.shift();
+    idsToDelete.push(ids);
+  });
+  await Email().destroy({
+    where: {
+      id: [].concat.apply([], idsToDelete)
     },
     transaction
   });
@@ -76,6 +97,7 @@ module.exports = {
 
     try {
       await migrateBlockRemoteContent(queryInterface, Sequelize, transaction);
+      await handleDuplicatedKeys(queryInterface, transaction);
       await handleDuplicatedMessageIds(queryInterface, transaction);
       await addUniqueIndexes(queryInterface, transaction);
       await transaction.commit();

@@ -41,7 +41,7 @@ const start = async () => {
   try {
     await initDatabaseEncrypted({
       key: key,
-      path: path.join(tempBackupDirectory, 'CriptextEncrypt.db'),
+      dbpath: path.join(tempBackupDirectory, 'CriptextEncrypt.db'),
       sync: false
     });
     account = await Account().findOne({
