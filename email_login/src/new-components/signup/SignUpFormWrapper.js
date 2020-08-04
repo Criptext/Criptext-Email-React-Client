@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import CustomTextField from '../templates/CustomTextField';
-import { validateUsername, validateFullname, validatePassword, validateConfirmPassword} from '../../validators/validators'
+import {
+  validateUsername,
+  validateFullname,
+  validatePassword,
+  validateConfirmPassword
+} from '../../validators/validators';
 import Button, { STYLE } from '../templates/Button';
 import { checkAvailableUsername } from '../../utils/ipc.js';
+import { appDomain } from '../../utils/const';
 import PropTypes from 'prop-types';
 
 import './signupformwrapper.scss';
@@ -12,7 +18,7 @@ const INPUT = {
   FULLNAME: 'signup-fullname',
   PASSWORD: 'signup-password',
   CONFIRM: 'signup-confirm-password'
-}
+};
 
 class SignUpFormWrapper extends Component {
   constructor(props) {
@@ -46,7 +52,7 @@ class SignUpFormWrapper extends Component {
   }
 
   render() {
-    const {username, fullname, password, confirmPassword} = this.state;
+    const { username, fullname, password, confirmPassword } = this.state;
     return (
       <div className="signup-form-wrapper">
         <div className="back-button" onClick={this.props.onGoBack}>
@@ -75,10 +81,10 @@ class SignUpFormWrapper extends Component {
               endAdornment: <span>@criptext.com</span>
             }}
           />
-          <CustomTextField 
+          <CustomTextField
             id={INPUT.FULLNAME}
-            label="Fullname" 
-            type="text" 
+            label="Fullname"
+            type="text"
             value={fullname.value}
             error={!!fullname.error}
             helperText={fullname.error}
@@ -145,7 +151,8 @@ class SignUpFormWrapper extends Component {
     this.props.onGoTo('create', {
       username: this.state.username.value,
       fullname: this.state.fullname.value,
-      password: this.state.password.value
+      password: this.state.password.value,
+      email: `${this.state.username.value}@${appDomain}`
     });
   };
 
@@ -173,7 +180,7 @@ class SignUpFormWrapper extends Component {
     const newValue = ev.target.value;
     const targetId = ev.target.id;
     let key, newInputState, isValid;
-    switch(targetId) {
+    switch (targetId) {
       case INPUT.USERNAME:
         key = 'username';
         newInputState = { ...this.state.username };
@@ -202,42 +209,54 @@ class SignUpFormWrapper extends Component {
         isValid = validateConfirmPassword(this.state.password.value, newValue);
         newInputState.error = isValid ? null : 'Confirm Error';
         break;
-      default: 
+      default:
         break;
     }
     newInputState.valid = isValid;
     newInputState.value = newValue;
-    this.setState({
-      [key]: newInputState
-    }, this.shouldEnableButton)
-  }
+    this.setState(
+      {
+        [key]: newInputState
+      },
+      this.shouldEnableButton
+    );
+  };
 
   checkUsername = async username => {
     const { status } = await checkAvailableUsername(username);
     if (username !== this.state.username.value) return;
-    switch(status) {
+    switch (status) {
       case 200:
-        this.setState({
-          username: {
-            ...this.state.username,
-            valid: true
-          }
-        }, this.shouldEnableButton)
+        this.setState(
+          {
+            username: {
+              ...this.state.username,
+              valid: true
+            }
+          },
+          this.shouldEnableButton
+        );
         break;
       default:
-        this.setState({
-          username: {
-            ...this.state.username,
-            error: 'Error Request'
-          }
-        }, this.shouldEnableButton)
+        this.setState(
+          {
+            username: {
+              ...this.state.username,
+              error: 'Error Request'
+            }
+          },
+          this.shouldEnableButton
+        );
         break;
     }
-  }
+  };
 
   shouldEnableButton = () => {
     const shouldEnable =
-      this.state.username.valid && this.state.password.valid && this.state.fullname.valid && this.state.confirmPassword.valid;
+      this.state.username.valid &&
+      this.state.password.valid &&
+      this.state.fullname.valid &&
+      this.state.confirmPassword.valid;
     if (shouldEnable !== this.state.enableButton) {
       this.setState({
         enableButton: shouldEnable

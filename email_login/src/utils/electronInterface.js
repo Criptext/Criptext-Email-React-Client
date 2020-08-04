@@ -8,6 +8,7 @@ export const { requiredMinLength, requiredMaxLength } = remote.require(
 );
 export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');
+export const getAlicePort = remote.require('./src/aliceManager').getPort;
 export const LabelType = labels;
 export const socketClient = remote.require('./src/socketClient');
 

@@ -1,0 +1,37 @@
+@import '../../styles/index.scss';
+
+.ready-wrapper {
+  margin: 64px 42px 50px 42px;
+
+  .header-container {
+    margin-top: 166px;
+  }
+
+  .ready-card {
+    background-image: url(../../#{$_PATH_TO_IMAGES}/img-card.svg);
+    height: 141px;
+    width: 252px;
+    margin: 0 auto;
+    margin-top: 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 18px;
+    background-repeat: no-repeat;
+
+    > div:nth-child(1) {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    > div:nth-child(2) {
+      font-size: 13px;
+      font-weight: bold;
+    }
+  }
+
+  button {
+    margin-top: 58px;
+  }
+}

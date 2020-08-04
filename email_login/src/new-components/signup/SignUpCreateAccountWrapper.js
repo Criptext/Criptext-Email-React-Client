@@ -4,7 +4,8 @@ import CustomCheckbox from '../templates/CustomCheckbox';
 import OverlayLoader from '../templates/OverlayLoader';
 import Button, { STYLE } from '../templates/Button';
 import { validateEmail } from '../../validators/validators';
-import { checkAvailableRecoveryEmail } from '../../utils/ipc'
+import { checkAvailableRecoveryEmail } from '../../utils/ipc';
+import { createAccount } from '../../signal/signup';
 import PropTypes from 'prop-types';
 
 import './signupcreateaccount.scss';
@@ -29,7 +30,7 @@ class SignUpCreateAccountWrapper extends Component {
     const recoveryEmail = this.state.recoveryEmail;
     return (
       <div className="signup-create-account-wrapper">
-        { this.state.createAccount && <OverlayLoader /> }
+        {this.state.createAccount && <OverlayLoader />}
         <div className="back-button" onClick={this.props.onGoBack}>
           <i className="icon-back" />
         </div>
@@ -91,7 +92,25 @@ class SignUpCreateAccountWrapper extends Component {
   handleCreateAccount = () => {
     this.setState({
       createAccount: true
-    })
+    }, this.processCreateAccount);
+  };
+
+  processCreateAccount = async () => {
+    const { username, fullname, password } = this.props.signupData;
+    try {
+      await createAccount({
+        recipientId: username,
+        password,
+        name: fullname,
+        recoveryEmail: this.state.recoveryEmail.value
+      })
+      this.props.onGoTo('ready');
+    } catch (ex) {
+      this.setState({
+        createAccount: false
+      })
+      console.log(ex);
+    }
   }
 
   handleCheckTermsConditions = () => {
@@ -123,7 +142,7 @@ class SignUpCreateAccountWrapper extends Component {
       if (!isValid) {
         error = 'Please enter a valid email';
       } else {
-        this.checkRecoveryEmail(newEmail)
+        this.checkRecoveryEmail(newEmail);
       }
     }
     this.setState(
@@ -131,7 +150,7 @@ class SignUpCreateAccountWrapper extends Component {
         recoveryEmail: {
           ...this.state.recoveryEmail,
           value: newEmail,
-          error,
+          error
         }
       },
       this.shouldEnableButton
@@ -142,7 +161,7 @@ class SignUpCreateAccountWrapper extends Component {
     let res = await checkAvailableRecoveryEmail({
       username: this.props.signupData.username,
       email
-    })
+    });
     if (email !== this.state.recoveryEmail.value) return;
     const { status } = res;
     switch (status) {
@@ -157,18 +176,18 @@ class SignUpCreateAccountWrapper extends Component {
           this.shouldEnableButton
         );
         break;
-      default: 
+      default:
         this.setState(
           {
             recoveryEmail: {
               ...this.state.recoveryEmail,
-              error: 'Error Request',
+              error: 'Error Request'
             }
           },
           this.shouldEnableButton
         );
     }
-  }
+  };
 
   shouldEnableButton = () => {
     const shouldEnable =

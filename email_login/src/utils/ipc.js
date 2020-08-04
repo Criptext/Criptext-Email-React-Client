@@ -26,6 +26,10 @@ export const openPinWindow = params => {
   ipc.callMain('open-pin', params);
 };
 
+export const restartAlice = async () => {
+  return await ipc.callMain('restart-alice');
+};
+
 export const upgradeToPlus = token => {
   ipc.callMain('upgrade-to-plus', token);
 };
@@ -38,8 +42,20 @@ export const throwError = error => {
 
 /*  Database
 ----------------------------- */
+export const cleanDatabase = async username => {
+  return await ipc.callMain('db-clean-database', username);
+};
+
+export const createContact = async params => {
+  return await ipc.callMain('db-create-contact', params);
+};
+
 export const getAccountByParams = async params => {
   return await ipc.callMain('db-get-account-by-params', params);
+};
+
+export const getContactByEmails = async params => {
+  return await ipc.callMain('db-get-contact-by-emails', params);
 };
 
 export const updateAccount = async params => {
@@ -57,8 +73,8 @@ export const checkAvailableUsername = async username => {
 };
 
 export const checkAvailableRecoveryEmail = async params => {
-  return await ipc.callMain('client-check-recovery-email', params)
-}
+  return await ipc.callMain('client-check-recovery-email', params);
+};
 
 export const deleteDeviceToken = async params => {
   return await ipc.callMain('client-delete-device-token', params);
@@ -94,6 +110,10 @@ export const login = async params => {
 
 export const loginFirst = async params => {
   return await ipc.callMain('client-login-first', params);
+};
+
+export const postUser = async params => {
+  return await ipc.callMain('client-post-user', params);
 };
 
 export const resetPassword = async params => {

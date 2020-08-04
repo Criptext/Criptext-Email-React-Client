@@ -45,7 +45,7 @@ const CustomTextField = withStyles({
       borderBottomColor: CRIPTEXT_COLOR
     },
     '& .MuiInput-underline.Mui-error:after': {
-      borderBottomColor: ALERT_COLOR,
+      borderBottomColor: ALERT_COLOR
     },
     '& .MuiOutlinedInput-root': {
       '&.Mui-focused fieldset': {

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SignUpFormWrapper from './SignUpFormWrapper';
+import AccountReady from './AccountReady';
 import SignUpCreateAccountWrapper from './SignUpCreateAccountWrapper';
 
 export const MODE = {
   FORM: 'form',
-  CREATE: 'create'
+  CREATE: 'create',
+  READY: 'ready',
 };
 
 class SignUpWrapper extends Component {
@@ -21,7 +23,20 @@ class SignUpWrapper extends Component {
   render() {
     switch (this.state.mode) {
       case MODE.CREATE:
-        return <SignUpCreateAccountWrapper signupData={this.state.signupData} onGoBack={this.handleGoBack} />;
+        return (
+          <SignUpCreateAccountWrapper
+            signupData={this.state.signupData}
+            onGoBack={this.handleGoBack}
+            onGoTo={this.handleGoTo}
+          />
+        );
+      case MODE.READY:
+        return (
+          <AccountReady
+            email={this.state.signupData.email}
+            name={this.state.signupData.fullname}
+          />
+        );
       default:
         return (
           <SignUpFormWrapper
