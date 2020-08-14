@@ -44,6 +44,7 @@ import {
   reencryptEmail,
   reportContentUnencrypted,
   reportContentUnencryptedBob,
+  reportPhishing,
   restartConnection,
   sendEndLinkDevicesEvent,
   sendEndSyncDevicesEvent,
@@ -65,7 +66,8 @@ import {
   initAutoBackupMonitor,
   updateAccountDefaultAddress,
   createOrUpdateContact,
-  reportUncaughtError
+  reportUncaughtError,
+  logError
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -573,7 +575,7 @@ const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
 };
 
 const isMailSpam = async params => {
-  const { labels, from, accountId } = params;
+  const { labels, from, accountId, recipientId } = params;
   if (labels && !!labels.find(label => label === LabelType.spam.text))
     return true;
   const contactObjectSpamToCheck = parseContactRow(from);
@@ -581,7 +583,22 @@ const isMailSpam = async params => {
     emails: contactObjectSpamToCheck.email,
     accountId
   });
-  return contactSpamToCheck[0] ? contactSpamToCheck[0].spamScore > 1 : false;
+  if (!contactSpamToCheck[0] || contactSpamToCheck[0].spamScore <= 1) {
+    return false;
+  }
+  try {
+    const params = {
+      emails: [contactObjectSpamToCheck.email],
+      type: 'spam',
+      recipientId
+    };
+    reportPhishing(params);
+  } catch (ex) {
+    logError(
+      `Unable to report ${contactObjectSpamToCheck.email}: ${ex.toString()}`
+    );
+  }
+  return true;
 };
 
 const generateEmailThreadId = async params => {
@@ -857,7 +874,8 @@ const handleNewMessageEvent = async (
     : await isMailSpam({
         accountId,
         labels,
-        from
+        from,
+        recipientId: accountRecipientId
       });
   const recipients = getRecipientsFromData({
     to: to || toArray,

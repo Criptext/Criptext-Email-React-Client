@@ -45,8 +45,14 @@ const oldVersionUrl = () => {
 
 process.on('uncaughtException', err => {
   logger.error('Uncaught Error: ', err);
+  await dialog.showMessageBox(null, {
+    type: "Application Error",
+    buttons: ["Ok"],
+    title: 'An unexpected error occurred',
+    message: `Error: ${err.toString()}`,
+  })
   closeAlice();
-  process.exit(1);
+  app.exit(0);
 })
 
 process.on('unhandledRejection', err => {

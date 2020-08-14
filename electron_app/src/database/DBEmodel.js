@@ -553,6 +553,7 @@ const initDatabaseEncrypted = async (
   if (!sync) return;
 
   const logger = require('../logger');
+  const { dialog } = require('electron');
 
   await sequelize.sync({});
 
@@ -633,6 +634,12 @@ const initDatabaseEncrypted = async (
       }
     );
   } catch (ex) {
+    await dialog.showMessageBox(null, {
+      type: 'Migration Error',
+      buttons: ['Ok'],
+      title: 'An unexpected error occurred',
+      message: `Error: ${ex.toString()}`
+    });
     logger.error({
       message: 'Migrating Database',
       error: ex.toString()
