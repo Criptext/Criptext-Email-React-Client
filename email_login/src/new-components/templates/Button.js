@@ -4,7 +4,8 @@ import './button.scss';
 
 export const STYLE = {
   CRIPTEXT: 'criptext-button',
-  CLEAR: 'clear-button'
+  CLEAR: 'clear-button',
+  TEXT: 'text-button'
 };
 
 const Button = props => (

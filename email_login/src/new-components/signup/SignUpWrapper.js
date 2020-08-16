@@ -7,7 +7,7 @@ import SignUpCreateAccountWrapper from './SignUpCreateAccountWrapper';
 export const MODE = {
   FORM: 'form',
   CREATE: 'create',
-  READY: 'ready',
+  READY: 'ready'
 };
 
 class SignUpWrapper extends Component {
@@ -16,6 +16,8 @@ class SignUpWrapper extends Component {
     this.state = {
       queue: [],
       mode: props.mode ? props.MODE : MODE.FORM,
+      states: [],
+      previousState: null,
       signupData: {}
     };
   }
@@ -28,6 +30,7 @@ class SignUpWrapper extends Component {
             signupData={this.state.signupData}
             onGoBack={this.handleGoBack}
             onGoTo={this.handleGoTo}
+            previousState={this.state.previousState}
           />
         );
       case MODE.READY:
@@ -35,6 +38,8 @@ class SignUpWrapper extends Component {
           <AccountReady
             email={this.state.signupData.email}
             name={this.state.signupData.fullname}
+            onNextHandle={this.handleNext}
+            previousState={this.state.previousState}
           />
         );
       default:
@@ -43,21 +48,32 @@ class SignUpWrapper extends Component {
             signupData={this.state.signupData}
             onGoTo={this.handleGoTo}
             onGoBack={this.handleGoBack}
+            previousState={this.state.previousState}
           />
         );
     }
   }
 
-  handleGoTo = (mode, storeData) => {
+  handleGoTo = (mode, storeData = {}, stateData) => {
     const queue = [...this.state.queue];
     queue.push(this.state.mode);
+    const states = [...this.state.states];
+    states.push(stateData);
     this.setState({
       queue,
       mode,
+      states,
       signupData: {
         ...this.state.signupData,
         ...storeData
       }
+    });
+  };
+
+  handleNext = () => {
+    console.log('DATA: ', this.state.signupData);
+    this.props.onGoTo('setup', {
+      ...this.state.signupData
     });
   };
 
@@ -69,10 +85,15 @@ class SignUpWrapper extends Component {
       return;
     }
 
+    const states = [...this.state.states];
+
+    const previousState = states.pop();
     const mode = queue.pop();
     this.setState({
       queue,
-      mode
+      mode,
+      previousState,
+      states
     });
   };
 }

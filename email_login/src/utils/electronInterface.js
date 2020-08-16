@@ -69,6 +69,15 @@ export const confirmWaitingApprovalLogin = callback => {
   });
 };
 
+export const showOpenFileDialog = () => {
+  const dialog = remote.dialog;
+  return dialog.showOpenDialog(null, {
+    filters: {
+      extensions: ['jpeg', 'jpg', 'png', 'bitmap']
+    }
+  });
+};
+
 export const setLoginInformation = params => {
   return globalManager.loginData.set(params);
 };

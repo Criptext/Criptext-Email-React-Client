@@ -6,9 +6,12 @@ import Button, { STYLE } from '../templates/Button';
 import { validateEmail } from '../../validators/validators';
 import { checkAvailableRecoveryEmail } from '../../utils/ipc';
 import { createAccount } from '../../signal/signup';
+import string, {getLang} from '../../lang';
 import PropTypes from 'prop-types';
 
 import './signupcreateaccount.scss';
+
+const { create } = string.newSignUp;
 
 class SignUpCreateAccountWrapper extends Component {
   constructor(props) {
@@ -36,14 +39,13 @@ class SignUpCreateAccountWrapper extends Component {
         </div>
         <div className="header-container">
           <h2>
-            You’re almost there!
+            {create.title.firstLine}
             <br />
-            Just two more things 💪
+            {create.title.secondLine}
           </h2>
           <div className="subtitle">
             <span>
-              Add a recovery email to regain access if you ever forget your
-              password
+              {create.description}
             </span>
           </div>
         </div>
@@ -63,10 +65,14 @@ class SignUpCreateAccountWrapper extends Component {
               onChange={this.handleCheckTermsConditions}
             />
             <span className="checkmark-label">
-              I have read and agree with the&nbsp;
-              <a href={`https://www.criptext.com/en/terms`} target="_blank">
-                Terms and Conditions
-              </a>
+              {
+                string.formatString(
+                  create.terms,
+                  (<a href={`https://www.criptext.com/${getLang}/terms`} target="_blank"> 
+                    {create.link}
+                  </a>)
+                )
+              }
             </span>
           </div>
           <div className="checkbox-container">
@@ -75,12 +81,12 @@ class SignUpCreateAccountWrapper extends Component {
               onChange={this.handleCheckPromiseCall}
             />
             <span className="checkmark-label">
-              I promise to call my mom more often
+              {create.lifeTip}
             </span>
           </div>
         </div>
         <Button
-          text={'Create Account'}
+          text={create.button}
           style={STYLE.CRIPTEXT}
           disabled={!this.state.enableButton}
           onClick={this.handleCreateAccount}
@@ -90,28 +96,34 @@ class SignUpCreateAccountWrapper extends Component {
   }
 
   handleCreateAccount = () => {
-    this.setState({
-      createAccount: true
-    }, this.processCreateAccount);
+    this.setState(
+      {
+        createAccount: true
+      },
+      this.processCreateAccount
+    );
   };
 
   processCreateAccount = async () => {
     const { username, fullname, password } = this.props.signupData;
     try {
-      await createAccount({
+      const newAccount = await createAccount({
         recipientId: username,
         password,
         name: fullname,
         recoveryEmail: this.state.recoveryEmail.value
-      })
-      this.props.onGoTo('ready');
+      });
+      this.props.onGoTo('ready', {
+        recoveryEmail: this.state.recoveryEmail.value,
+        id: newAccount.accountId
+      });
     } catch (ex) {
       this.setState({
         createAccount: false
-      })
+      });
       console.log(ex);
     }
-  }
+  };
 
   handleCheckTermsConditions = () => {
     const newValue = !this.state.termsConditions;
@@ -140,7 +152,7 @@ class SignUpCreateAccountWrapper extends Component {
     if (newEmail.includes('@')) {
       isValid = validateEmail(newEmail);
       if (!isValid) {
-        error = 'Please enter a valid email';
+        error = create.recovery.errors.invalid;
       } else {
         this.checkRecoveryEmail(newEmail);
       }
@@ -164,6 +176,7 @@ class SignUpCreateAccountWrapper extends Component {
     });
     if (email !== this.state.recoveryEmail.value) return;
     const { status } = res;
+    let requestError = ''
     switch (status) {
       case 200:
         this.setState(
@@ -175,18 +188,50 @@ class SignUpCreateAccountWrapper extends Component {
           },
           this.shouldEnableButton
         );
+        return;
+      case 405: {
+        const { error, data } = res.body;
+        switch(error) {
+          case 1:
+            requestError = create.recovery.errors.notConfirmed;
+            break;
+          case 2: 
+            requestError = string.formatString(
+              create.recovery.errors.maxUses,
+              data.max
+            );
+            break;
+          case 3: 
+            requestError = create.recovery.errors.blacklisted;
+            break;
+          case 5:
+            requestError = create.recovery.errors.same;
+            break;
+          default:
+            requestError = string.formatString(
+              create.recovery.errors.default,
+              error
+            );
+            break;
+        }
         break;
+      } 
       default:
-        this.setState(
-          {
-            recoveryEmail: {
-              ...this.state.recoveryEmail,
-              error: 'Error Request'
-            }
-          },
-          this.shouldEnableButton
+        requestError = string.formatString(
+          create.recovery.errors.default,
+          status
         );
+        break;
     }
+    this.setState(
+      {
+        recoveryEmail: {
+          ...this.state.recoveryEmail,
+          error: requestError
+        }
+      },
+      this.shouldEnableButton
+    );
   };
 
   shouldEnableButton = () => {

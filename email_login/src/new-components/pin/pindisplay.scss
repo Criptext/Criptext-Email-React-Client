@@ -1,0 +1,23 @@
+.pin-display {
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .pin-display-subtitle {
+    font-size: 15px;
+    margin-top: 12px;
+    color: #505050;
+    font-weight: 300;
+  }
+
+  .pin-display-pin {
+    font-weight: bold;
+    letter-spacing: 10px;
+    flex-grow: 1;
+    font-size: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

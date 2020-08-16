@@ -9,9 +9,12 @@ import {
 import Button, { STYLE } from '../templates/Button';
 import { checkAvailableUsername } from '../../utils/ipc.js';
 import { appDomain } from '../../utils/const';
+import string from '../../lang';
 import PropTypes from 'prop-types';
 
 import './signupformwrapper.scss';
+
+const { form } = string.newSignUp;
 
 const INPUT = {
   USERNAME: 'signup-username',
@@ -23,26 +26,25 @@ const INPUT = {
 class SignUpFormWrapper extends Component {
   constructor(props) {
     super(props);
-    const initialData = props.signupData;
-    this.state = {
+    this.state = props.previousState || {
       username: {
-        value: initialData.username || '',
+        value: '',
         error: null,
         valid: false
       },
       fullname: {
-        value: initialData.fullname || '',
+        value: '',
         error: null,
         valid: false
       },
       password: {
-        value: initialData.password || '',
+        value: '',
         error: null,
         visible: false,
         valid: false
       },
       confirmPassword: {
-        value: initialData.password || '',
+        value: '',
         error: null,
         visible: false,
         valid: false
@@ -60,18 +62,18 @@ class SignUpFormWrapper extends Component {
         </div>
         <div className="header-container">
           <h2>
-            You're gonna love
+            {form.title.firstLine}
             <br />
-            Criptext!
+            {form.title.secondLine}
           </h2>
           <div className="subtitle">
-            <span>let's get you started</span>
+            <span>{form.description}</span>
           </div>
         </div>
         <div className="form-container">
           <CustomTextField
             id={INPUT.USERNAME}
-            label="Username"
+            label={form.username.placeholder}
             type="text"
             value={username.value}
             error={!!username.error}
@@ -83,7 +85,7 @@ class SignUpFormWrapper extends Component {
           />
           <CustomTextField
             id={INPUT.FULLNAME}
-            label="Fullname"
+            label={form.fullname.placeholder}
             type="text"
             value={fullname.value}
             error={!!fullname.error}
@@ -92,7 +94,7 @@ class SignUpFormWrapper extends Component {
           />
           <CustomTextField
             id={INPUT.PASSWORD}
-            label="Password"
+            label={form.password.placeholder}
             type={this.state.password.visible ? 'text' : 'password'}
             value={password.value}
             error={!!password.error}
@@ -115,7 +117,7 @@ class SignUpFormWrapper extends Component {
           />
           <CustomTextField
             id={INPUT.CONFIRM}
-            label="Confirm Password"
+            label={form.confirmPassword.placeholder}
             type={this.state.confirmPassword.visible ? 'text' : 'password'}
             value={confirmPassword.value}
             error={!!confirmPassword.error}
@@ -138,7 +140,7 @@ class SignUpFormWrapper extends Component {
           />
         </div>
         <Button
-          text={'Next'}
+          text={form.button}
           onClick={this.handleNext}
           style={STYLE.CRIPTEXT}
           disabled={!this.state.enableButton}
@@ -148,12 +150,16 @@ class SignUpFormWrapper extends Component {
   }
 
   handleNext = () => {
-    this.props.onGoTo('create', {
-      username: this.state.username.value,
-      fullname: this.state.fullname.value,
-      password: this.state.password.value,
-      email: `${this.state.username.value}@${appDomain}`
-    });
+    this.props.onGoTo(
+      'create',
+      {
+        username: this.state.username.value,
+        fullname: this.state.fullname.value,
+        password: this.state.password.value,
+        email: `${this.state.username.value}@${appDomain}`
+      },
+      { ...this.state }
+    );
   };
 
   showPassword = () => {
@@ -185,7 +191,7 @@ class SignUpFormWrapper extends Component {
         key = 'username';
         newInputState = { ...this.state.username };
         isValid = validateUsername(newValue);
-        newInputState.error = isValid ? null : 'Username Error';
+        newInputState.error = isValid ? null : form.username.error;
         if (isValid) {
           isValid = false;
           this.checkUsername(newValue);
@@ -195,19 +201,19 @@ class SignUpFormWrapper extends Component {
         key = 'fullname';
         newInputState = { ...this.state.fullname };
         isValid = validateFullname(newValue);
-        newInputState.error = isValid ? null : 'Fullname Error';
+        newInputState.error = isValid ? null : form.fullname.error;
         break;
       case INPUT.PASSWORD:
         key = 'password';
         newInputState = { ...this.state.password };
         isValid = validatePassword(newValue);
-        newInputState.error = isValid ? null : 'Passowrd Error';
+        newInputState.error = isValid ? null : form.password.error;
         break;
       case INPUT.CONFIRM:
         key = 'confirmPassword';
         newInputState = { ...this.state.confirmPassword };
         isValid = validateConfirmPassword(this.state.password.value, newValue);
-        newInputState.error = isValid ? null : 'Confirm Error';
+        newInputState.error = isValid ? null : form.confirmPassword.error;
         break;
       default:
         break;

@@ -17,3 +17,12 @@ export const parseRateLimitBlockingTime = secondsString => {
 export const defineLastDeviceActivity = time => {
   return moment(getTimeLocal(time)).fromNow();
 };
+
+export const getAutoBackupDates = (time, period, unit) => {
+  const nowDate = moment(time);
+  const nextDate = moment(time).add(period, unit);
+  return {
+    nowDate: nowDate.format('YYYY-MM-DD HH:mm:ss'),
+    nextDate: nextDate.format('YYYY-MM-DD HH:mm:ss')
+  };
+};

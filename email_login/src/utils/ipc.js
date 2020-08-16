@@ -40,6 +40,18 @@ export const throwError = error => {
   ipc.callMain('throwError', error);
 };
 
+export const createDefaultBackupFolder = async () => {
+  return await ipc.callMain('create-default-backup-folder');
+};
+
+export const getDefaultBackupFolder = async () => {
+  return await ipc.callMain('get-default-backup-folder');
+};
+
+export const swapMailboxAccount = params => {
+  ipc.callMain('swap-account', params);
+};
+
 /*  Database
 ----------------------------- */
 export const cleanDatabase = async username => {
@@ -66,6 +78,10 @@ export const updateAccount = async params => {
 ----------------------------- */
 export const canLogin = async params => {
   return await ipc.callMain('client-can-login', params);
+};
+
+export const canSend = async params => {
+  return await ipc.callMain('client-can-send', params);
 };
 
 export const checkAvailableUsername = async username => {
@@ -116,12 +132,20 @@ export const postUser = async params => {
   return await ipc.callMain('client-post-user', params);
 };
 
+export const resendConfirmationEmail = async params => {
+  return await ipc.callMain('client-resend-confirmation-email', params);
+};
+
 export const resetPassword = async params => {
   return await ipc.callMain('client-reset-password', params);
 };
 
 export const sendRecoveryCode = async params => {
   return await ipc.callMain('client-send-recovery-code', params);
+};
+
+export const uploadAvatar = async params => {
+  return await ipc.callMain('client-upload-avatar', params);
 };
 
 export const validateRecoveryCode = async params => {

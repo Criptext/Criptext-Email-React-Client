@@ -283,7 +283,10 @@ ipc.answerRenderer('client-update-push-token', pushToken => {
 });
 
 ipc.answerRenderer('client-upload-avatar', params => {
-  const data = { ...params, recipientId: myAccount.recipientId };
+  const data = { 
+    ...params, 
+    recipientId: params.recipientId || myAccount.recipientId 
+  };
   return clientManager.uploadAvatar(data);
 });
 

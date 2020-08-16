@@ -1,0 +1,40 @@
+
+.setup-theme {
+
+  .theme-tip {
+    height: 40px;
+    font-family: NunitoSans;
+    font-size: 15px;
+    color: #505050;
+  }
+
+  .theme-selector {
+    width: 266px;
+    height: 56px;
+    border-radius: 28px;
+    background-color: #dfe2e7;
+    margin-top: 42px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: bold;
+
+    span {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .theme-slider {
+    width: 152px;
+    height: 56px;
+    border-radius: 28px;
+    box-shadow: 0 5px 12px 0 #dbdee0;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
