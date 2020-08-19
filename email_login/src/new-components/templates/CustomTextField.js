@@ -35,9 +35,6 @@ const CustomTextField = withStyles({
     '& label.MuiInputLabel-shrink': {
       transform: 'translate(0, 5px) scale(1)'
     },
-    '& label.Mui-focused': {
-      color: CRIPTEXT_COLOR
-    },
     '& label.Mui-error': {
       color: ALERT_COLOR
     },
@@ -46,11 +43,6 @@ const CustomTextField = withStyles({
     },
     '& .MuiInput-underline.Mui-error:after': {
       borderBottomColor: ALERT_COLOR
-    },
-    '& .MuiOutlinedInput-root': {
-      '&.Mui-focused fieldset': {
-        borderColor: CRIPTEXT_COLOR
-      }
     }
   }
 })(TextField);

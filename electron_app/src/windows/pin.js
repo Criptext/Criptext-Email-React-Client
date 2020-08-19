@@ -127,7 +127,8 @@ const setUpPin = async ({
   shouldSave,
   shouldExport,
   shouldResetPin,
-  shouldOnlySetPIN
+  shouldOnlySetPIN,
+  dontRestartApp
 }) => {
   if (shouldSave) {
     keytar
@@ -142,7 +143,9 @@ const setUpPin = async ({
   globalManager.databaseKey.set(pin);
   if (shouldResetPin) {
     await resetKeyDatabase(pin);
-    await setKeyEmailBodies(pin);
+    if (!dontRestartApp) {
+      await setKeyEmailBodies(pin);
+    }
   } else {
     await initDatabaseEncrypted({
       key: pin,
@@ -154,7 +157,7 @@ const setUpPin = async ({
     await encryptDataBase();
   }
 
-  if (shouldExport || shouldResetPin) {
+  if ((shouldExport || shouldResetPin) && !dontRestartApp) {
     setTimeout(() => {
       closeAlice();
       app.relaunch();

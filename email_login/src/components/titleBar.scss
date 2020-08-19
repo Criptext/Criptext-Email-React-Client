@@ -1,10 +1,10 @@
 @import './../styles/index.scss';
 
 .title-bar {
+  transition: background-color 0.5s ease;
   display: flex;
   height: 30px;
   border-radius: 7px 7px 0px 0px;
-  background-color: white;
   padding: 0px 4px;
   -webkit-app-region: drag;
 
@@ -70,3 +70,18 @@
     }
   }
 }
+
+/* THEME
+----------------------------- */
+
+@mixin themable($_THEME, $_BACKGROUND_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .title-bar {
+      background-color: $_BACKGROUND_COLOR;
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_DARK);

@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import CustomTextField from '../templates/CustomTextField';
 import CustomCheckbox from '../templates/CustomCheckbox';
 import OverlayLoader from '../templates/OverlayLoader';
+import ErrorPopup from '../templates/ErrorPopup';
+import PopupHOC from '../templates/PopupHOC';
 import Button, { STYLE } from '../templates/Button';
 import { validateEmail } from '../../validators/validators';
 import { checkAvailableRecoveryEmail } from '../../utils/ipc';
 import { createAccount } from '../../signal/signup';
-import string, {getLang} from '../../lang';
+import string, { getLang } from '../../lang';
 import PropTypes from 'prop-types';
 
 import './signupcreateaccount.scss';
 
 const { create } = string.newSignUp;
+
+const ErrorPop = PopupHOC(ErrorPopup);
 
 class SignUpCreateAccountWrapper extends Component {
   constructor(props) {
@@ -25,7 +29,12 @@ class SignUpCreateAccountWrapper extends Component {
       termsConditions: false,
       promiseCall: false,
       enableButton: false,
-      createAccount: false
+      createAccount: false,
+      error: {
+        message: create.errors.unknown,
+        title: create.errors.title,
+        button: create.errors.button
+      }
     };
   }
 
@@ -34,6 +43,12 @@ class SignUpCreateAccountWrapper extends Component {
     return (
       <div className="signup-create-account-wrapper">
         {this.state.createAccount && <OverlayLoader />}
+        {this.state.error && (
+          <ErrorPop
+            {...this.state.error}
+            onClickDismiss={this.handleDismissPopup}
+          />
+        )}
         <div className="back-button" onClick={this.props.onGoBack}>
           <i className="icon-back" />
         </div>
@@ -44,9 +59,7 @@ class SignUpCreateAccountWrapper extends Component {
             {create.title.secondLine}
           </h2>
           <div className="subtitle">
-            <span>
-              {create.description}
-            </span>
+            <span>{create.description}</span>
           </div>
         </div>
         <div className="form-container">
@@ -65,14 +78,15 @@ class SignUpCreateAccountWrapper extends Component {
               onChange={this.handleCheckTermsConditions}
             />
             <span className="checkmark-label">
-              {
-                string.formatString(
-                  create.terms,
-                  (<a href={`https://www.criptext.com/${getLang}/terms`} target="_blank"> 
-                    {create.link}
-                  </a>)
-                )
-              }
+              {string.formatString(
+                create.terms,
+                <a
+                  href={`https://www.criptext.com/${getLang}/terms`}
+                  target="_blank"
+                >
+                  {create.link}
+                </a>
+              )}
             </span>
           </div>
           <div className="checkbox-container">
@@ -80,9 +94,7 @@ class SignUpCreateAccountWrapper extends Component {
               value={this.state.promiseCall}
               onChange={this.handleCheckPromiseCall}
             />
-            <span className="checkmark-label">
-              {create.lifeTip}
-            </span>
+            <span className="checkmark-label">{create.lifeTip}</span>
           </div>
         </div>
         <Button
@@ -118,10 +130,15 @@ class SignUpCreateAccountWrapper extends Component {
         id: newAccount.accountId
       });
     } catch (ex) {
+      console.error(ex);
       this.setState({
-        createAccount: false
+        createAccount: false,
+        error: {
+          title: create.errors.title,
+          button: create.errors.button,
+          message: ex.message
+        }
       });
-      console.log(ex);
     }
   };
 
@@ -176,7 +193,7 @@ class SignUpCreateAccountWrapper extends Component {
     });
     if (email !== this.state.recoveryEmail.value) return;
     const { status } = res;
-    let requestError = ''
+    let requestError = '';
     switch (status) {
       case 200:
         this.setState(
@@ -191,17 +208,17 @@ class SignUpCreateAccountWrapper extends Component {
         return;
       case 405: {
         const { error, data } = res.body;
-        switch(error) {
+        switch (error) {
           case 1:
             requestError = create.recovery.errors.notConfirmed;
             break;
-          case 2: 
+          case 2:
             requestError = string.formatString(
               create.recovery.errors.maxUses,
               data.max
             );
             break;
-          case 3: 
+          case 3:
             requestError = create.recovery.errors.blacklisted;
             break;
           case 5:
@@ -215,7 +232,7 @@ class SignUpCreateAccountWrapper extends Component {
             break;
         }
         break;
-      } 
+      }
       default:
         requestError = string.formatString(
           create.recovery.errors.default,
@@ -242,6 +259,12 @@ class SignUpCreateAccountWrapper extends Component {
         enableButton: shouldEnable
       });
     }
+  };
+
+  handleDismissPopup = () => {
+    this.setState({
+      error: undefined
+    });
   };
 }
 

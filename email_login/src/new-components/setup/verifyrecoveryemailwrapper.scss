@@ -1,3 +1,5 @@
+@import '../../styles/index.scss';
+
 .setup-verify {
   .verify-container {
     font-size: 15px;
@@ -23,3 +25,22 @@
     margin-top: 10px;
   }
 }
+
+@mixin themable($_THEME, $_TEXT_COLOR, $_TEXT_OPAQUE_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .setup-verify {
+      .verify-container {
+        >span:nth-child(1) {
+          color: $_TEXT_OPAQUE_COLOR;
+        }
+      }
+      .verify-email {
+        color: $_TEXT_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_COLOR_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_COLOR_DARK, $_TEXT_OPAQUE_COLOR_DARK);

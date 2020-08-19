@@ -10,21 +10,19 @@ const PinDisplay = props => (
   <SetupCover
     topButton={display.button}
     title={display.title}
-    onClickTopButton={ () => { props.onGoTo('pin') } }
+    onClickTopButton={() => {
+      props.onGoTo('set');
+    }}
+    onGoBack={props.onGoBack}
   >
     <div className="pin-display">
       <div className="pin-display-subtitle">
-        <span>
-          {display.subtitle}
-        </span>
+        <span>{display.subtitle}</span>
       </div>
       <div className="pin-display-pin">
-        <span>
-          1234
-        </span>
+        <span>{props.storeData.defaultPin}</span>
       </div>
     </div>
-
   </SetupCover>
 );
 

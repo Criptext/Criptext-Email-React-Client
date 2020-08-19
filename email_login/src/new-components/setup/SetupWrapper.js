@@ -12,14 +12,6 @@ export const STEP = {
   BACKUP: 'backup'
 };
 
-const stepsFirstAccount = [
-  STEP.PROFILE,
-  STEP.THEME,
-  STEP.RECOVERY,
-  STEP.BACKUP
-];
-const stepsAlreadyAccount = [STEP.PROFILE, STEP.RECOVERY, STEP.BACKUP];
-
 class PanelWrapper extends Component {
   constructor(props) {
     super(props);
@@ -47,12 +39,15 @@ class PanelWrapper extends Component {
       default:
         return <div>Not Implemented</div>;
     }
-    return <Component
-      {...this.props}
-      onGoTo={this.handleGoTo}
-      totalSteps={4}
-      step={1}
-    />
+    return (
+      <Component
+        {...this.props}
+        onGoTo={this.handleGoTo}
+        onGoBack={this.handleGoBack}
+        totalSteps={4}
+        step={this.state.queue.length + 1}
+      />
+    );
   }
 
   handleGoTo = step => {
@@ -66,6 +61,7 @@ class PanelWrapper extends Component {
 
   handleGoBack = () => {
     const queue = [...this.state.queue];
+    if (queue.length <= 0) return;
     const step = queue.pop();
     this.setState({
       queue,

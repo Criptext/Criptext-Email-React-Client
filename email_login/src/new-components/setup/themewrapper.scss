@@ -1,5 +1,10 @@
+@import '../../styles/index.scss';
 
 .setup-theme {
+
+  * {
+    transition: all 0.5s ease;
+  }
 
   .theme-tip {
     height: 40px;
@@ -36,5 +41,32 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    cursor: pointer;
   }
 }
+
+@mixin themable($_THEME, $_SECTION_TITLE_COLOR, $_SECTION_SUBTITLE_COLOR, $_SLIDER_CONTAINER_BACKGROUND_COLOR, $_SLIDER_CONTAINER_COLOR, $_SLIDER_BACKGROUND_COLOR, $_SLIDER_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .setup-theme {
+      .theme-tip {
+        color: $_SECTION_SUBTITLE_COLOR;
+      }
+    
+      .theme-selector {
+        background-color: $_SLIDER_CONTAINER_BACKGROUND_COLOR;
+        color: $_SLIDER_CONTAINER_COLOR;
+      }
+    
+      .theme-slider {
+        box-shadow: 0 5px 12px 0 rgba(150, 150, 150, 0.2);
+        background-color: $_SLIDER_BACKGROUND_COLOR;
+        color: $_SLIDER_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_SECTION_TITLE_COLOR_LIGHT, $_SECTION_SUBTITLE_COLOR_LIGHT, $_SLIDER_CONTAINER_BACKGROUND_COLOR_LIGHT, $_SLIDER_CONTAINER_COLOR_LIGHT, $_SLIDER_BACKGROUND_COLOR_LIGHT, $_SLIDER_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_SECTION_TITLE_COLOR_DARK, $_SECTION_SUBTITLE_COLOR_DARK, $_SLIDER_CONTAINER_BACKGROUND_COLOR_DARK, $_SLIDER_CONTAINER_COLOR_DARK, $_SLIDER_BACKGROUND_COLOR_DARK, $_SLIDER_COLOR_DARK);

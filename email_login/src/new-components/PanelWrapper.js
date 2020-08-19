@@ -18,7 +18,7 @@ class PanelWrapper extends Component {
     super(props);
     this.state = {
       queue: [],
-      mode: MODE.PIN,
+      mode: MODE.LAUNCH,
       storeData: {}
     };
   }
@@ -26,10 +26,12 @@ class PanelWrapper extends Component {
   render() {
     switch (this.state.mode) {
       case MODE.PIN:
-        return <PinWrapper
-          onParentGoBack={this.handleGoBack}
-          onGoTo={this.handleGoTo}
-        />;
+        return (
+          <PinWrapper
+            onParentGoBack={this.handleGoBack}
+            onGoTo={this.handleGoTo}
+          />
+        );
       case MODE.SIGNUP:
         return (
           <SignUpWrapper
@@ -53,7 +55,6 @@ class PanelWrapper extends Component {
   handleGoTo = (mode, storeData = {}) => {
     const queue = [...this.state.queue];
     queue.push(this.state.mode);
-    console.log('Receiving : ', storeData);
     this.setState({
       queue,
       mode,
@@ -61,8 +62,6 @@ class PanelWrapper extends Component {
         ...this.state.storeData,
         ...storeData
       }
-    }, () => {
-      console.log(this.state)
     });
   };
 

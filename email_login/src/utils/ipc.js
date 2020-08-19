@@ -52,6 +52,9 @@ export const swapMailboxAccount = params => {
   ipc.callMain('swap-account', params);
 };
 
+export const storeRecoveryKey = params =>
+  ipc.callMain('store-recovery-key', params);
+
 /*  Database
 ----------------------------- */
 export const cleanDatabase = async username => {

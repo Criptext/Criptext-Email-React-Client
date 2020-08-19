@@ -14,18 +14,24 @@ const SetupCover = ({
   bottomButton,
   onClickTopButton,
   onClickBotButton,
-  topButtonDisabled
+  onGoBack,
+  topButtonDisabled,
+  theme = 'theme-light',
+  className
 }) => (
-  <div className="setup-wrapper">
-    {totalSteps && (<div className="steps-guide">
-      {string.formatString(
-        string.setup.step,
-        step,
-        totalSteps
-      )}
-    </div>)}
+  <div className={`setup-wrapper ${theme}`}>
+    {onGoBack && (
+      <div className="back-button" onClick={onGoBack}>
+        <i className="icon-back" />
+      </div>
+    )}
+    {totalSteps && (
+      <div className="steps-guide">
+        {string.formatString(string.setup.step, step, totalSteps)}
+      </div>
+    )}
     <div className="setup-title">{title}</div>
-    <div className="step-container">{children}</div>
+    <div className={`step-container ${className || ''}`}>{children}</div>
     <div>
       <Button
         style={STYLE.CRIPTEXT}

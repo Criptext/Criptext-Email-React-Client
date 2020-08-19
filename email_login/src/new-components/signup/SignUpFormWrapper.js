@@ -191,7 +191,7 @@ class SignUpFormWrapper extends Component {
         key = 'username';
         newInputState = { ...this.state.username };
         isValid = validateUsername(newValue);
-        newInputState.error = isValid ? null : form.username.error;
+        newInputState.error = isValid ? null : form.username.errors.format;
         if (isValid) {
           isValid = false;
           this.checkUsername(newValue);
@@ -243,12 +243,23 @@ class SignUpFormWrapper extends Component {
           this.shouldEnableButton
         );
         break;
+      case 400:
+        this.setState(
+          {
+            username: {
+              ...this.state.username,
+              error: form.username.errors.unavailable
+            }
+          },
+          this.shouldEnableButton
+        );
+        break;
       default:
         this.setState(
           {
             username: {
               ...this.state.username,
-              error: 'Error Request'
+              error: string.formatString(form.username.errors.default, status)
             }
           },
           this.shouldEnableButton

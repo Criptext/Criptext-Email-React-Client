@@ -12,7 +12,12 @@ import {
   getContactByEmails,
   createContact
 } from '../utils/ipc';
+import string from '../lang';
+
 import { myAccount } from '../utils/electronInterface';
+
+const { errors, recovery } = string.newSignUp.create;
+const recoveryErrors = recovery.errors;
 
 export const createAccount = async ({
   recipientId,
@@ -66,13 +71,13 @@ const createAccountAndGetKeyBundle = async ({
     });
   });
   if (!accountRes || accountRes.status !== 200) {
-    throw new Error('Cant create account');
+    throw new Error(errors.createAccount);
   }
   const keybundleRes = await aliceRequestWrapper(() => {
     return generateKeyBundle({ recipientId });
   });
   if (!keybundleRes || keybundleRes.status !== 200) {
-    throw new Error('Cant create keybundle');
+    throw new Error(errors.createKeys);
   }
   const jsonRes = await keybundleRes.json();
   const pcName = await getComputerName();
@@ -103,7 +108,6 @@ const postKeyBundle = async ({
   recoveryEmail,
   keybundle
 }) => {
-  console.log(recipientId, password, name, recoveryEmail, keybundle);
   const res = await postUser({
     recipientId,
     password,
@@ -112,34 +116,34 @@ const postKeyBundle = async ({
     keybundle
   });
   if (!res) {
-    throw new Error('Empty Response');
+    throw new Error(errors.contactServer);
   }
 
   const { status, body, headers } = res;
   switch (status) {
     case 400:
-      throw new Error('Already Exists');
+      throw new Error(errors.alreadyExists);
     case 405: {
       const { error } = body;
       switch (error) {
         case 1:
-          throw new Error('Not Confirmed');
+          throw new Error(recoveryErrors.notConfirmed);
         case 2:
-          throw new Error('Max Reached');
+          throw new Error(recoveryErrors.maxUses);
         case 3:
-          throw new Error('Temporal Email');
+          throw new Error(recoveryErrors.blacklisted);
         default:
-          throw new Error(`Recovery Failure ${error}`);
+          throw new Error(string.formatString(recoveryErrors.default, error));
       }
     }
     case 429: {
       const seconds = headers['retry-after'];
-      throw new Error(`RETRY AFTER ${seconds}`);
+      throw new Error(string.formatString(errors.toManyRequests, seconds));
     }
     case 200:
       break;
     default:
-      throw new Error(`UKNOWN ERROR ${status}`);
+      throw new Error(string.formatString(errors.unknown, status));
   }
   return body;
 };
@@ -170,7 +174,7 @@ const prepareAccount = async ({
 
   myAccount.initialize(loggedAccounts);
   if (!myAccount.id) {
-    throw new Error('Cant update locally');
+    throw new Error(errors.unableUpdate);
   }
 
   await createOwnContact(name, myAccount.email, myAccount.id);
@@ -188,6 +192,6 @@ const createOwnContact = async (name, email) => {
   try {
     await createContact({ contacts: [{ name, email }] });
   } catch (createContactDbError) {
-    throw new Error('Cant store myself');
+    console.log(createContactDbError);
   }
 };

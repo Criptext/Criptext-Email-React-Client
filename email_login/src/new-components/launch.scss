@@ -39,3 +39,28 @@
     margin-top: 15px;
   }
 }
+
+/* THEME
+----------------------------- */
+
+@mixin themable($_THEME, $_LAUNCH_TITLE, $_LAUNCH_SUBTITLE, $_FOOTER_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .launch-container {
+      .title {
+        background-image: url(../#{$_PATH_TO_IMAGES}/#{$_LAUNCH_TITLE});
+      }
+    
+      .subtitle {
+        background-image: url(../#{$_PATH_TO_IMAGES}/#{$_LAUNCH_SUBTITLE});
+      }
+    
+      .version-container {
+        color: $_FOOTER_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_LAUNCH_TITLE_LIGHT, $_LAUNCH_SUBTITLE_LIGHT, $_FOOTER_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_LAUNCH_TITLE_DARK, $_LAUNCH_SUBTITLE_DARK, $_FOOTER_COLOR_DARK);

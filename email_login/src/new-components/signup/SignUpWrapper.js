@@ -71,8 +71,7 @@ class SignUpWrapper extends Component {
   };
 
   handleNext = () => {
-    console.log('DATA: ', this.state.signupData);
-    this.props.onGoTo('setup', {
+    this.props.onGoTo('pin', {
       ...this.state.signupData
     });
   };

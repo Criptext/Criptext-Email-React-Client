@@ -1,6 +1,22 @@
+@import '../../styles/index.scss';
 
 .setup-wrapper {
-  margin: 134px 42px 50px 42px;
+  padding: 134px 42px 50px 42px;
+  transition: all 0.5s ease;
+  
+  * {
+    transition: all 0.5s ease;
+  }
+
+  .back-button {
+    position: fixed;
+    top: 56px;
+    left: 31px;
+    font-size: 24px;
+    height: 26px;
+    color: #0091ff;
+    cursor: pointer;
+  }
 
   .steps-guide {
     color: #939393;
@@ -22,3 +38,21 @@
     overflow: auto;
   }  
 }
+
+@mixin themable($_THEME, $_SECTION_TITLE_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .setup-wrapper {  
+      .steps-guide {
+        color: #939393;
+      }
+    
+      .setup-title {
+        color: $_SECTION_TITLE_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_SECTION_TITLE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_SECTION_TITLE_COLOR_DARK);

@@ -1,9 +1,26 @@
 @import './app.scss';
+@import './styles/index.scss';
+
 html {
   font-size: 12px;
 }
 
 .main-container {
   height: 100%;
-  background: white;
+  transition: background-color 0.5s ease;
 }
+
+/* THEME
+----------------------------- */
+
+@mixin themable($_THEME, $_BACKGROUND_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    &.main-container{
+      background-color: $_BACKGROUND_COLOR;
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_DARK);

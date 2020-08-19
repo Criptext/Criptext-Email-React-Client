@@ -24,8 +24,9 @@ class AvatarProfileWrapper extends Component {
         {...this.props}
         title={avatar.title}
         topButton={avatar.button}
-        bottomButton={string.setup.skip}
+        //bottomButton={string.setup.skip}
         onClickTopButton={this.handleNext}
+        onGoBack={undefined}
       >
         <div className="setup-profile">
           <div>

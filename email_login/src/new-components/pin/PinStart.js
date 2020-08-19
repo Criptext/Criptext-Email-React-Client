@@ -10,12 +10,12 @@ const PinStart = props => (
   <SetupCover
     topButton={start.button}
     title={start.title}
-    onClickTopButton={ () => { props.onGoTo('pin') } }
+    onClickTopButton={() => {
+      props.onGoTo('pin');
+    }}
   >
     <div className="pin-start-subtitle">
-      <span>
-        {start.subtitle}
-      </span>
+      <span>{start.subtitle}</span>
     </div>
   </SetupCover>
 );

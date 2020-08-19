@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SetupCover from './SetupCover';
 import './backupwrapper.scss';
-import { getDefaultBackupFolder, createDefaultBackupFolder, updateAccount, swapMailboxAccount, closeLoginWindow } from '../../utils/ipc';
+import {
+  getDefaultBackupFolder,
+  createDefaultBackupFolder,
+  updateAccount,
+  swapMailboxAccount,
+  closeLoginWindow
+} from '../../utils/ipc';
 import { getAutoBackupDates } from '../../utils/TimeUtils';
 import string from '../../lang';
 
@@ -24,11 +30,10 @@ class BackupWrapper extends Component {
         topButton={backup.button}
         bottomButton={string.setup.skip}
         onClickTopButton={this.handleActivateBackup}
+        onClickBotButton={this.handleSkip}
       >
         <div className="setup-backup">
-          <div>
-            {backup.message}
-          </div>
+          <div>{backup.message}</div>
         </div>
       </SetupCover>
     );
@@ -50,12 +55,20 @@ class BackupWrapper extends Component {
       autoBackupPath: backupPath
     });
 
-    swapMailboxAccount({ 
+    swapMailboxAccount({
       accountId: this.props.account.id,
-      recipientId: this.props.account.username  
+      recipientId: this.props.account.username
     });
     closeLoginWindow();
-  }
+  };
+
+  handleSkip = () => {
+    swapMailboxAccount({
+      accountId: this.props.account.id,
+      recipientId: this.props.account.username
+    });
+    closeLoginWindow();
+  };
 }
 
 BackupWrapper.propTypes = {

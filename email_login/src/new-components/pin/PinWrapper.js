@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import PinStart from './PinStart';
 import PinDisplay from './PinDisplay';
 import PinSetWrapper from './PinSetWrapper';
+import SaveKeyWrapper from './SaveKeyWrapper';
+import PinDoneWrapper from './PinDoneWrapper';
 
 export const STEP = {
   START: 'start',
@@ -17,7 +19,12 @@ class PinWrapper extends Component {
     super(props);
     this.state = {
       queue: [],
-      step: STEP.SET
+      states: [],
+      step: STEP.START,
+      previousState: null,
+      storeData: {
+        defaultPin: `${Math.round(Math.random() * 9000) + 1000}`
+      }
     };
   }
 
@@ -33,29 +40,60 @@ class PinWrapper extends Component {
       case STEP.SET:
         Component = PinSetWrapper;
         break;
+      case STEP.SAVE:
+        Component = SaveKeyWrapper;
+        break;
+      case STEP.DONE:
+        Component = PinDoneWrapper;
+        break;
       default:
         return <div>Not Implemented</div>;
     }
-    return <Component
-      {...this.props}
-      onGoTo={this.handleGoTo}
-    />
+    return (
+      <Component
+        {...this.props}
+        onGoTo={this.handleGoTo}
+        onGoBack={this.handleGoBack}
+        previousState={this.state.previousState}
+        storeData={this.state.storeData}
+        onNext={this.handleNext}
+      />
+    );
   }
 
-  handleGoTo = step => {
+  handleNext = () => {
+    this.props.onGoTo('setup');
+  };
+
+  handleGoTo = (step, storeData = {}, state) => {
     const queue = [...this.state.queue];
     queue.push(this.state.step);
+    const states = [...this.state.states];
+    states.push(state);
     this.setState({
       queue,
-      step
+      states,
+      step,
+      storeData: {
+        ...this.state.storeData,
+        ...storeData
+      }
     });
   };
 
   handleGoBack = () => {
     const queue = [...this.state.queue];
+    if (queue.length <= 0) {
+      return;
+    }
+
     const step = queue.pop();
+    const states = [...this.state.states];
+    const previousState = states.pop();
     this.setState({
       queue,
+      states,
+      previousState,
       step
     });
   };

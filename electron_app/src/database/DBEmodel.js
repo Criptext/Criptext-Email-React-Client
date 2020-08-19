@@ -670,7 +670,8 @@ const resetKeyDatabase = async key => {
   if (!sequelize) {
     await setConfiguration(DEFAULT_PIN);
   }
-  return await sequelize.query(`PRAGMA rekey = "${key}";`);
+  await sequelize.query(`PRAGMA rekey = "${key}";`);
+  await setConfiguration(key);
 };
 
 const rawCheckPin = async pin => {

@@ -1,5 +1,17 @@
+@import '../../styles/index.scss';
+
 .pin-set-container {
   height: 100%;
+
+  .back-button {
+    position: fixed;
+    top: 56px;
+    left: 31px;
+    font-size: 24px;
+    height: 26px;
+    color: #0091ff;
+    cursor: pointer;
+  }
 
   .pin-set-title {
     margin-top: 166px;
@@ -9,4 +21,98 @@
     text-align: center;
     margin-bottom: 15px;
   }
+
+  .pin-set-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  h4 {
+    margin-bottom: 7px;
+    font-weight: normal;
+  }
+
+  .confirm-pin {
+    margin-top: 33px;
+  }
+
+  .pin-code{
+    position: relative;
+  
+    &.styles_react-code-input-container__tpiKG{
+      width: 180px !important;
+      
+      .styles_react-code-input__CRulA{
+        input{
+          border: none;
+          border-radius: 0;
+          font-family: 'NunitoSans';
+          font-size: 16px;
+          border-bottom: 2px solid #0091ff;
+          margin-right: 20px;
+          padding-bottom: 6px;
+
+          &:last-child{
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  
+    &.pin-code-status-error{
+      .styles_react-code-input-container__tpiKG{
+        .styles_react-code-input__CRulA{
+          input{
+            border-bottom: 3px solid #bf2626;
+          }
+        }
+      }
+  
+      .error{
+        bottom: -20px;
+        color: #bf2626;
+        left: 0;
+        font-size: 11px;
+        text-align: left;
+        position: absolute;
+      }
+    }
+  }
+
+  .button-container {
+    margin-top: 72px;
+    display: flex;
+    justify-content: center;
+  }
 }
+
+@mixin themable($_THEME, $_TEXT_OPAQUE_COLOR, $_TEXT_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .pin-set-container {    
+      .pin-set-title {
+        color: $_TEXT_COLOR;
+      }
+    
+      h4 {
+        color: $_TEXT_COLOR;
+      }
+
+      .pin-code{
+        &.styles_react-code-input-container__tpiKG{          
+          .styles_react-code-input__CRulA{
+            input{
+              color: $_TEXT_OPAQUE_COLOR
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT, $_TEXT_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_OPAQUE_COLOR_DARK, $_TEXT_COLOR_DARK);

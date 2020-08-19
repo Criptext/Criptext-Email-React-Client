@@ -1,3 +1,5 @@
+@import '../../styles/index.scss';
+
 .signup-create-account-wrapper {
   margin: 64px 42px 50px 42px;
 
@@ -68,3 +70,52 @@
     }
   }
 }
+
+@mixin themable($_THEME, $_SECTION_TITLE_COLOR, $_SECTION_SUBTITLE_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+
+    .signup-create-account-wrapper {
+      .header-container {
+        h2 {
+          color: $_SECTION_TITLE_COLOR;
+        }
+    
+        .subtitle {
+          color: $_SECTION_SUBTITLE_COLOR;
+        }
+      }
+    
+      .form-container{
+        i {
+          color: #9aa1ab;
+        }
+
+        span {
+          color: $_SECTION_TITLE_COLOR;
+        }
+
+        label {
+          color: #8a8a8a;
+
+          &.Mui-focused {
+            color: #0091ff;
+          }
+        }
+    
+        input {
+          color: $_SECTION_TITLE_COLOR;
+        }
+      }
+    
+      .checkbox-container {    
+        .checkmark-label {
+          color: $_SECTION_SUBTITLE_COLOR;
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_SECTION_TITLE_COLOR_LIGHT, $_SECTION_SUBTITLE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_SECTION_TITLE_COLOR_DARK, $_SECTION_SUBTITLE_COLOR_DARK);

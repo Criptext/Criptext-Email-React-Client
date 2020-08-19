@@ -1,0 +1,132 @@
+@import '../../styles/index.scss';
+
+.pin-save-key {
+
+  .pin-save-subtitle {
+    font-size: 15px;
+    margin-top: 12px;
+    color: #505050;
+    font-weight: 300;
+  }
+
+  .pin-saved-key{
+    margin: 39px 0px 17px 0px;
+
+    h2{
+      text-align: left;
+      margin-bottom: 8px;
+      width: 153px;
+      height: 18px;
+      font-size: 13px;
+      font-weight: normal;
+      color: #8a8a8a;
+    }
+    
+    a {
+      text-decoration-color: #0091ff;
+    }
+
+    .pin-saved-key-block{
+      align-items: center;
+      border: 1px solid #e5e2e2;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: row;
+
+      .icon{
+        background-image: url(../../#{$_PATH_TO_IMAGES}/key-light.svg);
+        background-size: contain;
+        height: 18px;
+        margin-left: 5px;
+        width: 25px;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      input{
+        border: none;
+        font-size: 12px;
+        flex-grow: 1;
+        margin-left: 3px;
+        color: #4a4848;
+
+        &:focus{
+          outline: 0;
+        }
+      }
+
+      button{
+        border-radius: 4px;
+        height: 25px;
+        margin: 3px;
+        padding: 4px;
+        width: 45px;
+        background: #0091ff;
+        color: white;
+
+        &.button-a{
+          align-items: center;
+          display: flex;
+
+          i{
+            display: none;
+          }
+        }
+
+        span{
+          font-size: 11px;
+          top: 0;
+        }
+      }
+    }
+
+    >span{
+      margin-top: 5px;
+      display: block;
+      font-size: 12px;
+      text-align: left;
+
+      b{
+        color: #0091ff;
+      }
+    }
+  }
+}
+
+@mixin themable($_THEME, $_TEXT_OPAQUE_COLOR, $_TEXT_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .pin-save-key {
+      .pin-save-subtitle {
+        color: $_TEXT_OPAQUE_COLOR;
+      }
+      
+      .pin-saved-key{
+        margin: 39px 0px 17px 0px;
+
+        h2{
+          color: #8a8a8a;
+        }
+        
+        a {
+          text-decoration-color: #0091ff;
+        }
+
+        .pin-saved-key-block{
+          border: 1px solid #e5e2e2;
+
+          input{
+            color: $_TEXT_OPAQUE_COLOR;
+          }
+        }
+
+        >span{
+          color: $_TEXT_COLOR;
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT, $_TEXT_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_OPAQUE_COLOR_DARK, $_TEXT_COLOR_DARK);

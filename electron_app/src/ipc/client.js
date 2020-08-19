@@ -36,7 +36,7 @@ ipc.answerRenderer('client-check-available-username', params =>
   clientManager.checkAvailableUsername(params)
 );
 
-ipc.answerRenderer('client-check-recovery-email', params => 
+ipc.answerRenderer('client-check-recovery-email', params =>
   clientManager.checkAvailableRecoveryEmail(params)
 );
 
@@ -283,9 +283,9 @@ ipc.answerRenderer('client-update-push-token', pushToken => {
 });
 
 ipc.answerRenderer('client-upload-avatar', params => {
-  const data = { 
-    ...params, 
-    recipientId: params.recipientId || myAccount.recipientId 
+  const data = {
+    ...params,
+    recipientId: params.recipientId || myAccount.recipientId
   };
   return clientManager.uploadAvatar(data);
 });

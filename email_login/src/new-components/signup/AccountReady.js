@@ -20,7 +20,11 @@ const AccountReady = props => (
       <div>{props.name}</div>
       <div>{props.email}</div>
     </div>
-    <Button text={ready.button} style={STYLE.CRIPTEXT} onClick={props.onNextHandle} />
+    <Button
+      text={ready.button}
+      style={STYLE.CRIPTEXT}
+      onClick={props.onNextHandle}
+    />
   </div>
 );
 

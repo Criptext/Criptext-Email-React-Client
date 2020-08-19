@@ -251,7 +251,7 @@ const checkAvailableUsername = async username => {
   return await client.checkAvailableUsername(username);
 };
 
-const checkAvailableRecoveryEmail = async ({email, username}) => {
+const checkAvailableRecoveryEmail = async ({ email, username }) => {
   const client = await createClient({
     recipientId: username,
     optionalToken: '@'

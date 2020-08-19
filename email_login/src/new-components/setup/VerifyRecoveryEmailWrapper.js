@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SetupCover from './SetupCover';
+import NoRecoveryPopup from './NoRecoveryPopup';
+import PopupHOC from '../templates/PopupHOC';
+
 import './verifyrecoveryemailwrapper.scss';
 import { canSend, resendConfirmationEmail } from '../../utils/ipc';
 import string from '../../lang';
 
 const { recovery } = string.setup;
+const NoRecoveryPop = PopupHOC(NoRecoveryPopup);
 
 class VerifyRecoveryEmailWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       verified: false,
-      timer: 0
+      timer: 0,
+      showPopup: false
     };
     this.recoveryEmailChecker = undefined;
     this.resendTimer = undefined;
@@ -35,14 +40,25 @@ class VerifyRecoveryEmailWrapper extends Component {
             ? this.handleNext
             : this.handleResendConfirmationEmail
         }
+        onClickBotButton={this.handleNext}
         topButtonDisabled={!this.state.verified && this.state.timer > 0}
       >
+        {this.state.showPopup && (
+          <NoRecoveryPop
+            onClickSkip={() => {
+              this.props.onGoTo('backup');
+            }}
+            onClickCancel={this.handleDismissPopup}
+          />
+        )}
         <div className="setup-verify">
           <div className="verify-container">
             <span>Verification link sent to:</span>
-            <span className="verify-email">{this.props.account.recoveryEmail}</span>
+            <span className="verify-email">
+              {this.props.account.recoveryEmail}
+            </span>
             {this.state.verified && (
-              <span className="verify-status">(verified!)</span>
+              <span className="verify-status">{recovery.verified}</span>
             )}
           </div>
         </div>
@@ -94,7 +110,18 @@ class VerifyRecoveryEmailWrapper extends Component {
   };
 
   handleNext = () => {
-    this.props.onGoTo('backup');
+    if (this.state.verified) {
+      this.props.onGoTo('backup');
+    }
+    this.setState({
+      showPopup: true
+    });
+  };
+
+  handleDismissPopup = () => {
+    this.setState({
+      showPopup: false
+    });
   };
 }
 

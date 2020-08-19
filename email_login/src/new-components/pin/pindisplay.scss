@@ -1,3 +1,5 @@
+@import '../../styles/index.scss';
+
 .pin-display {
 
   display: flex;
@@ -7,7 +9,6 @@
   .pin-display-subtitle {
     font-size: 15px;
     margin-top: 12px;
-    color: #505050;
     font-weight: 300;
   }
 
@@ -21,3 +22,22 @@
     align-items: center;
   }
 }
+
+@mixin themable($_THEME, $_TEXT_OPAQUE_COLOR, $_TEXT_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .pin-display {
+    
+      .pin-display-subtitle {
+        color: $_TEXT_OPAQUE_COLOR;
+      }
+    
+      .pin-display-pin {
+        color: $_TEXT_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT, $_TEXT_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_OPAQUE_COLOR_DARK, $_TEXT_COLOR_DARK);

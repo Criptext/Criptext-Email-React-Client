@@ -21,13 +21,25 @@ class ThemeWrapper extends Component {
         title={theme.title}
         topButton={theme.button}
         onClickTopButton={this.handleNext}
+        theme={this.state.theme ? 'theme-dark' : 'theme-light'}
       >
-        <div className="setup-theme">
-          <div className="theme-tip">
-            {theme.tip}
-          </div>
+        <div
+          className={`setup-theme ${
+            this.state.theme ? 'theme-dark' : 'theme-light'
+          }`}
+        >
+          <div className="theme-tip">{theme.tip}</div>
           <div className="theme-selector">
-            <div className="theme-slider">{theme.light}</div>
+            <div
+              className="theme-slider"
+              style={{
+                right: this.state.theme ? '42px' : '156px'
+              }}
+              onClick={this.handleToggleTheme}
+            >
+              {this.state.theme ? theme.dark : theme.light}
+            </div>
+            <span>{theme.light}</span>
             <span>{theme.dark}</span>
           </div>
         </div>
@@ -37,6 +49,17 @@ class ThemeWrapper extends Component {
 
   handleNext = () => {
     this.props.onGoTo('verify');
+  };
+
+  handleToggleTheme = () => {
+    this.setState(
+      {
+        theme: !this.state.theme
+      },
+      () => {
+        window.swapTheme(this.state.theme ? 'dark' : 'light');
+      }
+    );
   };
 }
 

@@ -4,7 +4,8 @@ import PanelWrapper from './new-components/PanelWrapper';
 import './electronapp.scss';
 import {
   getLoginInformation,
-  setLoginInformation
+  setLoginInformation,
+  mySettings
 } from './utils/electronInterface';
 
 const mode = {
@@ -21,12 +22,13 @@ class ElectronApp extends Component {
     super();
     this.state = {
       mode: mode.SIGNIN,
-      signupError: undefined
+      signupError: undefined,
+      theme: mySettings.theme || 'light'
     };
   }
   render() {
     return (
-      <div className="main-container">
+      <div className="main-container" data-theme={this.state.theme}>
         <TitleBar />
         <PanelWrapper
           signupError={this.state.signupError}
@@ -50,6 +52,16 @@ class ElectronApp extends Component {
       );
     }
   }
+
+  componentDidMount() {
+    window.swapTheme = this.swapTheme;
+  }
+
+  swapTheme = theme => {
+    this.setState({
+      theme
+    });
+  };
 }
 
 export default ElectronApp;
