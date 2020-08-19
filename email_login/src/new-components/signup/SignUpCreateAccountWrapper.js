@@ -8,6 +8,7 @@ import Button, { STYLE } from '../templates/Button';
 import { validateEmail } from '../../validators/validators';
 import { checkAvailableRecoveryEmail } from '../../utils/ipc';
 import { createAccount } from '../../signal/signup';
+import { getPin } from '../../utils/electronInterface';
 import string, { getLang } from '../../lang';
 import PropTypes from 'prop-types';
 
@@ -30,11 +31,7 @@ class SignUpCreateAccountWrapper extends Component {
       promiseCall: false,
       enableButton: false,
       createAccount: false,
-      error: {
-        message: create.errors.unknown,
-        title: create.errors.title,
-        button: create.errors.button
-      }
+      error: undefined
     };
   }
 
@@ -125,7 +122,8 @@ class SignUpCreateAccountWrapper extends Component {
         name: fullname,
         recoveryEmail: this.state.recoveryEmail.value
       });
-      this.props.onGoTo('ready', {
+      const nextSection = getPin() ? 'ready' : 'created';
+      this.props.onGoTo(nextSection, {
         recoveryEmail: this.state.recoveryEmail.value,
         id: newAccount.accountId
       });

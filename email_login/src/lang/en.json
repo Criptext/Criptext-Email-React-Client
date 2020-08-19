@@ -240,6 +240,11 @@
         "unknown": "Uknown Server Error ({0})"
       }
     },
+    "created": {
+      "title": "Account created successfuly!",
+      "button": "Next",
+      "description": "Now, let's make sure your inbox remains private 🕵️‍♂️" 
+    },
     "ready": {
       "title": {
         "firstLine": "Account ready: now...",

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import SetupCover from './SetupCover';
 import string from '../../lang';
 import './themewrapper.scss';
+import { mySettings } from '../../utils/electronInterface';
+import { updateSettings } from '../../utils/ipc';
 
 const { theme } = string.setup;
 
@@ -10,7 +12,7 @@ class ThemeWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      theme: false
+      theme: mySettings ? mySettings.theme === 'dark' : false
     };
   }
 
@@ -57,7 +59,9 @@ class ThemeWrapper extends Component {
         theme: !this.state.theme
       },
       () => {
-        window.swapTheme(this.state.theme ? 'dark' : 'light');
+        const newTheme = this.state.theme ? 'dark' : 'light';
+        window.swapTheme(newTheme);
+        updateSettings({ theme: newTheme });
       }
     );
   };

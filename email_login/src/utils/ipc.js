@@ -77,6 +77,10 @@ export const updateAccount = async params => {
   return await ipc.callMain('db-update-account', params);
 };
 
+export const updateSettings = async params => {
+  return await ipc.callMain('db-update-settings', params);
+};
+
 /*  Criptext Client
 ----------------------------- */
 export const canLogin = async params => {

@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SignUpFormWrapper from './SignUpFormWrapper';
 import AccountReady from './AccountReady';
+import AccountCreated from './AccountCreated';
 import SignUpCreateAccountWrapper from './SignUpCreateAccountWrapper';
 
 export const MODE = {
   FORM: 'form',
   CREATE: 'create',
+  CREATED: 'created',
   READY: 'ready'
 };
 
@@ -42,6 +44,13 @@ class SignUpWrapper extends Component {
             previousState={this.state.previousState}
           />
         );
+      case MODE.CREATED:
+        return (
+          <AccountCreated
+            onNextHandle={this.handleNext}
+            previousState={this.state.previousState}
+          />
+        );
       default:
         return (
           <SignUpFormWrapper
@@ -70,8 +79,8 @@ class SignUpWrapper extends Component {
     });
   };
 
-  handleNext = () => {
-    this.props.onGoTo('pin', {
+  handleNext = section => {
+    this.props.onGoTo(section, {
       ...this.state.signupData
     });
   };

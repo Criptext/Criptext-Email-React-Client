@@ -23,7 +23,9 @@ const AccountReady = props => (
     <Button
       text={ready.button}
       style={STYLE.CRIPTEXT}
-      onClick={props.onNextHandle}
+      onClick={() => {
+        props.onNextHandle('setup');
+      }}
     />
   </div>
 );
