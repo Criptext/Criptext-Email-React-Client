@@ -38,6 +38,7 @@ import { defineContacts } from './../utils/ContactUtils';
 import { defineFiles } from './../utils/FileUtils';
 import { modifyContactIsTrusted } from './contacts';
 
+const PEER_BACTH = 25;
 const eventlessEmailStatuses = [EmailStatus.FAIL, EmailStatus.SENDING];
 
 export const addEmails = emails => {
@@ -106,31 +107,30 @@ export const removeEmails = (labelId, emailsParams) => {
       }, []);
 
       const dbResponse = await deleteEmailByKeys({ keys });
-      if (dbResponse) {
-        if (metadataKeys.length) {
-          const eventParams = {
-            cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
-            params: { metadataKeys }
-          };
-          const { status } = await postPeerEvent({ data: eventParams });
+      if (!dbResponse) return;
 
-          if (status === 200) {
-            if (keys.length === 1) {
-              const [email] = emailsParams;
-              dispatch(
-                updateEmailIdsThread({
-                  labelId,
-                  threadId: email.threadId,
-                  emailIdToAdd: null,
-                  emailIdsToRemove: [email.id]
-                })
-              );
-            }
-
-            dispatch(removeEmailsOnSuccess(allEmailIds));
-          }
-        }
+      let keysForEvent = metadataKeys.splice(0, PEER_BACTH);
+      while (keysForEvent.length > 0) {
+        const eventParams = {
+          cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
+          params: { keysForEvent }
+        };
+        await postPeerEvent({ data: eventParams });
+        keysForEvent = metadataKeys.splice(0, PEER_BACTH);
       }
+
+      if (keys.length === 1) {
+        const [email] = emailsParams;
+        dispatch(
+          updateEmailIdsThread({
+            labelId,
+            threadId: email.threadId,
+            emailIdToAdd: null,
+            emailIdsToRemove: [email.id]
+          })
+        );
+      }
+      dispatch(removeEmailsOnSuccess(allEmailIds));
     } catch (e) {
       sendRemoveThreadsErrorMessage();
     }
