@@ -82,6 +82,16 @@ class EmailWrapper extends Component {
   }
 
   async componentDidMount() {
+    await this.handleInlineImages();
+    this.setCollapseListener('add');
+    const steps = [
+      USER_GUIDE_STEPS.SECURE_MESSAGE,
+      USER_GUIDE_STEPS.EMAIL_READ
+    ];
+    checkUserGuideSteps(steps);
+  }
+
+  handleInlineImages = async () => {
     const newState = {};
     const {
       inlineImages,
@@ -118,24 +128,20 @@ class EmailWrapper extends Component {
     if (email.unread) newState['displayEmail'] = true;
     if (inlineImages && inlineImages.length > 0)
       newState['inlineImages'] = inlineImages;
-    if (Object.keys(newState).length) {
-      this.setState(newState, () => {
-        if (this.state.inlineImages.length) {
-          this.handleDownloadInlineImages(this.state.inlineImages);
-        }
-      });
-    }
-    this.setCollapseListener('add');
-    const steps = [
-      USER_GUIDE_STEPS.SECURE_MESSAGE,
-      USER_GUIDE_STEPS.EMAIL_READ
-    ];
-    checkUserGuideSteps(steps);
-  }
+
+    this.setState(newState, () => {
+      if (this.state.inlineImages.length) {
+        this.handleDownloadInlineImages(this.state.inlineImages);
+      }
+    });
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.email.content !== this.props.email.content) {
       this.setCollapseListener('add');
+      if (this.props.email.id === prevProps.email.id) {
+        this.handleInlineImages();
+      }
     }
   }
 
@@ -164,6 +170,7 @@ class EmailWrapper extends Component {
       };
 
       if (typeAction === 'add') {
+        divCollapse.removeEventListener('click', clickHandler);
         divCollapse.addEventListener('click', clickHandler);
       } else if (typeAction === 'remove') {
         divCollapse.removeEventListener('click', clickHandler);

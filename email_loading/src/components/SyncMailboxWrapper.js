@@ -111,10 +111,15 @@ class SyncMailboxWrapper extends Component {
   };
 
   handleDenySyncDeviceRequest = async () => {
-    const { randomId } = remoteData;
-    await syncDeny(randomId);
-    closeCreatingKeysLoadingWindow();
-    sendEndLinkDevicesEvent();
+    try {
+      const { randomId } = remoteData;
+      await syncDeny(randomId);
+    } catch (ex) {
+      logErrorAndReport(ex.toString());
+    } finally {
+      sendEndLinkDevicesEvent();
+      closeCreatingKeysLoadingWindow();
+    }
   };
 
   initSyncMailbox = () => {
