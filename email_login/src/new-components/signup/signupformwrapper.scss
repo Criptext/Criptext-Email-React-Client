@@ -44,7 +44,7 @@
   }
 }
 
-@mixin themable($_THEME, $_SECTION_TITLE_COLOR, $_SECTION_SUBTITLE_COLOR){
+@mixin themable($_THEME, $_SECTION_TITLE_COLOR, $_SECTION_SUBTITLE_COLOR, $_INPUT_UNDERLINE_COLOR){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .signup-form-wrapper {
@@ -73,6 +73,14 @@
           &.Mui-focused {
             color: #0091ff;
           }
+
+          &.Mui-error {
+            color: #ff5555;
+          }
+        }
+
+        .MuiInput-underline:before {
+          border-color: $_INPUT_UNDERLINE_COLOR;
         }
     
         input {
@@ -83,5 +91,5 @@
   }
 }
 
-@include themable($_THEME_LIGHT, $_SECTION_TITLE_COLOR_LIGHT, $_SECTION_SUBTITLE_COLOR_LIGHT);
-@include themable($_THEME_DARK, $_SECTION_TITLE_COLOR_DARK, $_SECTION_SUBTITLE_COLOR_DARK);
+@include themable($_THEME_LIGHT, $_SECTION_TITLE_COLOR_LIGHT, $_SECTION_SUBTITLE_COLOR_LIGHT, $_INPUT_UNDERLINE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_SECTION_TITLE_COLOR_DARK, $_SECTION_SUBTITLE_COLOR_DARK, $_INPUT_UNDERLINE_COLOR_DARK);

@@ -59,7 +59,7 @@ class BackupWrapper extends Component {
       accountId: this.props.account.id,
       recipientId: this.props.account.username
     });
-    closeLoginWindow();
+    closeLoginWindow({ forceClose: true });
   };
 
   handleSkip = () => {
@@ -67,7 +67,7 @@ class BackupWrapper extends Component {
       accountId: this.props.account.id,
       recipientId: this.props.account.username
     });
-    closeLoginWindow();
+    closeLoginWindow({ forceClose: true });
   };
 }
 

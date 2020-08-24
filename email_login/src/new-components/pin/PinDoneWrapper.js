@@ -60,7 +60,6 @@ class PinSetWrapper extends Component {
         iv,
         encryptedPin
       });
-      console.log('HEY');
       await sendPin({
         pin: pin,
         shouldSave: this.state.savePin,
@@ -69,7 +68,6 @@ class PinSetWrapper extends Component {
         shouldResetPin: true,
         dontRestartApp: true
       });
-      console.log('HO');
       this.props.onNext();
     } catch (ex) {
       console.log(ex);

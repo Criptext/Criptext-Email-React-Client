@@ -299,7 +299,8 @@
     "display": {
       "title": "Use this PIN or create your own",
       "subtitle": "This PIN will be kept in your Keychain so you don't have to enter it each time you open Criptext. Simpler is better 😅",
-      "button": "Next"
+      "keep": "Keep this one",
+      "own": "Set my own PIN"
     },
     "set": {
       "title": "Create your own PIN",

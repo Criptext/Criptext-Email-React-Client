@@ -8,9 +8,13 @@ const { display } = string.pin;
 
 const PinDisplay = props => (
   <SetupCover
-    topButton={display.button}
+    topButton={display.keep}
+    bottomButton={display.own}
     title={display.title}
     onClickTopButton={() => {
+      props.onGoTo('save');
+    }}
+    onClickBotButton={() => {
       props.onGoTo('set');
     }}
     onGoBack={props.onGoBack}

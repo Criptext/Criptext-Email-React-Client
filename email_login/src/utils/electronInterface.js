@@ -6,7 +6,7 @@ const { remote, webFrame } = electron;
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
 );
-const { DEFAULT_PIN } = remote.require('./src/utils/const');
+export const { DEFAULT_PIN } = remote.require('./src/utils/const');
 
 export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');

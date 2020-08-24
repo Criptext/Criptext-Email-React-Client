@@ -6,9 +6,9 @@ import ErrorPopup from '../templates/ErrorPopup';
 import PopupHOC from '../templates/PopupHOC';
 import Button, { STYLE } from '../templates/Button';
 import { validateEmail } from '../../validators/validators';
-import { checkAvailableRecoveryEmail } from '../../utils/ipc';
+import { checkAvailableRecoveryEmail, sendPin } from '../../utils/ipc';
 import { createAccount } from '../../signal/signup';
-import { getPin } from '../../utils/electronInterface';
+import { getPin, DEFAULT_PIN, hasPin } from '../../utils/electronInterface';
 import string, { getLang } from '../../lang';
 import PropTypes from 'prop-types';
 
@@ -116,6 +116,14 @@ class SignUpCreateAccountWrapper extends Component {
   processCreateAccount = async () => {
     const { username, fullname, password } = this.props.signupData;
     try {
+      const hasPIN = hasPin();
+      if (!hasPIN)
+        await sendPin({
+          pin: DEFAULT_PIN,
+          shouldSave: false,
+          shouldExport: false,
+          shouldOnlySetPIN: true
+        });
       const newAccount = await createAccount({
         recipientId: username,
         password,
