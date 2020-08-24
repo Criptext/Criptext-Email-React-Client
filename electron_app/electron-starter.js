@@ -43,7 +43,7 @@ const oldVersionUrl = () => {
   }
 }
 
-process.on('uncaughtException', err => {
+process.on('uncaughtException', async err => {
   logger.error('Uncaught Error: ', err);
   await dialog.showMessageBox(null, {
     type: "Application Error",

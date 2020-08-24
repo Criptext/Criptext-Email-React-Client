@@ -119,10 +119,15 @@ class LinkOldDeviceWrapper extends Component {
   };
 
   handleDenyLinkDeviceRequest = async () => {
-    const { randomId } = remoteData.session;
-    await linkDeny(randomId);
-    closeCreatingKeysLoadingWindow();
-    sendEndLinkDevicesEvent();
+    try {
+      const { randomId } = remoteData.session;
+      await linkDeny(randomId);
+    } catch (ex) {
+      logErrorAndReport(ex.toString());
+    } finally {
+      sendEndLinkDevicesEvent();
+      closeCreatingKeysLoadingWindow();
+    }
   };
 
   initLinkOldDevice = () => {
