@@ -1,4 +1,4 @@
-const { app, dialog, ipcMain, shell } = require('electron');
+const { app, dialog, ipcMain, shell, globalShortcut } = require('electron');
 const socketClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
 const { dbManager, upStepCreateDBEncrypted, upStepCheckPIN, upStepNewUser } = require('./src/windows');
@@ -43,16 +43,22 @@ const oldVersionUrl = () => {
   }
 }
 
-process.on('uncaughtException', async err => {
+process.on('uncaughtException', err => {
   logger.error('Uncaught Error: ', err);
-  await dialog.showMessageBox(null, {
-    type: "Application Error",
-    buttons: ["Ok"],
+  const responseIndex = dialog.showMessageBoxSync(null, {
+    type: "error",
+    buttons: ["Exit", "Ignore"],
     title: 'An unexpected error occurred',
     message: `Error: ${err.toString()}`,
   })
-  closeAlice();
-  app.exit(0);
+  switch(responseIndex) {
+    case 0:
+      closeAlice();
+      app.exit(0);
+      break;
+    default:
+      break;
+  }
 })
 
 process.on('unhandledRejection', err => {
@@ -70,7 +76,7 @@ async function initApp() {
         message: 'Your database is outdated. Download and install the following version of the app in order to migrate your data.',
       })
       if (response === 1) {
-        shell.openExternalSync(oldVersionUrl());
+        await shell.openExternal(oldVersionUrl());
       }
       app.exit(0);
     }

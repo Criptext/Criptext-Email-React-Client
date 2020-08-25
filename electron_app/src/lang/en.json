@@ -78,6 +78,7 @@
         "window": "Window",
         "minimize": "Minimize",
         "close": "Close",
+        "openLogs": "Open Logs",
         "developer": "Developer",
         "toggleDeveloperTools": "Toggle Developer Tools",
         "aboutCriptext": "About Criptext",
