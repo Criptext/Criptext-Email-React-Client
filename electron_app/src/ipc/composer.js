@@ -26,3 +26,7 @@ ipc.answerRenderer('save-draft-changes', windowParams => {
   const { composerId, data } = windowParams;
   composerWindowManager.saveDraftChanges(composerId, data);
 });
+
+ipc.answerRenderer('auto-save-draft', composerId => {
+  composerWindowManager.autoSaveDraft(composerId);
+});
