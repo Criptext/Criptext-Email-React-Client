@@ -64,21 +64,39 @@ const PasswordChangedPopupInputErrorMessage = ({
   return shouldRenderMessage && <span>{errorMessage}</span>;
 };
 
-const PasswordChangedPopupButtons = props => (
-  <div className="popup-buttons">
-    <button
-      className="button-a popup-cancel-button"
-      onClick={props.onClickCancelPasswordChanged}
-    >
-      <span>{string.popups.change_password.cancelButtonLabel}</span>
-    </button>
-    <button
-      className="button-a popup-confirm-button"
-      onClick={props.onConfirmPasswordChanged}
-      disabled={props.isDisabledConfirmButton}
-    >
-      <span>{string.popups.change_password.confirmButtonLabel}</span>
-    </button>
+const PasswordChangedPopupButtons = props => {
+  if (props.isLoading) {
+    return (
+      <div className="popup-buttons">
+        <LoadingWheel />
+      </div>
+    );
+  }
+  return (
+    <div className="popup-buttons">
+      <button
+        className="button-a popup-cancel-button"
+        onClick={props.onClickCancelPasswordChanged}
+      >
+        <span>{string.popups.change_password.cancelButtonLabel}</span>
+      </button>
+      <button
+        className="button-a popup-confirm-button"
+        onClick={props.onConfirmPasswordChanged}
+        disabled={props.isDisabledConfirmButton}
+      >
+        <span>{string.popups.change_password.confirmButtonLabel}</span>
+      </button>
+    </div>
+  );
+};
+
+const LoadingWheel = () => (
+  <div className="loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
   </div>
 );
 
@@ -96,7 +114,8 @@ PasswordChangedPopupInput.propTypes = {
 PasswordChangedPopupButtons.propTypes = {
   onClickCancelPasswordChanged: PropTypes.func,
   onConfirmPasswordChanged: PropTypes.func,
-  isDisabledConfirmButton: PropTypes.bool
+  isDisabledConfirmButton: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 export default PasswordChangedPopup;

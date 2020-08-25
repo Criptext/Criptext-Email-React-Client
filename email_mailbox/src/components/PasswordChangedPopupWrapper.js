@@ -25,7 +25,8 @@ class PasswordChangedPopupWrapper extends Component {
       icon: 'icon-not-show',
       value: '',
       errorMessage: '',
-      hasError: false
+      hasError: false,
+      isLoading: false
     };
   }
 
@@ -43,6 +44,7 @@ class PasswordChangedPopupWrapper extends Component {
         onClickChangeInputType={this.handleClickChangeInputType}
         onConfirmPasswordChanged={this.handleConfirmPasswordChanged}
         onClickCancelPasswordChanged={this.handleClickCancelPasswordChanged}
+        isLoading={this.state.isLoading}
         {...this.props}
       />
     );
@@ -94,11 +96,14 @@ class PasswordChangedPopupWrapper extends Component {
     const params = {
       password: hashPassword(this.state.value)
     };
+    this.setState({
+      isLoading: true
+    });
     const { status, headers } = await unlockDevice(params);
     switch (status) {
       case UNLOCK_DEVICE_STATUS.SUCCESS: {
         this.props.onCloseMailboxPopup();
-        return;
+        break;
       }
       case UNLOCK_DEVICE_STATUS.TOO_MANY_REQUESTS: {
         const seconds = headers['retry-after'];
@@ -109,23 +114,26 @@ class PasswordChangedPopupWrapper extends Component {
           seconds
         );
         throwError(tooManyRequestErrorMessage);
-        return;
+        break;
       }
       case UNLOCK_DEVICE_STATUS.WRONG_PASSWORD: {
         this.setState({
           hasError: true,
           errorMessage: 'Wrong password'
         });
-        return;
+        break;
       }
       default: {
         throwError({
           name: 'Failed to confirm password',
           description: `Code: ${status || 'Unknown'}`
         });
-        return;
+        break;
       }
     }
+    this.setState({
+      isLoading: false
+    });
   };
 }
 
