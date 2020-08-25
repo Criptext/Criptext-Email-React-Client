@@ -244,7 +244,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onRemoveDevice: async params => {
       const { status } = await removeDevice(params);
-      return status === 200;
+      return status;
     },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));

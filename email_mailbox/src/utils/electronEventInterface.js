@@ -153,7 +153,8 @@ const getAccountInfo = (recipientId, domain) => {
       accountId: myAccount.id,
       accountRecipientId: myAccount.recipientId,
       accountEmail: myAccount.email,
-      optionalToken: myAccount.jwt
+      optionalToken: myAccount.jwt,
+      accountName: myAccount.name
     };
   }
   const accountRecipientId =
@@ -204,7 +205,8 @@ const parseAndStoreEventsBatch = async ({
     accountId,
     accountRecipientId,
     accountEmail,
-    optionalToken
+    optionalToken,
+    accountName
   } = getAccountInfo(recipientId, domain);
 
   for (const event of events) {
@@ -224,7 +226,8 @@ const parseAndStoreEventsBatch = async ({
         accountId,
         accountRecipientId,
         accountEmail,
-        optionalToken
+        optionalToken,
+        accountName
       });
       rowIds.push(rowid);
       if (threadIds)
@@ -294,7 +297,8 @@ const parseAndDispatchEvent = async (event, recipientId, domain) => {
     accountId,
     accountRecipientId,
     accountEmail,
-    optionalToken
+    optionalToken,
+    accountName
   } = getAccountInfo(recipientId, domain);
   try {
     const {
@@ -310,7 +314,8 @@ const parseAndDispatchEvent = async (event, recipientId, domain) => {
       accountId,
       accountRecipientId,
       accountEmail,
-      optionalToken
+      optionalToken,
+      accountName
     });
     if (rowid) await setEventAsHandled([rowid]);
     emitter.emit(Event.STORE_LOAD, {
@@ -415,7 +420,8 @@ export const handleEvent = ({
   optionalToken,
   accountRecipientId,
   accountId,
-  accountEmail
+  accountEmail,
+  accountName
 }) => {
   switch (incomingEvent.cmd) {
     case SocketCommand.NEW_EMAIL: {
@@ -424,7 +430,8 @@ export const handleEvent = ({
         optionalToken,
         accountRecipientId,
         accountEmail,
-        accountId
+        accountId,
+        accountName
       );
     }
     case SocketCommand.EMAIL_TRACKING_UPDATE: {
@@ -823,7 +830,8 @@ const handleNewMessageEvent = async (
   optionalToken,
   accountRecipientId,
   accountEmail,
-  accountId
+  accountId,
+  accountName
 ) => {
   const {
     bcc,
@@ -948,6 +956,12 @@ const handleNewMessageEvent = async (
     });
   }
   const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
+
+  await updateContactByEmail({
+    email: accountEmail,
+    name: accountName
+  });
+
   return {
     rowid,
     labelIds: mailboxIdsToUpdate,

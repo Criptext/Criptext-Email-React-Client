@@ -45,8 +45,8 @@ class SettingDevicesWrapper extends Component {
   };
 
   handleDeviceToRemove = async params => {
-    const isSuccess = await this.props.onRemoveDevice(params);
-    if (isSuccess) {
+    const status = await this.props.onRemoveDevice(params);
+    if (status === 200) {
       this.setState(
         { isHiddenRemoveDevicePopup: true, deviceId: undefined },
         () => {
@@ -56,7 +56,7 @@ class SettingDevicesWrapper extends Component {
     } else {
       sendRemoveDeviceErrorMessage();
     }
-    return isSuccess;
+    return status;
   };
 }
 

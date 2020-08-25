@@ -6,6 +6,8 @@ import { requiredMinLength } from './../utils/electronInterface';
 import RemoveDevicePopup from './RemoveDevicePopup';
 import string from './../lang';
 
+const passwordErrors = string.popups.remove_device.input.password.errors;
+
 class RemoveDevicePopupWrapper extends Component {
   constructor(props) {
     super(props);
@@ -75,9 +77,29 @@ class RemoveDevicePopupWrapper extends Component {
       deviceId: this.props.deviceId,
       password: hashPassword(this.state.value)
     };
-    this.setState({ isLoading: true });
-    const isSuccess = await this.props.onDeviceToRemove(params);
-    if (!isSuccess) this.setState({ isLoading: false });
+    this.setState({
+      isLoading: true,
+      hasError: false
+    });
+    const status = await this.props.onDeviceToRemove(params);
+    switch (status) {
+      case 200:
+        break;
+      case 400:
+        this.setState({
+          isLoading: false,
+          errorMessage: passwordErrors.wrong,
+          hasError: true
+        });
+        break;
+      default:
+        this.setState({
+          isLoading: false,
+          errorMessage: string.formatString(passwordErrors.unknown, status),
+          hasError: true
+        });
+        break;
+    }
   };
 }
 

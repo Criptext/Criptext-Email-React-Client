@@ -724,7 +724,11 @@
       },
       "input": {
         "password": {
-          "placeholder": "Saisir le mot de passe"
+          "placeholder": "Saisir le mot de passe",
+          "errors": {
+            "wrong": "Wrong Password",
+            "unknown": "Uknown Error ({0}), please try again"
+          }
         }
       },
       "cancelButtonLabel": "Annuler",
