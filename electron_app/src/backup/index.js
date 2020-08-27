@@ -46,7 +46,7 @@ const runBackup = (
         env: {
           NODE_ENV: 'script',
           DBPATH: databasePath,
-          FSPATH: getUserEmailsPath(process.env, email)
+          FSPATH: getUserEmailsPath(process.env.NODE_ENV, email)
         },
         stdio: ['inherit', 'inherit', 'inherit', 'ipc']
       }
