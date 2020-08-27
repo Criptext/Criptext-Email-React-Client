@@ -210,7 +210,10 @@ const createContact = ({ contacts, accountId }, prevTrx) => {
 };
 
 const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
-  const parsedContacts = filterUniqueContacts(formContactsRow(contacts));
+  const accountEmailNames = myAccount.getEmailNames();
+  const parsedContacts = filterUniqueContacts(
+    formContactsRow(contacts, accountEmailNames)
+  );
   const contactsMap = parsedContacts.reduce((contactsObj, contact) => {
     contactsObj[contact.email] = contact;
     return contactsObj;

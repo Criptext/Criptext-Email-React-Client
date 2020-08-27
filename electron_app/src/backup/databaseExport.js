@@ -74,7 +74,6 @@ const exportEmailTable = async (accountId, email, databaseKey) => {
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
-  const myTime = Date.now();
   while (!shouldEnd) {
     const result = await getDB()
       .query(
@@ -134,7 +133,6 @@ const exportEmailTable = async (accountId, email, databaseKey) => {
     }
     await sleep(5);
   }
-  console.log('TIME OF EXPORT FROM DB: %s', Date.now() - myTime);
   return formatTableRowsToString(Table.EMAIL, emailRows);
 };
 
