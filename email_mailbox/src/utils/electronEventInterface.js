@@ -948,6 +948,7 @@ const handleNewMessageEvent = async (
     });
   }
   const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
+
   return {
     rowid,
     labelIds: mailboxIdsToUpdate,

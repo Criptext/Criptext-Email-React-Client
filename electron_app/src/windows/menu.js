@@ -1,4 +1,4 @@
-const { Menu } = require('electron');
+const { Menu, shell, app } = require('electron');
 const { checkForUpdates } = require('./../updater');
 const composerWindowManager = require('./composer');
 const { isFromStore, showWindows, quit } = require('./windowUtils');
@@ -68,6 +68,14 @@ const createAppMenu = () => {
           label: string.close,
           accelerator: 'CmdOrCtrl+W',
           role: 'close'
+        },
+        {
+          label: string.openLogs,
+          accelerator: 'CmdOrCtrl+L',
+          click() {
+            const dataPath = app.getPath('userData');
+            shell.openItem(dataPath);
+          }
         },
         {
           label: string.developer,

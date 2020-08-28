@@ -749,7 +749,11 @@
       },
       "input": {
         "password": {
-          "placeholder": "Enter password"
+          "placeholder": "Enter password",
+          "errors": {
+            "wrong": "Wrong Password",
+            "unknown": "Uknown Error ({0}), please try again"
+          }
         }
       },
       "cancelButtonLabel": "Cancel",

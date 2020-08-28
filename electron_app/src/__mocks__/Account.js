@@ -1,4 +1,5 @@
 module.exports = {
   recipientId: 'test',
-  update: () => {}
+  update: () => {},
+  getEmailNames: () => {}
 };

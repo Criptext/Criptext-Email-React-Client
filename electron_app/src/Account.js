@@ -22,10 +22,9 @@ class Account {
   initialize(loggedAccounts) {
     this.activeAccount = loggedAccounts.find(account => account.isActive);
     this.inactiveAccounts = loggedAccounts.filter(account => !account.isActive);
-
     if (!this.activeAccount) {
       this.activeAccount = loggedAccounts[0];
-      this.inactiveAccounts = loggedAccounts.slice(0);
+      this.inactiveAccounts = loggedAccounts.slice(0) || [];
     }
   }
 
@@ -124,6 +123,18 @@ class Account {
           ? accountObj[property]
           : account[property];
     }
+  }
+
+  getEmailNames() {
+    if (!this.activeAccount || !this.inactiveAccounts) return {};
+    return this.loggedAccounts.reduce((result, account) => {
+      const newResult = { ...result };
+      const email = account.recipientId.includes('@')
+        ? account.recipientId
+        : `${account.recipientId}@${APP_DOMAIN}`;
+      newResult[email] = account.name;
+      return newResult;
+    }, {});
   }
 
   getDataForSocket() {

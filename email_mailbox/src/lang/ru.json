@@ -724,7 +724,11 @@
       },
       "input": {
         "password": {
-          "placeholder": "Ввести пароль"
+          "placeholder": "Ввести пароль",
+          "errors": {
+            "wrong": "Wrong Password",
+            "unknown": "Uknown Error ({0}), please try again"
+          }
         }
       },
       "cancelButtonLabel": "Отмена",

@@ -63,6 +63,15 @@ const createComposerWindow = () => {
   });
   window.saved = false;
 
+  window.on('blur', async () => {
+    try {
+      const dataDraft = globalManager.composerData.get(window.id);
+      await saveDraftToDatabase(window.id, dataDraft, true);
+    } catch (error) {
+      logger.error(error.toString());
+    }
+  });
+
   window.on('close', async e => {
     try {
       if (globalManager.forcequit.get() && window.saved) return;
@@ -231,7 +240,7 @@ const sendEventToMailbox = (eventName, data) => {
   mailboxWindow.send(eventName, data);
 };
 
-const saveDraftToDatabase = async (composerId, data) => {
+const saveDraftToDatabase = async (composerId, data, isAutoSave) => {
   const { accountId, accountEmail: username, isEmpty } = data;
   if (isEmpty) return;
   const dbManager = require('./../database/index');
@@ -257,6 +266,12 @@ const saveDraftToDatabase = async (composerId, data) => {
       password: globalManager.databaseKey.get()
     });
     shouldUpdateBadge = true;
+    if (isAutoSave) {
+      globalManager.emailToEdit.set(composerId, {
+        key: parseInt(dataDraft.email.key),
+        type: composerEvents.EDIT_DRAFT
+      });
+    }
   } else {
     const [oldEmail] = await dbManager.getEmailByKey({
       key,

@@ -78,6 +78,7 @@
         "window": "Fenster",
         "minimize": "Minimieren",
         "close": "Schließen",
+        "openLogs": "Open Logs Folder",
         "developer": "Entwickler",
         "toggleDeveloperTools": "Umschalten auf Entwicklerwerkzeuge",
         "aboutCriptext": "Über Criptext",

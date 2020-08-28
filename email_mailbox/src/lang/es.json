@@ -749,7 +749,11 @@
       },
       "input": {
         "password": {
-          "placeholder": "Contraseña"
+          "placeholder": "Contraseña",
+          "errors": {
+            "wrong": "Contraseña Incorrecta",
+            "unknown": "Error Desconocido ({0}), por favor intenta de nuevo"
+          }
         }
       },
       "cancelButtonLabel": "Cancelar",

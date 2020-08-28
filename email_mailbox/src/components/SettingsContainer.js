@@ -284,14 +284,14 @@ class SettingsContainer extends Component {
   };
 
   handleRemoveDevice = async ({ deviceId, password }) => {
-    const isSuccess = await this.props.onRemoveDevice({ deviceId, password });
-    if (isSuccess) {
+    const status = await this.props.onRemoveDevice({ deviceId, password });
+    if (status === 200) {
       const devices = this.state.devices.filter(
         item => item.deviceId !== deviceId
       );
       this.setState({ devices });
     }
-    return isSuccess;
+    return status;
   };
 
   handleClickLogout = () => {

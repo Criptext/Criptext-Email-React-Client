@@ -78,6 +78,7 @@
         "window": "Ventana",
         "minimize": "Minimizar",
         "close": "Cerrar",
+        "openLogs": "Abrir Carpeta de Logs",
         "developer": "Desarrollador",
         "toggleDeveloperTools": "Mostrar\/Ocultar herramientas de desarrollo",
         "aboutCriptext": "Acerca de Criptext",

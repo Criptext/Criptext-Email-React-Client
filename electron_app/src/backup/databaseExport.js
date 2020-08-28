@@ -1,9 +1,7 @@
 const fs = require('fs');
 const moment = require('moment');
 const {
-  AccountContact,
   Alias,
-  Contact,
   CustomDomain,
   Email,
   Label,
@@ -33,18 +31,14 @@ const exportContactTable = async accountId => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const result = await Contact().findAll({
-      attributes: ['id', 'email', 'name', 'isTrusted', 'spamScore'],
-      include: [
-        {
-          attributes: [],
-          model: AccountContact(),
-          where: { accountId }
-        }
-      ],
-      offset,
-      limit: SELECT_ALL_BATCH
-    });
+    const [result] = await getDB().query(
+      `SELECT ${Table.CONTACT}.* FROM ${Table.CONTACT}, ${
+        Table.ACCOUNT_CONTACT
+      } WHERE ${Table.CONTACT}.id == ${Table.ACCOUNT_CONTACT}.contactId 
+        AND ${
+          Table.ACCOUNT_CONTACT
+        }.accountId = ${accountId} LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset};`
+    );
     contactRows = [...contactRows, ...result];
     if (result.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
@@ -114,12 +108,12 @@ const exportEmailTable = async (accountId, email, databaseKey) => {
             })) ||
             newRow.content ||
             '';
+          await sleep(5);
           const headers = await getEmailHeaders({
             username: email,
             metadataKey: newRow.key,
             password: databaseKey
           });
-
           const key = parseInt(newRow.key);
           emailRows.push({
             ...newRow,
@@ -129,7 +123,6 @@ const exportEmailTable = async (accountId, email, databaseKey) => {
             headers: headers || undefined
           });
         }
-
         return emailRows;
       });
     emailRows = [...emailRows, ...result];
@@ -138,6 +131,7 @@ const exportEmailTable = async (accountId, email, databaseKey) => {
     } else {
       offset += SELECT_ALL_BATCH;
     }
+    await sleep(5);
   }
   return formatTableRowsToString(Table.EMAIL, emailRows);
 };
@@ -452,6 +446,14 @@ const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
       }
       resolve();
     });
+  });
+};
+
+const sleep = time => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, time);
   });
 };
 

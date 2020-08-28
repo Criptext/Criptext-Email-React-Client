@@ -60,7 +60,18 @@ class ThreadsWrapper extends Component {
       if (this.scroll.scrollTop !== 0) {
         this.scroll.scrollTop = 0;
       }
+    } else if (
+      prevProps.threads.size !== this.props.threads.size &&
+      this.scroll
+    ) {
+      const scroll = this.scroll;
+      const height = scroll.clientHeight;
+      const scrollHeight = scroll.scrollHeight;
+      if (scrollHeight <= height) {
+        this.handleScroll({ target: scroll }, true);
+      }
     }
+
     if (
       this.props.threadItemsChecked.size > 0 &&
       prevProps.mailboxSelected !== this.props.mailboxSelected
@@ -119,14 +130,14 @@ class ThreadsWrapper extends Component {
     });
   };
 
-  handleScroll = e => {
+  handleScroll = (e, force) => {
     const scrollTop = e.target.scrollTop;
     const height = e.target.clientHeight;
     const scrollHeight = e.target.scrollHeight;
     const lastThread = this.props.threads.last();
-    if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
-      const date = lastThread.get('maxDate');
-      const threadIdRejected = lastThread.get('threadId');
+    if (force || scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT) {
+      const date = lastThread ? lastThread.get('maxDate') : Date.now();
+      const threadIdRejected = lastThread ? lastThread.get('threadId') : '';
       if (this.state.lastMinDate !== date) {
         const unreadSwitchStatus = this.props.switchChecked;
         const unread =
