@@ -13,6 +13,7 @@ import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import RestoreBackupPopupWrapper from './RestoreBackupPopupWrapper';
 import SuspendedAccountPopup from './SuspendedAccountPopup';
 import EnableBackupPopup from './EnableBackupPopup';
+import ApiVersionPopup from './ApiVersionPopup';
 import UpdatePopup from './UpdatePopup';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import { mySettings } from '../utils/electronInterface';
@@ -171,6 +172,19 @@ const renderMailboxPopup = ({ data, type, isHidden, ...props }) => {
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
           isClosable={false}
+          theme={'dark'}
+        />
+      );
+    }
+    case MAILBOX_POPUP_TYPES.API_VERSION_TOO_OLD: {
+      const ApiversionPopup = PopupHOC(ApiVersionPopup);
+      return (
+        <ApiversionPopup
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          onUpdateLocal={props.onUpdateNow}
+          onUpdateExternal={props.onCloseMailboxPopup}
+          onTogglePopup={props.onCloseMailboxPopup}
           theme={'dark'}
         />
       );

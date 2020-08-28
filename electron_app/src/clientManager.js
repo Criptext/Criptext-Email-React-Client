@@ -92,6 +92,7 @@ const checkExpiredSession = async (
   const UPDATE_USER_TOKENS = 201;
   const EXPIRED_SESSION_STATUS = 401;
   const REMOVED_DEVICE_STATUS = 419;
+  const API_VERSION_TOO_OLD = 430;
   const CHANGED_PASSWORD_STATUS = 403;
   const SUSPENDED_ACCOUNT_REQ_STATUS = 451;
 
@@ -119,6 +120,10 @@ const checkExpiredSession = async (
       mailboxWindow.send('suspended-account', recipientId);
       return { status: SUSPENDED_ACCOUNT_REQ_STATUS };
     }
+    case API_VERSION_TOO_OLD: {
+      mailboxWindow.send('api-version-too-old', recipientId);
+      return { status: API_VERSION_TOO_OLD };
+    }
     case EXPIRED_SESSION_STATUS: {
       let newSessionToken, newRefreshToken, newSessionStatus;
       const client = await createClient({ recipientId });
@@ -136,6 +141,11 @@ const checkExpiredSession = async (
           newSessionToken = body.token;
           newRefreshToken = body.refreshToken;
         }
+      }
+
+      if (newSessionStatus === API_VERSION_TOO_OLD) {
+        mailboxWindow.send('api-version-too-old', recipientId);
+        return { status: newSessionStatus };
       }
 
       if (newSessionStatus === REMOVED_DEVICE_STATUS) {

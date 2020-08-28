@@ -617,6 +617,14 @@
         "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo"
       }
     },
+    "api_version": {
+      "title": "Applicacion Desactualizada",
+      "description": "La versión de tu App es muy vieja. Actualizala para seguir disfrutando de Criptext!",
+      "buttons": {
+        "local": "Descargar",
+        "external": "Visitar Web"
+      }
+    },
     "enable_backup": {
       "once": {
         "title": "Respaldo Automático",

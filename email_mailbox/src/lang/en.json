@@ -617,6 +617,14 @@
         "timeout": "Connection Timeout. Please Try Again"
       }
     },
+    "api_version": {
+      "title": "App Out of Date",
+      "description": "Your App is to old. Please update it so you keep enjoying Criptext!",
+      "buttons": {
+        "local": "Download",
+        "external": "Visit Website"
+      }
+    },
     "enable_backup": {
       "once": {
         "title": "Auto Backup",
