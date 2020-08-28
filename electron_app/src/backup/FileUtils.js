@@ -59,9 +59,28 @@ const copyDatabase = (dbPath, tempBackupDirectory) => {
   }
 };
 
+const loadJson = path => {
+  if (!fs.existsSync(path)) return {};
+  const data = fs.readFileSync(path, { encoding: 'utf-8' });
+  const json = JSON.parse(data);
+  return json;
+};
+
+const writeJson = (path, object) => {
+  const data = JSON.stringify(object);
+  fs.writeFileSync(path, data, { encoding: 'utf-8' });
+};
+
+const deleteFile = path => {
+  return fs.unlinkSync(path);
+};
+
 module.exports = {
   getFileSizeInBytes,
   checkTempBackupDirectory,
   removeTempBackupDirectoryRecursive,
-  copyDatabase
+  copyDatabase,
+  loadJson,
+  writeJson,
+  deleteFile
 };

@@ -26,8 +26,29 @@ const getTempDirectory = nodeEnv => {
   }
 };
 
+const getBackupAuditPath = node_env => {
+  switch (node_env) {
+    case 'development': {
+      const auditPath = path
+        .join(__dirname, '/../userData', 'backup-audit.json')
+        .replace('/src', '');
+      return auditPath;
+    }
+    default: {
+      const { app } = require('electron');
+      const userDataPath = app.getPath('userData');
+      const auditPath = path.join(
+        userDataPath,
+        'userData',
+        'backup-audit.json'
+      );
+      return auditPath;
+    }
+  }
+};
+
 const runBackup = (
-  { dbPath, outputPath, key, recipientId, password },
+  { dbPath, outputPath, key, recipientId, password, isAutoBackup },
   progressCallback
 ) => {
   const email = recipientId.includes('@')
@@ -46,7 +67,9 @@ const runBackup = (
         env: {
           NODE_ENV: 'script',
           DBPATH: databasePath,
-          FSPATH: getUserEmailsPath(process.env.NODE_ENV, email)
+          FSPATH: getUserEmailsPath(process.env.NODE_ENV, email),
+          AUDITPATH: getBackupAuditPath(process.env.NODE_ENV),
+          AUTOBACKUP: isAutoBackup
         },
         stdio: ['inherit', 'inherit', 'inherit', 'ipc']
       }
