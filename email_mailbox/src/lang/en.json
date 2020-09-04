@@ -244,6 +244,8 @@
     },
     "forward": "Forward",
     "from": "From",
+    "lights_on": "Turn Lights On",
+    "lights_off": "Turn Lights Off",
     "mark_as_read": "Mark as Read",
     "mark_as_spam": "Mark as Spam",
     "mark_as_unread": "Mark as Unread",

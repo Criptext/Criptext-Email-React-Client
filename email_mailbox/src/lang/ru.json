@@ -243,6 +243,8 @@
     },
     "forward": "Переслать",
     "from": "От",
+    "lights_on": "Turn Lights On",
+    "lights_off": "Turn Lights Off",
     "mark_as_read": "Отметить прочитанным",
     "mark_as_spam": "Пометить как спам",
     "mark_as_unread": "Пометить как непрочитанное",

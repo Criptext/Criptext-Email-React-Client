@@ -244,6 +244,8 @@
     },
     "forward": "Reenviar",
     "from": "De",
+    "lights_on": "Encender Luces",
+    "lights_off": "Apagar Luces",
     "mark_as_read": "Marcar como leído",
     "mark_as_spam": "Marcar como Spam",
     "mark_as_unread": "Marcar como no leído",

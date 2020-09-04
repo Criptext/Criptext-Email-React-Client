@@ -36,7 +36,9 @@ class EmailWrapper extends Component {
       popupContentBlockRemoteContent: undefined,
       inlineImages: [],
       isLoadingBlockRemote: false,
-      language: 'en'
+      language: 'en',
+      showLightsOn: mySettings.theme === 'dark',
+      lightsOn: false
     };
   }
 
@@ -59,6 +61,9 @@ class EmailWrapper extends Component {
         isHiddenPopOverEmailBlocked={this.state.isHiddenPopOverEmailBlocked}
         isLoadingBlockRemote={this.state.isLoadingBlockRemote}
         hideView={this.state.hideView}
+        showLightsOn={this.state.showLightsOn}
+        lightsOn={this.state.lightsOn}
+        onLightsOn={this.handleLightsOn}
         onToggleEmail={this.handleToggleEmail}
         onTooglePopOverEmailMoreInfo={this.handleTooglePopOverEmailMoreInfo}
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
@@ -90,6 +95,12 @@ class EmailWrapper extends Component {
     ];
     checkUserGuideSteps(steps);
   }
+
+  handleLightsOn = () => {
+    this.setState({
+      lightsOn: !this.state.lightsOn
+    });
+  };
 
   handleInlineImages = async () => {
     const newState = {};

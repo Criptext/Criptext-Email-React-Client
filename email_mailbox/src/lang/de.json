@@ -243,6 +243,8 @@
     },
     "forward": "Vorwärts",
     "from": "Von",
+    "lights_on": "Turn Lights On",
+    "lights_off": "Turn Lights Off",
     "mark_as_read": "Als gelesen markieren",
     "mark_as_spam": "Als Spam markieren",
     "mark_as_unread": "Als ungelesen markieren",
