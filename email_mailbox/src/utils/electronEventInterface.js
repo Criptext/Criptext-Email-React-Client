@@ -1818,6 +1818,13 @@ ipcRenderer.on('suspended-account', (ev, accountRecipientId) => {
   return sendSuspendedAccountEvent();
 });
 
+ipcRenderer.on('api-version-too-old', (ev, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return;
+  }
+  return sendAPITooOldEvent();
+});
+
 ipcRenderer.on('disable-window-link-devices', () => {
   emitter.emit(Event.DISABLE_WINDOW);
 });
@@ -2049,6 +2056,10 @@ export const sendPasswordChangedEvent = () => {
 export const sendSuspendedAccountEvent = () => {
   emitter.emit(Event.SUSPENDED_ACCOUNT, null);
   return { rowid: null };
+};
+
+export const sendAPITooOldEvent = () => {
+  emitter.emit(Event.API_VERSION_TOO_OLD, null);
 };
 
 export const sendRefreshThreadsEvent = eventParams => {
@@ -2333,6 +2344,7 @@ export const sendMailboxEvent = (eventName, eventData) => {
 
 export const Event = {
   ACCOUNT_DELETED: 'account-deleted',
+  API_VERSION_TOO_OLD: 'api-version-too-old',
   BACKUP_PROGRESS: 'backup-progress',
   BIG_UPDATE_AVAILABLE: 'big-update-available',
   CHANGE_SET_TRUSTED_ACCOUNT: 'change-set-trusted-account',

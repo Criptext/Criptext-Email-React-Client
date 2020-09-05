@@ -3,7 +3,10 @@ const {
   copyDatabase,
   getFileSizeInBytes,
   removeTempBackupDirectoryRecursive,
-  checkTempBackupDirectory
+  checkTempBackupDirectory,
+  loadJson,
+  writeJson,
+  deleteFile
 } = require('./FileUtils');
 const {
   zipStreamFile,
@@ -14,6 +17,7 @@ const { initDatabaseEncrypted, Account } = require('../database/DBEmodel');
 const { exportEncryptDatabaseToFile } = require('./databaseExport');
 const { APP_DOMAIN } = require('../utils/const');
 
+const BACKUP_FILES_COUNT = 5;
 const startTimeout = setTimeout(() => {
   start();
 }, 5000);
@@ -54,8 +58,8 @@ const start = async () => {
     throw new Error(`Error connecting to db ${ex}`);
   }
 
+  const [reId, domain = APP_DOMAIN] = recipientId.split('@');
   try {
-    const [reId, domain = APP_DOMAIN] = recipientId.split('@');
     const accountObj = {
       email: `${reId}@${domain}`,
       username: reId,
@@ -102,7 +106,28 @@ const start = async () => {
     backupSize
   });
   removeTempBackupDirectoryRecursive(tempBackupDirectory);
+
+  if (process.env.AUTOBACKUP) {
+    handleRegisterBackup(`${reId}@${domain}`, backupPath);
+  }
+
   process.exit(0);
+};
+
+const handleRegisterBackup = (email, backupPath) => {
+  const audit = loadJson(process.env.AUDITPATH);
+  if (!audit[email]) {
+    audit[email] = [];
+  }
+  if (audit[email].length < BACKUP_FILES_COUNT) {
+    audit[email].push(backupPath);
+    writeJson(process.env.AUDITPATH, audit);
+  } else {
+    const deletePath = audit[email].shift();
+    deleteFile(deletePath);
+    audit[email].push(backupPath);
+    writeJson(process.env.AUDITPATH, audit);
+  }
 };
 
 const handleProgress = progress => {

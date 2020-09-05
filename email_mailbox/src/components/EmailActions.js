@@ -69,6 +69,20 @@ const EmailActions = props => {
             <span>{string.mailbox.mark_as_spam}</span>
           </li>
         )}
+        {props.showLightsOn && (
+          <li
+            onClick={ev => {
+              props.onLightsOn(ev);
+              props.onToggleMenu(ev);
+            }}
+          >
+            <span>
+              {props.lightsOn
+                ? string.mailbox.lights_off
+                : string.mailbox.lights_on}
+            </span>
+          </li>
+        )}
         <li
           onClick={ev => {
             props.onPrintEmail(ev);
@@ -108,6 +122,7 @@ EmailActions.propTypes = {
   isSpam: PropTypes.bool,
   isTrash: PropTypes.bool,
   hasBoundary: PropTypes.bool,
+  lightsOn: PropTypes.bool,
   onDelete: PropTypes.func,
   onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
@@ -118,7 +133,9 @@ EmailActions.propTypes = {
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
   onReportPhishing: PropTypes.func,
-  onToggleMenu: PropTypes.func
+  onToggleMenu: PropTypes.func,
+  onLightsOn: PropTypes.func,
+  showLightsOn: PropTypes.bool
 };
 
 export default EmailActions;

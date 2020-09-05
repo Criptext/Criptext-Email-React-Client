@@ -11,7 +11,6 @@ const path = require('path');
 const socket = require('./socketClient');
 const filesScript = require('./filescript/handler');
 const fileUtils = require('./utils/FileUtils');
-const myAccount = require('./Account');
 const { APP_DOMAIN } = require('./utils/const');
 const recoveryKeyManager = require('./recoveryKey');
 const { closeAlice } = require('./aliceManager');
@@ -25,20 +24,6 @@ const initialize = params => {
 
   globalManager.pinData.set({ pinType: 'reset' });
   pinWindow.show();
-};
-
-const setKeyEmailBodies = async pin => {
-  const accountEmail = myAccount.email;
-  const userEmailsPath = fileUtils.getUserEmailsPath(
-    process.env.NODE_ENV,
-    accountEmail
-  );
-  const userEmailsCopyPath = path.join(userEmailsPath, '../emails-copy');
-  await filesScript.start({
-    inPath: userEmailsPath,
-    outPath: userEmailsCopyPath,
-    pass: pin
-  });
 };
 
 const start = async () => {
@@ -104,6 +89,5 @@ const start = async () => {
 
 module.exports = {
   initialize,
-  setKeyEmailBodies,
   start
 };

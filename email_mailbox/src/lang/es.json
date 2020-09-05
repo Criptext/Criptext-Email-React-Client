@@ -244,6 +244,8 @@
     },
     "forward": "Reenviar",
     "from": "De",
+    "lights_on": "Encender Luces",
+    "lights_off": "Apagar Luces",
     "mark_as_read": "Marcar como leído",
     "mark_as_spam": "Marcar como Spam",
     "mark_as_unread": "Marcar como no leído",
@@ -615,6 +617,14 @@
         "nodomain": "Dominio no hallado",
         "unknown": "Error Desconocido ({0}), por favor intenta de nuevo",
         "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo"
+      }
+    },
+    "api_version": {
+      "title": "Applicacion Desactualizada",
+      "description": "La versión de tu App es muy vieja. Actualizala para seguir disfrutando de Criptext!",
+      "buttons": {
+        "local": "Descargar",
+        "external": "Visitar Web"
       }
     },
     "enable_backup": {

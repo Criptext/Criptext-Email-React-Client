@@ -60,6 +60,7 @@ class ChangePasswordWrapper extends Component {
     super();
     this.state = {
       disabled: true,
+      isLoading: false,
       isShowingPassword: false,
       values: {
         newPassword: '',
@@ -75,7 +76,7 @@ class ChangePasswordWrapper extends Component {
   render() {
     return (
       <ChangePassword
-        disabled={this.state.disabled}
+        disabled={this.state.disabled || this.state.isLoading}
         errors={this.state.errors}
         isShowingPassword={this.state.isShowingPassword}
         items={items}
@@ -111,6 +112,7 @@ class ChangePasswordWrapper extends Component {
       oldPassword: hashedOldPassword,
       newPassword: hashedNewPassword
     };
+    this.setState({ isLoading: true });
     const res = await loginFirst(data);
     const { status, body, text } = res;
     switch (status) {
@@ -137,7 +139,7 @@ class ChangePasswordWrapper extends Component {
           }
         });
         closeLoginWindow({ forceClose: true });
-        break;
+        return;
       }
       case LOGIN_FIRST_STATUS.WRONG_CREDENTIALS: {
         this.throwLoginError(string.errors.wrongCredentials);
@@ -154,6 +156,7 @@ class ChangePasswordWrapper extends Component {
       default:
         break;
     }
+    this.setState({ isLoading: false });
   };
 
   handleToggleShowPassword = () =>

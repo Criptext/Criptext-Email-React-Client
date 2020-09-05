@@ -77,7 +77,8 @@ const doExportBackup = async params => {
         recipientId: accountObj
           ? accountObj.recipientId
           : myAccount.recipientId,
-        password
+        password,
+        isAutoBackup
       },
       progressCallback
     );

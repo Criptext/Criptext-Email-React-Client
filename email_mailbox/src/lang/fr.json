@@ -243,6 +243,8 @@
     },
     "forward": "Transférer",
     "from": "De",
+    "lights_on": "Turn Lights On",
+    "lights_off": "Turn Lights Off",
     "mark_as_read": "Marquer comme lu",
     "mark_as_spam": "Marquer comme indésirable",
     "mark_as_unread": "Marquer comme non lu",
@@ -608,6 +610,14 @@
         "nodomain": "Domain not found",
         "unknown": "Uknown Error ({0}), please try again",
         "timeout": "Connection Timeout. Please Try Again"
+      }
+    },
+    "api_version": {
+      "title": "App Out of Date",
+      "description": "Your App is to old. Please update it so you keep enjoying Criptext!",
+      "buttons": {
+        "local": "Download",
+        "external": "Visit Website"
       }
     },
     "enable_backup": {

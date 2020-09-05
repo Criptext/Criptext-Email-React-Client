@@ -53,6 +53,15 @@
         color: gray;
       }
     }
+
+    &.lights-on {
+      .email-body {
+        color: inherit; 
+        padding: 5px 17px 0px 17px;
+        margin: 0px;
+        background-color: white;
+      }
+    }
   
     > div{
       background-color: transparent;

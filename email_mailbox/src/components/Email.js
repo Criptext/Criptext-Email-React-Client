@@ -49,7 +49,11 @@ const Email = props => (
       className={`cptx-email-container ${defineEmailState(
         props.displayEmail,
         props.staticOpen
-      )} ${defineEmailType(props.isUnsend, props.isDraft, props.isEmpty)}`}
+      )} ${defineViewType(props.lightsOn)} ${defineEmailType(
+        props.isUnsend,
+        props.isDraft,
+        props.isEmpty
+      )}`}
     >
       <div
         className="email-info"
@@ -255,6 +259,7 @@ const renderEmailInfoExpand = props => (
               isTrash={props.isTrash}
               isFromMe={props.isFromMe}
               hasBoundary={!!props.email.boundary}
+              lightsOn={props.lightsOn}
               menuPosition={{ right: '-32px', top: '28px' }}
               onReplyEmail={props.onReplyEmail}
               onReplyAll={props.onReplyAll}
@@ -266,7 +271,9 @@ const renderEmailInfoExpand = props => (
               onToggleMenu={props.onTogglePopOverEmailActions}
               onOpenEmailSource={props.onOpenEmailSource}
               onPrintEmail={props.onPrintEmail}
+              onLightsOn={props.onLightsOn}
               onReportPhishing={props.onReportPhishing}
+              showLightsOn={props.showLightsOn}
             />
           </i>
         </div>
@@ -387,6 +394,10 @@ const defineEmailState = (displayEmail, staticOpen) => {
   return 'email-container-collapse';
 };
 
+const defineViewType = lightsOn => {
+  return lightsOn ? 'lights-on' : '';
+};
+
 const defineEmailType = (isUnsend, isDraft, isEmpty) => {
   if (isUnsend) {
     return 'email-unsend';
@@ -416,6 +427,7 @@ renderEmailInfoExpand.propTypes = {
   isHiddenPopOverEmailActions: PropTypes.bool,
   isHiddenPopOverEmailMoreInfo: PropTypes.bool,
   isUnsend: PropTypes.bool,
+  lightsOn: PropTypes.bool,
   onClickEditDraft: PropTypes.func,
   onClickReplyEmail: PropTypes.func,
   onClickUnsendButton: PropTypes.func,
@@ -430,7 +442,9 @@ renderEmailInfoExpand.propTypes = {
   onReplyAll: PropTypes.func,
   onReportPhishing: PropTypes.func,
   onTogglePopOverEmailActions: PropTypes.func,
-  onTooglePopOverEmailMoreInfo: PropTypes.func
+  onTooglePopOverEmailMoreInfo: PropTypes.func,
+  onLightsOn: PropTypes.func,
+  showLightsOn: PropTypes.bool
 };
 
 Email.propTypes = {
@@ -454,6 +468,7 @@ Email.propTypes = {
   isLoadingBlockRemote: PropTypes.bool,
   isUnsend: PropTypes.bool,
   letters: PropTypes.string,
+  lightsOn: PropTypes.bool,
   onForward: PropTypes.func,
   onMouseEnterTooltip: PropTypes.func,
   onMouseLeaveTooltip: PropTypes.func,
@@ -466,7 +481,9 @@ Email.propTypes = {
   preview: PropTypes.string,
   staticOpen: PropTypes.bool,
   isHiddenPopOverEmailBlocked: PropTypes.bool,
-  onTogglePopOverEmailBlocked: PropTypes.func
+  onTogglePopOverEmailBlocked: PropTypes.func,
+  onLightsOn: PropTypes.func,
+  showLightsOn: PropTypes.bool
 };
 
 export default Email;

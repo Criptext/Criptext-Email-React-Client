@@ -43,6 +43,7 @@ import {
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
+  API_VERSION_TOO_OLD: 'api-version-too-old',
   BIG_UPDATE_AVAILABLE: 'big-update-available',
   CREATING_BACKUP_FILE: 'creating-backup-file',
   CHANGE_ACCOUNT: 'change-account',
@@ -110,6 +111,7 @@ class PanelWrapper extends Component {
         onUpdateApp={this.handleUpdateApp}
         sectionSelected={this.state.sectionSelected}
         onUpdateNow={this.handleUpdateNow}
+        onUpdateWebsite={this.handleUpdateWebsite}
         backupSnackbar={this.state.backupSnackbar}
         onDismissSnackbar={this.handleSnackbarDismiss}
         {...this.props}
@@ -393,6 +395,7 @@ class PanelWrapper extends Component {
     addEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
     addEvent(Event.SUSPENDED_ACCOUNT, this.suspendedAccountListenerCallback);
     addEvent(Event.BIG_UPDATE_AVAILABLE, this.handleBigUpdateListenerCallback);
+    addEvent(Event.API_VERSION_TOO_OLD, this.apiVersionTooOldListenerCallback);
     addEvent(Event.BACKUP_PROGRESS, this.handleBackupProgress);
     addEvent(
       Event.REACTIVATED_ACCOUNT,
@@ -444,6 +447,10 @@ class PanelWrapper extends Component {
     removeEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
     removeEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
     removeEvent(Event.SUSPENDED_ACCOUNT, this.suspendedAccountListenerCallback);
+    removeEvent(
+      Event.API_VERSION_TOO_OLD,
+      this.apiVersionTooOldListenerCallback
+    );
     removeEvent(Event.BACKUP_PROGRESS, this.handleBackupProgress);
     removeEvent(
       Event.REACTIVATED_ACCOUNT,
@@ -808,6 +815,13 @@ class PanelWrapper extends Component {
     this.setState({
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.SUSPENDED_ACCOUNT
+    });
+  };
+
+  apiVersionTooOldListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.API_VERSION_TOO_OLD
     });
   };
 
