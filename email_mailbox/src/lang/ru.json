@@ -345,6 +345,9 @@
       "description": "Нет соединения. Пытаемся восстановить соединение",
       "action": "Попробуй"
     },
+    "actionRequired": {
+      "update": "Click to Update"
+    },
     "new_device": {
       "ask": "Вы пытаетесь получить доступ с"
     },

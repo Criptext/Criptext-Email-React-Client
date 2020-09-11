@@ -7,7 +7,7 @@ import SettingGeneral from './SettingGeneral';
 import SettingUpgradePlusWrapper from './SettingUpgradePlusWrapper';
 import { version } from './../../package.json';
 import string from '../lang';
-import { isPlus } from '../utils/plus';
+import { isPlus, isEnterprise } from '../utils/plus';
 
 const Sections = [
   string.settings.account,
@@ -28,19 +28,24 @@ export const TAB = {
 const Settings = props => (
   <div className="settings-content">
     <ul className="settings-content-items">
-      {Sections.map((section, index) => (
-        <Items
-          key={index}
-          name={section}
-          sectionName={
-            section === TAB.PLUS && isPlus(props.customerType)
-              ? string.settings.billing
-              : section
-          }
-          onClick={props.onClickSection}
-          selected={section === props.sectionSelected}
-        />
-      ))}
+      {Sections.reduce((result, section, index) => {
+        if (section === TAB.PLUS && isEnterprise(props.customerType))
+          return result;
+        return [
+          ...result,
+          <Items
+            key={index}
+            name={section}
+            sectionName={
+              section === TAB.PLUS && isPlus(props.customerType)
+                ? string.settings.billing
+                : section
+            }
+            onClick={props.onClickSection}
+            selected={section === props.sectionSelected}
+          />
+        ];
+      }, [])}
     </ul>
     <div className="settings-content-scroll cptx-scrollbar">
       {renderSection(props)}

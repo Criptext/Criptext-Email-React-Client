@@ -345,6 +345,9 @@
       "description": "Non connecté. Tentative de reconnexion",
       "action": "Essayez maintenant"
     },
+    "actionRequired": {
+      "update": "Click to Update"
+    },
     "new_device": {
       "ask": "Essayez-vous d'accéder depuis"
     },

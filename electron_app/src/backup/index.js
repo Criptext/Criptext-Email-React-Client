@@ -87,7 +87,7 @@ const runBackup = (
     });
 
     worker.on('close', code => {
-      console.log(`child process closed with code ${code}`);
+      logger.info(`child process closed with code ${code}`);
       if (code !== 0 || backupSize === 0) {
         reject(code);
         return;

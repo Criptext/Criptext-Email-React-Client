@@ -111,7 +111,16 @@ const start = async () => {
     handleRegisterBackup(`${reId}@${domain}`, backupPath);
   }
 
+  await sleep(1000);
   process.exit(0);
+};
+
+const sleep = time => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, time);
+  });
 };
 
 const handleRegisterBackup = (email, backupPath) => {
