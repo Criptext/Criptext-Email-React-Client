@@ -113,6 +113,7 @@ class MessageWrapper extends Component {
       displayMessage: true
     };
     this.setState(newState, () => {
+      if (type === MessageType.REQUIREMENT) return;
       const isImportantMessage =
         ask ||
         priority === messagePriorities.HIGH ||
