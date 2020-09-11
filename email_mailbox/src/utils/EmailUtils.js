@@ -25,7 +25,13 @@ const cleanEmails = emails => {
 };
 
 const cleanHTML = string => {
-  const stringHTMLcontentRemoved = string
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = string;
+  const styles = wrapper.getElementsByTagName('style');
+  for (const style of styles) {
+    style.innerHTML = '';
+  }
+  const stringHTMLcontentRemoved = wrapper.innerHTML
     .replace(/<style[^>]*>[^>]*<\/style>/g, '')
     .replace(/<script[^>]*>[^>]*<\/script>/g, '')
     .replace(/&[a-z]{2,5};/g, ' ');
