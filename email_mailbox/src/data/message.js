@@ -17,7 +17,8 @@ const actionHandlerKeys = {
     emailSent: 'view-message'
   },
   error: {
-    network: 'try-reconnect'
+    network: 'try-reconnect',
+    billing: 'open-billing'
   }
 };
 

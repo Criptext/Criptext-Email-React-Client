@@ -345,6 +345,9 @@
       "description": "Nicht verbunden. Es wird versucht, die Verbindung wiederherzustellen",
       "action": "Versuchen Sie es jetzt"
     },
+    "actionRequired": {
+      "update": "Click to Update"
+    },
     "new_device": {
       "ask": "Versuchen Sie, von hier aus darauf zuzugreifen"
     },

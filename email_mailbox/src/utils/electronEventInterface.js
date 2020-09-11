@@ -90,7 +90,7 @@ import {
   NOTIFICATION_ACTIONS,
   SEND_BUTTON_STATUS
 } from './const';
-import Messages from './../data/message';
+import Messages, { actionHandlerKeys } from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import {
@@ -526,11 +526,14 @@ export const handleEvent = ({
     case SocketCommand.UPDATE_DEVICE_TYPE: {
       return handleUpdateDeviceTypeEvent(incomingEvent);
     }
+    case SocketCommand.ACTION_REQUIRED: {
+      return handleActionRequiredEvent(incomingEvent, accountRecipientId);
+    }
     case SocketCommand.SUSPENDED_ACCOUNT_EVENT: {
-      return handleSuspendedAccountEvent(incomingEvent, accountRecipientId);
+      return handleSuspendedAccountEvent(accountRecipientId);
     }
     case SocketCommand.REACTIVATED_ACCOUNT_EVENT: {
-      return handleReactivatedAccountEvent(incomingEvent, accountRecipientId);
+      return handleReactivatedAccountEvent(accountRecipientId);
     }
     case SocketCommand.CUSTOMER_TYPE_UPDATE: {
       return handleCustomerTypeUpdateEvent(incomingEvent, accountRecipientId);
@@ -1406,20 +1409,26 @@ const handleNewAnnouncementEvent = async ({ rowid, params }) => {
   const { code, version, operator } = params;
   const updateAnnouncement = await getNews({ code });
   if (!updateAnnouncement) return { rowid };
+  const shouldAnnounce = checkIfShouldAnnounce(operator, version);
+  if (!shouldAnnounce) return { rowid };
+
   if (updateAnnouncement.largeImageUrl) {
-    handleNewAnnouncement(updateAnnouncement, version, parseInt(operator));
-    return { rowid };
+    emitter.emit(Event.BIG_UPDATE_AVAILABLE, {
+      ...updateAnnouncement,
+      showUpdateNow: semver.gt(version, appVersion)
+    });
+  } else {
+    const messageData = {
+      ...Messages.news.announcement,
+      type: MessageType.ANNOUNCEMENT,
+      description: updateAnnouncement.title
+    };
+    emitter.emit(Event.DISPLAY_MESSAGE, messageData);
   }
-  const messageData = {
-    ...Messages.news.announcement,
-    type: MessageType.ANNOUNCEMENT,
-    description: updateAnnouncement.title
-  };
-  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
   return { rowid };
 };
 
-const handleNewAnnouncement = (announcement, version, operator) => {
+const checkIfShouldAnnounce = (operator, version) => {
   const OPERATOR = {
     LESS_THAN: 1,
     LESS_EQUAL: 2,
@@ -1447,12 +1456,7 @@ const handleNewAnnouncement = (announcement, version, operator) => {
     default:
       break;
   }
-  if (!shouldShowAnnouncement) return;
-
-  emitter.emit(Event.BIG_UPDATE_AVAILABLE, {
-    ...announcement,
-    showUpdateNow: semver.gt(version, appVersion)
-  });
+  return shouldShowAnnouncement;
 };
 
 const handleNewUpdateAvailable = async ({ rowid }) => {
@@ -1465,6 +1469,26 @@ const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
   const newDeviceType = getDeviceType();
   const { status } = await updateDeviceType(newDeviceType);
   return status === 200 ? { rowid } : { rowid: null };
+};
+
+const handleActionRequiredEvent = async (
+  { rowid, params },
+  accountRecipientId
+) => {
+  if (accountRecipientId !== myAccount.recipientId) return { rowid: null };
+
+  const { code } = params;
+  const updateAnnouncement = await getNews({ code });
+
+  const messageData = {
+    ...Messages.news.announcement,
+    type: MessageType.ANNOUNCEMENT,
+    description: updateAnnouncement.title,
+    actionHandlerKey: actionHandlerKeys.error.billing,
+    action: string.messages.actionRequired.update
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+  return { rowid };
 };
 
 const handleSuspendedAccountEvent = accountRecipientId => {

@@ -347,6 +347,9 @@
       "description": "Sin conexión. Intentando reconectar",
       "action": "Reconectar ahora"
     },
+    "actionRequired": {
+      "update": "Clic para Actualizar"
+    },
     "new_device": {
       "ask": "Estás tratando de acceder desde"
     },

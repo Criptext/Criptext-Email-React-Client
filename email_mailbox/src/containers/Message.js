@@ -7,6 +7,7 @@ import { installUpdate, restartConnection } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, updateUnreadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
+import { adminUrl } from '../utils/const';
 import string from '../lang';
 
 const { popups } = string;
@@ -111,6 +112,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
         case actionHandlerKeys.error.network: {
           await restartConnection();
+          break;
+        }
+        case actionHandlerKeys.error.billing: {
+          window.open(`${adminUrl}/#/billing`, '_blank');
           break;
         }
         default:

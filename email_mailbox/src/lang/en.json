@@ -347,6 +347,9 @@
       "description": "Not connected. Trying to reconnect",
       "action": "Try now"
     },
+    "actionRequired": {
+      "update": "Click to Update"
+    },
     "new_device": {
       "ask": "Are you trying to access from"
     },
