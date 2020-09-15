@@ -242,6 +242,10 @@ const messagesContent = {
     announcement: {
       priority: messagePriorities.MEDIUM,
       description: ''
+    },
+    requirement: {
+      priority: messagePriorities.LOW,
+      description: ''
     }
   }
 };

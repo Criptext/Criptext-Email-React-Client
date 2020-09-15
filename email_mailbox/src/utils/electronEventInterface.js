@@ -1471,24 +1471,21 @@ const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
   return status === 200 ? { rowid } : { rowid: null };
 };
 
-const handleActionRequiredEvent = async (
-  { rowid, params },
-  accountRecipientId
-) => {
+const handleActionRequiredEvent = async ({ params }, accountRecipientId) => {
   if (accountRecipientId !== myAccount.recipientId) return { rowid: null };
 
   const { code } = params;
   const updateAnnouncement = await getNews({ code });
 
   const messageData = {
-    ...Messages.news.announcement,
-    type: MessageType.ANNOUNCEMENT,
+    ...Messages.news.requirement,
+    type: MessageType.REQUIREMENT,
     description: updateAnnouncement.title,
     actionHandlerKey: actionHandlerKeys.error.billing,
     action: string.messages.actionRequired.update
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
-  return { rowid };
+  return { rowid: null };
 };
 
 const handleSuspendedAccountEvent = accountRecipientId => {

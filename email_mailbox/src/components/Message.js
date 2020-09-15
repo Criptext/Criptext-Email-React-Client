@@ -20,7 +20,8 @@ const renderMessageType = props => {
     props.type === MessageType.SUCCESS ||
     props.type === MessageType.ERROR ||
     props.type === MessageType.ESTABLISH ||
-    props.type === MessageType.ANNOUNCEMENT
+    props.type === MessageType.ANNOUNCEMENT ||
+    props.type === MessageType.REQUIREMENT
   ) {
     return <MessageStandard {...props} />;
   } else if (props.type === MessageType.QUESTION) {
@@ -97,6 +98,8 @@ const defineMessageClass = type => {
       return 'message-establish';
     case MessageType.ANNOUNCEMENT:
       return 'message-announcement';
+    case MessageType.REQUIREMENT:
+      return 'message-requirement';
     default:
       break;
   }
@@ -120,7 +123,8 @@ export const MessageType = {
   SUCCESS: 4,
   ERROR: 5,
   ESTABLISH: 6,
-  ANNOUNCEMENT: 7
+  ANNOUNCEMENT: 7,
+  REQUIREMENT: 8
 };
 
 export const MessageActionStatus = {
