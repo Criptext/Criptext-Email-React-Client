@@ -530,7 +530,7 @@ export const updateUnreadThreads = (threadIds, unread, labelId) => {
   return async dispatch => {
     try {
       if (!threadIds.length) return;
-      const threadIdsEvent = [...this.threadIds];
+      const threadIdsEvent = [...threadIds];
       let threadIdsForEvent = threadIdsEvent.splice(0, PEER_BATCH);
       while (threadIdsForEvent.length > 0) {
         const eventParams = {

@@ -133,7 +133,11 @@ const handleRegisterBackup = (email, backupPath) => {
     writeJson(process.env.AUDITPATH, audit);
   } else {
     const deletePath = audit[email].shift();
-    deleteFile(deletePath);
+    try {
+      deleteFile(deletePath);
+    } catch (ex) {
+      console.error('Unable to delete path:', deletePath);
+    }
     audit[email].push(backupPath);
     writeJson(process.env.AUDITPATH, audit);
   }
