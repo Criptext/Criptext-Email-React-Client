@@ -105,7 +105,10 @@ const Email = props => (
       </div>
       <hr />
       <div className="email-body">
-        <div disabled={props.hideView || props.isUnsend} className="email-text">
+        <div
+          disabled={props.hideView || props.isUnsend}
+          className="email-text cptx-email-display"
+        >
           <div dangerouslySetInnerHTML={{ __html: theMail(props) }} />
         </div>
         {!!props.files.length &&
