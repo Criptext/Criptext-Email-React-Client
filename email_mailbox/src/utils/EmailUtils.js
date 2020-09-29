@@ -3,7 +3,6 @@ import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
 import sanitizeHtml from 'sanitize-html';
-import css from 'css';
 import { version } from './../../package.json';
 import { LabelType, myAccount } from './electronInterface';
 import { HTMLTagsRegex, emailRegex } from './RegexUtils';
@@ -11,7 +10,7 @@ import { Utf8Decode } from './EncodingUtils';
 import { removeAppDomain, toCapitalize } from './StringUtils';
 import { appDomain } from './const';
 import string from './../lang';
-import { getOsAndArch, logError } from './ipc';
+import { getOsAndArch } from './ipc';
 
 const cleanEmails = emails => {
   return emails.map(email => {
@@ -290,27 +289,7 @@ export const formFilesFromData = ({ files, date, fileKeys, emailContent }) => {
 
 export const cleanEmailBody = body => {
   if (!body) return '';
-  try {
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = body;
-    const styles = wrapper.getElementsByTagName('style');
-    for (const style of styles) {
-      const parsedCss = css.parse(style.innerText);
-      const sheet = parsedCss.stylesheet;
-      for (const rule in sheet.rules) {
-        const myRule = sheet.rules[rule];
-        for (const s in myRule.selectors) {
-          myRule.selectors[s] = '.cptx-email-display ' + myRule.selectors[s];
-        }
-      }
-      style.innerHTML = css.stringify(parsedCss);
-    }
-    const newBody = wrapper.innerHTML;
-    return Utf8Decode(sanitize(newBody));
-  } catch (ex) {
-    logError(ex);
-    return Utf8Decode(sanitize(body));
-  }
+  return Utf8Decode(sanitize(body));
 };
 
 export const formIncomingEmailFromData = ({
