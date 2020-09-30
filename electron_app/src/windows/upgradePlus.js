@@ -1,5 +1,6 @@
 const { BrowserWindow } = require('electron');
 const language = require('../lang/index');
+const { ACCOUNT_URL } = require('../utils/const');
 
 const openUpgradeToPlusWindow = token => {
   try {
@@ -15,9 +16,7 @@ const openUpgradeToPlusWindow = token => {
       }
     });
     workerWin.loadURL(
-      `https://admin.criptext.com/?#/account/billing?lang=${
-        language.currentLanguage
-      }&token=${token}`
+      `${ACCOUNT_URL}?#/billing?lang=${language.currentLanguage}&token=${token}`
     );
     workerWin.webContents.closeDevTools();
     return workerWin;

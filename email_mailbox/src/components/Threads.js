@@ -13,7 +13,7 @@ import DialogPopup from './DialogPopup';
 import string from './../lang';
 import './threads.scss';
 
-const EmptyTrashPopover = PopupHOC(DialogPopup);
+const EmptyMailboxPopover = PopupHOC(DialogPopup);
 
 const Threads = props => (
   <div className={defineClassComponent(props.isVisible)}>
@@ -26,7 +26,7 @@ const Threads = props => (
       setPopupContent={props.setPopupContent}
     />
     {props.popupContent && (
-      <EmptyTrashPopover
+      <EmptyMailboxPopover
         {...props.popupContent}
         onLeftButtonClick={props.dismissPopup}
         onRightButtonClick={props.handlePopupConfirm}

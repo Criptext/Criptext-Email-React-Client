@@ -2,7 +2,8 @@ import string from '../lang';
 
 const actionHandlerKeys = {
   advice: {
-    trash: 'empty-trash'
+    trash: 'empty-trash',
+    spam: 'empty-spam'
   },
   suggestion: {
     update: 'install-update'
@@ -36,6 +37,12 @@ const messagesContent = {
       description: string.messages.trash.description,
       action: string.messages.trash.action,
       actionHandlerKey: actionHandlerKeys.advice.trash
+    },
+    spam: {
+      priority: messagePriorities.LOW,
+      description: string.messages.spam.description,
+      action: string.messages.spam.action,
+      actionHandlerKey: actionHandlerKeys.advice.spam
     }
   },
   suggestion: {

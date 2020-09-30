@@ -22,6 +22,11 @@ export const adminUrl =
     ? process.env.REACT_APP_ADMIN_URL
     : `https://admin.criptext.com`;
 
+export const accountUrl =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_ACCOUNT_URL
+    : `https://account.criptext.com`;
+
 export const unsentText = 'This content was unsent';
 
 export const sidebarItemsOrder = [

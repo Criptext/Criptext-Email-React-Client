@@ -405,6 +405,10 @@
         "description": "Confirmation email sent to your recovery email"
       }
     },
+    "spam": {
+      "description": "You can permanently delete all emails on your spam folder",
+      "action": "Empty Spam"
+    },
     "trash": {
       "description": "Les messages qui sont dans la corbeille depuis plus de 30 jours seront automatiquement supprimés",
       "action": "Vider la corbeille"

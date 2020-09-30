@@ -412,6 +412,10 @@
         "description": "Confirmation email sent to your recovery email"
       }
     },
+    "spam": {
+      "description": "You can permanently delete all emails on your spam folder",
+      "action": "Empty Spam"
+    },
     "trash": {
       "description": "Messages that have been in Trash more than 30 days will be automatically deleted",
       "action": "Empty Trash"

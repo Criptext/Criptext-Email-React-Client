@@ -11,6 +11,7 @@ const LINK_DEVICES_FILE_VERSION = '6';
 const PROD_SOCKET_URL = 'wss://socket.criptext.com';
 const PROD_SERVER_URL = 'https://api.criptext.com';
 const PROD_DATA_TRANSFER_URL = 'https://transfer.criptext.com';
+const PROD_ACCOUNT_URL = 'https://account.criptext.com';
 const FILE_SERVER_APP_ID = 'qynhtyzjrshazxqarkpy';
 const FILE_SERVER_KEY = 'lofjksedbxuucdjjpnby';
 const PROD_APP_DOMAIN = 'criptext.com';
@@ -45,5 +46,6 @@ module.exports = {
     ? process.env.DEV_NUCLEUS_ID
     : process.env.PROD_NUCLEUS_ID || nucleusId,
   INSTALLER_TYPE: criptextInstallerType,
-  DEFAULT_PIN
+  DEFAULT_PIN,
+  ACCOUNT_URL: isDevelopment ? process.env.DEV_ACCOUNT_URL : PROD_ACCOUNT_URL
 };
