@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { myAccount, mySettings } from '../utils/electronInterface';
 import string from './../lang';
-import { adminUrl } from '../utils/const';
+import { accountUrl } from '../utils/const';
 import './addressmanager.scss';
 const localize = string.settings.address_manager;
 
@@ -37,7 +37,7 @@ class AddressManager extends Component {
           <iframe
             id="cptx-address-manager-iframe"
             title="cptx-address-manager-iframe"
-            src={`${adminUrl}/?#/addresses?lang=${mySettings.language ||
+            src={`${accountUrl}/?#/addresses?lang=${mySettings.language ||
               'en'}&token=${myAccount.jwt}`}
             onLoad={this.handleLoad}
             className={

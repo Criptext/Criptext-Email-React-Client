@@ -27,7 +27,7 @@ const mailboxSize = {
 };
 
 const oldAdminUrl = 'https://admin.criptext.com/?#/account/billing';
-const adminUrl = `${ACCOUNT_URL}/?#/billing`;
+const accountUrl = `${ACCOUNT_URL}/?#/billing`;
 
 const iconPath = path.join(
   __dirname,
@@ -189,7 +189,7 @@ const openLinkInDefaultBrowser = (ev, url) => {
       emailAddress
     });
     return;
-  } else if (url === adminUrl || url === oldAdminUrl) {
+  } else if (url === accountUrl || url === oldAdminUrl) {
     mailboxWindow.webContents.send('open-plus');
     return;
   }

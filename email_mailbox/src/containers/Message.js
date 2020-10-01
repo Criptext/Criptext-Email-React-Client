@@ -4,10 +4,9 @@ import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
 import { LabelType } from './../utils/electronInterface';
 import { installUpdate, restartConnection } from './../utils/ipc';
-import { SectionType } from '../utils/const';
+import { SectionType, adminUrl } from '../utils/const';
 import { loadThreads, updateUnreadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
-import { adminUrl } from '../utils/const';
 import string from '../lang';
 
 const { popups } = string;
