@@ -12,7 +12,6 @@ import { getEmailsByLabelIds } from './../utils/ipc';
 import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { EmptyMailboxStatus } from '../components/EmptyMailbox';
-import { LabelType } from './../utils/electronInterface';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { storeValue } from '../utils/storage';
@@ -121,8 +120,7 @@ const mapDispatchToProps = dispatch => {
         )
       ).then(() => true);
     },
-    onEmptyTrash: async () => {
-      const labelId = LabelType.trash.id;
+    onEmptyMailbox: async labelId => {
       const emails = await getEmailsByLabelIds({ labelIds: [labelId] });
       const threadsParams = emails.map(email => ({
         threadIdDB: email.threadId

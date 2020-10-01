@@ -412,6 +412,10 @@
         "description": "Correo de confirmación enviado a su correo de recuperación"
       }
     },
+    "spam": {
+      "description": "Puedes borrar permanentemente todos los correos que se encuentren en tu carpeta de Spam",
+      "action": "Vaciar Spam"
+    },
     "trash": {
       "description": "Correos que estén en la papelera más de 30 días serán eliminados automáticamente",
       "action": "Vaciar Papelera"

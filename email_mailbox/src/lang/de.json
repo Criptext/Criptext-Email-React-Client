@@ -405,6 +405,10 @@
         "description": "Confirmation email sent to your recovery email"
       }
     },
+    "spam": {
+      "description": "You can permanently delete all emails on your spam folder",
+      "action": "Empty Spam"
+    },
     "trash": {
       "description": "Nachrichten, die länger als 30 Tage im Papierkorb waren, werden automatisch gelöscht",
       "action": "Leerer Papierkorb"

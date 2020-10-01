@@ -288,7 +288,8 @@ export const formFilesFromData = ({ files, date, fileKeys, emailContent }) => {
 };
 
 export const cleanEmailBody = body => {
-  return body ? Utf8Decode(sanitize(body)) : '';
+  if (!body) return '';
+  return Utf8Decode(sanitize(body));
 };
 
 export const formIncomingEmailFromData = ({

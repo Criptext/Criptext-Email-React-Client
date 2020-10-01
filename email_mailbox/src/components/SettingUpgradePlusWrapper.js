@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { myAccount, mySettings } from '../utils/electronInterface';
 import './settingupgradepluss.scss';
+import { accountUrl } from '../utils/const';
 
 const Loading = () => (
   <div className="loading-ring">
@@ -30,7 +31,7 @@ class SettingUpgradePlusWrapper extends Component {
         <iframe
           id="cptx-upgrade-to-plus-iframe"
           title="cptx-upgrade-to-plus-iframe"
-          src={`https://admin.criptext.com/?#/account/billing?lang=${mySettings.language ||
+          src={`${accountUrl}/?#/billing?lang=${mySettings.language ||
             'en'}&token=${myAccount.jwt}`}
           onLoad={this.handleLoad}
           className={

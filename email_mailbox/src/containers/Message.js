@@ -28,6 +28,17 @@ const defineMessageData = (
       actionHandlerKey: actionHandlerKeys.advice.trash,
       displayMessage: true
     };
+  } else if (
+    targetLabelId === LabelType.spam.id &&
+    !isEmpty &&
+    !isSectionThread
+  ) {
+    return {
+      ...MessageContent.advice.spam,
+      type: MessageType.ADVICE,
+      actionHandlerKey: actionHandlerKeys.advice.spam,
+      displayMessage: true
+    };
   } else if (isUpdateAvailable) {
     return {
       ...MessageContent.suggestion.update,
@@ -102,6 +113,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.advice.trash: {
+          ownProps.setPopupContent(popups.permanently_delete);
+          break;
+        }
+        case actionHandlerKeys.advice.spam: {
           ownProps.setPopupContent(popups.permanently_delete);
           break;
         }

@@ -12,8 +12,10 @@ import ButtonUnsend from './ButtonUnsendWrapper';
 import AvatarImage from './AvatarImage';
 import ButtonIcon from './ButtonIcon';
 import { EmailStatus } from './../utils/const';
+import css from 'css';
 import string from '../lang';
 import './email.scss';
+import { logError } from '../utils/ipc';
 
 const DeletePermanenltyPopup = PopupHOC(DialogPopup);
 const BlockRemotePopup = PopupHOC(BlockRemoteContentPopup);
@@ -105,7 +107,10 @@ const Email = props => (
       </div>
       <hr />
       <div className="email-body">
-        <div disabled={props.hideView || props.isUnsend} className="email-text">
+        <div
+          disabled={props.hideView || props.isUnsend}
+          className={`email-text cptx-email-display-${props.email.key}`}
+        >
           <div dangerouslySetInnerHTML={{ __html: theMail(props) }} />
         </div>
         {!!props.files.length &&
@@ -331,10 +336,33 @@ const renderIconSecure = (onMouseEnterTooltip, onMouseLeaveTooltip, id) => {
 };
 
 const theMail = props => {
-  const { content, blockImagesInline } = props;
+  const { content, blockImagesInline, email } = props;
+
+  let newContent = content;
+  try {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = content;
+    const styles = wrapper.getElementsByTagName('style');
+    for (const style of styles) {
+      const parsedCss = css.parse(style.innerText);
+      const sheet = parsedCss.stylesheet;
+      for (const rule in sheet.rules) {
+        const myRule = sheet.rules[rule];
+        for (const s in myRule.selectors) {
+          myRule.selectors[s] =
+            `.cptx-email-display-${email.key} ` + myRule.selectors[s];
+        }
+      }
+      style.innerHTML = css.stringify(parsedCss);
+    }
+    newContent = wrapper.innerHTML;
+  } catch (ex) {
+    logError(ex);
+  }
+
   if (!blockImagesInline)
-    return `<div class="email-container">${content}</div>`;
-  return getDOM(content);
+    return `<div class="email-container">${newContent}</div>`;
+  return getDOM(newContent);
 };
 
 const getDOM = html => {

@@ -9,7 +9,7 @@ const globalManager = require('./../globalManager');
 const { EVENTS, callEvent } = require('./events');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
-const { API_TRACKING_EVENT } = require('./../utils/const');
+const { API_TRACKING_EVENT, ACCOUNT_URL } = require('./../utils/const');
 const { isFromStore, isDev } = require('./windowUtils');
 const {
   updateUserData,
@@ -26,7 +26,8 @@ const mailboxSize = {
   height: 800
 };
 
-const adminUrl = 'https://admin.criptext.com/?#/account/billing';
+const oldAdminUrl = 'https://admin.criptext.com/?#/account/billing';
+const adminUrl = `${ACCOUNT_URL}/?#/billing`;
 
 const iconPath = path.join(
   __dirname,
@@ -188,7 +189,7 @@ const openLinkInDefaultBrowser = (ev, url) => {
       emailAddress
     });
     return;
-  } else if (url === adminUrl) {
+  } else if (url === adminUrl || url === oldAdminUrl) {
     mailboxWindow.webContents.send('open-plus');
     return;
   }

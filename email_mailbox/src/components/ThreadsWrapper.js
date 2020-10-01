@@ -172,7 +172,9 @@ class ThreadsWrapper extends Component {
   };
 
   handlePopupConfirm = () => {
-    this.setState({ popupContent: undefined }, this.props.onEmptyTrash);
+    this.setState({ popupContent: undefined }, () => {
+      this.props.onEmptyMailbox(this.props.mailboxSelected.id);
+    });
   };
 
   handleSetScrollRef = e => {
@@ -195,7 +197,7 @@ ThreadsWrapper.propTypes = {
   mailboxSelected: PropTypes.object,
   onBackOption: PropTypes.func,
   onCloseUpdateMessage: PropTypes.func,
-  onEmptyTrash: PropTypes.func,
+  onEmptyMailbox: PropTypes.func,
   onLoadApp: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
