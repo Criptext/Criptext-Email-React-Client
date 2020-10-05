@@ -75,7 +75,7 @@ const deleteDatabase = () => {
   });
 };
 
-const CURRENT_VERSION = 4;
+const CURRENT_VERSION = 5;
 
 const Table = {
   ACCOUNT: 'account',
@@ -261,7 +261,12 @@ const initDatabaseEncrypted = async (
       messageId: Sequelize.STRING,
       replyTo: Sequelize.STRING,
       fromAddress: { type: Sequelize.STRING, defaultValue: '' },
-      boundary: Sequelize.STRING
+      boundary: Sequelize.STRING,
+      isNewsletter: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: null
+      }
     },
     {
       sequelize,
@@ -582,24 +587,33 @@ const initDatabaseEncrypted = async (
       migrationFiles = [
         '20200422145912-customerType',
         '20200512111423_addBlockAllColumn',
-        '20200701180920_addDefaultAddressId'
+        '20200701180920_addDefaultAddressId',
+        '20201005121441-addIsNewsletter'
       ];
       break;
     case 2:
       migrationFiles = [
         '20200512111423_addBlockAllColumn',
-        '20200701180920_addDefaultAddressId'
+        '20200701180920_addDefaultAddressId',
+        '20201005121441-addIsNewsletter'
       ];
       break;
     case 3:
-      migrationFiles = ['20200701180920_addDefaultAddressId'];
+      migrationFiles = [
+        '20200701180920_addDefaultAddressId',
+        '20201005121441-addIsNewsletter'
+      ];
+      break;
+    case 4:
+      migrationFiles = ['20201005121441-addIsNewsletter'];
       break;
     default:
       migrationFiles = [
         '20200123161254-multipleAccounts',
         '20200422145912-customerType',
-        '20200512111423_addBlockAllColumn.js',
-        '20200701180920_addDefaultAddressId'
+        '20200512111423_addBlockAllColumn',
+        '20200701180920_addDefaultAddressId',
+        '20201005121441-addIsNewsletter'
       ];
       break;
   }

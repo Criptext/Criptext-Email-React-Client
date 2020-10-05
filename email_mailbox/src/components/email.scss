@@ -68,6 +68,19 @@
       margin: 5px 17px 0px 17px;
       width: calc(100% - 32px);
     }
+
+    .email-not-encrypted {
+      background: #f3f6ff;
+      margin: 20px 0px 5px 0px;
+      width: calc(100% - 136px);
+      text-align: center;
+      padding: 5px;
+      font-size: 14px;
+
+      a {
+        color: #0091ff;
+      }
+    }
   
     .email-info{
       .email-info-content{

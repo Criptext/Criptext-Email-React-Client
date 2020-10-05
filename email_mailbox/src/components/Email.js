@@ -106,6 +106,21 @@ const Email = props => (
         {renderEmailBlocked(props)}
       </div>
       <hr />
+      {(props.email.isNewsletter === false ||
+        props.email.isNewsletter === 0) && (
+        <div className="email-not-encrypted">
+          <span>
+            {string.mailbox.not_encrypted.message}{' '}
+            <a
+              href="https://criptext.com"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {string.mailbox.not_encrypted.link}
+            </a>
+          </span>
+        </div>
+      )}
       <div className="email-body">
         <div
           disabled={props.hideView || props.isUnsend}

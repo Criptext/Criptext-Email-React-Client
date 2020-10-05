@@ -251,6 +251,10 @@
     "mark_as_unread": "Mark as Unread",
     "move_to_trash": "Move to trash",
     "more": "more",
+    "not_encrypted": {
+      "message": "This email couldn't be encrypted.",
+      "link": "Learn More"
+    },
     "not_starred": "Not starred",
     "of": "of",
     "reply": "Reply",

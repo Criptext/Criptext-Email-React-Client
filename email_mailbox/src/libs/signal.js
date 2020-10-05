@@ -37,7 +37,7 @@ const decryptEmail = async ({
   if (status !== 200) {
     throw new Error(CONTENT_NOT_AVAILABLE);
   }
-  if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
+  if (typeof deviceId !== 'number' || typeof messageType !== 'number') {
     return {
       decryptedBody: body.body,
       decryptedHeaders: body.headers,

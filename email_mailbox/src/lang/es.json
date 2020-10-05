@@ -251,6 +251,10 @@
     "mark_as_unread": "Marcar como no leído",
     "move_to_trash": "Mover a papelera",
     "more": "más",
+    "not_encrypted": {
+      "message": "Este correo no pudo ser encriptado.",
+      "link": "Conocer Más"
+    },
     "not_starred": "No favorito",
     "of": "de",
     "reply": "Responder",
