@@ -113,7 +113,9 @@ export const removeEmails = (labelId, emailsParams) => {
       while (keysForEvent.length > 0) {
         const eventParams = {
           cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
-          params: { keysForEvent }
+          params: {
+            metadataKeys: keysForEvent
+          }
         };
         await postPeerEvent({ data: eventParams });
         keysForEvent = metadataKeys.splice(0, PEER_BACTH);
