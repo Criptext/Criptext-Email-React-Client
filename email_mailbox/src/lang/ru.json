@@ -250,6 +250,10 @@
     "mark_as_unread": "Пометить как непрочитанное",
     "move_to_trash": "Перейти к корзине",
     "more": "еще",
+    "not_encrypted": {
+      "message": "This email couldn't be encrypted.",
+      "link": "Learn More"
+    },
     "not_starred": "Не отмечено",
     "of": "из",
     "reply": "Ответить",

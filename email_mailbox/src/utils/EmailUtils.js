@@ -304,7 +304,8 @@ export const formIncomingEmailFromData = ({
   unread,
   messageId,
   replyTo,
-  boundary
+  boundary,
+  isNewsletter
 }) => {
   const content = body || '';
   const preview = body
@@ -326,7 +327,8 @@ export const formIncomingEmailFromData = ({
     replyTo,
     fromAddress: from,
     boundary,
-    content: ''
+    content: '',
+    isNewsletter
   };
   return email;
 };

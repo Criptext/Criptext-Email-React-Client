@@ -211,7 +211,10 @@ class EmailWrapper extends Component {
         blockImagesAccount: false
       };
     }
-    const theValue = blockRemoteContent ? !contactIsTrusted : false;
+    const theValue =
+      this.props.email.isNewsletter !== true &&
+      blockRemoteContent &&
+      !contactIsTrusted;
 
     return {
       blockingInline: theValue,

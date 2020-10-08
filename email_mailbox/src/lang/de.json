@@ -250,6 +250,10 @@
     "mark_as_unread": "Als ungelesen markieren",
     "move_to_trash": "In den Papierkorb verschieben",
     "more": "mehr",
+    "not_encrypted": {
+      "message": "This email couldn't be encrypted.",
+      "link": "Learn More"
+    },
     "not_starred": "Nicht markiert",
     "of": "von",
     "reply": "Antworten",

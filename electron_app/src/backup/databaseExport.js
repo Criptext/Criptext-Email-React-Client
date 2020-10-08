@@ -78,7 +78,7 @@ const exportEmailTable = async (accountId, email, databaseKey) => {
     const result = await getDB()
       .query(
         `SELECT content, date, fromAddress, email.id, key, messageId, preview, 
-        replyTo, secure, status, subject, threadId, unread, unsentDate 
+        replyTo, secure, status, subject, threadId, unread, unsentDate, isNewsletter 
         FROM ${Table.EMAIL} ${whereRawEmailQuery(
           `${Table.EMAIL}.id`,
           accountId
@@ -99,6 +99,7 @@ const exportEmailTable = async (accountId, email, databaseKey) => {
           if (!newRow.trashDate) delete newRow.trashDate;
           if (newRow.replyTo === null) newRow = { ...newRow, replyTo: '' };
           if (!newRow.boundary) delete newRow.boundary;
+          if (!newRow.isNewsletter) delete newRow.isNewsletter;
 
           const body =
             (await getEmailBody({

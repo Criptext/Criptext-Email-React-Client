@@ -441,7 +441,9 @@ export const removeThreads = (threadsParams, labelId) => {
         while (keysForEvent.length > 0) {
           const eventParams = {
             cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
-            params: { metadataKeys }
+            params: {
+              metadataKeys: keysForEvent
+            }
           };
           await postPeerEvent({ data: eventParams });
           keysForEvent = metadataKeys.splice(0, PEER_BATCH);

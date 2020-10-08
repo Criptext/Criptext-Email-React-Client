@@ -640,6 +640,7 @@ const formEmailIfNotExists = async params => {
     recipients,
     guestEncryption,
     external,
+    isNewsletter,
     rowid
   } = params;
 
@@ -659,32 +660,17 @@ const formEmailIfNotExists = async params => {
       fileKeys: fileKeys || (fileKey ? [fileKey] : null)
     });
     if (decryptResult.signalError) {
+      reportContentUnencryptedBob(decryptResult.signalError);
       if (external) {
-        const reencryptRes = await reencryptEmail({
+        await reencryptEmail({
           metadataKey,
           eventid: rowid,
           recipientId: accountRecipientId
         });
-        if (!reencryptRes) return { error: FATAL_ERROR };
-
-        switch (reencryptRes.status) {
-          case 200:
-            return {
-              error: FATAL_ERROR
-            };
-          case 429:
-            reportContentUnencryptedBob(decryptResult.signalError);
-            break;
-          default:
-            return {
-              error: FATAL_ERROR
-            };
-        }
-        body = 'Content unencrypted';
-      } else {
-        reportContentUnencrypted(decryptResult.signalError);
-        body = 'Content unencrypted';
+        return { error: FATAL_ERROR };
       }
+      reportContentUnencrypted(decryptResult.signalError);
+      body = 'Content unencrypted';
     } else {
       const {
         decryptedBody,
@@ -736,7 +722,8 @@ const formEmailIfNotExists = async params => {
     secure,
     subject,
     threadId: emailThreadId,
-    unread
+    unread,
+    isNewsletter
   };
   const email = await formIncomingEmailFromData(data);
   const notificationPreview = email.preview;
@@ -853,7 +840,8 @@ const handleNewMessageEvent = async (
     toArray,
     messageId,
     external,
-    boundary
+    boundary,
+    isNewsletter = null
   } = params;
   if (!metadataKey) return { rowid: null };
   const from = rawFrom.replace(/"/g, '');
@@ -923,6 +911,7 @@ const handleNewMessageEvent = async (
         recipients,
         guestEncryption,
         external,
+        isNewsletter,
         rowid
       })
     : await formEmailIfExists({
