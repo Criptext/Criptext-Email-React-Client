@@ -55,6 +55,17 @@ export const swapMailboxAccount = params => {
 export const storeRecoveryKey = params =>
   ipc.callMain('store-recovery-key', params);
 
+/* Logger Call
+----------------------------- */
+export const logErrorAndReport = stack => {
+  ipc.callMain('nucleups-report-uncaught-error', stack);
+  ipc.callMain('log-error', stack);
+};
+
+export const logLocal = stack => {
+  ipc.callMain('log-info', stack);
+};
+
 /*  Database
 ----------------------------- */
 export const cleanDatabase = async username => {

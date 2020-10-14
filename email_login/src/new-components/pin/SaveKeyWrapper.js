@@ -78,6 +78,9 @@ class PinSetWrapper extends Component {
 }
 
 PinSetWrapper.propTypes = {
-  step: PropTypes.string
+  step: PropTypes.string,
+  storeData: PropTypes.object,
+  onGoBack: PropTypes.func,
+  onGoTo: PropTypes.func
 };
 export default PinSetWrapper;

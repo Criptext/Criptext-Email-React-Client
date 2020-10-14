@@ -68,6 +68,7 @@ class ThemeWrapper extends Component {
 }
 
 ThemeWrapper.propTypes = {
-  step: PropTypes.string
+  step: PropTypes.string,
+  onGoTo: PropTypes.func
 };
 export default ThemeWrapper;

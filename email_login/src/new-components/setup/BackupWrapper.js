@@ -72,6 +72,7 @@ class BackupWrapper extends Component {
 }
 
 BackupWrapper.propTypes = {
-  step: PropTypes.string
+  step: PropTypes.string,
+  account: PropTypes.object
 };
 export default BackupWrapper;

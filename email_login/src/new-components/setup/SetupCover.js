@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Button, { STYLE } from '../templates/Button';
 import string from '../../lang';
@@ -49,5 +49,20 @@ const SetupCover = ({
     </div>
   </div>
 );
+
+SetupCover.propTypes = {
+  children: PropTypes.object,
+  step: PropTypes.string,
+  totalSteps: PropTypes.number,
+  title: PropTypes.string,
+  topButton: PropTypes.string,
+  bottomButton: PropTypes.string,
+  onClickTopButton: PropTypes.func,
+  onClickBotButton: PropTypes.func,
+  onGoBack: PropTypes.func,
+  topButtonDisabled: PropTypes.bool,
+  theme: PropTypes.string,
+  className: PropTypes.string
+};
 
 export default SetupCover;

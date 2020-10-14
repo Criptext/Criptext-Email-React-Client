@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SetupCover from '../setup/SetupCover';
 import PropTypes from 'prop-types';
 import './pinstart.scss';
@@ -19,5 +19,9 @@ const PinStart = props => (
     </div>
   </SetupCover>
 );
+
+PinStart.propTypes = {
+  onGoTo: PropTypes.func
+};
 
 export default PinStart;

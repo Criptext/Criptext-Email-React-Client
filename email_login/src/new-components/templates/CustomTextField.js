@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import PropTypes from 'prop-types';
 
 const ALERT_COLOR = '#ff5555';
 const CRIPTEXT_COLOR = '#0091ff';

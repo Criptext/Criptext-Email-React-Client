@@ -17,7 +17,7 @@ class SignUpWrapper extends Component {
     super(props);
     this.state = {
       queue: [],
-      mode: props.mode ? props.MODE : MODE.FORM,
+      mode: props.mode ? props.mode : MODE.FORM,
       states: [],
       previousState: null,
       signupData: {}
@@ -105,5 +105,11 @@ class SignUpWrapper extends Component {
     });
   };
 }
+
+SignUpWrapper.propTypes = {
+  mode: PropTypes.string,
+  onGoTo: PropTypes.func,
+  onParentGoBack: PropTypes.func
+};
 
 export default SignUpWrapper;

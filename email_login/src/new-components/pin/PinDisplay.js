@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SetupCover from '../setup/SetupCover';
 import PropTypes from 'prop-types';
 import './pindisplay.scss';
@@ -29,5 +29,11 @@ const PinDisplay = props => (
     </div>
   </SetupCover>
 );
+
+PinDisplay.propTypes = {
+  storeData: PropTypes.object,
+  onGoTo: PropTypes.func,
+  onGoBack: PropTypes.func
+};
 
 export default PinDisplay;

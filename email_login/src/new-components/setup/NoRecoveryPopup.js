@@ -6,7 +6,7 @@ import string from '../../lang';
 
 const { popup } = string.setup.recovery;
 
-const ErrorPopup = props => (
+const NoRecoveryPopup = props => (
   <div className="recovery-popup-content">
     <div className="popup-title">
       <h1>{popup.title}</h1>
@@ -23,4 +23,9 @@ const ErrorPopup = props => (
   </div>
 );
 
-export default ErrorPopup;
+NoRecoveryPopup.propTypes = {
+  onClickSkip: PropTypes.func,
+  onClickCancel: PropTypes.func
+};
+
+export default NoRecoveryPopup;

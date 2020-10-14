@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button, { STYLE } from '../templates/Button';
 import PropTypes from 'prop-types';
 import string from '../../lang';
@@ -29,5 +29,11 @@ const AccountReady = props => (
     />
   </div>
 );
+
+AccountReady.propTypes = {
+  name: PropTypes.string,
+  email: PropTypes.string,
+  onNextHandle: PropTypes.func
+};
 
 export default AccountReady;

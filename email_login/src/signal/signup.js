@@ -10,7 +10,8 @@ import {
   getComputerName,
   updateAccount,
   getContactByEmails,
-  createContact
+  createContact,
+  logLocal
 } from '../utils/ipc';
 import string from '../lang';
 
@@ -192,6 +193,6 @@ const createOwnContact = async (name, email) => {
   try {
     await createContact({ contacts: [{ name, email }] });
   } catch (createContactDbError) {
-    console.log(createContactDbError);
+    logLocal(createContactDbError.stack);
   }
 };

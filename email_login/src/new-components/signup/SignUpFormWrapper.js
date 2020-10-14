@@ -282,4 +282,10 @@ class SignUpFormWrapper extends Component {
   };
 }
 
+SignUpFormWrapper.propTypes = {
+  previousState: PropTypes.object,
+  onGoBack: PropTypes.func,
+  onGoTo: PropTypes.func
+};
+
 export default SignUpFormWrapper;

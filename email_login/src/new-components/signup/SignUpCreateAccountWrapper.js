@@ -6,7 +6,11 @@ import ErrorPopup from '../templates/ErrorPopup';
 import PopupHOC from '../templates/PopupHOC';
 import Button, { STYLE } from '../templates/Button';
 import { validateEmail } from '../../validators/validators';
-import { checkAvailableRecoveryEmail, sendPin } from '../../utils/ipc';
+import {
+  checkAvailableRecoveryEmail,
+  sendPin,
+  logLocal
+} from '../../utils/ipc';
 import { createAccount } from '../../signal/signup';
 import { getPin, DEFAULT_PIN, hasPin } from '../../utils/electronInterface';
 import string, { getLang } from '../../lang';
@@ -80,6 +84,7 @@ class SignUpCreateAccountWrapper extends Component {
                 <a
                   href={`https://www.criptext.com/${getLang}/terms`}
                   target="_blank"
+                  rel="noreferrer noopener"
                 >
                   {create.link}
                 </a>
@@ -136,7 +141,7 @@ class SignUpCreateAccountWrapper extends Component {
         id: newAccount.accountId
       });
     } catch (ex) {
-      console.error(ex);
+      logLocal(ex.stack);
       this.setState({
         createAccount: false,
         error: {
@@ -193,7 +198,7 @@ class SignUpCreateAccountWrapper extends Component {
   };
 
   checkRecoveryEmail = async email => {
-    let res = await checkAvailableRecoveryEmail({
+    const res = await checkAvailableRecoveryEmail({
       username: this.props.signupData.username,
       email
     });
@@ -273,5 +278,11 @@ class SignUpCreateAccountWrapper extends Component {
     });
   };
 }
+
+SignUpCreateAccountWrapper.propTypes = {
+  signupData: PropTypes.object,
+  onGoBack: PropTypes.func,
+  onGoTo: PropTypes.func
+};
 
 export default SignUpCreateAccountWrapper;

@@ -126,6 +126,8 @@ class VerifyRecoveryEmailWrapper extends Component {
 }
 
 VerifyRecoveryEmailWrapper.propTypes = {
-  step: PropTypes.string
+  step: PropTypes.string,
+  onGoTo: PropTypes.func,
+  account: PropTypes.object
 };
 export default VerifyRecoveryEmailWrapper;

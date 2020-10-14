@@ -5,11 +5,11 @@ import CustomCheckbox from '../templates/CustomCheckbox';
 
 import string from '../../lang';
 import './pindonewrapper.scss';
-import { storeRecoveryKey, sendPin } from '../../utils/ipc';
+import { storeRecoveryKey, sendPin, logLocal } from '../../utils/ipc';
 
 const { done } = string.pin;
 
-class PinSetWrapper extends Component {
+class PinDoneWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,13 +48,6 @@ class PinSetWrapper extends Component {
       const { salt, iv, encryptedPin } = this.props.storeData.recoveryKeyData;
       const pin =
         this.props.storeData.inputPin || this.props.storeData.defaultPin;
-      console.log('Data : ', {
-        pin,
-        salt,
-        iv,
-        encryptedPin,
-        shouldSave: this.state.savePin
-      });
       await storeRecoveryKey({
         salt,
         iv,
@@ -70,12 +63,15 @@ class PinSetWrapper extends Component {
       });
       this.props.onNext();
     } catch (ex) {
-      console.log(ex);
+      logLocal(ex.stack);
     }
   };
 }
 
-PinSetWrapper.propTypes = {
-  step: PropTypes.string
+PinDoneWrapper.propTypes = {
+  step: PropTypes.string,
+  onGoBack: PropTypes.func,
+  onNext: PropTypes.func,
+  storeData: PropTypes.object
 };
-export default PinSetWrapper;
+export default PinDoneWrapper;

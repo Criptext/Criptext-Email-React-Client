@@ -100,6 +100,7 @@ class PinWrapper extends Component {
 }
 
 PinWrapper.propTypes = {
-  step: PropTypes.string
+  step: PropTypes.string,
+  onGoTo: PropTypes.func
 };
 export default PinWrapper;

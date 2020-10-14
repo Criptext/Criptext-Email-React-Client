@@ -14,4 +14,11 @@ const ErrorPopup = props => (
   </div>
 );
 
+ErrorPopup.propTypes = {
+  title: PropTypes.string,
+  message: PropTypes.string,
+  button: PropTypes.string,
+  onClickDismiss: PropTypes.func
+};
+
 export default ErrorPopup;

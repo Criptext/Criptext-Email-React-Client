@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SetupCover from '../setup/SetupCover';
 import PropTypes from 'prop-types';
 import './accountcreated.scss';
@@ -20,5 +20,9 @@ const AccountCreated = props => (
     <div className="account-created-img" />
   </SetupCover>
 );
+
+AccountCreated.propTypes = {
+  onNextHandle: PropTypes.func
+};
 
 export default AccountCreated;

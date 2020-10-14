@@ -112,7 +112,7 @@ class PinSetWrapper extends Component {
     });
   };
 
-  handleSetPin = async () => {
+  handleSetPin = () => {
     const pin = this.state.pin;
     this.props.onGoTo(
       'save',
@@ -125,6 +125,9 @@ class PinSetWrapper extends Component {
 }
 
 PinSetWrapper.propTypes = {
-  step: PropTypes.string
+  step: PropTypes.string,
+  previousState: PropTypes.object,
+  onGoBack: PropTypes.func,
+  onGoTo: PropTypes.func
 };
 export default PinSetWrapper;

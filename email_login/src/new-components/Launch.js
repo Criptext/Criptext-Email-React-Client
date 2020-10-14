@@ -28,4 +28,8 @@ const Launch = props => {
   );
 };
 
+Launch.propTypes = {
+  onGoTo: PropTypes.func
+};
+
 export default Launch;

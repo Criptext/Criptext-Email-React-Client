@@ -1,7 +1,6 @@
 import React from 'react';
 import { closeLoginWindow, minimizeLoginWindow } from './../utils/ipc';
 import './titleBar.scss';
-import { version } from './../../package.json';
 
 const isWindows = () => {
   const platform = window.navigator.platform;

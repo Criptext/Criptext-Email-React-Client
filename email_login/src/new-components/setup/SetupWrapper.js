@@ -73,4 +73,5 @@ class PanelWrapper extends Component {
 PanelWrapper.propTypes = {
   step: PropTypes.string
 };
+
 export default PanelWrapper;

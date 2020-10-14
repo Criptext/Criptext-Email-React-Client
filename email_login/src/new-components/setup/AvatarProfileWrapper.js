@@ -24,7 +24,6 @@ class AvatarProfileWrapper extends Component {
         {...this.props}
         title={avatar.title}
         topButton={avatar.button}
-        //bottomButton={string.setup.skip}
         onClickTopButton={this.handleNext}
         onGoBack={undefined}
       >
@@ -69,7 +68,6 @@ class AvatarProfileWrapper extends Component {
     if (this.state.uploading) return;
     const { filePaths } = await showOpenFileDialog();
     if (!filePaths || !filePaths[0]) {
-      console.log('Not image selected');
       return;
     }
     this.setState(
@@ -102,6 +100,8 @@ class AvatarProfileWrapper extends Component {
 }
 
 AvatarProfileWrapper.propTypes = {
-  step: PropTypes.string
+  step: PropTypes.string,
+  account: PropTypes.object,
+  onGoTo: PropTypes.func
 };
 export default AvatarProfileWrapper;
