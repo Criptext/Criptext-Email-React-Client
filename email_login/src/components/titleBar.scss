@@ -1,5 +1,12 @@
 @import './../styles/index.scss';
 
+.no-theme {
+  .title-bar {
+    background: #00c4ff;
+    transition: none;
+  }
+}
+
 .title-bar {
   transition: background-color 0.5s ease;
   display: flex;
@@ -78,7 +85,7 @@
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .title-bar {
-      background-color: $_BACKGROUND_COLOR;
+      background-color: $_BACKGROUND_COLOR; //#00c4ff
     }
   }
 }

@@ -30,16 +30,20 @@
   }
 }
 
-@mixin themable($_THEME, $_PROFILE){
+@mixin themable($_THEME, $_PROFILE, $_TEXT_COLOR){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .setup-profile {
       .setup-avatar {
         background-image: url(../../#{$_PATH_TO_IMAGES}/#{$_PROFILE});
       }
+
+      .setup-avatar-name {
+        color: $_TEXT_COLOR;
+      }
     }
   }
 }
 
-@include themable($_THEME_LIGHT, $_PROFILE_LIGHT);
-@include themable($_THEME_DARK, $_PROFILE_DARK);
+@include themable($_THEME_LIGHT, $_PROFILE_LIGHT, $_TEXT_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_PROFILE_DARK, $_TEXT_COLOR_DARK);

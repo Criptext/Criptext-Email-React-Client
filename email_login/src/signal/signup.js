@@ -17,8 +17,8 @@ import string from '../lang';
 
 import { myAccount } from '../utils/electronInterface';
 
-const { errors, recovery } = string.newSignUp.create;
-const recoveryErrors = recovery.errors;
+const { errors } = string.newSignUp.create;
+const recoveryErrors = string.newSignUp.recovery.recovery.errors;
 
 export const createAccount = async ({
   recipientId,

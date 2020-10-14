@@ -206,12 +206,12 @@
       },
       "button": "Next"
     },
-    "create": {
+    "recovery": {
       "title": {
-        "firstLine": "You’re almost there!",
-        "secondLine": "Just two more things 💪"
+        "firstLine": "Lastly, add a recovery",
+        "secondLine": "email"
       },
-      "description": "Add a recovery email to regain access if you ever forget your password",
+      "description": "This will allow you to regain access if you ever forget your password",
       "recovery": {
         "placeholder": "Recovery Email",
         "errors": {
@@ -223,6 +223,14 @@
           "default": "Uknown Error {0}"
         }
       },
+      "button": "Set Recovery Email"
+    },
+    "create": {
+      "title": {
+        "firstLine": "You’re almost there!",
+        "secondLine": "Just two more things 💪"
+      },
+      "description": "Prove you are not a Robot",
       "terms": "I have read and agree with the {0}",
       "link": "Terms and Conditions",
       "lifeTip": "I promise to drink more water",

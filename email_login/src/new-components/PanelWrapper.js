@@ -48,7 +48,12 @@ class PanelWrapper extends Component {
           />
         );
       default:
-        return <Launch onGoTo={this.handleGoTo} />;
+        return (
+          <Launch
+            onGoTo={this.handleGoTo}
+            onChangeVersion={this.props.onChangeVersion}
+          />
+        );
     }
   }
 
@@ -76,6 +81,7 @@ class PanelWrapper extends Component {
 }
 
 PanelWrapper.propTypes = {
-  mode: PropTypes.string
+  mode: PropTypes.string,
+  onChangeVersion: PropTypes.func
 };
 export default PanelWrapper;

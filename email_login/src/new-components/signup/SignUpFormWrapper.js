@@ -151,7 +151,7 @@ class SignUpFormWrapper extends Component {
 
   handleNext = () => {
     this.props.onGoTo(
-      'create',
+      'recovery',
       {
         username: this.state.username.value,
         fullname: this.state.fullname.value,

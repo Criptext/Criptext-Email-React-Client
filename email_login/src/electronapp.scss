@@ -8,6 +8,11 @@ html {
 .main-container {
   height: 100%;
   transition: background-color 0.5s ease;
+  
+  &.no-theme {
+    background: #0091ff;
+    transition: none;
+  }
 }
 
 /* THEME
@@ -17,7 +22,7 @@ html {
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     &.main-container{
-      background-color: $_BACKGROUND_COLOR;
+      background-color: $_BACKGROUND_COLOR; //#0091ff
     }
   }
 }

@@ -1,6 +1,6 @@
 @import '../../styles/index.scss';
 
-.signup-create-account-wrapper {
+.signup-recovery-wrapper {
   margin: 64px 42px 50px 42px;
 
   .back-button {
@@ -43,7 +43,7 @@
   }
 
   button {
-    margin-top: 172px;
+    margin-top: 194px;
   }
 
   .checkbox-container {
@@ -75,7 +75,7 @@
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
 
-    .signup-create-account-wrapper {
+    .signup-recovery-wrapper {
       .header-container {
         h2 {
           color: $_SECTION_TITLE_COLOR;

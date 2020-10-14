@@ -4,9 +4,11 @@ import SignUpFormWrapper from './SignUpFormWrapper';
 import AccountReady from './AccountReady';
 import AccountCreated from './AccountCreated';
 import SignUpCreateAccountWrapper from './SignUpCreateAccountWrapper';
+import RecoveryEmailFormWrapper from './RecoveryEmailFormWrapper';
 
 export const MODE = {
   FORM: 'form',
+  RECOVERY: 'recovery',
   CREATE: 'create',
   CREATED: 'created',
   READY: 'ready'
@@ -26,6 +28,15 @@ class SignUpWrapper extends Component {
 
   render() {
     switch (this.state.mode) {
+      case MODE.RECOVERY:
+        return (
+          <RecoveryEmailFormWrapper
+            signupData={this.state.signupData}
+            onGoBack={this.handleGoBack}
+            onGoTo={this.handleGoTo}
+            previousState={this.state.previousState}
+          />
+        );
       case MODE.CREATE:
         return (
           <SignUpCreateAccountWrapper
@@ -75,7 +86,8 @@ class SignUpWrapper extends Component {
       signupData: {
         ...this.state.signupData,
         ...storeData
-      }
+      },
+      previousState: undefined
     });
   };
 

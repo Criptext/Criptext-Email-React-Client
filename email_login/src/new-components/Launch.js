@@ -12,7 +12,13 @@ const Launch = props => {
         <div className="subtitle" />
       </div>
       <div className="buttons-container">
-        <Button text={'Log In'} style={STYLE.CRIPTEXT} />
+        <Button
+          text={'Log In'}
+          style={STYLE.CRIPTEXT}
+          onClick={() => {
+            props.onChangeVersion('old');
+          }}
+        />
         <Button
           text={'Create Account'}
           onClick={() => {
@@ -29,7 +35,8 @@ const Launch = props => {
 };
 
 Launch.propTypes = {
-  onGoTo: PropTypes.func
+  onGoTo: PropTypes.func,
+  onChangeVersion: PropTypes.func
 };
 
 export default Launch;

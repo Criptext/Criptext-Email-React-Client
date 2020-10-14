@@ -56,7 +56,7 @@ const renderFooter = props => (
     <div className="signup-message">
       <span>
         {signIn.signUpMessage.text} &nbsp;
-        <strong onClick={e => props.goToSignUp(e)}>
+        <strong onClick={() => props.onChangeVersion('new')}>
           {signIn.signUpMessage.strong}
         </strong>
       </span>
@@ -73,7 +73,8 @@ renderForm.propTypes = {
 };
 
 renderFooter.propTypes = {
-  goToSignUp: PropTypes.func
+  goToSignUp: PropTypes.func,
+  onChangeVersion: PropTypes.func
 };
 
 export default SignIn;
