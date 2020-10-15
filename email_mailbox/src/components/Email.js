@@ -112,7 +112,7 @@ const Email = props => (
           <span>
             {string.mailbox.not_encrypted.message}{' '}
             <a
-              href="https://criptext.atlassian.net/wiki/spaces/CRIPTEXT/pages/511377409/Content+Unencrypted+Learn+More"
+              href="https://criptext.atlassian.net/l/c/10NeN7ZM"
               target="_blank"
               rel="noreferrer noopener"
             >
