@@ -177,6 +177,11 @@
       "strong": ""
     }
   },
+  "launch": {
+    "create": "Create Account",
+    "login": "Log In",
+    "version": "Version"
+  },
   "newSignUp": {
     "form": {
       "title": {
@@ -234,6 +239,8 @@
       "terms": "I have read and agree with the {0}",
       "link": "Terms and Conditions",
       "lifeTip": "I promise to drink more water",
+      "enterCaptcha": "Enter the characters you see",
+      "errorCaptcha": "Unable to refresh captcha. Please try again",
       "button": "Create Account",
       "creating": "Creating encrypted keys...",
       "errors": {
@@ -245,6 +252,7 @@
         "alreadyExists": "This account already exists!",
         "toManyRequests": "You have reached maximum retries. Please retry in {0} seconds",
         "unableUpdate": "Unable to update database. Please restart the app",
+        "wrongCaptcha": "Wrong Captcha. Please try again",
         "unknown": "Uknown Server Error ({0})"
       }
     },

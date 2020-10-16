@@ -86,6 +86,8 @@ ipc.answerRenderer('client-get-key-bundle', params =>
   clientManager.getKeyBundle(params)
 );
 
+ipc.answerRenderer('client-get-captcha', () => clientManager.getCaptcha());
+
 ipc.answerRenderer('client-get-max-devices', params =>
   clientManager.getMaxDevices(params)
 );

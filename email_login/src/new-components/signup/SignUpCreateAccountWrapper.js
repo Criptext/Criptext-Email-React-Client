@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import CustomTextField from '../templates/CustomTextField';
 import CustomCheckbox from '../templates/CustomCheckbox';
 import OverlayLoader from '../templates/OverlayLoader';
 import ErrorPopup from '../templates/ErrorPopup';
 import PopupHOC from '../templates/PopupHOC';
 import Button, { STYLE } from '../templates/Button';
-import { sendPin, logLocal } from '../../utils/ipc';
+import { sendPin, logLocal, getCaptcha } from '../../utils/ipc';
 import { createAccount } from '../../signal/signup';
 import { getPin, DEFAULT_PIN, hasPin } from '../../utils/electronInterface';
 import string, { getLang } from '../../lang';
@@ -20,6 +21,12 @@ class SignUpCreateAccountWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      captcha: {
+        value: '',
+        error: undefined,
+        randomId: undefined,
+        image: undefined
+      },
       termsConditions: false,
       promiseCall: false,
       enableButton: false,
@@ -52,6 +59,27 @@ class SignUpCreateAccountWrapper extends Component {
           </div>
         </div>
         <div className="form-container">
+          <div>
+            <div className="captcha-container">
+              <div
+                className="captcha-svg"
+                dangerouslySetInnerHTML={this.createHTML()}
+              />
+              <div
+                className="refresh-captcha"
+                onClick={this.handleRefreshCaptcha}
+              />
+            </div>
+            <CustomTextField
+              id={'captcha'}
+              label={create.enterCaptcha}
+              type={'text'}
+              value={this.state.captcha.value}
+              error={!!this.state.captcha.error}
+              helperText={this.state.captcha.error}
+              onChange={this.handleInputChange}
+            />
+          </div>
           <div className="checkbox-container">
             <CustomCheckbox
               value={this.state.termsConditions}
@@ -88,6 +116,51 @@ class SignUpCreateAccountWrapper extends Component {
     );
   }
 
+  componentDidMount() {
+    this.handleRefreshCaptcha();
+  }
+
+  createHTML() {
+    return {
+      __html: this.state.captcha.image || ''
+    };
+  }
+
+  handleRefreshCaptcha = async () => {
+    const result = await getCaptcha();
+    if (!result || result.status !== 200) {
+      this.setState({
+        captcha: {
+          ...this.state.captcha,
+          error: create.errorCaptcha
+        }
+      });
+      return;
+    }
+    const { randomId, image } = result.body;
+    this.setState({
+      captcha: {
+        ...this.state.captcha,
+        randomId,
+        image
+      }
+    });
+  };
+
+  handleInputChange = ev => {
+    const newValue = ev.target.value;
+    this.setState(
+      {
+        captcha: {
+          ...this.state.captcha,
+          value: newValue,
+          error: undefined
+        }
+      },
+      this.shouldEnableButton
+    );
+  };
+
   handleCreateAccount = () => {
     this.setState(
       {
@@ -117,7 +190,9 @@ class SignUpCreateAccountWrapper extends Component {
         recipientId: username,
         password,
         name: fullname,
-        recoveryEmail
+        recoveryEmail,
+        captchaKey: this.state.captcha.randomId,
+        captchaAnswer: this.state.captcha.value
       });
       const nextSection = getPin() ? 'ready' : 'created';
       this.props.onGoTo(nextSection, {
@@ -126,6 +201,21 @@ class SignUpCreateAccountWrapper extends Component {
       });
     } catch (ex) {
       logLocal(ex.stack);
+      if (ex.message === create.errors.wrongCaptcha) {
+        this.setState({
+          createAccount: false,
+          error: {
+            title: create.errors.title,
+            button: create.errors.button,
+            message: ex.message
+          },
+          captcha: {
+            ...this.state.captcha,
+            error: ex.message
+          }
+        });
+        return;
+      }
       this.setState({
         createAccount: false,
         error: {
@@ -158,7 +248,10 @@ class SignUpCreateAccountWrapper extends Component {
   };
 
   shouldEnableButton = () => {
-    const shouldEnable = this.state.termsConditions;
+    const shouldEnable =
+      this.state.termsConditions &&
+      this.state.captcha.value &&
+      this.state.captcha.randomId;
     if (shouldEnable !== this.state.enableButton) {
       this.setState({
         enableButton: shouldEnable

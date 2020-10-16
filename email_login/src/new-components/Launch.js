@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button, { STYLE } from './templates/Button';
+import string from '../lang';
 import { version } from './../../package.json';
 import './launch.scss';
+
+const { launch } = string;
 
 const Launch = props => {
   return (
@@ -13,14 +16,14 @@ const Launch = props => {
       </div>
       <div className="buttons-container">
         <Button
-          text={'Log In'}
+          text={launch.login}
           style={STYLE.CRIPTEXT}
           onClick={() => {
             props.onChangeVersion('old');
           }}
         />
         <Button
-          text={'Create Account'}
+          text={launch.create}
           onClick={() => {
             props.onGoTo('sign-up');
           }}
@@ -28,7 +31,9 @@ const Launch = props => {
         />
       </div>
       <div className="version-container">
-        <span>Version {version}</span>
+        <span>
+          {launch.version} {version}
+        </span>
       </div>
     </div>
   );

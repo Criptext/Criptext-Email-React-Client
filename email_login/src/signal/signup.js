@@ -24,7 +24,9 @@ export const createAccount = async ({
   recipientId,
   password,
   name,
-  recoveryEmail
+  recoveryEmail,
+  captchaKey,
+  captchaAnswer
 }) => {
   const [activeAccount] = await getAccountByParams({
     isActive: true
@@ -44,7 +46,9 @@ export const createAccount = async ({
     password,
     name,
     recoveryEmail,
-    keybundle
+    keybundle,
+    captchaKey,
+    captchaAnswer
   });
 
   const newAccount = await prepareAccount({
@@ -107,14 +111,18 @@ const postKeyBundle = async ({
   password,
   name,
   recoveryEmail,
-  keybundle
+  keybundle,
+  captchaKey,
+  captchaAnswer
 }) => {
   const res = await postUser({
     recipientId,
     password,
     name,
     recoveryEmail,
-    keybundle
+    keybundle,
+    captchaKey,
+    captchaAnswer
   });
   if (!res) {
     throw new Error(errors.contactServer);
@@ -136,6 +144,9 @@ const postKeyBundle = async ({
         default:
           throw new Error(string.formatString(recoveryErrors.default, error));
       }
+    }
+    case 409: {
+      throw new Error(errors.wrongCaptcha);
     }
     case 429: {
       const seconds = headers['retry-after'];

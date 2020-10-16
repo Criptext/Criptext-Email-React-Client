@@ -351,6 +351,13 @@ const getKeyBundle = async params => {
     : await checkExpiredSession(res, getKeyBundle, params);
 };
 
+const getCaptcha = async () => {
+  const client = await createClient({
+    optionalToken: '@'
+  });
+  return await client.getCaptcha();
+};
+
 const getMaxDevices = async params => {
   const { token, recipientId } = params;
   const client = await createClient({ recipientId });
@@ -815,6 +822,7 @@ module.exports = {
   generateEvent,
   getDataReady,
   getDomainMX,
+  getCaptcha,
   getKeyBundle,
   getMaxDevices,
   getUserSettings,

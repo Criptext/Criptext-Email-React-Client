@@ -114,6 +114,10 @@ export const deleteDeviceToken = async params => {
   return await ipc.callMain('client-delete-device-token', params);
 };
 
+export const getCaptcha = async () => {
+  return await ipc.callMain('client-get-captcha');
+};
+
 export const getMaxDevices = async params => {
   return await ipc.callMain('client-get-max-devices', params);
 };
