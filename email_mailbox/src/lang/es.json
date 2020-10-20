@@ -255,6 +255,10 @@
       "message": "Este correo no pudo ser encriptado.",
       "link": "Conocer Más"
     },
+    "resend": {
+      "message": "Este correo no pudo ser enviado.",
+      "action": "Reenviar"
+    },
     "not_starred": "No favorito",
     "of": "de",
     "reply": "Responder",

@@ -148,6 +148,14 @@
           color: #0091ff;
         }
       }
+
+      .fake-icon-warning {
+        background-image: url(../#{$_PATH_TO_IMAGES}/resend-warning.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 16px;
+        height: 16px;
+      }
     }
 
     .thread-item-labels{

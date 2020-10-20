@@ -1063,6 +1063,13 @@ const getTrashExpiredEmails = accountId => {
   });
 };
 
+const setSendingEmailsAsFailed = () => {
+  const sequelize = getDB();
+  return sequelize.query(
+    `UPDATE ${Table.EMAIL} SET status = 1 WHERE status = 4;`
+  );
+};
+
 const updateEmail = ({
   accountId,
   id,
@@ -1933,6 +1940,7 @@ module.exports = {
   initDatabaseEncrypted: InitDatabaseEncrypted,
   rawCheckPin,
   resetKeyDatabase,
+  setSendingEmailsAsFailed,
   updateAccount,
   updateAccountDefaultAddressId,
   updateAlias,

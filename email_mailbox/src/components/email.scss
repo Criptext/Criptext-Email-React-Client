@@ -69,16 +69,25 @@
       width: calc(100% - 32px);
     }
 
-    .email-not-encrypted {
-      background: #f3f6ff;
+    .email-banner {
       margin: 20px 0px 5px 0px;
       width: calc(100% - 136px);
       text-align: center;
       padding: 5px;
       font-size: 14px;
+      max-width: 600px;
 
       a {
         color: #0091ff;
+        cursor: pointer;
+      }
+
+      &.not-encrypted {
+        background: #f3f6ff;
+      }
+
+      &.resend {
+        background: #fff5de;
       }
     }
   
@@ -361,6 +370,15 @@
       &.status-opened{
         color: #0091ff;
       }
+    }
+
+    .fake-icon-warning {
+      background-image: url(../#{$_PATH_TO_IMAGES}/resend-warning.svg);
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 15px;
+      height: 18px;
+      margin-right: 3px;
     }
   }
 

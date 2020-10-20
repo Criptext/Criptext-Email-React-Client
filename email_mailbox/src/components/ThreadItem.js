@@ -166,6 +166,8 @@ class ThreadItem extends Component {
         return <i className="icon-double-checked status-opened" />;
       case EmailStatus.SENDING:
         return <i className="icon-time status-sending" />;
+      case EmailStatus.FAIL:
+        return <div className="fake-icon-warning" />;
       default:
         return null;
     }

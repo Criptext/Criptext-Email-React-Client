@@ -118,6 +118,9 @@ const upApp = async ({ shouldSave, pin }) => {
 
 const upMailboxWindow = async loggedAccounts => {
   const appSettings = await dbManager.getSettings();
+  try {
+    await dbManager.setSendingEmailsAsFailed();
+  } catch (ex) {}
   const settings = Object.assign(appSettings, { isFromStore });
   myAccount.initialize(loggedAccounts);
   mySettings.initialize(settings);
