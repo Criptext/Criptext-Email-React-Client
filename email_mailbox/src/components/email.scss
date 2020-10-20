@@ -77,7 +77,15 @@
       font-size: 14px;
       max-width: 600px;
 
-      a {
+      button {
+        display: inline-block;
+        font-size: 14px;
+        background: transparent;
+        margin: 0px;
+        padding: 0px;
+      }
+
+      a, button {
         color: #0091ff;
         cursor: pointer;
       }

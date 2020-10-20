@@ -17,6 +17,7 @@ global.pendingRestore = false;
 global.backupStatus = null;
 global.databaseKey = '';
 global.progressDBE = { total: 4, current: 1 };
+global.sendingComposer = new Set();
 
 /*  Composer
 ----------------------------- */
@@ -34,6 +35,15 @@ const setEmailToEdit = (composerId, data) => {
 };
 const getEmailToEdit = composerId => {
   return global.emailToEdit[composerId];
+};
+const addSendingId = composerId => {
+  global.sendingComposer.add(composerId);
+};
+const isSending = composerId => {
+  return global.sendingComposer.has(composerId);
+};
+const removeSendingId = composerId => {
+  global.sendingComposer.delete(composerId);
 };
 
 /*  Force quit
@@ -189,6 +199,11 @@ module.exports = {
   pinData: {
     get: getPinData,
     set: setPinData
+  },
+  sendingComposer: {
+    add: addSendingId,
+    remove: removeSendingId,
+    has: isSending
   },
   temporalAccount: {
     get: getTemporalAccountData,

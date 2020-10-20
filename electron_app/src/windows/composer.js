@@ -64,6 +64,9 @@ const createComposerWindow = () => {
   window.saved = false;
 
   window.on('blur', async () => {
+    if (globalManager.sendingComposer.has(window.id)) {
+      return;
+    }
     try {
       const dataDraft = globalManager.composerData.get(window.id);
       await saveDraftToDatabase(window.id, dataDraft, true);
@@ -74,6 +77,7 @@ const createComposerWindow = () => {
 
   window.on('close', async e => {
     try {
+      globalManager.sendingComposer.remove(window.id);
       if (globalManager.forcequit.get() && window.saved) return;
       if (
         globalManager.forcequit.get() ||
@@ -165,6 +169,14 @@ const isDraftEmpty = composerId => {
     recipients.cc.length > 0 ||
     recipients.bcc.length > 0;
   return !hasRecipients && !subject.length && !preview.length;
+};
+
+const pauseAutoSave = composerId => {
+  globalManager.sendingComposer.add(composerId);
+};
+
+const resumeAutoSave = composerId => {
+  globalManager.sendingComposer.remove(composerId);
 };
 
 const saveDraftChanges = (composerId, incomingData) => {
@@ -307,6 +319,8 @@ const saveDraftToDatabase = async (composerId, data, isAutoSave) => {
 module.exports = {
   destroy,
   editDraft,
+  pauseAutoSave,
+  resumeAutoSave,
   saveDraftChanges,
   sendEventToMailbox,
   openNewComposer

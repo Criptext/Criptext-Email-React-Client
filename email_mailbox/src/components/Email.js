@@ -169,9 +169,9 @@ const renderBanner = props => {
       <div className="email-banner resend">
         <span>
           {string.mailbox.resend.message}{' '}
-          <a onClick={ev => props.onClickEditDraft(ev)}>
+          <button onClick={ev => props.onClickEditDraft(ev)}>
             {string.mailbox.resend.action}
-          </a>
+          </button>
         </span>
       </div>
     );

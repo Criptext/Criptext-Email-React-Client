@@ -32,6 +32,14 @@ export const saveDraftChangesComposerWindow = data => {
   ipc.callMain('save-draft-changes', { composerId, data });
 };
 
+export const pauseAutoSave = () => {
+  ipc.callMain('pause-auto-save', { composerId });
+};
+
+export const resumeAutoSave = () => {
+  ipc.callMain('resume-auto-save', { composerId });
+};
+
 export const throwError = error => {
   ipc.callMain('throwError', error);
 };
