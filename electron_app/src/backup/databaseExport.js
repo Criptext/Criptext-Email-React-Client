@@ -39,7 +39,15 @@ const exportContactTable = async accountId => {
           Table.ACCOUNT_CONTACT
         }.accountId = ${accountId} LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset};`
     );
-    contactRows = [...contactRows, ...result];
+    contactRows = [
+      ...contactRows,
+      ...result.map(row => {
+        return {
+          ...row,
+          isTrusted: !!row.isTrusted
+        };
+      })
+    ];
     if (result.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
     } else {

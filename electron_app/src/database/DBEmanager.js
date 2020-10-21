@@ -16,6 +16,7 @@ const {
   Sessionrecord,
   Settings,
   Signedprekeyrecord,
+  EMAIL_STATUS,
   deleteDatabase,
   getDB,
   initDatabaseEncrypted,
@@ -1066,7 +1067,9 @@ const getTrashExpiredEmails = accountId => {
 const setSendingEmailsAsFailed = () => {
   const sequelize = getDB();
   return sequelize.query(
-    `UPDATE ${Table.EMAIL} SET status = 1 WHERE status = 4;`
+    `UPDATE ${Table.EMAIL} SET status = ${EMAIL_STATUS.FAIL} WHERE status = ${
+      EMAIL_STATUS.SENDING
+    };`
   );
 };
 

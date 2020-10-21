@@ -100,6 +100,11 @@ const Table = {
   VERSION: 'version'
 };
 
+const EMAIL_STATUS = {
+  SENDING: 4,
+  FAIL: 1
+};
+
 class Contact extends Model {}
 class Account extends Model {}
 class AccountContact extends Model {}
@@ -698,6 +703,7 @@ module.exports = {
   Sessionrecord: () => Sessionrecord,
   Settings: () => Settings,
   Signedprekeyrecord: () => Signedprekeyrecord,
+  EMAIL_STATUS,
   deleteDatabase,
   getDB,
   initDatabaseEncrypted,
