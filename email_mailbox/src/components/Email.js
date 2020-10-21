@@ -106,21 +106,7 @@ const Email = props => (
         {renderEmailBlocked(props)}
       </div>
       <hr />
-      {(props.email.isNewsletter === false ||
-        props.email.isNewsletter === 0) && (
-        <div className="email-not-encrypted">
-          <span>
-            {string.mailbox.not_encrypted.message}{' '}
-            <a
-              href="https://criptext.atlassian.net/l/c/10NeN7ZM"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              {string.mailbox.not_encrypted.link}
-            </a>
-          </span>
-        </div>
-      )}
+      {isExpand(props.displayEmail, props.staticOpen) && renderBanner(props)}
       <div className="email-body">
         <div
           disabled={props.hideView || props.isUnsend}
@@ -161,6 +147,37 @@ const Email = props => (
     )}
   </div>
 );
+
+const renderBanner = props => {
+  if (props.email.isNewsletter === false || props.email.isNewsletter === 0) {
+    return (
+      <div className="email-banner not-encrypted">
+        <span>
+          {string.mailbox.not_encrypted.message}{' '}
+          <a
+            href="https://criptext.atlassian.net/l/c/10NeN7ZM"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            {string.mailbox.not_encrypted.link}
+          </a>
+        </span>
+      </div>
+    );
+  } else if (props.email.status === EmailStatus.FAIL) {
+    return (
+      <div className="email-banner resend">
+        <span>
+          {string.mailbox.resend.message}{' '}
+          <button onClick={ev => props.onClickEditDraft(ev)}>
+            {string.mailbox.resend.action}
+          </button>
+        </span>
+      </div>
+    );
+  }
+  return null;
+};
 
 const renderEmailInfoCollapse = (status, preview) => (
   <div className="email-info-content-line">
@@ -425,6 +442,8 @@ const defineEmailStatus = status => {
       return <i className="icon-double-checked status-opened" />;
     case EmailStatus.SENDING:
       return <i className="icon-time status-sending" />;
+    case EmailStatus.FAIL:
+      return <div className="fake-icon-warning" />;
     default:
       return null;
   }
@@ -454,6 +473,11 @@ const defineEmailType = (isUnsend, isDraft, isEmpty) => {
 
 const isExpand = (displayEmail, staticOpen) => {
   return displayEmail || staticOpen;
+};
+
+renderBanner.propTypes = {
+  email: PropTypes.object,
+  onClickEditDraft: PropTypes.func
 };
 
 renderEmailInfoExpand.propTypes = {

@@ -16,6 +16,7 @@ const {
   Sessionrecord,
   Settings,
   Signedprekeyrecord,
+  EMAIL_STATUS,
   deleteDatabase,
   getDB,
   initDatabaseEncrypted,
@@ -1063,6 +1064,15 @@ const getTrashExpiredEmails = accountId => {
   });
 };
 
+const setSendingEmailsAsFailed = () => {
+  const sequelize = getDB();
+  return sequelize.query(
+    `UPDATE ${Table.EMAIL} SET status = ${EMAIL_STATUS.FAIL} WHERE status = ${
+      EMAIL_STATUS.SENDING
+    };`
+  );
+};
+
 const updateEmail = ({
   accountId,
   id,
@@ -1933,6 +1943,7 @@ module.exports = {
   initDatabaseEncrypted: InitDatabaseEncrypted,
   rawCheckPin,
   resetKeyDatabase,
+  setSendingEmailsAsFailed,
   updateAccount,
   updateAccountDefaultAddressId,
   updateAlias,

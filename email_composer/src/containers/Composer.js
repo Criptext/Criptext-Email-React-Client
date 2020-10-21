@@ -16,6 +16,8 @@ import {
   createEmail,
   getAlias,
   isCriptextDomain,
+  pauseAutoSave,
+  resumeAutoSave,
   resendConfirmationEmail,
   saveDraftChangesComposerWindow,
   throwError,
@@ -804,7 +806,9 @@ class ComposerWrapper extends Component {
         });
       } else {
         const isEmailSecure = !hasNonCriptextRecipients;
-        this.sendMessage(isEmailSecure);
+        pauseAutoSave();
+        await this.sendMessage(isEmailSecure);
+        resumeAutoSave();
       }
     }
   };

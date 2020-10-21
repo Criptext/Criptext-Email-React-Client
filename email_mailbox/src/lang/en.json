@@ -255,6 +255,10 @@
       "message": "This email couldn't be encrypted.",
       "link": "Learn More"
     },
+    "resend": {
+      "message": "This email couldn't be sent.",
+      "action": "Retry sending"
+    },
     "not_starred": "Not starred",
     "of": "of",
     "reply": "Reply",

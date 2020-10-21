@@ -254,6 +254,10 @@
       "message": "This email couldn't be encrypted.",
       "link": "Learn More"
     },
+    "resend": {
+      "message": "This email couldn't be sent.",
+      "action": "Retry sending"
+    },
     "not_starred": "Nicht markiert",
     "of": "von",
     "reply": "Antworten",

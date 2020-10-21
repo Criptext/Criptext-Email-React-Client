@@ -27,6 +27,16 @@ ipc.answerRenderer('save-draft-changes', windowParams => {
   composerWindowManager.saveDraftChanges(composerId, data);
 });
 
+ipc.answerRenderer('pause-auto-save', windowParams => {
+  const { composerId } = windowParams;
+  composerWindowManager.pauseAutoSave(composerId);
+});
+
+ipc.answerRenderer('resume-auto-save', windowParams => {
+  const { composerId } = windowParams;
+  composerWindowManager.resumeAutoSave(composerId);
+});
+
 ipc.answerRenderer('auto-save-draft', composerId => {
   composerWindowManager.autoSaveDraft(composerId);
 });

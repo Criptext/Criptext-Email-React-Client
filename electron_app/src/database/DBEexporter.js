@@ -553,19 +553,27 @@ const exportContactTable = async accountId => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const result = await Contact().findAll({
-      attributes: ['id', 'email', 'name', 'isTrusted', 'spamScore'],
-      include: [
-        {
-          attributes: [],
-          model: AccountContact(),
-          where: { accountId }
-        }
-      ],
-      offset,
-      limit: SELECT_ALL_BATCH
-    });
-    contactRows = [...contactRows, ...result];
+    const [result] = await getDB().query(
+      `SELECT ${Table.CONTACT}.id, ${Table.CONTACT}.email, ${
+        Table.CONTACT
+      }.name, ${Table.CONTACT}.isTrusted, ${Table.CONTACT}.spamScore FROM ${
+        Table.CONTACT
+      }, ${Table.ACCOUNT_CONTACT} WHERE ${Table.CONTACT}.id == ${
+        Table.ACCOUNT_CONTACT
+      }.contactId 
+        AND ${
+          Table.ACCOUNT_CONTACT
+        }.accountId = ${accountId} LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset};`
+    );
+    contactRows = [
+      ...contactRows,
+      ...result.map(row => {
+        return {
+          ...row,
+          isTrusted: !!row.isTrusted
+        };
+      })
+    ];
     if (result.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
     } else {
