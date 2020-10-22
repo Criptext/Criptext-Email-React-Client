@@ -5,7 +5,6 @@ const { checkForUpdates } = require('./../updater');
 const { openUpgradeToPlusWindow } = require('../windows/upgradePlus');
 
 ipc.answerRenderer('close-login', ({ forceClose }) => {
-  console.log('FORCE CLOSE : ', forceClose);
   loginWindow.close({ forceClose });
 });
 

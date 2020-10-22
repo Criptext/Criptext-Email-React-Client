@@ -755,7 +755,6 @@ const upgradeToRefreshToken = async client => {
 };
 
 const uploadAvatar = async params => {
-  console.log(params);
   const QUALITY = 100;
   const RESIZE_DIM = 256;
   const JPEG_MIME = 'image/jpeg';
