@@ -6,15 +6,25 @@ const { remote, webFrame } = electron;
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
 );
+export const { DEFAULT_PIN } = remote.require('./src/utils/const');
+
 export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');
+export const getAlicePort = remote.require('./src/aliceManager').getPort;
 export const LabelType = labels;
 export const socketClient = remote.require('./src/socketClient');
-
 const globalManager = remote.require('./src/globalManager');
 
 webFrame.setVisualZoomLevelLimits(1, 1);
 webFrame.setLayoutZoomLevelLimits(0, 0);
+
+export const getPin = () => {
+  const globalPin = globalManager.databaseKey.get();
+  if (globalPin === DEFAULT_PIN) {
+    return '';
+  }
+  return globalPin;
+};
 
 export const createTemporalAccount = accountData => {
   return globalManager.temporalAccount.set(accountData);
@@ -68,8 +78,15 @@ export const confirmWaitingApprovalLogin = callback => {
   });
 };
 
+export const showOpenFileDialog = () => {
+  const dialog = remote.dialog;
+  return dialog.showOpenDialog(null, {
+    filters: {
+      extensions: ['jpeg', 'jpg', 'png', 'bitmap']
+    }
+  });
+};
+
 export const setLoginInformation = params => {
   return globalManager.loginData.set(params);
 };
-
-export const { DEFAULT_PIN } = remote.require('./src/utils/const');

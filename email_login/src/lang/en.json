@@ -177,6 +177,173 @@
       "strong": ""
     }
   },
+  "launch": {
+    "create": "Create Account",
+    "login": "Log In",
+    "version": "Version"
+  },
+  "newSignUp": {
+    "form": {
+      "title": {
+        "firstLine": "You’re gonna love",
+        "secondLine": "Criptext!"
+      },
+      "description": "Let’s get you started",
+      "username": {
+        "placeholder": "Username",
+        "errors": {
+          "format": "Must begin with A-Z and have 3 characters",
+          "unavailable": "This username is already in use",
+          "default": "Uknown Error {0}"
+        }
+      },
+      "fullname": {
+        "placeholder": "Full Name",
+        "error": "Full Name can't be empty"
+      },
+      "password": {
+        "placeholder": "Password",
+        "error": "Must be at least 8 characters"
+      },
+      "confirmPassword": {
+        "placeholder": "Confirm Password",
+        "error": "Passwords don’t match. Try again"
+      },
+      "button": "Next"
+    },
+    "recovery": {
+      "title": {
+        "firstLine": "Lastly, add a recovery",
+        "secondLine": "email"
+      },
+      "description": "This will allow you to regain access if you ever forget your password",
+      "recovery": {
+        "placeholder": "Recovery Email",
+        "errors": {
+          "invalid": "Invalid email address",
+          "notConfirmed": "This address has no verified recovery email.",
+          "maxUses": "This address has already been used {0} times.",
+          "blacklisted": "Black-listed email provider.",
+          "same": "You can't use your email as recovery email",
+          "default": "Uknown Error {0}"
+        }
+      },
+      "button": "Set Recovery Email"
+    },
+    "create": {
+      "title": {
+        "firstLine": "You’re almost there!",
+        "secondLine": "Just two more things 💪"
+      },
+      "description": "Prove you are not a Robot",
+      "terms": "I have read and agree with the {0}",
+      "link": "Terms and Conditions",
+      "lifeTip": "I promise to drink more water",
+      "enterCaptcha": "Enter the characters you see",
+      "errorCaptcha": "Unable to refresh captcha. Please try again",
+      "button": "Create Account",
+      "creating": "Creating encrypted keys...",
+      "errors": {
+        "title": "Sign Up Error",
+        "button": "Ok",
+        "createAccount": "Unable to create your account. Please try again",
+        "createKeys": "Unable to create Keys. Please try again",
+        "contactServer": "Unable to contact server. Please try again",
+        "alreadyExists": "This account already exists!",
+        "toManyRequests": "You have reached maximum retries. Please retry in {0} seconds",
+        "unableUpdate": "Unable to update database. Please restart the app",
+        "wrongCaptcha": "Wrong Captcha. Please try again",
+        "unknown": "Uknown Server Error ({0})"
+      }
+    },
+    "created": {
+      "title": "Account created successfuly!",
+      "button": "Next",
+      "description": "Now, let's make sure your inbox remains private 🕵️‍♂️" 
+    },
+    "ready": {
+      "title": {
+        "firstLine": "Account ready: now...",
+        "secondLine": "make it yours 😎"
+      },
+      "button": "Next"
+    }
+  },
+  "setup": {
+    "avatar": {
+      "title": "Add a profile picture",
+      "button": "Next",
+      "img": "My Profile Picture"
+    },
+    "skip": "Skip",
+    "theme": {
+      "title": "Choose your style",
+      "tip": "Tip: Dark mode will actually save your battery life.",
+      "light": "Light 🌞",
+      "dark": "Dark 🌛",
+      "button": "Next"
+    },
+    "recovery": {
+      "title": "Verify your recovery email 📩",
+      "message": "Verification link sent to:",
+      "resend": "Resend Code",
+      "resendTime": "Resend Code ({0} sec)",
+      "verified": "(verified!)",
+      "button": "Next",
+      "popup": {
+        "title": "Woah there 🖐",
+        "message": "You won't be able to send emails until you verify your recovery email. This is for you security in case you ever forget your password.",
+        "buttons": {
+          "skip": "Skip",
+          "cancel": "Cancel"
+        } 
+      }
+    },
+    "backup": {
+      "title": "Turn on Mailbox Backup 📁",
+      "button": "Activate Mailbox Backup",
+      "message": "For your privacy your emails are only kept on your device. It’s best you turn on Mailbox backup to avoid loosing your emails if you lose or change devices."
+    },
+    "step": "Step {0} of {1}"
+  },
+  "pin": {
+    "start": {
+      "title": "Let’s add a Criptext app PIN 🔐",
+      "subtitle": "This PIN will block other apps in your computer from accessing your Criptext inbox. (We got you 😉)",
+      "button": "Next"
+    },
+    "display": {
+      "title": "Use this PIN or create your own",
+      "subtitle": "This PIN will be kept in your Keychain so you don't have to enter it each time you open Criptext. Simpler is better 😅",
+      "keep": "Keep this one",
+      "own": "Set my own PIN"
+    },
+    "set": {
+      "title": "Create your own PIN",
+      "new": "New PIN",
+      "confirm": "Confirm PIN",
+      "button": "Next"
+    },
+    "key": {
+      "title": "Save your Recovery Key",
+      "message": "If you forget your PIN, this recovery key will be your only way in. Save it in where you won't forget it. 📋",
+      "button": "Next",
+      "recovery": {
+        "title": "Copy Recovery Key",
+        "button": "Copy",
+        "link": {
+          "or": "Or",
+          "download": "download",
+          "it": "it in a file"
+        }
+      }
+    },
+    "done": {
+      "title": "Your PIN was set 🙌",
+      "checkbox": "Don’t require PIN on startup",
+      "button": "Next"
+    }
+  },
   "signUp": {
     "header": "Sign Up",
     "subheader": "Create your Criptext account",

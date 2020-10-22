@@ -1,0 +1,67 @@
+@import '../../styles/index.scss';
+
+.overlay-loader {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: 1;
+
+  .rectangle-loader-left {
+    height: 5px;
+    width: 40px;
+    position: absolute;
+    background-color: #0091ff;
+    bottom: 0;
+    animation: loading-left 2s infinite forwards linear;
+  }
+
+  @keyframes loading-left {
+    0% { transform: translateX(0px);}
+    50% { transform: translateX(135px);}
+    100% { transform: translateX(0px);}
+  }
+
+  .rectangle-loader-right {
+    height: 5px;
+    width: 40px;
+    position: absolute;
+    background-color: #0091ff;
+    bottom: 0;
+    animation: loading-right 2s infinite forwards linear;
+  }
+
+  @keyframes loading-right {
+    0% { transform: translateX(310px);}
+    50% { transform: translateX(175px);}
+    100% { transform: translateX(310px);}
+  }
+
+  .loader-message {
+    position: absolute;
+    margin: 0 auto;
+    bottom: 20px;
+    width: 200px;
+    transform: translateX(50%);
+    font-size: 12px;
+  }
+}
+
+@mixin themable($_THEME, $_TEXT_COLOR, $_BACKGROUND_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .overlay-loader {
+      background-color: rgba($color: $_BACKGROUND_COLOR, $alpha: 0.4);
+
+      .loader-message {
+        span {
+          color: $_TEXT_COLOR
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_COLOR_LIGHT, $_BACKGROUND_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_COLOR_DARK, $_BACKGROUND_COLOR_DARK);

@@ -1,0 +1,19 @@
+@import '../../styles/index.scss';
+
+.pin-start-subtitle {
+  font-size: 15px;
+  margin-top: 12px;
+  font-weight: 300;
+}
+
+@mixin themable($_THEME, $_TEXT_OPAQUE_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .pin-start-subtitle {
+      color: $_TEXT_OPAQUE_COLOR;
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_OPAQUE_COLOR_DARK);

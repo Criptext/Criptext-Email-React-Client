@@ -1,0 +1,54 @@
+@import '../../styles/index.scss';
+
+.custom-button {
+  width: 266px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 20px;
+
+  &.criptext-button {
+    background: #0091ff;
+    color: white;
+  }
+
+  &.clear-button {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    color: #4a4a4a;
+  }
+
+  &.text-button {
+    background: transparent;
+    border: none;
+    text-decoration: underline;
+    font-size: 12px;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
+/* THEME
+----------------------------- */
+
+@mixin themable($_THEME, $_CLEAR_BUTTON_BACKGROUND, $_CLEAR_BUTTON_BORDER, $_CLEAR_BUTTON_COLOR, $_TEXT_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .custom-button {
+      &.clear-button {
+        background: $_CLEAR_BUTTON_BACKGROUND;
+        border: 1px solid $_CLEAR_BUTTON_BORDER;
+        color: $_CLEAR_BUTTON_COLOR;
+      }
+
+      &.text-button {
+        color: $_TEXT_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_CLEAR_BUTTON_BACKGROUND_LIGHT, $_CLEAR_BUTTON_BORDER_LIGHT, $_CLEAR_BUTTON_COLOR_LIGHT, $_TEXT_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_CLEAR_BUTTON_BACKGROUND_DARK, $_CLEAR_BUTTON_BORDER_DARK, $_CLEAR_BUTTON_COLOR_DARK, $_TEXT_COLOR_DARK);

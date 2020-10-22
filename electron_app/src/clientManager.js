@@ -251,6 +251,17 @@ const checkAvailableUsername = async username => {
   return await client.checkAvailableUsername(username);
 };
 
+const checkAvailableRecoveryEmail = async ({ email, username }) => {
+  const client = await createClient({
+    recipientId: username,
+    optionalToken: '@'
+  });
+  return await client.checkRecoveryEmail({
+    email,
+    username
+  });
+};
+
 const deleteAddress = async ({ addressId, recipientId }) => {
   const client = await createClient({ recipientId });
   const res = await client.deleteAddress(addressId);
@@ -338,6 +349,13 @@ const getKeyBundle = async params => {
   return res.status === 200
     ? res
     : await checkExpiredSession(res, getKeyBundle, params);
+};
+
+const getCaptcha = async () => {
+  const client = await createClient({
+    optionalToken: '@'
+  });
+  return await client.getCaptcha();
 };
 
 const getMaxDevices = async params => {
@@ -792,6 +810,7 @@ module.exports = {
   changePassword,
   changeRecoveryEmail,
   checkAvailableUsername,
+  checkAvailableRecoveryEmail,
   checkExpiredSession,
   deleteAddress,
   deleteDeviceToken,
@@ -802,6 +821,7 @@ module.exports = {
   generateEvent,
   getDataReady,
   getDomainMX,
+  getCaptcha,
   getKeyBundle,
   getMaxDevices,
   getUserSettings,

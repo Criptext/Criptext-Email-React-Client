@@ -1,0 +1,47 @@
+@import '../../styles/index.scss';
+
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 10px;
+
+  &:nth-child(2) {
+    margin-top: 28px;
+  }
+
+  &:nth-child(3) {
+    margin-top: 8px;
+  }
+
+  .checkmark-label {
+    font-size: 13px;
+    margin-left: 8px;
+    
+    a {
+      color: #0091ff;
+      text-decoration: none;
+    }
+  }
+}
+
+.done-image {
+  height: 122px;
+  width: 83px;
+  margin: auto;
+  margin-top: 62px;
+  background-image: url(../../#{$_PATH_TO_IMAGES}/sign-up-desktop.svg);
+}
+
+@mixin themable($_THEME, $_TEXT_OPAQUE_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .checkbox-container {    
+      .checkmark-label {
+        color: $_TEXT_OPAQUE_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_OPAQUE_COLOR_DARK);

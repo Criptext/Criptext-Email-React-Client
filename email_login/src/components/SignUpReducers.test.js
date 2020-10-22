@@ -140,9 +140,11 @@ describe('updateForm', () => {
     input                             | error
     ${'yi'}                           | ${ErrorMsgs.USERNAME_INVALID}
     ${'joe'}                          | ${toBeConfirmed}
-    ${'verylongnamethatisnotallowed'} | ${ErrorMsgs.USERNAME_INVALID}
+    ${'verylongnamethatisnotallowedbecauseithasmorethan64charactersasusername'} | ${
+    ErrorMsgs.USERNAME_INVALID
+  }
     ${'erika.isabel'}                 | ${toBeConfirmed}
-    ${'benalcazar.benalcazar'}        | ${ErrorMsgs.USERNAME_INVALID}
+    ${'benalcazar.'}                  | ${ErrorMsgs.USERNAME_INVALID}
     ${'carlos1996'}                   | ${toBeConfirmed}
     ${'1jeff'}                        | ${toBeConfirmed}
     ${'dtb9'}                         | ${toBeConfirmed}

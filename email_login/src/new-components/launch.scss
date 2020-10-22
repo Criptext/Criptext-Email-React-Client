@@ -1,0 +1,66 @@
+@import './../styles/index.scss';
+
+.launch-container {
+  height: 100%;
+  width: 100%;
+
+  .title-container {
+    text-align: center;
+    margin-top: 200px;
+
+    > div {
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+
+  .title {
+    background-image: url(../#{$_PATH_TO_IMAGES}/img-logo.svg);
+    height: 65px;
+  }
+
+  .subtitle {
+    background-image: url(../#{$_PATH_TO_IMAGES}/img-subtitle.svg);
+    height: 48px;
+  }
+
+  .buttons-container {
+    display: flex;
+    flex-direction: column;
+    height: 95px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 120px;
+  }
+
+  .version-container {
+    color: #8a8a8a;
+    text-align: center;
+    margin-top: 15px;
+  }
+}
+
+/* THEME
+----------------------------- */
+
+@mixin themable($_THEME, $_LAUNCH_TITLE, $_LAUNCH_SUBTITLE, $_FOOTER_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .launch-container {
+      .title {
+        background-image: url(../#{$_PATH_TO_IMAGES}/#{$_LAUNCH_TITLE});
+      }
+    
+      .subtitle {
+        background-image: url(../#{$_PATH_TO_IMAGES}/#{$_LAUNCH_SUBTITLE});
+      }
+    
+      .version-container {
+        color: $_FOOTER_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_LAUNCH_TITLE_LIGHT, $_LAUNCH_SUBTITLE_LIGHT, $_FOOTER_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_LAUNCH_TITLE_DARK, $_LAUNCH_SUBTITLE_DARK, $_FOOTER_COLOR_DARK);

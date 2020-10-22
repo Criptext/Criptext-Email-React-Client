@@ -1,0 +1,27 @@
+@import '../../styles/index.scss';
+
+.account-created-subtitle {
+  font-size: 15px;
+  margin-top: 12px;
+  font-weight: 300;
+}
+
+.account-created-img {
+  width: 92px;
+  height: 109px;
+  margin: auto;
+  margin-top: 38px;
+  background-image: url(../../#{$_PATH_TO_IMAGES}/img-shield.svg);
+}
+
+@mixin themable($_THEME, $_TEXT_OPAQUE_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .account-created-subtitle {
+      color: $_TEXT_OPAQUE_COLOR;
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_OPAQUE_COLOR_DARK);

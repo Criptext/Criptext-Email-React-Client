@@ -1,0 +1,46 @@
+@import '../../styles/index.scss';
+
+.setup-verify {
+  .verify-container {
+    font-size: 15px;
+    margin-top: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+    >span:nth-child(1) {
+      color: #505050;
+      font-weight: 300;
+    }
+  }
+  .verify-email {
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 15px;
+  }
+  .verify-status {
+    font-size: 12px;
+    color: #3daa55;
+    margin-top: 10px;
+  }
+}
+
+@mixin themable($_THEME, $_TEXT_COLOR, $_TEXT_OPAQUE_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .setup-verify {
+      .verify-container {
+        >span:nth-child(1) {
+          color: $_TEXT_OPAQUE_COLOR;
+        }
+      }
+      .verify-email {
+        color: $_TEXT_COLOR;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_COLOR_LIGHT, $_TEXT_OPAQUE_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_COLOR_DARK, $_TEXT_OPAQUE_COLOR_DARK);

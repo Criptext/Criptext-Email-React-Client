@@ -36,6 +36,10 @@ ipc.answerRenderer('client-check-available-username', params =>
   clientManager.checkAvailableUsername(params)
 );
 
+ipc.answerRenderer('client-check-recovery-email', params =>
+  clientManager.checkAvailableRecoveryEmail(params)
+);
+
 ipc.answerRenderer(
   'client-check-expired-session',
   ({ response, initialRequest, requestParams }) =>
@@ -81,6 +85,8 @@ ipc.answerRenderer('client-get-domain-mx', domain => {
 ipc.answerRenderer('client-get-key-bundle', params =>
   clientManager.getKeyBundle(params)
 );
+
+ipc.answerRenderer('client-get-captcha', () => clientManager.getCaptcha());
 
 ipc.answerRenderer('client-get-max-devices', params =>
   clientManager.getMaxDevices(params)
@@ -279,7 +285,10 @@ ipc.answerRenderer('client-update-push-token', pushToken => {
 });
 
 ipc.answerRenderer('client-upload-avatar', params => {
-  const data = { ...params, recipientId: myAccount.recipientId };
+  const data = {
+    ...params,
+    recipientId: params.recipientId || myAccount.recipientId
+  };
   return clientManager.uploadAvatar(data);
 });
 

@@ -1,0 +1,55 @@
+@import '../../styles/index.scss';
+
+.ready-wrapper {
+  margin: 64px 42px 50px 42px;
+
+  .header-container {
+    margin-top: 166px;
+  }
+
+  .ready-card {
+    height: 141px;
+    width: 252px;
+    margin: 0 auto;
+    margin-top: 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 18px;
+    background-repeat: no-repeat;
+
+    > div:nth-child(1) {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    > div:nth-child(2) {
+      font-size: 13px;
+      font-weight: bold;
+    }
+  }
+
+  button {
+    margin-top: 58px;
+  }
+}
+
+@mixin themable($_THEME, $_SECTION_TITLE_COLOR, $_TEXT_COLOR, $_ACCOUNT_READY){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .ready-wrapper {
+      .header-container {
+        color: $_SECTION_TITLE_COLOR;
+      }
+    
+      .ready-card {
+        background-image: url(../../#{$_PATH_TO_IMAGES}/#{$_ACCOUNT_READY});
+        color: $_TEXT_COLOR
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_SECTION_TITLE_COLOR_LIGHT, $_TEXT_COLOR_LIGHT, $_ACCOUNT_READY_LIGHT);
+@include themable($_THEME_DARK, $_SECTION_TITLE_COLOR_DARK, $_TEXT_COLOR_DARK, $_ACCOUNT_READY_DARK);

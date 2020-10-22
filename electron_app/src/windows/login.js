@@ -6,8 +6,8 @@ let loginWindow;
 let shouldCloseForce = false;
 
 const loginSize = {
-  width: 328,
-  height: 543
+  width: 350,
+  height: 600
 };
 
 const iconPath = path.join(

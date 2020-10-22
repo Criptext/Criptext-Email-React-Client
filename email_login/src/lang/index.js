@@ -14,12 +14,12 @@ const string = new LocalizedStrings({
   ru
 });
 
-string.setLanguage(mySettings.language);
+string.setLanguage(mySettings ? mySettings.language : 'en');
 
 export const setLang = lang => {
   string.setLanguage(lang);
 };
 
-export const getLang = mySettings.language;
+export const getLang = mySettings ? mySettings.language : 'en';
 
 export default string;

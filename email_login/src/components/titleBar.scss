@@ -1,10 +1,17 @@
 @import './../styles/index.scss';
 
+.no-theme {
+  .title-bar {
+    background: #00c4ff;
+    transition: none;
+  }
+}
+
 .title-bar {
+  transition: background-color 0.5s ease;
   display: flex;
   height: 30px;
   border-radius: 7px 7px 0px 0px;
-  background-color: #00c4ff;
   padding: 0px 4px;
   -webkit-app-region: drag;
 
@@ -31,18 +38,20 @@
 
     .close,
     .minimize {
+      cursor: pointer;
       border-radius: 50%;
       width: 15px;
       height: 15px;
       margin: 0px 4px;
-      background-color: rgba(255, 255, 255, 0.6);
+      background-color: #cececd;
       -webkit-app-region: no-drag;
     }
 
     &:hover {
       .close,
       .minimize {
-        background-color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        background-color: #cececd;
         > i {
           opacity: 1;
         }
@@ -68,3 +77,18 @@
     }
   }
 }
+
+/* THEME
+----------------------------- */
+
+@mixin themable($_THEME, $_BACKGROUND_COLOR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .title-bar {
+      background-color: $_BACKGROUND_COLOR; //#00c4ff
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_DARK);

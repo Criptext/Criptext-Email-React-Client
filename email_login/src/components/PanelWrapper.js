@@ -315,8 +315,8 @@ class PanelWrapper extends Component {
             isRemoveDevicesLinkActive={this.state.isRemoveDevicesLinkActive}
             removeDevicesData={this.state.removeDevicesData}
             setPopupContent={this.setPopupContent}
-            onGoToChangePassword={this.hangleGoToChangePassword}
             value={this.state.values.usernameOrEmailAddress}
+            onChangeVersion={this.props.onChangeVersion}
           />
         );
       case mode.CHANGEPASSWORD:
@@ -337,6 +337,7 @@ class PanelWrapper extends Component {
             goToSignUp={this.goToSignUp}
             onClickSignIn={this.handleClickSignIn}
             onChangeField={this.handleChange}
+            onChangeVersion={this.props.onChangeVersion}
             value={this.state.values.usernameOrEmailAddress}
           />
         );
@@ -1100,6 +1101,7 @@ class PanelWrapper extends Component {
 }
 PanelWrapper.propTypes = {
   mode: PropTypes.string,
-  signupError: PropTypes.object
+  signupError: PropTypes.object,
+  onChangeVersion: PropTypes.func
 };
 export default PanelWrapper;

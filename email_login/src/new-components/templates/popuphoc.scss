@@ -1,0 +1,47 @@
+@import '../../styles/index.scss';
+
+.popup-wrapper {
+  position: absolute;
+}
+
+.popup-container {
+  box-shadow: 0 1px 16px 0 rgba(143, 143, 143, 0.56);
+  border: solid 1px transparent;
+  border-radius: 15px;
+  position: absolute;
+  color: black;
+  width: auto;
+  z-index: 11;
+  transform: translate(-50%, -50%);
+  background-color: $_BACKGROUND_COLOR_POPUP_LIGHT;
+  border-color: $_BORDER_COLOR_POPUP_LIGHT;
+  width: 265px;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  background-color: black;
+  opacity: 0.5;
+}
+
+@mixin themable($_THEME, $_TEXT_COLOR, $_BACKGROUND_COLOR_POPUP, $_BORDER_COLOR_POPUP){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .popup-container {
+      color: $_TEXT_COLOR;
+    }
+
+    .popup-container {
+      background-color: $_BACKGROUND_COLOR_POPUP;
+      border-color: $_BORDER_COLOR_POPUP;
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_TEXT_COLOR_LIGHT, $_BACKGROUND_COLOR_POPUP_LIGHT, $_BORDER_COLOR_POPUP_LIGHT);
+@include themable($_THEME_DARK, $_TEXT_COLOR_DARK, $_BACKGROUND_COLOR_POPUP_DARK, $_BORDER_COLOR_POPUP_DARK);
