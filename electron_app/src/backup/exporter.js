@@ -61,6 +61,7 @@ const start = async () => {
   const [reId, domain = APP_DOMAIN] = recipientId.split('@');
   try {
     const accountObj = {
+      recipientId: account.recipientId,
       email: `${reId}@${domain}`,
       username: reId,
       domain: domain,

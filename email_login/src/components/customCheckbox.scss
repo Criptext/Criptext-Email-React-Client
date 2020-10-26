@@ -22,7 +22,7 @@
     height: 10px;
     width: 10px;
     border-radius: 3px;
-    border: solid 2px #fff;
+    border: solid 2px #8a8a8a;
     opacity: 0.2;
     margin-left: 0px;
 
@@ -34,7 +34,7 @@
 
     &.checkmark-checked {
       background-color: #ffffff;
-      border-color: transparent !important;
+      border-color: transparent;
       opacity: 1;
 
       &:after {

@@ -28,7 +28,6 @@ class SignUpCreateAccountWrapper extends Component {
         image: undefined
       },
       termsConditions: false,
-      promiseCall: false,
       enableButton: false,
       createAccount: false,
       error: undefined
@@ -98,13 +97,6 @@ class SignUpCreateAccountWrapper extends Component {
               )}
             </span>
           </div>
-          <div className="checkbox-container">
-            <CustomCheckbox
-              value={this.state.promiseCall}
-              onChange={this.handleCheckPromiseCall}
-            />
-            <span className="checkmark-label">{create.lifeTip}</span>
-          </div>
         </div>
         <Button
           text={create.button}
@@ -137,11 +129,11 @@ class SignUpCreateAccountWrapper extends Component {
       });
       return;
     }
-    const { randomId, image } = result.body;
+    const { captchaKey, image } = result.body;
     this.setState({
       captcha: {
         ...this.state.captcha,
-        randomId,
+        randomId: captchaKey,
         image
       }
     });
@@ -232,16 +224,6 @@ class SignUpCreateAccountWrapper extends Component {
     this.setState(
       {
         termsConditions: newValue
-      },
-      this.shouldEnableButton
-    );
-  };
-
-  handleCheckPromiseCall = () => {
-    const newValue = !this.state.promiseCall;
-    this.setState(
-      {
-        promiseCall: newValue
       },
       this.shouldEnableButton
     );
