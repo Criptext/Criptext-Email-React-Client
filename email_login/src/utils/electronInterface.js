@@ -90,3 +90,6 @@ export const showOpenFileDialog = () => {
 export const setLoginInformation = params => {
   return globalManager.loginData.set(params);
 };
+
+export const isFromStore =
+  globalManager.isWindowsStore.get() || globalManager.isMAS.get();

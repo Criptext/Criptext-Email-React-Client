@@ -34,15 +34,16 @@ const upStepCreateDBEncrypted = async () => {
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 const upStepCheckPIN = async () => {
   try {
-    const fallback = await dbManager.rawCheckPin(DEFAULT_PIN);
-    if (fallback) {
-      if (fallback.length) {
+    const existingAccounts = await dbManager.rawCheckPin(DEFAULT_PIN);
+    console.log(existingAccounts);
+    if (existingAccounts) {
+      if (!existingAccounts.length || (existingAccounts.length == 1 && !existingAccounts[0].jwt && !existingAccounts[0].refreshToken)) {
+        await deleteEncryptedDatabase();
+        upStepNewUser();
+      } else {
         myAccount.initialize(fallback);
         globalManager.pinData.set({ pinType: 'signin' });
         pinWindow.show();
-      } else {
-        await deleteEncryptedDatabase();
-        upStepNewUser();
       }
       return;
     }
@@ -118,6 +119,7 @@ const upApp = async ({ shouldSave, pin }) => {
 
 const upMailboxWindow = async loggedAccounts => {
   const appSettings = await dbManager.getSettings();
+  console.log(appSettings);
   try {
     await dbManager.setSendingEmailsAsFailed();
   } catch (ex) {}
