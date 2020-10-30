@@ -8,14 +8,18 @@ import {
   getAccountByParams,
   cleanDatabase,
   getComputerName,
+  getSettings,
+  getSystemLanguage,
+  createSettings,
   updateAccount,
   getContactByEmails,
   createContact,
   logLocal
 } from '../utils/ipc';
+import { hashPassword } from '../utils/HashUtils';
 import string from '../lang';
 
-import { myAccount } from '../utils/electronInterface';
+import { myAccount, mySettings, isFromStore } from '../utils/electronInterface';
 
 const { errors } = string.newSignUp.create;
 const recoveryErrors = string.newSignUp.recovery.recovery.errors;
@@ -117,7 +121,7 @@ const postKeyBundle = async ({
 }) => {
   const res = await postUser({
     recipientId,
-    password,
+    password: hashPassword(password),
     name,
     recoveryEmail,
     keybundle,
@@ -190,6 +194,7 @@ const prepareAccount = async ({
   }
 
   await createOwnContact(name, myAccount.email, myAccount.id);
+  await setDefaultSettings();
   return {
     recipientId,
     accountId: newAccount.id
@@ -205,5 +210,23 @@ const createOwnContact = async (name, email) => {
     await createContact({ contacts: [{ name, email }] });
   } catch (createContactDbError) {
     logLocal(createContactDbError.stack);
+  }
+};
+
+const setDefaultSettings = async () => {
+  const settings = await getSettings();
+  if (settings) {
+    mySettings.initialize({
+      ...settings,
+      isFromStore: isFromStore
+    });
+  } else {
+    const language = await getSystemLanguage();
+    const data = { language, opened: false, theme: 'light' };
+    await createSettings(data);
+    mySettings.initialize({
+      ...data,
+      isFromStore: isFromStore
+    });
   }
 };

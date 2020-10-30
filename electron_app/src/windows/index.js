@@ -34,15 +34,20 @@ const upStepCreateDBEncrypted = async () => {
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 const upStepCheckPIN = async () => {
   try {
-    const fallback = await dbManager.rawCheckPin(DEFAULT_PIN);
-    if (fallback) {
-      if (fallback.length) {
-        myAccount.initialize(fallback);
-        globalManager.pinData.set({ pinType: 'signin' });
-        pinWindow.show();
-      } else {
+    const existingAccounts = await dbManager.rawCheckPin(DEFAULT_PIN);
+    if (existingAccounts) {
+      if (
+        !existingAccounts.length ||
+        (existingAccounts.length === 1 &&
+          !existingAccounts[0].jwt &&
+          !existingAccounts[0].refreshToken)
+      ) {
         await deleteEncryptedDatabase();
         upStepNewUser();
+      } else {
+        myAccount.initialize(existingAccounts[0]);
+        globalManager.pinData.set({ pinType: 'signin' });
+        pinWindow.show();
       }
       return;
     }

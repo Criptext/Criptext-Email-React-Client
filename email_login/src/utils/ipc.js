@@ -48,6 +48,10 @@ export const getDefaultBackupFolder = async () => {
   return await ipc.callMain('get-default-backup-folder');
 };
 
+export const getSystemLanguage = async () => {
+  return await ipc.callMain('get-system-language');
+};
+
 export const swapMailboxAccount = params => {
   ipc.callMain('swap-account', params);
 };
@@ -76,6 +80,10 @@ export const createContact = async params => {
   return await ipc.callMain('db-create-contact', params);
 };
 
+export const createSettings = async params => {
+  return await ipc.callMain('db-create-settings', params);
+};
+
 export const getAccountByParams = async params => {
   return await ipc.callMain('db-get-account-by-params', params);
 };
@@ -86,6 +94,10 @@ export const getContactByEmails = async params => {
 
 export const updateAccount = async params => {
   return await ipc.callMain('db-update-account', params);
+};
+
+export const getSettings = async () => {
+  return await ipc.callMain('db-get-settings');
 };
 
 export const updateSettings = async params => {
