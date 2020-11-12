@@ -1,6 +1,6 @@
 {
   "name": "email_pin",
-  "version": "0.31.0",
+  "version": "0.31.1",
   "private": true,
   "dependencies": {
     "@criptext/electron-better-ipc": "^0.7.0-rc1-0.2",
