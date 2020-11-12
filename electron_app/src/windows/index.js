@@ -16,6 +16,7 @@ const aliceManager = require('./../aliceManager');
 const { isFromStore, getSystemLanguage } = require('./windowUtils');
 const { openLaunchWindow } = require('./launch.js');
 const { DEFAULT_PIN } = require('./../utils/const');
+const logger = require('../logger');
 
 const sendAPIevent = async event => {
   await generateEvent({ event, recipientId: myAccount.recipientId });
@@ -45,13 +46,15 @@ const upStepCheckPIN = async () => {
         await deleteEncryptedDatabase();
         upStepNewUser();
       } else {
-        myAccount.initialize(existingAccounts[0]);
+        myAccount.initialize(existingAccounts);
         globalManager.pinData.set({ pinType: 'signin' });
         pinWindow.show();
       }
       return;
     }
-  } catch (error) {}
+  } catch (error) {
+    logger.error(error);
+  }
 
   const pin = await pinWindow.checkPin();
   if (!pin) {
