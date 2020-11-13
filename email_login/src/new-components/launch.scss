@@ -9,7 +9,7 @@
     margin-top: 185px;
 
     > div {
-      background-position: center;
+      background-position: bottom;
       background-repeat: no-repeat;
     }
   }
@@ -21,7 +21,10 @@
 
   .subtitle {
     background-image: url(../#{$_PATH_TO_IMAGES}/img-subtitle.svg);
-    height: 48px;
+    height: 30px;
+    width: 190px;
+    margin: auto;
+    margin-top: 18px;
   }
 
   .buttons-container {
