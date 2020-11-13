@@ -317,6 +317,7 @@ class PanelWrapper extends Component {
             setPopupContent={this.setPopupContent}
             value={this.state.values.usernameOrEmailAddress}
             onChangeVersion={this.props.onChangeVersion}
+            onGoToChangePassword={this.hangleGoToChangePassword}
           />
         );
       case mode.CHANGEPASSWORD:
